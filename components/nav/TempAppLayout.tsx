@@ -8,7 +8,7 @@ import { RxHamburgerMenu } from "react-icons/rx"
 
 import Logo from "./Logo"
 
-export default function TempAppNav() {
+export default function TempAppLayout() {
   return (
     <>
       <div className="fixed z-0 top-0 left-0 right-0">

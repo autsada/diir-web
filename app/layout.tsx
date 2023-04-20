@@ -1,6 +1,6 @@
 import "./globals.css"
 
-import AppNavWrapper from "@/components/nav/AppNavWrapper"
+import AppLayoutServer from "@/components/nav/AppLayoutServer"
 
 export const metadata = {
   title: "DiiR",
@@ -25,7 +25,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className="text-textRegular overflow-y-auto">
         {/* @ts-expect-error Async Server Component */}
-        <AppNavWrapper />
+        <AppLayoutServer />
 
         <div className="pt-[70px] sm:ml-[100px]">{children}</div>
       </body>

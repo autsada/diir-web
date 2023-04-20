@@ -8,9 +8,10 @@ import Logo from "./Logo"
 
 interface Props {
   openLeftDrawer: () => void
+  openAuthModal: () => void
 }
 
-export default function MainNav({ openLeftDrawer }: Props) {
+export default function MainNav({ openLeftDrawer, openAuthModal }: Props) {
   return (
     <div className="h-[70px] px-2 flex items-center justify-between">
       <div className="h-full w-[120px] min-w-[120px] flex items-center">
@@ -40,7 +41,10 @@ export default function MainNav({ openLeftDrawer }: Props) {
         </div>
       </div>
       <div className="h-full w-[80px] flex items-center justify-end">
-        <button className="btn-orange mx-0 h-8 w-[80px] rounded-full">
+        <button
+          className="btn-orange mx-0 h-8 w-[80px] rounded-full"
+          onClick={openAuthModal}
+        >
           Sign in
         </button>
       </div>

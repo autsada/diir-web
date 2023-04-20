@@ -2,8 +2,8 @@ import { cookies } from "next/headers"
 import React, { Suspense } from "react"
 
 import { getMyAccount } from "@/graphql"
-import AppNav from "./AppNav"
-import TempAppNav from "./TempAppNav"
+import AppLayoutClient from "./AppLayoutClient"
+import TempAppLayout from "./TempAppLayout"
 
 async function getAccount(walletAddress?: string) {
   const cookieStore = cookies()
@@ -16,12 +16,12 @@ async function getAccount(walletAddress?: string) {
   return data
 }
 
-export default async function AppNavWrapper() {
+export default async function AppLayoutServer() {
   const accountData = await getAccount()
 
   return (
-    <Suspense fallback={<TempAppNav />}>
-      <AppNav accountData={accountData} />
+    <Suspense fallback={<TempAppLayout />}>
+      <AppLayoutClient accountData={accountData} />
     </Suspense>
   )
 }
