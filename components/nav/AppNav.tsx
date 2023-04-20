@@ -4,9 +4,14 @@ import React, { useCallback, useState } from "react"
 
 import LeftDrawer from "./LeftDrawer"
 import MainNav from "./MainNav"
-import Backdrop from "../Backdrop"
+import { getMyAccount } from "@/graphql"
+import type { ValueType } from "@/types"
 
-export default function AppNav() {
+interface Props {
+  accountData: ValueType<ReturnType<typeof getMyAccount>> | null
+}
+
+export default function AppNav({ accountData }: Props) {
   const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
 
   const openLeftDrawer = useCallback(() => {
@@ -27,8 +32,6 @@ export default function AppNav() {
       </div>
 
       <LeftDrawer isOpen={leftDrawerVisible} closeDrawer={closeLeftDrawer} />
-
-      <Backdrop visible={leftDrawerVisible} onClick={closeLeftDrawer} />
     </>
   )
 }

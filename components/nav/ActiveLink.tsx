@@ -19,7 +19,6 @@ export default function ActiveLink({
   const pathname = usePathname()
   const isActive = pathname === href
 
-  console.log("pathname: ", pathname)
   return (
     <Link href={href} scroll={false}>
       <div
