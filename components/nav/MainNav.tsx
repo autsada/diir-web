@@ -1,23 +1,28 @@
 import React from "react"
-import Image from "next/image"
 import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
 
-import Logo from "../../public/logo.png"
+import Logo from "./Logo"
 
-export default function MainNav() {
+interface Props {
+  openLeftDrawer: () => void
+}
+
+export default function MainNav({ openLeftDrawer }: Props) {
   return (
     <div className="h-[70px] px-2 flex items-center justify-between">
       <div className="h-full w-[120px] min-w-[120px] flex items-center">
         <div className="h-full w-[50px] flex items-center">
           <div className="cursor-pointer p-2 rounded-full hover:bg-gray-100">
-            <RxHamburgerMenu size={28} className="text-textLight" />
+            <RxHamburgerMenu
+              size={28}
+              className="text-textLight"
+              onClick={openLeftDrawer}
+            />
           </div>
         </div>
 
-        <div className="h-full flex items-center justify-center">
-          <Image src={Logo} alt="DiiR" className="h-full cursor-pointer" />
-        </div>
+        <Logo />
       </div>
       <div className="h-full flex-grow flex items-center justify-center">
         <div className="w-full h-[50px] max-w-[500px] flex items-center px-3 md:border md:border-gray-200 md:rounded-full">

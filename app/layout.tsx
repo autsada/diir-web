@@ -1,5 +1,9 @@
 import "./globals.css"
+
 import MainNav from "../components/nav/MainNav"
+import Backdrop from "@/components/Backdrop"
+import LeftDrawer from "@/components/nav/LeftDrawer"
+import AppNav from "@/components/nav/AppNav"
 
 export const metadata = {
   title: "DiiR",
@@ -14,12 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="text-textRegular overflow-y-auto">
-        <div className="fixed top-0 left-0 right-0">
-          <MainNav />
-        </div>
-        <div className="hidden w-[100px] fixed top-[70px] bottom-0 sm:block bg-green-300">
-          Sidebar
-        </div>
+        <AppNav />
 
         <div className="pt-[70px] sm:ml-[100px]">{children}</div>
       </body>
