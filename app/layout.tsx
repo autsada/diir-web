@@ -1,13 +1,19 @@
 import "./globals.css"
 
-import MainNav from "../components/nav/MainNav"
-import Backdrop from "@/components/Backdrop"
-import LeftDrawer from "@/components/nav/LeftDrawer"
 import AppNav from "@/components/nav/AppNav"
 
 export const metadata = {
   title: "DiiR",
   description: "A platform for story teller",
+  icons: {
+    icon: "/favicon/favicon.ico",
+    // shortcut: "/shortcut-icon.png",
+    // apple: '/apple-icon.png',
+    // other: {
+    //   rel: 'apple-touch-icon-precomposed',
+    //   url: '/apple-touch-icon-precomposed.png',
+    // },
+  },
 }
 
 export default function RootLayout({
