@@ -37,7 +37,7 @@ export default function AuthModal({ visible, closeModal }: Props) {
           windowWidth && windowHeight && windowWidth > windowHeight
             ? "sm:h-full sm:min-h-full"
             : "sm:h-[65%] sm:min-h[65%]"
-        } lg:h-[95%] lg:min-h-[95%] sm:w-[80%] md:w-[60%] lg:w-[45%] lg:max-w-[500px] bg-white opacity-90 overflow-y-auto pt-5 py-10 sm:rounded-2xl`}
+        } lg:h-[98%] lg:min-h-[98%] sm:w-[60%] lg:w-[45%] lg:max-w-[500px] bg-white opacity-95 overflow-y-auto pt-5 py-10 sm:rounded-2xl`}
       >
         <CloseButton
           onClick={closeAuthModal}
