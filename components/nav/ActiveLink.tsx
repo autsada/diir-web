@@ -27,7 +27,11 @@ export default function ActiveLink({
         } rounded-md`}
       >
         <div className="h-full w-[50px] flex items-center">
-          {isActive ? <ActiveIcon size={24} /> : <InActiveIcon />}
+          {isActive ? (
+            <ActiveIcon size={24} className="mb-2" />
+          ) : (
+            <InActiveIcon size={24} className="mb-2" />
+          )}
         </div>
         <div className="h-full flex items-center">
           <h6 className="text-lg">{name}</h6>
