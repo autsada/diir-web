@@ -18,7 +18,7 @@ export default function SelectAuth({ selectMethod }: Props) {
 
       <div className="w-full px-8 sm:px-12">
         <h4 className="text-center font-bold leading-10">
-          Creators/audience centric content sharing platform.
+          Creators/audience-centric content sharing platform.
         </h4>
       </div>
 

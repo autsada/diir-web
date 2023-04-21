@@ -1,3 +1,5 @@
+"use client"
+
 import React, {
   ChangeEvent,
   useCallback,
@@ -12,19 +14,25 @@ import PhoneInput, {
 import _ from "lodash"
 import { IoCaretDownOutline } from "react-icons/io5"
 import type { Country } from "react-phone-number-input"
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth"
+import type { ConfirmationResult } from "firebase/auth"
 
-import { getCountryNames } from "@/lib"
 import { OtpInput } from "./OtpInput"
+import { firebaseAuth } from "@/firebase/config"
+import { getCountryNames } from "@/lib"
 
 export default function PhoneAuth() {
   const [country, setCountry] = useState<Country>("TH")
   const [phoneNumber, setPhoneNumber] = useState<string>()
   const [isNumberValid, setIsNumberValid] = useState(false)
   const [requestOtpLoading, setRequestOtpLoading] = useState(false)
+  const [requestError, setRequestError] = useState("")
+  const [confirmationResult, setConfirmationResult] =
+    useState<ConfirmationResult>()
   const [isOtpSent, setIsOtpSent] = useState(false)
   const [userOtp, setUserOtp] = useState("")
   const [verifyOtpLoading, setVerifyOtpLoading] = useState(false)
-  const [verifyOtpError, setVerifyOtpError] = useState("")
+  const [verifyError, setVerifyError] = useState("")
 
   function selectCountry(e: ChangeEvent<HTMLSelectElement>) {
     setCountry(e.target.value as Country)
@@ -64,8 +72,99 @@ export default function PhoneAuth() {
    * 2. User enter and confirm the verification code they received
    */
 
+  /**
+   * The 1 step: Request OTP.
+   */
+  async function requestOtp() {
+    try {
+      if (!phoneNumber) throw new Error("Phone number is required.")
+
+      // Start the process
+      if (isOtpSent) setIsOtpSent(false)
+      setRequestOtpLoading(true)
+      if (requestError) setRequestError("")
+
+      // Create a new recaptcha instance if not already
+      const recaptchaVerifier = new RecaptchaVerifier(
+        "sign-in-button",
+        {
+          size: "invisible",
+          callback: async function () {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+            // const confirmation = await signInWithPhoneNumber(
+            //   firebaseAuth,
+            //   phoneNumber,
+            //   recaptchaVerifier
+            // )
+            // setConfirmationResult(confirmation)
+            // setRequestOtpLoading(false)
+            // setIsOtpSent(true)
+          },
+        },
+        firebaseAuth
+      )
+
+      const confirmation = await signInWithPhoneNumber(
+        firebaseAuth,
+        phoneNumber,
+        recaptchaVerifier
+      )
+      setConfirmationResult(confirmation)
+      setRequestOtpLoading(false)
+      setIsOtpSent(true)
+
+      // Store the instance on the window object
+      window.recaptchaVerifier = recaptchaVerifier
+      const widgetId = await recaptchaVerifier.render()
+      window.widgetId = widgetId
+    } catch (error) {
+      console.log("error -->", error)
+      setRequestError("Error attempting to send OTP, please try again.")
+      setRequestOtpLoading(false)
+      if (isOtpSent) setIsOtpSent(false)
+
+      // Reset the recaptcha so the user can try again
+      if (window.grecaptcha) {
+        window.grecaptcha.reset(window.widgetId)
+      }
+    }
+  }
+
+  /**
+   * The 2 step: Verify OTP
+   */
   const handleOtpChange = useCallback((value: string) => {
     setUserOtp(value)
+  }, [])
+
+  async function verifyOtp() {
+    if (!confirmationResult || !userOtp || userOtp.length !== 6) return
+
+    try {
+      setVerifyOtpLoading(true)
+      const result = await confirmationResult.confirm(userOtp)
+
+      console.log("result -->", result)
+      setVerifyOtpLoading(false)
+    } catch (error) {
+      console.log("error -->", error)
+      setVerifyOtpLoading(false)
+      setVerifyError("Verify code failed")
+    }
+  }
+
+  // When id token changed
+  useEffect(() => {
+    const unsubscribe = firebaseAuth.onIdTokenChanged(async (user) => {
+      if (user) {
+        console.log("user: ", user)
+        console.log("token: ", await user.getIdToken())
+      } else {
+        console.log("no user")
+      }
+    })
+
+    return unsubscribe
   }, [])
 
   return (
@@ -131,7 +230,13 @@ export default function PhoneAuth() {
           <div className="my-6 h-[50px] px-1 flex items-center justify-center">
             <p className="text-center text-lg text-blueBase">
               {isNumberValid ? (
-                "We will send you a 6-digits verification code."
+                isOtpSent ? (
+                  "A verification sent."
+                ) : requestOtpLoading ? (
+                  "Sending a verification code"
+                ) : (
+                  "We will send you a 6-digits verification code."
+                )
               ) : (
                 <>&nbsp;</>
               )}
@@ -144,7 +249,7 @@ export default function PhoneAuth() {
               !isNumberValid || requestOtpLoading ? "opacity-10" : "opacity-100"
             }`}
             disabled={!isNumberValid || requestOtpLoading}
-            //   onClick={requestVerificationCode}
+            onClick={requestOtp}
           >
             Get Code
           </button>
@@ -161,30 +266,32 @@ export default function PhoneAuth() {
                 valueLen={6}
                 onChange={handleOtpChange}
               />
-              {/* Prevent users from entering if OTP not sent or is sending */}
-              {requestOtpLoading && <div className="absolute inset-0"></div>}
+              {/* Prevent users interaction during verifying otp */}
+              {verifyOtpLoading && <div className="absolute inset-0"></div>}
             </div>
 
-            <div>
-              <button
-                id="sign-in-button"
-                type="button"
-                className={`btn-orange w-full mt-14 h-12 rounded-full text-lg ${
-                  requestOtpLoading || verifyOtpLoading
-                    ? "opacity-30"
-                    : "opacity-100"
-                }`}
-                disabled={
-                  requestOtpLoading ||
-                  //   !confirmationResult ||
-                  !userOtp ||
-                  userOtp.length !== 6 ||
-                  verifyOtpLoading
-                }
-              >
-                Verify Code
-              </button>
-            </div>
+            <button
+              id="sign-in-button"
+              type="button"
+              className={`btn-orange w-full mt-14 h-12 rounded-full text-lg ${
+                requestOtpLoading || verifyOtpLoading
+                  ? "opacity-30"
+                  : "opacity-100"
+              }`}
+              disabled={
+                requestOtpLoading ||
+                !confirmationResult ||
+                !userOtp ||
+                userOtp.length !== 6 ||
+                verifyOtpLoading
+              }
+              onClick={verifyOtp}
+            >
+              Verify Code
+            </button>
+            <p className="error font-light text-base">
+              {verifyError ? verifyError : <>&nbsp;</>}
+            </p>
           </div>
         )}
       </div>
