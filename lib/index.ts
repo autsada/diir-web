@@ -3,15 +3,19 @@ import { cookies } from "next/headers"
 import { getMyAccount } from "@/graphql"
 
 export async function getAccount() {
-  const cookieStore = cookies()
-  const token = cookieStore.get("dtoken")
+  try {
+    const cookieStore = cookies()
+    const token = cookieStore.get("dtoken")
 
-  if (!token || !token.value) return null
-  const values = token.value.split("  starthere:")
-  const idToken = values[0]
-  const address = values[1]
+    if (!token || !token.value) return null
+    const values = token.value.split("  :::")
+    const idToken = values[0]
+    const address = values[1]
 
-  const data = await getMyAccount(idToken, address)
+    const data = await getMyAccount(idToken, address)
 
-  return data
+    return data
+  } catch (error) {
+    return null
+  }
 }

@@ -17,7 +17,6 @@ export default function AppLayoutClient({ accountData }: Props) {
   const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
   const [authModalVisible, setAuthModalVisible] = useState(false)
 
-  // When id token change, this hook will set the token as a cookie
   const { idToken } = useIdTokenChanged()
 
   const openLeftDrawer = useCallback(() => {
