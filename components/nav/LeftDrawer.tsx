@@ -1,7 +1,12 @@
-"use client"
-
 import React from "react"
-import { RiHome4Fill, RiHome4Line } from "react-icons/ri"
+import {
+  RiHome4Fill,
+  RiHome4Line,
+  RiVideoFill,
+  RiVideoLine,
+} from "react-icons/ri"
+import { IoRadioOutline, IoRadio } from "react-icons/io5"
+import { AiOutlineRead, AiFillRead } from "react-icons/ai"
 
 import Logo from "./Logo"
 import ActiveLink from "./ActiveLink"
@@ -41,6 +46,30 @@ export default function LeftDrawer({ isOpen = false, closeDrawer }: Props) {
             href="/"
             ActiveIcon={RiHome4Fill}
             InActiveIcon={RiHome4Line}
+          />
+        </div>
+        <div className="w-full px-5 mt-5">
+          <ActiveLink
+            name="Shorts"
+            href="/shorts"
+            ActiveIcon={RiVideoFill}
+            InActiveIcon={RiVideoLine}
+          />
+        </div>
+        <div className="w-full px-5 mt-5">
+          <ActiveLink
+            name="Podcasts"
+            href="/podcasts"
+            ActiveIcon={IoRadio}
+            InActiveIcon={IoRadioOutline}
+          />
+        </div>
+        <div className="w-full px-5 mt-5">
+          <ActiveLink
+            name="Blogs"
+            href="/blogs"
+            ActiveIcon={AiFillRead}
+            InActiveIcon={AiOutlineRead}
           />
         </div>
       </div>

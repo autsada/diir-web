@@ -8,6 +8,7 @@ import { getMyAccount } from "@/graphql"
 import type { ValueType } from "@/types"
 import AuthModal from "../auth/AuthModal"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
+import SideBar from "./SideBar"
 
 interface Props {
   accountData: ValueType<ReturnType<typeof getMyAccount>> | null
@@ -43,8 +44,9 @@ export default function AppLayoutClient({ accountData }: Props) {
           openAuthModal={openAuthModal}
         />
       </div>
-      <div className="hidden w-[100px] fixed top-[70px] bottom-0 sm:block bg-green-300">
-        Sidebar
+
+      <div className="hidden w-[100px] fixed top-[70px] bottom-0 bg-white py-5 px-2 sm:block">
+        <SideBar />
       </div>
 
       <LeftDrawer isOpen={leftDrawerVisible} closeDrawer={closeLeftDrawer} />

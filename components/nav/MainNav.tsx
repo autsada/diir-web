@@ -1,5 +1,3 @@
-"use client"
-
 import React from "react"
 import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
@@ -14,8 +12,8 @@ interface Props {
 export default function MainNav({ openLeftDrawer, openAuthModal }: Props) {
   return (
     <div className="h-[70px] px-2 flex items-center justify-between">
-      <div className="h-full w-[120px] min-w-[120px] flex items-center">
-        <div className="h-full w-[50px] flex items-center">
+      <div className="h-full w-[120px] min-w-[120px] sm:w-[150px] flex items-center">
+        <div className="h-full w-[50px] flex items-center sm:mr-4">
           <div className="cursor-pointer p-2 rounded-full hover:bg-gray-100">
             <RxHamburgerMenu
               size={28}
@@ -24,8 +22,9 @@ export default function MainNav({ openLeftDrawer, openAuthModal }: Props) {
             />
           </div>
         </div>
-
-        <Logo />
+        <div className="h-full flex items-center justify-center">
+          <Logo />
+        </div>
       </div>
       <div className="h-full flex-grow flex items-center justify-center">
         <div className="w-full h-[50px] max-w-[500px] flex items-center px-3 md:border md:border-gray-200 md:rounded-full">
