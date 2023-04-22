@@ -10,6 +10,7 @@ import ModalWrapper from "@/components/ModalWrapper"
 import EmailInput from "@/components/auth/EmailInput"
 import { useRouter } from "next/navigation"
 import ButtonLoader from "@/components/ButtonLoader"
+import { wait } from "@/lib/helpers"
 
 /**
  * @dev Verify user's email
@@ -44,12 +45,14 @@ export default function VerifyEmail() {
         } else {
           await signInWithEmailLink(firebaseAuth, email, link)
           setIsError(false)
-          setLoading(false)
-          // TODO: bring user to the home page
+          // Remove saved email in localstorage
+          window?.localStorage?.removeItem(EMAIL_KEY)
+          // Bring user to the home page, wait 0.5 second to make sure the cookie is set
+          await wait(500)
           router.replace("/")
+          // setLoading(false)
         }
       } catch (error) {
-        console.log("error -->", error)
         setLoading(false)
         setIsError(true)
       }

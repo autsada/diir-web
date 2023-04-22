@@ -36,6 +36,7 @@ export default function AppLayoutClient({ accountData }: Props) {
     setAuthModalVisible(false)
   }, [])
 
+  console.log("data: ", accountData)
   return (
     <>
       <div className="fixed z-0 top-0 left-0 right-0">

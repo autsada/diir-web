@@ -11,3 +11,11 @@ export function getCountryNames() {
       return c1Name > c2Name ? 1 : c1Name < c2Name ? -1 : 0
     })
 }
+
+/**
+ * A helper function to wait
+ * @param time milliseconds
+ */
+export function wait(time: number) {
+  return new Promise((resolve) => setTimeout(resolve, time))
+}

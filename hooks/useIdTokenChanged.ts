@@ -12,12 +12,12 @@ export function useIdTokenChanged(walletAddress?: string, signedMsg?: string) {
   useEffect(() => {
     let unsubscribe: Unsubscribe | undefined = undefined
 
-    if (walletAddress) {
+    if (walletAddress && signedMsg) {
       unsubscribe = firebaseAuth.onIdTokenChanged(async (user) => {
         if (user) {
           const token = await user.getIdToken()
           setIdToken(token)
-          setCookie("dtoken", `${token}  :::${walletAddress} ${signedMsg}`)
+          setCookie("dtoken", `${token}  :::${signedMsg} ${walletAddress}`)
         } else {
           setIdToken(undefined)
         }

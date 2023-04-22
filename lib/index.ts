@@ -1,6 +1,6 @@
 import { cookies } from "next/headers"
 
-import { getMyAccount } from "@/graphql"
+import { createAccount, getMyAccount } from "@/graphql"
 
 export async function getAccount() {
   try {
@@ -10,9 +10,14 @@ export async function getAccount() {
     if (!token || !token.value) return null
     const values = token.value.split("  :::")
     const idToken = values[0]
-    const address = values[1]
+    const message = values[1]
 
-    const data = await getMyAccount(idToken, address)
+    const data = await getMyAccount(idToken, message)
+
+    // If no account found, create a new account
+    if (!data?.account) {
+      const result = await createAccount(idToken)
+    }
 
     return data
   } catch (error) {

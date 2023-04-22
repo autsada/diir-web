@@ -13,7 +13,7 @@ import ActiveLink from "./ActiveLink"
 export default function SideBar() {
   return (
     <div>
-      <div className="mb-5">
+      <div className="mb-3">
         <ActiveLink
           name="Home"
           href="/"
@@ -22,7 +22,7 @@ export default function SideBar() {
           isVertical={true}
         />
       </div>
-      <div className="mb-5">
+      <div className="mb-3">
         <ActiveLink
           name="Shorts"
           href="/shorts"
@@ -31,7 +31,7 @@ export default function SideBar() {
           isVertical={true}
         />
       </div>
-      <div className="mb-5">
+      <div className="mb-3">
         <ActiveLink
           name="Podcasts"
           href="/podcasts"
@@ -40,7 +40,7 @@ export default function SideBar() {
           isVertical={true}
         />
       </div>
-      <div className="mb-5">
+      <div className="mb-3">
         <ActiveLink
           name="Blogs"
           href="/blogs"
