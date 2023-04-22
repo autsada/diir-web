@@ -18,8 +18,9 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth"
 import type { ConfirmationResult } from "firebase/auth"
 
 import { OtpInput } from "./OtpInput"
+import Mask from "../Mask"
 import { firebaseAuth } from "@/firebase/config"
-import { getCountryNames } from "@/lib"
+import { getCountryNames } from "@/lib/helpers"
 
 export default function PhoneAuth() {
   const [country, setCountry] = useState<Country>("TH")
@@ -118,7 +119,6 @@ export default function PhoneAuth() {
       const widgetId = await recaptchaVerifier.render()
       window.widgetId = widgetId
     } catch (error) {
-      console.log("error -->", error)
       setRequestError("Error attempting to send OTP, please try again.")
       setRequestOtpLoading(false)
       if (isOtpSent) setIsOtpSent(false)
@@ -153,27 +153,13 @@ export default function PhoneAuth() {
     }
   }
 
-  // When id token changed
-  useEffect(() => {
-    const unsubscribe = firebaseAuth.onIdTokenChanged(async (user) => {
-      if (user) {
-        console.log("user: ", user)
-        console.log("token: ", await user.getIdToken())
-      } else {
-        console.log("no user")
-      }
-    })
-
-    return unsubscribe
-  }, [])
-
   return (
     <>
       <div className="mt-8 py-5 text-center">
         <h4>Sign in with Phone</h4>
       </div>
 
-      <div className="mt-5 px-10">
+      <div className="mt-5 px-10 sm:px-14">
         {/* Step 1 Request Code */}
         <div className="relative">
           <div className="border border-orange-400 rounded-lg">
@@ -253,8 +239,6 @@ export default function PhoneAuth() {
           >
             Get Code
           </button>
-          {/* Prevent users interaction during verifying code */}
-          {verifyOtpLoading && <div className="absolute z-20 inset-0" />}
         </div>
 
         {/* Step 2 Confirm Code */}
@@ -266,8 +250,6 @@ export default function PhoneAuth() {
                 valueLen={6}
                 onChange={handleOtpChange}
               />
-              {/* Prevent users interaction during verifying otp */}
-              {verifyOtpLoading && <div className="absolute inset-0"></div>}
             </div>
 
             <button
@@ -295,6 +277,9 @@ export default function PhoneAuth() {
           </div>
         )}
       </div>
+
+      {/* Prevent user interaction while loading */}
+      {(requestOtpLoading || verifyOtpLoading) && <Mask />}
     </>
   )
 }

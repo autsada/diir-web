@@ -6,17 +6,22 @@ import PulseLoader from "react-spinners/PulseLoader"
 interface Props {
   loading: boolean
   size?: number
+  color?: string
 }
 
-export default function ButtonLoader({ loading, size = 12 }: Props) {
+export default function ButtonLoader({
+  loading,
+  size = 12,
+  color = "#fff",
+}: Props) {
   return (
     <PulseLoader
-      color="#fff"
+      color={color}
       loading={loading}
       cssOverride={{
         display: "block",
         margin: "0 auto",
-        borderColor: "#fff",
+        borderColor: color,
       }}
       size={size}
       aria-label="Loading Spinner"

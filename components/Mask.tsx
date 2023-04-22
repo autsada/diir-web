@@ -9,6 +9,9 @@ interface Props {
 
 export default function Mask({ backgroundColor, opacity }: Props) {
   return (
-    <div className="absolute inset-0" style={{ backgroundColor, opacity }} />
+    <div
+      className="absolute z-50 inset-0"
+      style={{ backgroundColor, opacity }}
+    />
   )
 }

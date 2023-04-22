@@ -7,6 +7,7 @@ import MainNav from "./MainNav"
 import { getMyAccount } from "@/graphql"
 import type { ValueType } from "@/types"
 import AuthModal from "../auth/AuthModal"
+import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
 
 interface Props {
   accountData: ValueType<ReturnType<typeof getMyAccount>> | null
@@ -15,6 +16,9 @@ interface Props {
 export default function AppLayoutClient({ accountData }: Props) {
   const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
   const [authModalVisible, setAuthModalVisible] = useState(false)
+
+  // When id token change, this hook will set the token as a cookie
+  const { idToken } = useIdTokenChanged()
 
   const openLeftDrawer = useCallback(() => {
     setLeftDrawerVisible(true)
@@ -46,7 +50,9 @@ export default function AppLayoutClient({ accountData }: Props) {
 
       <LeftDrawer isOpen={leftDrawerVisible} closeDrawer={closeLeftDrawer} />
 
-      <AuthModal visible={authModalVisible} closeModal={closeAuthModal} />
+      {!idToken && (
+        <AuthModal visible={authModalVisible} closeModal={closeAuthModal} />
+      )}
     </>
   )
 }

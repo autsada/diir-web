@@ -4,9 +4,10 @@ import { MdKeyboardBackspace } from "react-icons/md"
 import ModalWrapper from "../ModalWrapper"
 import CloseButton from "../CloseButton"
 import SelectAuth from "./SelectAuth"
-import type { AuthMethod } from "./SelectAuth"
-import { useWindowDimension } from "@/hooks/useWindowDimension"
 import PhoneAuth from "./PhoneAuth"
+import EmailAuth from "./EmailAuth"
+import { useWindowDimension } from "@/hooks/useWindowDimension"
+import type { AuthMethod } from "./SelectAuth"
 
 interface Props {
   visible: boolean
@@ -52,6 +53,7 @@ export default function AuthModal({ visible, closeModal }: Props) {
             />
 
             {authMethod === "phone" && <PhoneAuth />}
+            {authMethod === "email" && <EmailAuth />}
           </>
         ) : (
           <SelectAuth selectMethod={selectMethod} />
