@@ -7,7 +7,6 @@ export async function getAccount() {
     const cookieStore = cookies()
     const token = cookieStore.get("dtoken")
 
-    console.log("token: ", token)
     if (!token || !token.value) return null
     const values = token.value.split("  :::")
     const idToken = values[0]

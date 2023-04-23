@@ -20,10 +20,10 @@ export default function EmailAuth() {
   }
 
   async function sendSignInLink(email: string) {
-    // const url = process.env.NEXT_PUBLIC_DIIR_URL_TEST || "http://localhost:3000"
-    const url =
-      process.env.NEXT_PUBLIC_DIIR_URL_TEST ||
-      "https://b46d-124-120-252-187.ngrok-free.app"
+    const url = process.env.NEXT_PUBLIC_DIIR_URL_TEST || "http://localhost:3000"
+    // const url =
+    //   process.env.NEXT_PUBLIC_DIIR_URL_TEST ||
+    //   "https://b46d-124-120-252-187.ngrok-free.app"
 
     const actionCodeSettings = {
       url: `${url}/auth/email/verify`,
