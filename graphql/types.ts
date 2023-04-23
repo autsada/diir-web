@@ -1,4 +1,8 @@
-import type { NexusGenFieldTypes, NexusGenArgTypes } from "./typegen"
+import type {
+  NexusGenFieldTypes,
+  NexusGenArgTypes,
+  NexusGenObjects,
+} from "./typegen"
 
 export type QueryReturnType<T extends keyof NexusGenFieldTypes["Query"]> = {
   [k in T]: NexusGenFieldTypes["Query"][T]
@@ -12,3 +16,5 @@ export type MutationReturnType<T extends keyof NexusGenFieldTypes["Mutation"]> =
   }
 export type MutationArgsType<T extends keyof NexusGenArgTypes["Mutation"]> =
   NexusGenArgTypes["Mutation"][T]
+
+export type Station = NexusGenObjects["Station"]

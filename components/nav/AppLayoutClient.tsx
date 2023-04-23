@@ -1,32 +1,47 @@
 "use client"
 
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState, useEffect } from "react"
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
 
-import LeftDrawer from "./LeftDrawer"
 import MainNav from "./MainNav"
-import { getMyAccount } from "@/graphql"
-import type { ValueType } from "@/types"
 import AuthModal from "../auth/AuthModal"
-import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
+import LeftDrawer from "./LeftDrawer"
+import RightDrawer from "./RightDrawer"
 import SideBar from "./SideBar"
+import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
+import type { AccountData } from "@/types"
 
 interface Props {
-  accountData: ValueType<ReturnType<typeof getMyAccount>> | null
+  accountData: AccountData
 }
 
 export default function AppLayoutClient({ accountData }: Props) {
-  const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
   const [authModalVisible, setAuthModalVisible] = useState(false)
+  const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
+  const [rightDrawerVisible, setRightDrawerVisible] = useState(false)
 
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const { idToken } = useIdTokenChanged()
 
-  const openLeftDrawer = useCallback(() => {
-    setLeftDrawerVisible(true)
-  }, [])
+  // When idToken changed, refresh the route
+  useEffect(() => {
+    if (idToken) {
+      router.refresh()
+    }
+  }, [idToken, router])
 
-  const closeLeftDrawer = useCallback(() => {
-    setLeftDrawerVisible(false)
-  }, [])
+  // Close drawers when navigate finished
+  useEffect(() => {
+    const url = pathname + searchParams.toString()
+
+    // You can now use the current URL
+    if (url) {
+      setLeftDrawerVisible(false)
+      setRightDrawerVisible(false)
+    }
+  }, [pathname, searchParams])
 
   const openAuthModal = useCallback(() => {
     setAuthModalVisible(true)
@@ -36,13 +51,30 @@ export default function AppLayoutClient({ accountData }: Props) {
     setAuthModalVisible(false)
   }, [])
 
-  console.log("data: ", accountData)
+  const openLeftDrawer = useCallback(() => {
+    setLeftDrawerVisible(true)
+  }, [])
+
+  const closeLeftDrawer = useCallback(() => {
+    setLeftDrawerVisible(false)
+  }, [])
+
+  const openRightDrawer = useCallback(() => {
+    setRightDrawerVisible(true)
+  }, [])
+
+  const closeRightDrawer = useCallback(() => {
+    setRightDrawerVisible(false)
+  }, [])
+
   return (
     <>
       <div className="fixed z-0 top-0 left-0 right-0">
         <MainNav
-          openLeftDrawer={openLeftDrawer}
+          accountData={accountData}
           openAuthModal={openAuthModal}
+          openLeftDrawer={openLeftDrawer}
+          openRightDrawer={openRightDrawer}
         />
       </div>
 
@@ -51,6 +83,11 @@ export default function AppLayoutClient({ accountData }: Props) {
       </div>
 
       <LeftDrawer isOpen={leftDrawerVisible} closeDrawer={closeLeftDrawer} />
+      <RightDrawer
+        profile={accountData?.defaultStation}
+        isOpen={rightDrawerVisible}
+        closeDrawer={closeRightDrawer}
+      />
 
       {!idToken && (
         <AuthModal visible={authModalVisible} closeModal={closeAuthModal} />

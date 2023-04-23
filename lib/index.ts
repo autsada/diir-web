@@ -16,7 +16,7 @@ export async function getAccount() {
 
     // If no account found, create a new account
     if (!data?.account) {
-      const result = await createAccount(idToken)
+      data.account = await createAccount(idToken)
     }
 
     return data
