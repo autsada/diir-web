@@ -1,12 +1,14 @@
-import React from "react"
+import React, { useCallback, useState } from "react"
 import { IoSettingsOutline, IoSettings } from "react-icons/io5"
 import { HiOutlineRadio, HiRadio } from "react-icons/hi2"
 import { useRouter } from "next/navigation"
 
 import ActiveLink from "./ActiveLink"
 import Backdrop from "../Backdrop"
-import type { Station } from "@/graphql/types"
 import Avatar from "../Avatar"
+import { firebaseAuth } from "@/firebase/config"
+import type { Station } from "@/graphql/types"
+import ButtonLoader from "../ButtonLoader"
 
 interface Props {
   profile: Station | null | undefined // Profile is a logged in station
@@ -19,14 +21,26 @@ export default function RightDrawer({
   isOpen = false,
   closeDrawer,
 }: Props) {
+  const [loading, setLoading] = useState(false)
+
   const router = useRouter()
+
+  const signOut = useCallback(async () => {
+    try {
+      setLoading(true)
+      await firebaseAuth.signOut()
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }, [])
 
   return (
     <>
       <div
         className={`fixed z-50 ${
           isOpen ? "top-0 bottom-0 right-0" : "top-0 bottom-0 -right-[100%]"
-        } w-[300px] bg-white transition-all duration-300`}
+        } w-[260px] sm:w-[300px] bg-white transition-all duration-300`}
       >
         <div className="relative w-full px-5 flex items-center justify-center">
           <div className="absolute right-2 top-1 px-2">
@@ -59,7 +73,9 @@ export default function RightDrawer({
             />
           ) : (
             <button
+              type="button"
               className="btn-orange px-5 ml-5 rounded-full"
+              disabled={loading}
               onClick={() => router.push("/stations/create")}
             >
               Create Station
@@ -73,6 +89,17 @@ export default function RightDrawer({
             ActiveIcon={IoSettings}
             InActiveIcon={IoSettingsOutline}
           />
+        </div>
+
+        <div className="mt-20">
+          <button
+            type="button"
+            className="text-lg text-orange-500"
+            disabled={loading}
+            onClick={signOut}
+          >
+            {loading ? <ButtonLoader loading color="#f97316" /> : "Sign out"}
+          </button>
         </div>
       </div>
       <Backdrop visible={isOpen} onClick={closeDrawer} />

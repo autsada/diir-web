@@ -120,7 +120,7 @@ export default function VerifyEmail() {
             }`}
             disabled={!email || !href || loading}
           >
-            {true ? <ButtonLoader loading /> : "Get Link"}
+            {loading ? <ButtonLoader loading /> : "Verify"}
           </button>
         </div>
       </form>

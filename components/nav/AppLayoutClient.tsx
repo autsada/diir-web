@@ -27,8 +27,14 @@ export default function AppLayoutClient({ accountData }: Props) {
 
   // When idToken changed, refresh the route
   useEffect(() => {
-    if (idToken) {
-      router.refresh()
+    router.refresh()
+
+    if (!idToken) {
+      // Close right drawer when user signed out
+      setRightDrawerVisible(false)
+    } else {
+      // Close auth modal when user signed in
+      setAuthModalVisible(false)
     }
   }, [idToken, router])
 
@@ -89,9 +95,7 @@ export default function AppLayoutClient({ accountData }: Props) {
         closeDrawer={closeRightDrawer}
       />
 
-      {!idToken && (
-        <AuthModal visible={authModalVisible} closeModal={closeAuthModal} />
-      )}
+      <AuthModal visible={authModalVisible} closeModal={closeAuthModal} />
     </>
   )
 }

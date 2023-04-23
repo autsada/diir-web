@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { setCookie } from "cookies-next"
+import { setCookie, deleteCookie } from "cookies-next"
 import type { Unsubscribe } from "firebase/auth"
 
 import { firebaseAuth } from "@/firebase/config"
@@ -30,6 +30,7 @@ export function useIdTokenChanged(walletAddress?: string, signedMsg?: string) {
           setCookie("dtoken", token)
         } else {
           setIdToken(undefined)
+          deleteCookie("dtoken")
         }
       })
     }
