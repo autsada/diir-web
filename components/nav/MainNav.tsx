@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
 
@@ -21,8 +22,8 @@ export default function MainNav({
 }: Props) {
   return (
     <div className="h-[70px] px-2 flex items-center justify-between">
-      <div className="h-full w-[140px] min-w-[120px] sm:w-[150px] flex items-center">
-        <div className="h-full w-[50px] flex items-center sm:mr-4">
+      <div className="h-full w-[140px] min-w-[140px] flex items-center">
+        <div className="h-full w-[50px] flex items-center">
           <div className="cursor-pointer p-2 rounded-full hover:bg-gray-100">
             <RxHamburgerMenu
               size={28}
@@ -32,7 +33,9 @@ export default function MainNav({
           </div>
         </div>
         <div className="h-full ml-2 flex items-center justify-center bg-blue-200">
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
         </div>
       </div>
       <div className="h-full flex-grow flex items-center justify-center">
