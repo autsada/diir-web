@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 import {
   RiHome4Fill,
   RiHome4Line,
@@ -9,10 +10,11 @@ import { IoRadioOutline, IoRadio } from "react-icons/io5"
 import { AiOutlineRead, AiFillRead } from "react-icons/ai"
 
 import ActiveLink from "./ActiveLink"
+import UploadBtn from "@/app/UploadBtn"
 
 export default function SideBar() {
   return (
-    <div>
+    <>
       <div className="mb-3">
         <ActiveLink
           name="Home"
@@ -49,6 +51,9 @@ export default function SideBar() {
           isVertical={true}
         />
       </div>
-    </div>
+      <div className="py-5">
+        <UploadBtn />
+      </div>
+    </>
   )
 }

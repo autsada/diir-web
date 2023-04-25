@@ -21,7 +21,7 @@ export default function MainNav({
   openRightDrawer,
 }: Props) {
   return (
-    <div className="h-[70px] px-2 flex items-center justify-between">
+    <div className="h-[70px] px-2 flex items-center justify-between bg-white">
       <div className="h-full w-[140px] min-w-[140px] flex items-center">
         <div className="h-full w-[50px] flex items-center">
           <div className="cursor-pointer p-2 rounded-full hover:bg-gray-100">

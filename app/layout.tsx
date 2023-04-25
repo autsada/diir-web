@@ -1,3 +1,4 @@
+import UploadBtn from "./UploadBtn"
 import "./globals.css"
 
 import AppLayoutServer from "@/components/nav/AppLayoutServer"
@@ -23,11 +24,17 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="text-textRegular overflow-y-auto">
+      <body className="text-textRegular">
         {/* @ts-expect-error Async Server Component */}
         <AppLayoutServer />
 
-        <div className="pt-[70px] sm:ml-[100px]">{children}</div>
+        <div className="min-h-screen pt-[70px] sm:ml-[100px] overflow-y-auto">
+          {children}
+        </div>
+
+        <div className="fixed bottom-10 right-8 max-w-max sm:hidden">
+          <UploadBtn />
+        </div>
       </body>
     </html>
   )

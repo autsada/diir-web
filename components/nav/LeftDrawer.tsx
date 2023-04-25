@@ -11,6 +11,7 @@ import { AiOutlineRead, AiFillRead } from "react-icons/ai"
 import Logo from "./Logo"
 import ActiveLink from "./ActiveLink"
 import Backdrop from "../Backdrop"
+import UploadBtn from "@/app/UploadBtn"
 
 interface Props {
   isOpen: boolean
@@ -71,6 +72,9 @@ export default function LeftDrawer({ isOpen = false, closeDrawer }: Props) {
             ActiveIcon={AiFillRead}
             InActiveIcon={AiOutlineRead}
           />
+        </div>
+        <div className="py-5">
+          <UploadBtn />
         </div>
       </div>
       <Backdrop visible={isOpen} onClick={closeDrawer} />

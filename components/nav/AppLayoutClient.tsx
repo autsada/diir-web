@@ -84,7 +84,7 @@ export default function AppLayoutClient({ accountData }: Props) {
         />
       </div>
 
-      <div className="hidden w-[100px] fixed top-[70px] bottom-0 bg-white py-5 px-2 sm:block">
+      <div className="hidden w-[100px] fixed top-[70px] bottom-0 bg-white py-5 px-2 sm:block overflow-y-auto">
         <SideBar />
       </div>
 
