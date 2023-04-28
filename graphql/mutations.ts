@@ -10,3 +10,32 @@ export const CREATE_ACCOUNT_MUTATION = gql`
     }
   }
 `
+
+export const MINT_FIRST_STATION_NFT_MUTATION = gql`
+  mutation MintFirstStationNFT($input: MintStationNFTInput!) {
+    mintFirstStationNFT(input: $input) {
+      tokenId
+    }
+  }
+`
+
+export const MINT_STATION_NFT_MUTATION = gql`
+  mutation MintStationNFT($input: MintStationNFTInput!) {
+    mintStationNFT(input: $input) {
+      tokenId
+    }
+  }
+`
+
+export const CREATE_STATION_MUTATION = gql`
+  mutation CreateStation($input: CreateStationInput!) {
+    createStation(input: $input) {
+      id
+      name
+      displayName
+      owner
+      accountId
+      tokenId
+    }
+  }
+`

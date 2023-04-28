@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react"
+import Link from "next/link"
 import { IoSettingsOutline, IoSettings } from "react-icons/io5"
-import { HiOutlineRadio, HiRadio } from "react-icons/hi2"
-import { useRouter } from "next/navigation"
+import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
 
 import ActiveLink from "./ActiveLink"
 import Backdrop from "../Backdrop"
@@ -22,8 +22,6 @@ export default function RightDrawer({
   closeDrawer,
 }: Props) {
   const [loading, setLoading] = useState(false)
-
-  const router = useRouter()
 
   const signOut = useCallback(async () => {
     try {
@@ -54,33 +52,34 @@ export default function RightDrawer({
           </div>
           <div className="w-full py-8 px-5 flex items-center">
             <Avatar profile={profile} width={60} height={60} />
-            {profile && (
-              <div className="ml-3">
-                <h6>{profile?.displayName}</h6>
-                <h6>@{profile?.name}</h6>
-              </div>
-            )}
+            <div className="w-[100px] sm:w-[150px] pl-4">
+              {profile ? (
+                <div className="ml-3">
+                  <h6>{profile?.displayName}</h6>
+                  <h6>@{profile?.name}</h6>
+                </div>
+              ) : (
+                <div className="font-thin text-textLight">
+                  To start upload content, you will need to{" "}
+                  <Link href="/station">
+                    <span className="font-semibold text-textRegular cursor-pointer">
+                      create
+                    </span>
+                  </Link>{" "}
+                  a station.
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         <div className="w-full px-5 mt-5">
-          {profile ? (
-            <ActiveLink
-              name="Your Stations"
-              href="/stations"
-              ActiveIcon={HiRadio}
-              InActiveIcon={HiOutlineRadio}
-            />
-          ) : (
-            <button
-              type="button"
-              className="btn-orange px-5 ml-5 rounded-full"
-              disabled={loading}
-              onClick={() => router.push("/stations/create")}
-            >
-              Create Station
-            </button>
-          )}
+          <ActiveLink
+            name="Your Station"
+            href="/station"
+            ActiveIcon={MdVideoLibrary}
+            InActiveIcon={MdOutlineVideoLibrary}
+          />
         </div>
         <div className="w-full px-5 mt-5">
           <ActiveLink

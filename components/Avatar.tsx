@@ -20,11 +20,11 @@ export default function Avatar({ profile, width = 40, height = 40 }: Props) {
     >
       {!profile || !profile.image ? (
         !profile ? (
-          <div className="w-full h-full flex items-center justify-center bg-blue-500 text-white">
-            A
+          <div className="w-full h-full flex items-center justify-center bg-blue-500 text-white text-xs">
+            DiiR
           </div>
         ) : (
-          <div className="w-full h-full items-center justify-center bg-orange-500 text-white">
+          <div className="w-full h-full flex items-center justify-center bg-orange-500 text-white">
             {profile.displayName.slice(0, 1).toUpperCase()}
           </div>
         )

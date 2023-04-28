@@ -9,7 +9,7 @@ export default function CloseButton({ onClick, className }: Props) {
   return (
     <button
       type="submit"
-      className={`text-xl text-textLight ${className || ""}`}
+      className={`text-xl text-textExtraLight ${className || ""}`}
       onClick={onClick}
     >
       &#10005;

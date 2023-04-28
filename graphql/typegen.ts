@@ -41,9 +41,9 @@ export interface NexusGenInputs {
   CreateStationInput: {
     // input type
     accountId: string // String!
-    displayName: string // String!
     name: string // String!
     owner: string // String!
+    tokenId: number // Int!
   }
   CreateTipInput: {
     // input type
@@ -58,6 +58,11 @@ export interface NexusGenInputs {
   GetMyAccountInput: {
     // input type
     accountType: NexusGenEnums["AccountType"] // AccountType!
+  }
+  MintStationNFTInput: {
+    // input type
+    name: string // String!
+    to: string // String!
   }
   QueryByIdInput: {
     // input type
@@ -110,7 +115,7 @@ export interface NexusGenEnums {
     | "Vehicles"
     | "Women"
   CommentType: "COMMENT" | "PUBLISH"
-  PublishKind: "Adds" | "Blog" | "Video"
+  PublishKind: "Adds" | "Blog" | "Podcast" | "Short" | "Video"
   ThumbSource: "custom" | "generated"
 }
 
@@ -178,6 +183,10 @@ export interface NexusGenObjects {
     account?: NexusGenRootTypes["Account"] | null // Account
     defaultStation?: NexusGenRootTypes["Station"] | null // Station
   }
+  MintStationNFTResult: {
+    // root type
+    tokenId: number // Int!
+  }
   Mutation: {}
   PageInfo: {
     // root type
@@ -242,7 +251,7 @@ export interface NexusGenObjects {
     imageRef?: string | null // String
     name: string // String!
     owner: string // String!
-    tokenId?: string | null // String
+    tokenId?: number | null // Int
     updatedAt?: NexusGenScalars["DateTime"] | null // DateTime
   }
   Tip: {
@@ -336,6 +345,10 @@ export interface NexusGenFieldTypes {
     account: NexusGenRootTypes["Account"] | null // Account
     defaultStation: NexusGenRootTypes["Station"] | null // Station
   }
+  MintStationNFTResult: {
+    // field return type
+    tokenId: number // Int!
+  }
   Mutation: {
     // field return type
     cacheSession: NexusGenRootTypes["WriteResult"] // WriteResult!
@@ -345,6 +358,8 @@ export interface NexusGenFieldTypes {
     createStation: NexusGenRootTypes["Station"] | null // Station
     createTip: NexusGenRootTypes["Tip"] | null // Tip
     createUser: NexusGenRootTypes["AuthUser"] | null // AuthUser
+    mintFirstStationNFT: NexusGenRootTypes["MintStationNFTResult"] | null // MintStationNFTResult
+    mintStationNFT: NexusGenRootTypes["MintStationNFTResult"] | null // MintStationNFTResult
     sendTips: NexusGenRootTypes["SendTipsResult"] | null // SendTipsResult
     updatePublish: NexusGenRootTypes["Publish"] | null // Publish
     validateName: boolean // Boolean!
@@ -401,7 +416,7 @@ export interface NexusGenFieldTypes {
   Query: {
     // field return type
     fetchPublishes: Array<NexusGenRootTypes["Publish"] | null> // [Publish]!
-    getMyAccount: NexusGenRootTypes["GetAccountResult"] // GetAccountResult!
+    getMyAccount: NexusGenRootTypes["Account"] | null // Account
     getMyBalance: string // String!
     getPublishById: NexusGenRootTypes["Publish"] | null // Publish
     getStationById: NexusGenRootTypes["Station"] | null // Station
@@ -439,7 +454,7 @@ export interface NexusGenFieldTypes {
     name: string // String!
     owner: string // String!
     publishesCount: number // Int!
-    tokenId: string | null // String
+    tokenId: number | null // Int
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
   }
   Tip: {
@@ -526,6 +541,10 @@ export interface NexusGenFieldTypeNames {
     account: "Account"
     defaultStation: "Station"
   }
+  MintStationNFTResult: {
+    // field return type name
+    tokenId: "Int"
+  }
   Mutation: {
     // field return type name
     cacheSession: "WriteResult"
@@ -535,6 +554,8 @@ export interface NexusGenFieldTypeNames {
     createStation: "Station"
     createTip: "Tip"
     createUser: "AuthUser"
+    mintFirstStationNFT: "MintStationNFTResult"
+    mintStationNFT: "MintStationNFTResult"
     sendTips: "SendTipsResult"
     updatePublish: "Publish"
     validateName: "Boolean"
@@ -591,7 +612,7 @@ export interface NexusGenFieldTypeNames {
   Query: {
     // field return type name
     fetchPublishes: "Publish"
-    getMyAccount: "GetAccountResult"
+    getMyAccount: "Account"
     getMyBalance: "String"
     getPublishById: "Publish"
     getStationById: "Station"
@@ -629,7 +650,7 @@ export interface NexusGenFieldTypeNames {
     name: "String"
     owner: "String"
     publishesCount: "Int"
-    tokenId: "String"
+    tokenId: "Int"
     updatedAt: "DateTime"
   }
   Tip: {
@@ -682,6 +703,14 @@ export interface NexusGenArgTypes {
     createUser: {
       // args
       address: string // String!
+    }
+    mintFirstStationNFT: {
+      // args
+      input: NexusGenInputs["MintStationNFTInput"] // MintStationNFTInput!
+    }
+    mintStationNFT: {
+      // args
+      input: NexusGenInputs["MintStationNFTInput"] // MintStationNFTInput!
     }
     sendTips: {
       // args

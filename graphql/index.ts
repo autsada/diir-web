@@ -7,7 +7,12 @@ import type {
   MutationReturnType,
 } from "./types"
 import { GET_ACCOUNT_QUERY } from "./queries"
-import { CREATE_ACCOUNT_MUTATION } from "./mutations"
+import {
+  CREATE_ACCOUNT_MUTATION,
+  CREATE_STATION_MUTATION,
+  MINT_FIRST_STATION_NFT_MUTATION,
+  MINT_STATION_NFT_MUTATION,
+} from "./mutations"
 
 const { API_URL_DEV, API_URL_TEST, NODE_ENV } = process.env
 
@@ -20,14 +25,14 @@ const client = new GraphQLClient(`${apiURL}/graphql`, {
 
 /**
  * @dev This function will query a logged-in user's account from the database.
- * @param token {string} an id token from the auth system
+ * @param idToken {string} an id token from the auth system
  * @param message {string} a (signed message + wallet address) that used to authenticate users that sign in with digital wallet
  */
-export async function getMyAccount(token: string, message?: string) {
+export async function getMyAccount(idToken: string, message?: string) {
   const data = await client
     .setHeaders({
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${idToken}`,
       "auth-wallet-account": message || "",
     })
     .request<QueryReturnType<"getMyAccount">, QueryArgsType<"getMyAccount">>(
@@ -39,23 +44,105 @@ export async function getMyAccount(token: string, message?: string) {
 }
 
 /**
- * @param token {string} an id token from the auth system
- * @param message {string} a (signed message + wallet address) that used to authenticate users that sign in with digital wallet
+ * @param idToken {string} an id token from the auth system
+ * @param signature {string} a signature signed by a wallet
  */
-export async function createAccount(token: string, message?: string) {
+export async function createAccount(idToken: string, signature?: string) {
   const data = await client
     .setHeaders({
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      "auth-wallet-account": message || "",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
     })
     .request<
       MutationReturnType<"createAccount">,
       MutationArgsType<"createAccount">
     >(
       CREATE_ACCOUNT_MUTATION,
-      message ? { input: { accountType: "WALLET" } } : {}
+      signature ? { input: { accountType: "WALLET" } } : {}
     )
 
   return data?.createAccount
+}
+
+/**
+ * Mint Station NFT by admin
+ */
+export async function mintFirstStationNFT({
+  idToken,
+  to,
+  name,
+}: {
+  idToken: string
+  to: string
+  name: string
+}) {
+  const data = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+    })
+    .request<
+      MutationReturnType<"mintFirstStationNFT">,
+      MutationArgsType<"mintFirstStationNFT">
+    >(MINT_FIRST_STATION_NFT_MUTATION, { input: { to, name } })
+
+  return data?.mintFirstStationNFT
+}
+
+/**
+ * Mint Station NFT
+ */
+export async function mintStationNFT({
+  idToken,
+  to,
+  name,
+}: {
+  idToken: string
+  to: string
+  name: string
+}) {
+  const data = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+    })
+    .request<
+      MutationReturnType<"mintStationNFT">,
+      MutationArgsType<"mintStationNFT">
+    >(MINT_STATION_NFT_MUTATION, { input: { to, name } })
+
+  return data?.mintStationNFT
+}
+
+/**
+ * Create station in the database
+ */
+export async function createStation({
+  idToken,
+  owner,
+  accountId,
+  name,
+  tokenId,
+  signature,
+}: {
+  idToken: string
+  owner: string
+  accountId: string
+  name: string
+  tokenId: number // Station NFT token id
+  signature?: string
+}) {
+  const data = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      MutationReturnType<"createStation">,
+      MutationArgsType<"createStation">
+    >(CREATE_STATION_MUTATION, { input: { owner, accountId, name, tokenId } })
+
+  return data?.createStation
 }

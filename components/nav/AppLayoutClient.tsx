@@ -9,13 +9,13 @@ import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
 import SideBar from "./SideBar"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
-import type { AccountData } from "@/types"
+import type { Account } from "@/types"
 
 interface Props {
-  accountData: AccountData
+  account: Account | null
 }
 
-export default function AppLayoutClient({ accountData }: Props) {
+export default function AppLayoutClient({ account }: Props) {
   const [authModalVisible, setAuthModalVisible] = useState(false)
   const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
   const [rightDrawerVisible, setRightDrawerVisible] = useState(false)
@@ -77,7 +77,7 @@ export default function AppLayoutClient({ accountData }: Props) {
     <>
       <div className="fixed z-0 top-0 left-0 right-0">
         <MainNav
-          accountData={accountData}
+          account={account}
           openAuthModal={openAuthModal}
           openLeftDrawer={openLeftDrawer}
           openRightDrawer={openRightDrawer}
@@ -90,7 +90,7 @@ export default function AppLayoutClient({ accountData }: Props) {
 
       <LeftDrawer isOpen={leftDrawerVisible} closeDrawer={closeLeftDrawer} />
       <RightDrawer
-        profile={accountData?.defaultStation}
+        profile={account?.defaultStation}
         isOpen={rightDrawerVisible}
         closeDrawer={closeRightDrawer}
       />

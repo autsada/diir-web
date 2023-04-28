@@ -5,11 +5,11 @@ import TempAppLayout from "./TempAppLayout"
 import { getAccount } from "@/lib"
 
 export default async function AppLayoutServer() {
-  const accountData = await getAccount()
+  const account = await getAccount()
 
   return (
     <Suspense fallback={<TempAppLayout />}>
-      <AppLayoutClient accountData={accountData} />
+      <AppLayoutClient account={account} />
     </Suspense>
   )
 }

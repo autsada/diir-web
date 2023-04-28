@@ -4,11 +4,11 @@ import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
 
 import Logo from "./Logo"
-import type { AccountData } from "@/types"
+import type { Account } from "@/types"
 import Avatar from "../Avatar"
 
 interface Props {
-  accountData: AccountData
+  account: Account | null
   openAuthModal: () => void
   openLeftDrawer: () => void
   openRightDrawer: () => void
@@ -16,7 +16,7 @@ interface Props {
 
 export default function MainNav({
   openAuthModal,
-  accountData,
+  account,
   openLeftDrawer,
   openRightDrawer,
 }: Props) {
@@ -52,9 +52,9 @@ export default function MainNav({
         </div>
       </div>
       <div className="h-full w-[80px] flex items-center justify-end pr-2">
-        {accountData ? (
+        {account ? (
           <div onClick={openRightDrawer}>
-            <Avatar profile={accountData.defaultStation} />
+            <Avatar profile={account.defaultStation} />
           </div>
         ) : (
           <button
