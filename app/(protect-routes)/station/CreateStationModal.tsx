@@ -84,7 +84,7 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
   return (
     <>
       <Backdrop visible />
-      <div className="relative z-50 w-[100%] sm:w-[40%] lg:w-[30%] mx-auto p-10 bg-white rounded-xl text-center">
+      <div className="relative z-50 w-[100%] sm:w-[60%] md:w-[50%] lg:w-[35%] mx-auto p-10 bg-white rounded-xl text-center">
         <div className="absolute top-2 right-4">
           <CloseButton onClick={closeModal} className="text-base" />
         </div>
