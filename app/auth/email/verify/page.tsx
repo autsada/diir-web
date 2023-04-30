@@ -8,7 +8,7 @@ export default async function Verify() {
   const data = await getAccount()
 
   // If user already logged in, redirect to homepage
-  if (data?.account) {
+  if (data) {
     redirect("/")
   }
 

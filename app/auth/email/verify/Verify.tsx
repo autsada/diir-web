@@ -49,8 +49,9 @@ export default function VerifyEmail() {
           window?.localStorage?.removeItem(EMAIL_KEY)
           // Bring user to the home page, wait 0.5 second to make sure the cookie is set
           await wait(500)
+          // Refresh queries
+          router.refresh()
           router.replace("/")
-          // setLoading(false)
         }
       } catch (error) {
         setLoading(false)
