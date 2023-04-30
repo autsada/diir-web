@@ -1,5 +1,13 @@
-import React, { useState, ChangeEvent, useCallback, FormEvent } from "react"
+import React, {
+  useState,
+  ChangeEvent,
+  useCallback,
+  FormEvent,
+  useMemo,
+  useEffect,
+} from "react"
 import { useRouter } from "next/navigation"
+import _ from "lodash"
 // import Image from "next/image"
 // import Dropzone from "react-dropzone"
 // import { CiTrash } from "react-icons/ci"
@@ -19,6 +27,7 @@ interface Props {
 export default function CreateStationModal({ owner, closeModal }: Props) {
   const [name, setName] = useState("")
   const [nameError, setNameError] = useState("")
+  const [isNameValid, setIsNameValid] = useState<boolean>()
   const [loading, setLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   //   const [image, setImage] = useState<FileWithPrview>()
@@ -53,6 +62,30 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
 
   //     setImage(fileWithPreview)
   //   }, [])
+
+  const validateName = useCallback(async (n: string) => {
+    const result = await fetch(`/station/validate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: n }),
+    })
+
+    const data = await result.json()
+    setIsNameValid(data?.valid)
+  }, [])
+
+  const validateNameDebounce = useMemo(
+    () => _.debounce(validateName, 200),
+    [validateName]
+  )
+
+  useEffect(() => {
+    if (!nameError) {
+      validateNameDebounce(name)
+    }
+  }, [name, nameError, validateNameDebounce])
 
   async function onCreate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -97,12 +130,25 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
               placeholder="Station name"
               value={name}
               onChange={handleChange}
-              error={nameError}
+              error={
+                nameError ||
+                (typeof isNameValid === "boolean" && !isNameValid
+                  ? "This name is taken"
+                  : "")
+              }
               isMandatory={true}
             />
           </div>
 
-          <button type="submit" className="btn-dark w-full rounded-full">
+          <button
+            type="submit"
+            className={`btn-dark w-full rounded-full ${
+              nameError || !isNameValid
+                ? "opacity-30 cursor-not-allowed"
+                : "opacity-100"
+            }`}
+            disabled={!!nameError || !isNameValid}
+          >
             {loading ? <ButtonLoader loading /> : "Create"}
           </button>
           <p className="error">

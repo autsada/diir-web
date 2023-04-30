@@ -1,5 +1,14 @@
 import React from "react"
 
-export default function Settings() {
-  return <div>Settings</div>
+import { getAccount } from "@/lib"
+
+export default async function Settings() {
+  const data = await getAccount()
+
+  console.log("data: ", data)
+  return (
+    <>
+      <h5>Settings</h5>
+    </>
+  )
 }

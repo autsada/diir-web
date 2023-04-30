@@ -32,7 +32,7 @@ export default function MainNav({
             />
           </div>
         </div>
-        <div className="h-full ml-2 flex items-center justify-center bg-blue-200">
+        <div className="h-full ml-2 flex items-center justify-center">
           <Link href="/">
             <Logo />
           </Link>

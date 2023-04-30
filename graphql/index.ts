@@ -12,6 +12,7 @@ import {
   CREATE_STATION_MUTATION,
   MINT_FIRST_STATION_NFT_MUTATION,
   MINT_STATION_NFT_MUTATION,
+  VALIDATE_NAME_MUTATION,
 } from "./mutations"
 
 const { API_URL_DEV, API_URL_TEST, NODE_ENV } = process.env
@@ -63,6 +64,18 @@ export async function createAccount(idToken: string, signature?: string) {
     )
 
   return data?.createAccount
+}
+
+/**
+ * Validate station name
+ */
+export async function validateStationName(name: string) {
+  const data = await client.request<
+    MutationReturnType<"validateName">,
+    MutationArgsType<"validateName">
+  >(VALIDATE_NAME_MUTATION, { name })
+
+  return data?.validateName
 }
 
 /**

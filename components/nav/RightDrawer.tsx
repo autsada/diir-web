@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState, useEffect } from "react"
 import Link from "next/link"
 import { IoSettingsOutline, IoSettings } from "react-icons/io5"
 import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
@@ -27,6 +27,13 @@ export default function RightDrawer({
   const [loading, setLoading] = useState(false)
   const [stationsExpanded, setStationExpanded] = useState(false)
 
+  // Reset stations expanded state when the modal is close
+  useEffect(() => {
+    if (!isOpen) {
+      setStationExpanded(false)
+    }
+  }, [isOpen])
+
   const signOut = useCallback(async () => {
     try {
       setLoading(true)
@@ -50,9 +57,9 @@ export default function RightDrawer({
       <div
         className={`fixed z-50 ${
           isOpen ? "top-0 bottom-0 right-0" : "top-0 bottom-0 -right-[100%]"
-        } w-[260px] sm:w-[300px] bg-white transition-all duration-300`}
+        } w-[300px] bg-white transition-all duration-300`}
       >
-        <div className="relative w-full px-5 flex items-center justify-center">
+        <div className="relative w-full px-2 sm:px-5 flex items-center justify-center">
           <div
             className={`absolute ${
               !stationsExpanded ? "right-2" : "left-2"
@@ -70,15 +77,17 @@ export default function RightDrawer({
           <div className="w-full py-8 px-5 flex items-center">
             {!stationsExpanded && (
               <>
-                <Avatar profile={profile} width={60} height={60} />
-                <div className="w-[100px] sm:w-[150px] pl-4">
+                <div className="w-[60px]">
+                  <Avatar profile={profile} width={60} height={60} />
+                </div>
+                <div className="w-full ml-4">
                   {profile ? (
-                    <div className="ml-3">
+                    <>
                       <h6>{profile?.displayName}</h6>
                       <p className="text-textLight">@{profile?.name}</p>
-                    </div>
+                    </>
                   ) : (
-                    <div className="font-thin text-textLight">
+                    <div className="font-thin px-2 text-textLight">
                       To start upload content, you will need to{" "}
                       <Link href="/station">
                         <span className="font-semibold text-textRegular cursor-pointer">
@@ -94,7 +103,7 @@ export default function RightDrawer({
           </div>
         </div>
 
-        {stations.length > 1 && !stationsExpanded && (
+        {stations.length > 0 && !stationsExpanded && (
           <div className="relative px-5">
             <div
               className="px-5 flex items-center justify-between cursor-pointer py-2 hover:bg-gray-100 rounded-md"
@@ -145,6 +154,14 @@ export default function RightDrawer({
             {stations.map((st) => (
               <StationItem key={st.id} item={st} />
             ))}
+
+            <div className="mt-2">
+              <Link href="/settings">
+                <p className="font-light text-textLight hover:text-textExtraLight cursor-pointer">
+                  View all stations
+                </p>
+              </Link>
+            </div>
           </div>
         )}
       </div>

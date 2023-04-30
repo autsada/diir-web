@@ -12,14 +12,20 @@ export default function StationItem({ item }: Props) {
     <div className="p-2 flex items-center cursor-pointer rounded-lg hover:bg-gray-50">
       <Avatar profile={item} width={50} height={50} />
       <div className="ml-5 flex-grow">
-        <p className="text-sm text-textLight">{item?.displayName}</p>
-        <p className="text-sm text-textLight">@{item?.name}</p>
-        <div className="flex items-center">
+        <p className="text-sm">{item?.displayName}</p>
+        <p className="text-sm text-textExtraLight">@{item?.name}</p>
+        <div className="flex items-center mt-1">
           <p className="text-sm font-thin text-textExtraLight">
-            {item.followersCount} Followers
+            <span className="font-light text-textRegular">
+              {item.followersCount}
+            </span>{" "}
+            Followers
           </p>
           <p className="text-sm font-thin text-textExtraLight ml-2">
-            {item.publishesCount} Publishes
+            <span className="font-light text-textRegular">
+              {item.publishesCount}
+            </span>{" "}
+            Publishes
           </p>
         </div>
       </div>

@@ -11,6 +11,12 @@ export const CREATE_ACCOUNT_MUTATION = gql`
   }
 `
 
+export const VALIDATE_NAME_MUTATION = gql`
+  mutation ValidateName($name: String!) {
+    validateName(name: $name)
+  }
+`
+
 export const MINT_FIRST_STATION_NFT_MUTATION = gql`
   mutation MintFirstStationNFT($input: MintStationNFTInput!) {
     mintFirstStationNFT(input: $input) {
