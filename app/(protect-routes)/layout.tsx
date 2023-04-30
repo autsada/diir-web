@@ -8,11 +8,11 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const data = await getAccount()
+  const account = await getAccount()
 
-  if (!data) {
+  if (!account) {
     redirect("/")
   }
 
-  return <div className="w-full p-5">{children}</div>
+  return <div className="w-full px-4 py-2">{children}</div>
 }

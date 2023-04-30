@@ -34,3 +34,39 @@ export const GET_ACCOUNT_QUERY = gql`
     }
   }
 `
+
+export const GET_STATION_BY_ID_QUERY = gql`
+  query GetStationById($input: QueryByIdInput!) {
+    getStationById(input: $input) {
+      id
+      name
+      displayName
+      image
+      imageRef
+      bannerImage
+      bannerImageRef
+      accountId
+      owner
+      createdAt
+      followersCount
+      followingCount
+      publishesCount
+      isFollowing
+      isOwner
+      publishes {
+        id
+        thumbnail
+        title
+        createdAt
+        views
+        playback {
+          id
+          preview
+          duration
+          dash
+          hls
+        }
+      }
+    }
+  }
+`

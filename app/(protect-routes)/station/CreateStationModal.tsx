@@ -13,11 +13,11 @@ import _ from "lodash"
 // import { CiTrash } from "react-icons/ci"
 // import { BsUpload } from "react-icons/bs"
 
-import Backdrop from "@/components/Backdrop"
 import CloseButton from "@/components/CloseButton"
 import Input from "@/components/Input"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
+import ModalWrapper from "@/components/ModalWrapper"
 
 interface Props {
   owner: string
@@ -82,7 +82,7 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
   )
 
   useEffect(() => {
-    if (!nameError) {
+    if (name && !nameError) {
       validateNameDebounce(name)
     }
   }, [name, nameError, validateNameDebounce])
@@ -107,7 +107,6 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
       if (isError) setIsError(false)
       // Reload data to update the UI
       router.refresh()
-      closeModal()
     } catch (error) {
       setLoading(false)
       setIsError(false)
@@ -115,9 +114,8 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
   }
 
   return (
-    <>
-      <Backdrop visible />
-      <div className="relative z-50 w-[100%] sm:w-[60%] md:w-[50%] lg:w-[35%] mx-auto p-10 bg-white rounded-xl text-center">
+    <ModalWrapper visible withBackdrop>
+      <div className="relative z-50 w-[90%] sm:w-[60%] md:w-[50%] lg:w-[35%] mx-auto p-10 bg-white rounded-xl text-center">
         <div className="absolute top-2 right-4">
           <CloseButton onClick={closeModal} className="text-base" />
         </div>
@@ -157,6 +155,6 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
         </form>
       </div>
       {loading && <Mask />}
-    </>
+    </ModalWrapper>
   )
 }

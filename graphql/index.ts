@@ -6,7 +6,7 @@ import type {
   MutationArgsType,
   MutationReturnType,
 } from "./types"
-import { GET_ACCOUNT_QUERY } from "./queries"
+import { GET_ACCOUNT_QUERY, GET_STATION_BY_ID_QUERY } from "./queries"
 import {
   CREATE_ACCOUNT_MUTATION,
   CREATE_STATION_MUTATION,
@@ -158,4 +158,18 @@ export async function createStation({
     >(CREATE_STATION_MUTATION, { input: { owner, accountId, name, tokenId } })
 
   return data?.createStation
+}
+
+/**
+ * @dev This function will query a station by its id
+ */
+export async function getStationById(targetId: string, requestorId?: string) {
+  const data = await client.request<
+    QueryReturnType<"getStationById">,
+    QueryArgsType<"getStationById">
+  >(GET_STATION_BY_ID_QUERY, {
+    input: { targetId, requestorId: requestorId || null },
+  })
+
+  return data?.getStationById
 }

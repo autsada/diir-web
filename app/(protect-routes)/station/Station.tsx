@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useCallback, useState } from "react"
+import { useRouter } from "next/navigation"
 
 import CreateStationModal from "./CreateStationModal"
 import type { Account } from "@/graphql/types"
@@ -14,17 +15,19 @@ export default function Station({ account }: Props) {
     () => !account?.defaultStation
   )
 
-  const openModal = useCallback(() => {
-    setModalVisible(true)
-  }, [])
+  const router = useRouter()
 
   const closeModal = useCallback(() => {
     setModalVisible(false)
-  }, [])
+    router.back()
+  }, [router])
 
   return (
-    <div>
-      <h6>Station</h6>
+    <>
+      <h5>Create station</h5>
+      <p className="text-textExtraLight">
+        To start upload content, you need a station.
+      </p>
 
       {modalVisible && (
         <CreateStationModal
@@ -32,6 +35,6 @@ export default function Station({ account }: Props) {
           closeModal={closeModal}
         />
       )}
-    </div>
+    </>
   )
 }

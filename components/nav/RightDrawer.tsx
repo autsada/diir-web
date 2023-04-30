@@ -120,7 +120,7 @@ export default function RightDrawer({
             <div className="w-full px-5 mt-5">
               <ActiveLink
                 name="Your Station"
-                href="/station"
+                href={profile ? `/station/${profile.id}` : "/station"}
                 ActiveIcon={MdVideoLibrary}
                 InActiveIcon={MdOutlineVideoLibrary}
               />
