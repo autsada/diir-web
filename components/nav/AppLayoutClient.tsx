@@ -9,7 +9,7 @@ import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
 import SideBar from "./SideBar"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
-import type { Account } from "@/types"
+import type { Account } from "@/graphql/types"
 
 interface Props {
   account: Account | null
@@ -91,6 +91,7 @@ export default function AppLayoutClient({ account }: Props) {
       <LeftDrawer isOpen={leftDrawerVisible} closeDrawer={closeLeftDrawer} />
       <RightDrawer
         profile={account?.defaultStation}
+        stations={account?.stations || []}
         isOpen={rightDrawerVisible}
         closeDrawer={closeRightDrawer}
       />

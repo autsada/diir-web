@@ -1,8 +1,5 @@
 import type { RecaptchaVerifier } from "firebase/auth"
 
-import { getMyAccount } from "@/graphql"
-import { NexusGenObjects } from "@/graphql/typegen"
-
 declare global {
   interface Window {
     recaptchaVerifier: RecaptchaVerifier
@@ -19,6 +16,3 @@ export type FileWithPrview = File & {
 }
 
 export type ValueType<T> = T extends Promise<infer U> ? U : T
-export type Account = NexusGenObjects["Account"] & {
-  stations: NexusGenObjects["Station"][]
-}

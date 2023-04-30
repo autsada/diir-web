@@ -6,7 +6,7 @@ import {
   mintFirstStationNFT,
   mintStationNFT,
 } from "@/graphql"
-import type { Account } from "@/types"
+import type { Account } from "@/graphql/types"
 
 export async function POST(req: Request) {
   const cookieStore = cookies()

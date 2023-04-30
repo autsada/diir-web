@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from "react"
 
 import CreateStationModal from "./CreateStationModal"
-import type { Account } from "@/types"
+import type { Account } from "@/graphql/types"
 
 interface Props {
   account: Account | null

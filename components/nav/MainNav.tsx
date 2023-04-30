@@ -4,7 +4,7 @@ import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
 
 import Logo from "./Logo"
-import type { Account } from "@/types"
+import type { Account } from "@/graphql/types"
 import Avatar from "../Avatar"
 
 interface Props {
@@ -54,7 +54,7 @@ export default function MainNav({
       <div className="h-full w-[80px] flex items-center justify-end pr-2">
         {account ? (
           <div onClick={openRightDrawer}>
-            <Avatar profile={account.defaultStation} />
+            <Avatar profile={account?.defaultStation} />
           </div>
         ) : (
           <button

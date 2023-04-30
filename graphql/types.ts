@@ -17,4 +17,12 @@ export type MutationReturnType<T extends keyof NexusGenFieldTypes["Mutation"]> =
 export type MutationArgsType<T extends keyof NexusGenArgTypes["Mutation"]> =
   NexusGenArgTypes["Mutation"][T]
 
-export type Station = NexusGenObjects["Station"]
+export type Account = NexusGenObjects["Account"] & {
+  defaultStation: Station
+  stations: Station[]
+}
+export type Station = NexusGenObjects["Station"] & {
+  followersCount: number
+  followingCount: number
+  publishesCount: number
+}
