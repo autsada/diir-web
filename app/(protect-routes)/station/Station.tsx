@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from "react"
 import { useRouter } from "next/navigation"
 
-import CreateStationModal from "./CreateStationModal"
+import CreateStationModal from "../settings/CreateStationModal"
 import type { Account } from "@/graphql/types"
 
 interface Props {

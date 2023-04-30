@@ -107,6 +107,7 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
       if (isError) setIsError(false)
       // Reload data to update the UI
       router.refresh()
+      closeModal()
     } catch (error) {
       setLoading(false)
       setIsError(false)

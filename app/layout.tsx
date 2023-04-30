@@ -1,4 +1,4 @@
-import UploadBtn from "./UploadBtn"
+import UploadBtn from "../components/UploadBtn"
 import "./globals.css"
 
 import AppLayoutServer from "@/components/nav/AppLayoutServer"

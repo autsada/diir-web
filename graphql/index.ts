@@ -6,7 +6,11 @@ import type {
   MutationArgsType,
   MutationReturnType,
 } from "./types"
-import { GET_ACCOUNT_QUERY, GET_STATION_BY_ID_QUERY } from "./queries"
+import {
+  GET_ACCOUNT_QUERY,
+  GET_BALANCE_QUERY,
+  GET_STATION_BY_ID_QUERY,
+} from "./queries"
 import {
   CREATE_ACCOUNT_MUTATION,
   CREATE_STATION_MUTATION,
@@ -172,4 +176,18 @@ export async function getStationById(targetId: string, requestorId?: string) {
   })
 
   return data?.getStationById
+}
+
+/**
+ * @dev This function will query a balance by address
+ */
+export async function getBalance(address: string) {
+  const data = await client.request<
+    QueryReturnType<"getBalance">,
+    QueryArgsType<"getBalance">
+  >(GET_BALANCE_QUERY, {
+    address,
+  })
+
+  return data?.getBalance
 }

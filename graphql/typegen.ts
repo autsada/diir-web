@@ -178,11 +178,6 @@ export interface NexusGenObjects {
     cursor?: string | null // String
     node?: NexusGenRootTypes["Station"] | null // Station
   }
-  GetAccountResult: {
-    // root type
-    account?: NexusGenRootTypes["Account"] | null // Account
-    defaultStation?: NexusGenRootTypes["Station"] | null // Station
-  }
   MintStationNFTResult: {
     // root type
     tokenId: number // Int!
@@ -290,7 +285,7 @@ export interface NexusGenFieldTypes {
     defaultStation: NexusGenRootTypes["Station"] | null // Station
     id: string // String!
     owner: string // String!
-    stations: Array<NexusGenRootTypes["Station"] | null> // [Station]!
+    stations: Array<NexusGenRootTypes["Station"] | null> | null // [Station]
     type: NexusGenEnums["AccountType"] // AccountType!
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
   }
@@ -339,11 +334,6 @@ export interface NexusGenFieldTypes {
     // field return type
     cursor: string | null // String
     node: NexusGenRootTypes["Station"] | null // Station
-  }
-  GetAccountResult: {
-    // field return type
-    account: NexusGenRootTypes["Account"] | null // Account
-    defaultStation: NexusGenRootTypes["Station"] | null // Station
   }
   MintStationNFTResult: {
     // field return type
@@ -416,8 +406,8 @@ export interface NexusGenFieldTypes {
   Query: {
     // field return type
     fetchPublishes: Array<NexusGenRootTypes["Publish"] | null> // [Publish]!
+    getBalance: string // String!
     getMyAccount: NexusGenRootTypes["Account"] | null // Account
-    getMyBalance: string // String!
     getPublishById: NexusGenRootTypes["Publish"] | null // Publish
     getStationById: NexusGenRootTypes["Station"] | null // Station
     listCommentsByCommentId: Array<NexusGenRootTypes["Comment"] | null> // [Comment]!
@@ -451,8 +441,10 @@ export interface NexusGenFieldTypes {
     image: string | null // String
     imageRef: string | null // String
     isFollowing: boolean | null // Boolean
+    isOwner: boolean | null // Boolean
     name: string // String!
     owner: string // String!
+    publishes: Array<NexusGenRootTypes["Publish"] | null> | null // [Publish]
     publishesCount: number // Int!
     tokenId: number | null // Int
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
@@ -536,11 +528,6 @@ export interface NexusGenFieldTypeNames {
     cursor: "String"
     node: "Station"
   }
-  GetAccountResult: {
-    // field return type name
-    account: "Account"
-    defaultStation: "Station"
-  }
   MintStationNFTResult: {
     // field return type name
     tokenId: "Int"
@@ -612,8 +599,8 @@ export interface NexusGenFieldTypeNames {
   Query: {
     // field return type name
     fetchPublishes: "Publish"
+    getBalance: "String"
     getMyAccount: "Account"
-    getMyBalance: "String"
     getPublishById: "Publish"
     getStationById: "Station"
     listCommentsByCommentId: "Comment"
@@ -647,8 +634,10 @@ export interface NexusGenFieldTypeNames {
     image: "String"
     imageRef: "String"
     isFollowing: "Boolean"
+    isOwner: "Boolean"
     name: "String"
     owner: "String"
+    publishes: "Publish"
     publishesCount: "Int"
     tokenId: "Int"
     updatedAt: "DateTime"
@@ -726,13 +715,13 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    getBalance: {
+      // args
+      address: string // String!
+    }
     getMyAccount: {
       // args
       input?: NexusGenInputs["GetMyAccountInput"] | null // GetMyAccountInput
-    }
-    getMyBalance: {
-      // args
-      address: string // String!
     }
     getPublishById: {
       // args

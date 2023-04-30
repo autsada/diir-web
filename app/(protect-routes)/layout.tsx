@@ -14,5 +14,5 @@ export default async function Layout({
     redirect("/")
   }
 
-  return <div className="w-full px-4 py-2">{children}</div>
+  return <div className="w-full px-4 py-2 sm:px-8">{children}</div>
 }

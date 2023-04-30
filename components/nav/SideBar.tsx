@@ -10,7 +10,7 @@ import { IoRadioOutline, IoRadio } from "react-icons/io5"
 import { AiOutlineRead, AiFillRead } from "react-icons/ai"
 
 import ActiveLink from "./ActiveLink"
-import UploadBtn from "@/app/UploadBtn"
+import UploadBtn from "@/components/UploadBtn"
 
 export default function SideBar() {
   return (

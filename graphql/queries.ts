@@ -70,3 +70,9 @@ export const GET_STATION_BY_ID_QUERY = gql`
     }
   }
 `
+
+export const GET_BALANCE_QUERY = gql`
+  query Query($address: String!) {
+    getBalance(address: $address)
+  }
+`

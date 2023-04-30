@@ -11,7 +11,7 @@ import { AiOutlineRead, AiFillRead } from "react-icons/ai"
 import Logo from "./Logo"
 import ActiveLink from "./ActiveLink"
 import Backdrop from "../Backdrop"
-import UploadBtn from "@/app/UploadBtn"
+import UploadBtn from "@/components/UploadBtn"
 
 interface Props {
   isOpen: boolean
