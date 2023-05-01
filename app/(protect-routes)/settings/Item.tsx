@@ -1,6 +1,7 @@
 import React from "react"
 
 import Avatar from "@/components/Avatar"
+import Online from "@/components/Online"
 import type { Station } from "@/graphql/types"
 
 interface Props {
@@ -23,15 +24,13 @@ export default function StationItem({
           : onRequestToSwitchStation.bind(undefined, item.id)
       }
     >
-      <Avatar profile={item} width={50} height={50} />
+      <div className="relative">
+        <Avatar profile={item} width={50} height={50} />
+        {defaultId === item?.id && <Online />}
+      </div>
       <div className="ml-5 flex-grow">
         <p>{item?.displayName}</p>
-        <p className="text-textExtraLight">
-          @{item?.name}{" "}
-          <span className="font-thin italic">
-            {item.id === defaultId ? "[default]" : ""}
-          </span>
-        </p>
+        <p className="text-textExtraLight">@{item?.name}</p>
         <div className="flex items-center gap-x-2 mt-1">
           <p className="font-light text-textExtraLight">
             <span className="text-textRegular">{item.followersCount}</span>{" "}

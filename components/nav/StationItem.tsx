@@ -1,16 +1,25 @@
 import React from "react"
 
 import Avatar from "../Avatar"
+import Online from "../Online"
 import type { Station } from "@/graphql/types"
 
 interface Props {
   item: Station
+  defaultId: string
+  switchStation: (address: string, stationId: string) => void
 }
 
-export default function StationItem({ item }: Props) {
+export default function StationItem({ item, defaultId, switchStation }: Props) {
   return (
-    <div className="p-2 flex items-center cursor-pointer rounded-lg hover:bg-gray-50">
-      <Avatar profile={item} width={50} height={50} />
+    <div
+      className="p-2 flex items-center cursor-pointer rounded-lg hover:bg-gray-50"
+      onClick={switchStation.bind(undefined, item.owner, item.id)}
+    >
+      <div className="relative">
+        <Avatar profile={item} width={50} height={50} />
+        {defaultId === item?.id && <Online />}
+      </div>
       <div className="ml-5 flex-grow">
         <p className="text-sm">{item?.displayName}</p>
         <p className="text-sm text-textExtraLight">@{item?.name}</p>

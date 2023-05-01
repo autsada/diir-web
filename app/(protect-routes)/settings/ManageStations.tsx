@@ -76,7 +76,7 @@ export default function ManageStations({
         <div className="sm:w-[30%]">
           <h6>Manage stations</h6>
           <button
-            className="btn-blue px-6 mx-0 my-5 rounded-full"
+            className="btn-blue px-6 my-5 sm:mx-0 rounded-full"
             onClick={openModal}
           >
             Create new station

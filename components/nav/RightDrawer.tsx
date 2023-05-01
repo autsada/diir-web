@@ -1,15 +1,17 @@
 import React, { useCallback, useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { IoSettingsOutline, IoSettings } from "react-icons/io5"
 import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
 
 import ActiveLink from "./ActiveLink"
 import Backdrop from "../Backdrop"
 import Avatar from "../Avatar"
-import { firebaseAuth } from "@/firebase/config"
-import type { Station } from "@/graphql/types"
 import ButtonLoader from "../ButtonLoader"
 import StationItem from "./StationItem"
+import Mask from "../Mask"
+import { firebaseAuth } from "@/firebase/config"
+import type { Station } from "@/graphql/types"
 
 interface Props {
   profile: Station | null | undefined // Profile is a logged in station
@@ -26,6 +28,9 @@ export default function RightDrawer({
 }: Props) {
   const [loading, setLoading] = useState(false)
   const [stationsExpanded, setStationExpanded] = useState(false)
+  const [switchLoading, setSwitchLoading] = useState(false)
+
+  const router = useRouter()
 
   // Reset stations expanded state when the modal is close
   useEffect(() => {
@@ -51,6 +56,29 @@ export default function RightDrawer({
   const unViewStations = useCallback(() => {
     setStationExpanded(false)
   }, [])
+
+  async function switchStation(address: string, stationId: string) {
+    try {
+      setSwitchLoading(true)
+      const result = await fetch(`/station/switch`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ address, stationId }),
+      })
+
+      const data = await result.json()
+      if (data?.status === "Ok") {
+        // Reload data
+        router.refresh()
+        setSwitchLoading(false)
+        closeDrawer()
+      }
+    } catch (error) {
+      setSwitchLoading(false)
+    }
+  }
 
   return (
     <>
@@ -152,7 +180,12 @@ export default function RightDrawer({
         ) : (
           <div className="px-5 flex flex-col gap-y-2 overflow-y-auto">
             {stations.map((st) => (
-              <StationItem key={st.id} item={st} />
+              <StationItem
+                key={st.id}
+                item={st}
+                defaultId={profile?.id || ""}
+                switchStation={switchStation}
+              />
             ))}
 
             <div className="mt-2">
@@ -166,6 +199,8 @@ export default function RightDrawer({
         )}
       </div>
       <Backdrop visible={isOpen} onClick={closeDrawer} />
+
+      {switchLoading && <Mask />}
     </>
   )
 }
