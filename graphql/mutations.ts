@@ -45,3 +45,11 @@ export const CREATE_STATION_MUTATION = gql`
     }
   }
 `
+
+export const CACHE_SESSION_MUTATION = gql`
+  mutation CacheSession($input: CacheSessionInput!) {
+    cacheSession(input: $input) {
+      status
+    }
+  }
+`

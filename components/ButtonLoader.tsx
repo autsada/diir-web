@@ -20,7 +20,8 @@ export default function ButtonLoader({
       loading={loading}
       cssOverride={{
         display: "block",
-        margin: "0 auto",
+        // margin: "0 auto",
+        margin: "5px 0 0 0",
         borderColor: color,
       }}
       size={size}

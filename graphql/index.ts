@@ -17,6 +17,7 @@ import {
   MINT_FIRST_STATION_NFT_MUTATION,
   MINT_STATION_NFT_MUTATION,
   VALIDATE_NAME_MUTATION,
+  CACHE_SESSION_MUTATION,
 } from "./mutations"
 
 const { API_URL_DEV, API_URL_TEST, NODE_ENV } = process.env
@@ -190,4 +191,29 @@ export async function getBalance(address: string) {
   })
 
   return data?.getBalance
+}
+
+/**
+ * Cache user session
+ */
+export async function cacheLoggedInSession({
+  idToken,
+  address,
+  stationId,
+}: {
+  idToken: string
+  address: string
+  stationId: string
+}) {
+  const data = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+    })
+    .request<
+      MutationReturnType<"cacheSession">,
+      MutationArgsType<"cacheSession">
+    >(CACHE_SESSION_MUTATION, { input: { address, stationId } })
+
+  return data?.cacheSession
 }

@@ -26,6 +26,7 @@ export default async function Settings() {
       <Suspense fallback={<ManageStationsTemplate />}>
         <ManageStations
           stations={account?.stations || []}
+          defaultStationId={account?.defaultStation?.id || ""}
           owner={account?.owner || ""}
         />
       </Suspense>
