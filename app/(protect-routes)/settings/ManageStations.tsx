@@ -24,16 +24,18 @@ export default function ManageStations({ stations, owner }: Props) {
 
   return (
     <>
-      <div className="mt-5">
-        <h6>Manage stations</h6>
-        <button
-          className="btn-blue px-6 mx-0 my-5 rounded-full"
-          onClick={openModal}
-        >
-          Create new station
-        </button>
+      <div className="mt-5 sm:flex sm:items-start">
+        <div className="sm:w-[30%]">
+          <h6>Manage stations</h6>
+          <button
+            className="btn-blue px-6 mx-0 my-5 rounded-full"
+            onClick={openModal}
+          >
+            Create new station
+          </button>
+        </div>
 
-        <div className="mt-2">
+        <div className="mt-2 sm:w-[70%]">
           {stations.length > 0 ? (
             <>
               <p className="text-textLight">All stations</p>
