@@ -9,15 +9,16 @@ export async function getAccount() {
     const token = cookieStore.get("dtoken")
 
     if (!token || !token.value) return null
-    const values = token.value.split("  :::")
-    const idToken = values[0]
-    const message = values[1]
+    const idToken = token.value
 
-    let account = (await getMyAccount(idToken, message)) as Account
+    const signedMessage = cookieStore.get("dsignature")
+    const signature = signedMessage?.value
+
+    let account = (await getMyAccount(idToken, signature)) as Account
 
     // If no account found, create a new account
     if (!account) {
-      account = (await createAccount(idToken)) as Account
+      account = (await createAccount(idToken, signature)) as Account
     }
 
     return account

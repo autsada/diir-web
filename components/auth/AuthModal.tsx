@@ -6,6 +6,7 @@ import CloseButton from "../CloseButton"
 import SelectAuth from "./SelectAuth"
 import PhoneAuth from "./PhoneAuth"
 import EmailAuth from "./EmailAuth"
+import WalletAuth from "./WalletAuth"
 import { useWindowDimension } from "@/hooks/useWindowDimension"
 import type { AuthMethod } from "./SelectAuth"
 
@@ -16,6 +17,7 @@ interface Props {
 
 export default function AuthModal({ visible, closeModal }: Props) {
   const [authMethod, setAuthMethod] = useState<AuthMethod>()
+
   const { windowWidth, windowHeight } = useWindowDimension()
 
   function closeAuthModal() {
@@ -54,6 +56,7 @@ export default function AuthModal({ visible, closeModal }: Props) {
 
             {authMethod === "phone" && <PhoneAuth />}
             {authMethod === "email" && <EmailAuth />}
+            {authMethod === "wallet" && <WalletAuth closeModal={closeModal} />}
           </>
         ) : (
           <SelectAuth selectMethod={selectMethod} />

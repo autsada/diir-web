@@ -33,18 +33,18 @@ const client = new GraphQLClient(`${apiURL}/graphql`, {
 /**
  * @dev This function will query a logged-in user's account from the database.
  * @param idToken {string} an id token from the auth system
- * @param message {string} a (signed message + wallet address) that used to authenticate users that sign in with digital wallet
+ * @param signature {string} a signature signed by a wallet
  */
-export async function getMyAccount(idToken: string, message?: string) {
+export async function getMyAccount(idToken: string, signature?: string) {
   const data = await client
     .setHeaders({
       "Content-Type": "application/json",
       Authorization: `Bearer ${idToken}`,
-      "auth-wallet-account": message || "",
+      "auth-wallet-account": signature || "",
     })
     .request<QueryReturnType<"getMyAccount">, QueryArgsType<"getMyAccount">>(
       GET_ACCOUNT_QUERY,
-      message ? { input: { accountType: "WALLET" } } : {}
+      signature ? { input: { accountType: "WALLET" } } : {}
     )
 
   return data?.getMyAccount

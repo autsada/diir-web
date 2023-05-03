@@ -2,6 +2,7 @@ import UploadBtn from "../components/UploadBtn"
 import "./globals.css"
 
 import AppLayoutServer from "@/components/nav/AppLayoutServer"
+import WalletClient from "./WalletClient"
 
 export const metadata = {
   title: "DiiR",
@@ -24,18 +25,20 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="text-textRegular">
-        {/* @ts-expect-error Async Server Component */}
-        <AppLayoutServer />
+      <WalletClient>
+        <body className="text-textRegular">
+          {/* @ts-expect-error Async Server Component */}
+          <AppLayoutServer />
 
-        <div className="min-h-screen pt-[70px] sm:ml-[100px] overflow-y-auto">
-          {children}
-        </div>
+          <div className="min-h-screen pt-[70px] sm:ml-[100px] overflow-y-auto">
+            {children}
+          </div>
 
-        <div className="fixed bottom-10 right-8 max-w-max sm:hidden">
-          <UploadBtn />
-        </div>
-      </body>
+          <div className="fixed bottom-10 right-8 max-w-max sm:hidden">
+            <UploadBtn />
+          </div>
+        </body>
+      </WalletClient>
     </html>
   )
 }

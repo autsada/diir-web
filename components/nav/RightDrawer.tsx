@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { IoSettingsOutline, IoSettings } from "react-icons/io5"
 import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
+import { useDisconnect } from "wagmi"
 
 import ActiveLink from "./ActiveLink"
 import Backdrop from "../Backdrop"
@@ -31,6 +32,7 @@ export default function RightDrawer({
   const [switchLoading, setSwitchLoading] = useState(false)
 
   const router = useRouter()
+  const { disconnect } = useDisconnect()
 
   // Reset stations expanded state when the modal is close
   useEffect(() => {
@@ -43,11 +45,14 @@ export default function RightDrawer({
     try {
       setLoading(true)
       await firebaseAuth.signOut()
+      if (disconnect) disconnect()
+      // Reload data
+      router.refresh()
       setLoading(false)
     } catch (error) {
       setLoading(false)
     }
-  }, [])
+  }, [disconnect, router])
 
   const viewStations = useCallback(() => {
     setStationExpanded(true)
@@ -200,7 +205,7 @@ export default function RightDrawer({
       </div>
       <Backdrop visible={isOpen} onClick={closeDrawer} />
 
-      {switchLoading && <Mask />}
+      {(switchLoading || loading) && <Mask />}
     </>
   )
 }

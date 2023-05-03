@@ -3,6 +3,8 @@ import Image from "next/image"
 
 import DiiRLogo from "../../public/logo.png"
 
-export default function Logo() {
-  return <Image src={DiiRLogo} alt="DiiR" className="h-[70px] cursor-pointer" />
+export default function Logo({ size = "h-[70px]" }: { size?: string }) {
+  return (
+    <Image src={DiiRLogo} alt="DiiR" className={`${size} cursor-pointer`} />
+  )
 }

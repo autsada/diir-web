@@ -13,13 +13,13 @@ export default function SelectAuth({ selectMethod }: Props) {
   return (
     <>
       <div className="w-[120px] max-h-max mx-auto">
-        <Logo />
+        <Logo size="h-[100px]" />
       </div>
 
       <div className="w-full px-8 sm:px-12">
-        <h4 className="text-center font-bold leading-10">
+        <h5 className="text-center font-bold leading-10">
           Creators/audience-centric content sharing platform.
-        </h4>
+        </h5>
       </div>
 
       <div className="mt-10">
