@@ -5,12 +5,13 @@ import { signInWithEmailLink, isSignInWithEmailLink } from "firebase/auth"
 import { firebaseAuth } from "@/firebase/config"
 
 import PageLoaderWithInfo from "@/components/PageLoaderWithInfo"
-import { EMAIL_KEY } from "@/lib/constants"
 import ModalWrapper from "@/components/ModalWrapper"
 import EmailInput from "@/components/auth/EmailInput"
-import { useRouter } from "next/navigation"
+import PageLoader from "@/components/PageLoader"
 import ButtonLoader from "@/components/ButtonLoader"
+import { useRouter } from "next/navigation"
 import { wait } from "@/lib/helpers"
+import { EMAIL_KEY } from "@/lib/constants"
 
 /**
  * @dev Verify user's email
@@ -44,13 +45,13 @@ export default function VerifyEmail() {
           setLoading(false)
         } else {
           await signInWithEmailLink(firebaseAuth, email, link)
-          setIsError(false)
           // Remove saved email in localstorage
           window?.localStorage?.removeItem(EMAIL_KEY)
           // Bring user to the home page, wait 0.5 second to make sure the cookie is set
           await wait(500)
           // Refresh queries
           router.refresh()
+          setIsError(false)
           router.replace("/")
         }
       } catch (error) {
@@ -97,34 +98,38 @@ export default function VerifyEmail() {
     )
 
   return (
-    <ModalWrapper visible>
-      <form
-        className="py-10 px-6 bg-white rounded-xl w-[90%] sm:w-[35%]"
-        onSubmit={verifyEmail.bind(undefined, email, href!)}
-      >
-        <div className="text-center mb-10">
-          <h5>Enter your email address</h5>
-        </div>
+    <>
+      <ModalWrapper visible>
+        <form
+          className="py-10 px-6 bg-white rounded-xl w-[90%] sm:w-[35%]"
+          onSubmit={verifyEmail.bind(undefined, email, href!)}
+        >
+          <div className="text-center mb-10">
+            <h5>Enter your email address</h5>
+          </div>
 
-        <div className="px-4 sm:px-10">
-          <EmailInput
-            placeholder="Email address"
-            value={email}
-            handleChange={onEmailChange}
-            disabled={loading}
-          />
+          <div className="px-4 sm:px-10">
+            <EmailInput
+              placeholder="Email address"
+              value={email}
+              handleChange={onEmailChange}
+              disabled={loading}
+            />
 
-          <button
-            type="submit"
-            className={`btn-orange w-full mt-10 mb-5 h-12 rounded-full text-lg ${
-              !email || !href || loading ? "opacity-40" : "opacity-100"
-            }`}
-            disabled={!email || !href || loading}
-          >
-            {loading ? <ButtonLoader loading /> : "Verify"}
-          </button>
-        </div>
-      </form>
-    </ModalWrapper>
+            <button
+              type="submit"
+              className={`btn-orange w-full mt-10 mb-5 h-12 rounded-full text-lg ${
+                !email || !href || loading ? "opacity-40" : "opacity-100"
+              }`}
+              disabled={!email || !href || loading}
+            >
+              {loading ? <ButtonLoader loading /> : "Verify"}
+            </button>
+          </div>
+        </form>
+      </ModalWrapper>
+
+      {loading && <PageLoader />}
+    </>
   )
 }

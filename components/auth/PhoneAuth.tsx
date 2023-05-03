@@ -15,12 +15,14 @@ import _ from "lodash"
 import { IoCaretDownOutline } from "react-icons/io5"
 import type { Country } from "react-phone-number-input"
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth"
+import { useRouter } from "next/navigation"
 import type { ConfirmationResult } from "firebase/auth"
 
 import { OtpInput } from "./OtpInput"
 import Mask from "../Mask"
+import PageLoader from "../PageLoader"
 import { firebaseAuth } from "@/firebase/config"
-import { getCountryNames } from "@/lib/helpers"
+import { getCountryNames, wait } from "@/lib/helpers"
 
 export default function PhoneAuth() {
   const [country, setCountry] = useState<Country>("TH")
@@ -34,6 +36,8 @@ export default function PhoneAuth() {
   const [userOtp, setUserOtp] = useState("")
   const [verifyOtpLoading, setVerifyOtpLoading] = useState(false)
   const [verifyError, setVerifyError] = useState("")
+
+  const router = useRouter()
 
   function selectCountry(e: ChangeEvent<HTMLSelectElement>) {
     setCountry(e.target.value as Country)
@@ -144,10 +148,12 @@ export default function PhoneAuth() {
       setVerifyOtpLoading(true)
       const result = await confirmationResult.confirm(userOtp)
 
-      console.log("result -->", result)
-      setVerifyOtpLoading(false)
+      if (result.user) {
+        await wait(500)
+        // Refresh queries
+        router.refresh()
+      }
     } catch (error) {
-      console.log("error -->", error)
       setVerifyOtpLoading(false)
       setVerifyError("Verify code failed")
     }
@@ -280,6 +286,9 @@ export default function PhoneAuth() {
 
       {/* Prevent user interaction while loading */}
       {(requestOtpLoading || verifyOtpLoading) && <Mask />}
+
+      {/* Show page loader during account creation */}
+      {verifyOtpLoading && <PageLoader />}
     </>
   )
 }

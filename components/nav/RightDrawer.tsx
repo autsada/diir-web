@@ -131,7 +131,7 @@ export default function RightDrawer({
           </div>
         </div>
 
-        {stations.length > 0 && !stationsExpanded && (
+        {stations.length > 1 && !stationsExpanded && (
           <div className="relative px-5">
             <div
               className="px-5 flex items-center justify-between cursor-pointer py-2 hover:bg-gray-100 rounded-md"

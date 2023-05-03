@@ -13,9 +13,10 @@ import type { Account } from "@/graphql/types"
 
 interface Props {
   account: Account | null
+  isAuthenticated: boolean // True when account is not null
 }
 
-export default function AppLayoutClient({ account }: Props) {
+export default function AppLayoutClient({ account, isAuthenticated }: Props) {
   const [authModalVisible, setAuthModalVisible] = useState(false)
   const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
   const [rightDrawerVisible, setRightDrawerVisible] = useState(false)
@@ -32,11 +33,19 @@ export default function AppLayoutClient({ account }: Props) {
     if (!idToken) {
       // Close right drawer when user signed out
       setRightDrawerVisible(false)
-    } else {
-      // Close auth modal when user signed in
+    }
+    // else {
+    //   // Close auth modal when user signed in
+    //   setAuthModalVisible(false)
+    // }
+  }, [idToken, router])
+
+  // Close auth modal when user is authenticated (account not null)
+  useEffect(() => {
+    if (isAuthenticated && authModalVisible) {
       setAuthModalVisible(false)
     }
-  }, [idToken, router])
+  }, [isAuthenticated, authModalVisible])
 
   // Close drawers when navigate finished
   useEffect(() => {
