@@ -1,31 +1,25 @@
 import React from "react"
-import { redirect } from "next/navigation"
 
 import { getAccount } from "@/lib"
-import { getStationById } from "@/graphql"
+import { getStationByName } from "@/graphql"
 import type { Station } from "@/graphql/types"
-import StationTemplate from "./StationTemplate"
 
-export default async function Station({
+export default async function Page({
   params,
 }: {
-  params: { id: string }
-  children: React.ReactNode
+  params: { station: string; tab: string }
 }) {
   const account = await getAccount()
-  const station = (await getStationById(
-    params.id,
+  const name = params.station.replace("%40", "")
+
+  // Query station by name
+  const station = (await getStationByName(
+    name,
     account?.defaultStation?.id
   )) as Station
 
-  if (!station) {
-    redirect("/settings")
-  }
-
   return (
     <>
-      <StationTemplate station={station} />
-
       <div className="mt-2">
         {station?.publishes.length === 0 ? (
           <h6 className="text-textLight text-center">No content found</h6>

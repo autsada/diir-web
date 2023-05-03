@@ -69,6 +69,11 @@ export interface NexusGenInputs {
     requestorId?: string | null // String
     targetId: string // String!
   }
+  QueryByNameInput: {
+    // input type
+    name: string // String!
+    requestorId?: string | null // String
+  }
   SendTipsInput: {
     // input type
     publishId: string // String!
@@ -410,6 +415,7 @@ export interface NexusGenFieldTypes {
     getMyAccount: NexusGenRootTypes["Account"] | null // Account
     getPublishById: NexusGenRootTypes["Publish"] | null // Publish
     getStationById: NexusGenRootTypes["Station"] | null // Station
+    getStationByName: NexusGenRootTypes["Station"] | null // Station
     listCommentsByCommentId: Array<NexusGenRootTypes["Comment"] | null> // [Comment]!
     listCommentsByPublishId: Array<NexusGenRootTypes["Comment"] | null> // [Comment]!
   }
@@ -603,6 +609,7 @@ export interface NexusGenFieldTypeNames {
     getMyAccount: "Account"
     getPublishById: "Publish"
     getStationById: "Station"
+    getStationByName: "Station"
     listCommentsByCommentId: "Comment"
     listCommentsByPublishId: "Comment"
   }
@@ -730,6 +737,10 @@ export interface NexusGenArgTypes {
     getStationById: {
       // args
       input: NexusGenInputs["QueryByIdInput"] // QueryByIdInput!
+    }
+    getStationByName: {
+      // args
+      input: NexusGenInputs["QueryByNameInput"] // QueryByNameInput!
     }
     listCommentsByCommentId: {
       // args

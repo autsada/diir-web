@@ -25,4 +25,9 @@ export type Station = NexusGenObjects["Station"] & {
   followersCount: number
   followingCount: number
   publishesCount: number
+  isFollowing: boolean
+  isOwner: boolean
+  publishes: Publish[]
 }
+
+export type Publish = NexusGenObjects["Publish"]

@@ -10,6 +10,7 @@ import {
   GET_ACCOUNT_QUERY,
   GET_BALANCE_QUERY,
   GET_STATION_BY_ID_QUERY,
+  GET_STATION_BY_NAME_QUERY,
 } from "./queries"
 import {
   CREATE_ACCOUNT_MUTATION,
@@ -177,6 +178,20 @@ export async function getStationById(targetId: string, requestorId?: string) {
   })
 
   return data?.getStationById
+}
+
+/**
+ * @dev This function will query a station by its name
+ */
+export async function getStationByName(name: string, requestorId?: string) {
+  const data = await client.request<
+    QueryReturnType<"getStationByName">,
+    QueryArgsType<"getStationByName">
+  >(GET_STATION_BY_NAME_QUERY, {
+    input: { name, requestorId: requestorId || null },
+  })
+
+  return data?.getStationByName
 }
 
 /**
