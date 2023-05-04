@@ -8,6 +8,7 @@ import React, {
 } from "react"
 import { useRouter } from "next/navigation"
 import _ from "lodash"
+import { useContractWrite } from "wagmi"
 // import Image from "next/image"
 // import Dropzone from "react-dropzone"
 // import { CiTrash } from "react-icons/ci"
@@ -19,6 +20,10 @@ import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
 import ModalWrapper from "@/components/ModalWrapper"
 import type { Account } from "@/graphql/types"
+import {
+  usePrepareStationContractWrite,
+  useStationMintedEvent,
+} from "@/hooks/contracts/useStation"
 
 interface Props {
   account: Account
@@ -36,6 +41,21 @@ export default function CreateStationModal({ account, closeModal }: Props) {
   //   const [imageError, setImageError] = useState("")
 
   const router = useRouter()
+  const { config } = usePrepareStationContractWrite(
+    account?.owner,
+    name,
+    !!isNameValid
+  )
+  const { write, isError: isWriteError } = useContractWrite(config)
+
+  // For direct mint, we will need to listen to event and call the callback function upon the event is emited.
+  const onMintedCallback = useCallback(() => {
+    // Reload data to update the UI
+    router.refresh()
+    setLoading(false)
+    closeModal()
+  }, [router, closeModal])
+  useStationMintedEvent(name, onMintedCallback)
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value
@@ -94,14 +114,10 @@ export default function CreateStationModal({ account, closeModal }: Props) {
     if (!account || !name || name.length < 3 || name.length > 64) return
 
     try {
-      setLoading(true)
-
-      let tokenId: number | undefined = undefined
-
       // 1. Mint station NFT
-
       if (account?.stations?.length === 0 || account?.type === "TRADITIONAL") {
-        // First station, or `TRADITIONAL` account
+        setLoading(true)
+        // A. First station, or `TRADITIONAL` account
         const result = await fetch(`/station/mint`, {
           method: "POST",
           headers: {
@@ -111,34 +127,35 @@ export default function CreateStationModal({ account, closeModal }: Props) {
         })
 
         const data = await result.json()
-        tokenId = data?.tokenId
-      } else {
-        // Not the first station and `WALLET` ACCOUNT
-        console.log("second -->")
-      }
+        const tokenId = data?.tokenId
+        if (tokenId) {
+          // 2. Create a station in the database
+          await fetch(`/station/create`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, tokenId }),
+          })
 
-      if (tokenId) {
-        // 2. Create a station in the database
-        await fetch(`/station/create`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, tokenId }),
-        })
-
-        setLoading(false)
-        if (isError) setIsError(false)
-        // Reload data to update the UI
-        router.refresh()
-        closeModal()
+          setLoading(false)
+          if (isError) setIsError(false)
+          // Reload data to update the UI
+          router.refresh()
+          closeModal()
+        } else {
+          // Error case
+          setLoading(false)
+          setIsError(true)
+        }
       } else {
-        // Error case
-        setLoading(false)
-        setIsError(true)
+        // B. Direct mint for Not the first station and `WALLET` ACCOUNT
+        if (!write) return
+        // Set loading to true to update the UI
+        setLoading(true)
+        write()
       }
     } catch (error) {
-      console.log("error: -->", error)
       setLoading(false)
       setIsError(false)
     }
@@ -176,12 +193,12 @@ export default function CreateStationModal({ account, closeModal }: Props) {
                 ? "opacity-30 cursor-not-allowed"
                 : "opacity-100"
             }`}
-            disabled={!!nameError || !isNameValid}
+            disabled={!!nameError || !isNameValid || loading}
           >
             {loading ? <ButtonLoader loading /> : "Create"}
           </button>
           <p className="error">
-            {isError ? "Create station failed" : <>&nbsp;</>}
+            {isError || isWriteError ? "Create station failed" : <>&nbsp;</>}
           </p>
         </form>
       </div>

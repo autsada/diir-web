@@ -7,7 +7,7 @@ import StationItem from "./Item"
 import CreateStationModal from "./CreateStationModal"
 import ConfirmModal from "@/components/ConfirmModal"
 import Mask from "@/components/Mask"
-import type { Station, Account } from "@/graphql/types"
+import type { Account } from "@/graphql/types"
 
 interface Props {
   account: Account
@@ -85,7 +85,7 @@ export default function ManageStations({
           </button>
         </div>
 
-        <div className="mt-2 sm:w-[60%]">
+        <div className="mt-2 pb-5 sm:w-[60%]">
           {stations.length > 0 ? (
             <>
               <p className="text-textLight">All stations</p>
