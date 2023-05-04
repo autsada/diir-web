@@ -221,22 +221,27 @@ export async function getBalance(address: string) {
  */
 export async function cacheLoggedInSession({
   idToken,
+  signature,
   address,
   stationId,
+  accountId,
 }: {
   idToken: string
+  signature?: string
   address: string
   stationId: string
+  accountId: string
 }) {
   const data = await client
     .setHeaders({
       "Content-Type": "application/json",
       Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
     })
     .request<
       MutationReturnType<"cacheSession">,
       MutationArgsType<"cacheSession">
-    >(CACHE_SESSION_MUTATION, { input: { address, stationId } })
+    >(CACHE_SESSION_MUTATION, { input: { address, stationId, accountId } })
 
   return data?.cacheSession
 }
