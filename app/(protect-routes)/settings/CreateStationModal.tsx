@@ -18,13 +18,14 @@ import Input from "@/components/Input"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
 import ModalWrapper from "@/components/ModalWrapper"
+import type { Account } from "@/graphql/types"
 
 interface Props {
-  owner: string
+  account: Account
   closeModal: () => void
 }
 
-export default function CreateStationModal({ owner, closeModal }: Props) {
+export default function CreateStationModal({ account, closeModal }: Props) {
   const [name, setName] = useState("")
   const [nameError, setNameError] = useState("")
   const [isNameValid, setIsNameValid] = useState<boolean>()
@@ -90,25 +91,54 @@ export default function CreateStationModal({ owner, closeModal }: Props) {
   async function onCreate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    if (!owner || !name || name.length > 64) return
+    if (!account || !name || name.length < 3 || name.length > 64) return
 
     try {
       setLoading(true)
-      const result = await fetch(`/station/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, to: owner }),
-      })
 
-      await result.json()
-      setLoading(false)
-      if (isError) setIsError(false)
-      // Reload data to update the UI
-      router.refresh()
-      closeModal()
+      let tokenId: number | undefined = undefined
+
+      // 1. Mint station NFT
+
+      if (account?.stations?.length === 0 || account?.type === "TRADITIONAL") {
+        // First station, or `TRADITIONAL` account
+        const result = await fetch(`/station/mint`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name }),
+        })
+
+        const data = await result.json()
+        tokenId = data?.tokenId
+      } else {
+        // Not the first station and `WALLET` ACCOUNT
+        console.log("second -->")
+      }
+
+      if (tokenId) {
+        // 2. Create a station in the database
+        await fetch(`/station/create`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, tokenId }),
+        })
+
+        setLoading(false)
+        if (isError) setIsError(false)
+        // Reload data to update the UI
+        router.refresh()
+        closeModal()
+      } else {
+        // Error case
+        setLoading(false)
+        setIsError(true)
+      }
     } catch (error) {
+      console.log("error: -->", error)
       setLoading(false)
       setIsError(false)
     }

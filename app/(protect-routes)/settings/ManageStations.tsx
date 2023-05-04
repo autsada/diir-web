@@ -7,16 +7,16 @@ import StationItem from "./Item"
 import CreateStationModal from "./CreateStationModal"
 import ConfirmModal from "@/components/ConfirmModal"
 import Mask from "@/components/Mask"
-import type { Station } from "@/graphql/types"
+import type { Station, Account } from "@/graphql/types"
 
 interface Props {
-  stations: Station[]
+  account: Account
   owner: string
   defaultStationId: string
 }
 
 export default function ManageStations({
-  stations,
+  account,
   defaultStationId,
   owner,
 }: Props) {
@@ -24,6 +24,8 @@ export default function ManageStations({
   const [switchToId, setSwitchToId] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+
+  const stations = account?.stations
 
   const router = useRouter()
 
@@ -73,7 +75,7 @@ export default function ManageStations({
   return (
     <>
       <div className="mt-5 sm:flex sm:items-start">
-        <div className="sm:w-[30%]">
+        <div className="sm:w-[40%]">
           <h6>Manage stations</h6>
           <button
             className="btn-blue px-6 my-5 sm:mx-0 rounded-full"
@@ -83,7 +85,7 @@ export default function ManageStations({
           </button>
         </div>
 
-        <div className="mt-2 sm:w-[70%]">
+        <div className="mt-2 sm:w-[60%]">
           {stations.length > 0 ? (
             <>
               <p className="text-textLight">All stations</p>
@@ -105,7 +107,7 @@ export default function ManageStations({
       </div>
 
       {modalVisible && (
-        <CreateStationModal owner={owner} closeModal={closeModal} />
+        <CreateStationModal account={account} closeModal={closeModal} />
       )}
 
       {switchToId && (

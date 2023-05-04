@@ -10,6 +10,7 @@ export default async function Layout({
 }) {
   const account = await getAccount()
 
+  console.log("account: ", account)
   if (!account) {
     redirect("/")
   }

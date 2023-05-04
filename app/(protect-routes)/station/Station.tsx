@@ -30,10 +30,7 @@ export default function Station({ account }: Props) {
       </p>
 
       {modalVisible && (
-        <CreateStationModal
-          owner={account?.owner || ""}
-          closeModal={closeModal}
-        />
+        <CreateStationModal account={account!} closeModal={closeModal} />
       )}
     </>
   )

@@ -1,8 +1,8 @@
 import { gql } from "graphql-request"
 
 export const GET_ACCOUNT_QUERY = gql`
-  query GetMyAccount {
-    getMyAccount {
+  query GetMyAccount($input: GetMyAccountInput!) {
+    getMyAccount(input: $input) {
       id
       owner
       type

@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import {
-  createStation,
-  getMyAccount,
-  mintFirstStationNFT,
-  mintStationNFT,
-} from "@/graphql"
+import { createStation, getMyAccount } from "@/graphql"
 import type { Account } from "@/graphql/types"
 
 export async function POST(req: Request) {
@@ -13,40 +8,31 @@ export async function POST(req: Request) {
   const token = cookieStore.get("dtoken")
 
   if (!token || !token.value) return null
-  const values = token.value.split("  :::")
-  const idToken = values[0]
-  const message = values[1]
-
+  const idToken = token.value
   if (!idToken) throw new Error("Unauthenticated")
 
+  const signedMessage = cookieStore.get("dsignature")
+  const signature = signedMessage?.value
+
   // Get an account
-  const account = (await getMyAccount(idToken, message)) as Account
+  const account = (await getMyAccount(idToken, signature)) as Account
   if (!account) throw new Error("No account found")
 
-  const { to, name } = (await req.json()) as { name: string; to: string }
-
-  // 1. Mint Station NFT
-  let tokenId: number | undefined = undefined
-
-  if (account.stations.length === 0) {
-    const data = await mintFirstStationNFT({ idToken, to, name })
-    tokenId = data?.tokenId
-  } else {
-    const data = await mintStationNFT({ idToken, to, name })
-    tokenId = data?.tokenId
+  const { name, tokenId } = (await req.json()) as {
+    name: string
+    tokenId: number
   }
+  if (!name) throw new Error("Name is required")
+  if (!tokenId) throw new Error("Token id is required")
 
-  if (!tokenId || typeof tokenId !== "number")
-    throw new Error("Mint station NFT failed")
-
-  // 2. Create station in the database
+  // Create station in the database
   const result = await createStation({
     idToken,
     name,
     accountId: account.id,
     owner: account.owner,
     tokenId,
-    signature: message,
+    signature,
   })
 
   return NextResponse.json(result)

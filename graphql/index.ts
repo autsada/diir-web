@@ -40,13 +40,12 @@ export async function getMyAccount(idToken: string, signature?: string) {
     .setHeaders({
       "Content-Type": "application/json",
       Authorization: `Bearer ${idToken}`,
-      "auth-wallet-account": signature || "",
+      "auth-wallet-signature": signature || "",
     })
     .request<QueryReturnType<"getMyAccount">, QueryArgsType<"getMyAccount">>(
       GET_ACCOUNT_QUERY,
-      signature ? { input: { accountType: "WALLET" } } : {}
+      { input: { accountType: signature ? "WALLET" : "TRADITIONAL" } }
     )
-
   return data?.getMyAccount
 }
 
@@ -64,10 +63,9 @@ export async function createAccount(idToken: string, signature?: string) {
     .request<
       MutationReturnType<"createAccount">,
       MutationArgsType<"createAccount">
-    >(
-      CREATE_ACCOUNT_MUTATION,
-      signature ? { input: { accountType: "WALLET" } } : {}
-    )
+    >(CREATE_ACCOUNT_MUTATION, {
+      input: { accountType: signature ? "WALLET" : "TRADITIONAL" },
+    })
 
   return data?.createAccount
 }
@@ -89,22 +87,27 @@ export async function validateStationName(name: string) {
  */
 export async function mintFirstStationNFT({
   idToken,
+  signature,
   to,
   name,
+  accountId,
 }: {
   idToken: string
+  signature?: string
   to: string
   name: string
+  accountId: string
 }) {
   const data = await client
     .setHeaders({
       "Content-Type": "application/json",
       Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
     })
     .request<
       MutationReturnType<"mintFirstStationNFT">,
       MutationArgsType<"mintFirstStationNFT">
-    >(MINT_FIRST_STATION_NFT_MUTATION, { input: { to, name } })
+    >(MINT_FIRST_STATION_NFT_MUTATION, { input: { to, name, accountId } })
 
   return data?.mintFirstStationNFT
 }
@@ -114,22 +117,27 @@ export async function mintFirstStationNFT({
  */
 export async function mintStationNFT({
   idToken,
+  signature,
   to,
   name,
+  accountId,
 }: {
   idToken: string
+  signature?: string
   to: string
   name: string
+  accountId: string
 }) {
   const data = await client
     .setHeaders({
       "Content-Type": "application/json",
       Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
     })
     .request<
       MutationReturnType<"mintStationNFT">,
       MutationArgsType<"mintStationNFT">
-    >(MINT_STATION_NFT_MUTATION, { input: { to, name } })
+    >(MINT_STATION_NFT_MUTATION, { input: { to, name, accountId } })
 
   return data?.mintStationNFT
 }
