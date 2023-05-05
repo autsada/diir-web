@@ -2,9 +2,9 @@
 
 import React, { useState, useCallback } from "react"
 import Dropzone from "react-dropzone"
+import { MdFileUpload } from "react-icons/md"
 
-import Avatar from "@/components/Avatar"
-import ImageModal from "./ImageModal"
+import BannerModal from "./BannerModal"
 import type { FileWithPrview } from "@/types"
 import type { Station } from "@/graphql/types"
 
@@ -12,7 +12,7 @@ interface Props {
   station: Station
 }
 
-export default function StationImage({ station }: Props) {
+export default function BannerImage({ station }: Props) {
   const [image, setImage] = useState<FileWithPrview>()
   const [imageError, setImageError] = useState("")
 
@@ -21,8 +21,8 @@ export default function StationImage({ station }: Props) {
     const f = acceptedFiles[0] as FileWithPrview
 
     // Check size
-    if (f.size / 1000 > 4096) {
-      // Maximum allowed image size = 4mb
+    if (f.size / 1000 > 6144) {
+      // Maximum allowed image size = 6mb
       setImageError("File too big")
     }
     const fileWithPreview = Object.assign(f, {
@@ -40,7 +40,7 @@ export default function StationImage({ station }: Props) {
   return (
     <>
       <div
-        className={`relative z-10 mx-auto w-[150px] h-[150px] cursor-pointer rounded ${
+        className={`relative z-10 mx-auto w-[150px] h-[85px] sm:w-full sm:h-[160px] cursor-pointer rounded bg-white ${
           !!imageError
             ? "border-[2px] border-red-500"
             : "border border-gray-200"
@@ -52,23 +52,23 @@ export default function StationImage({ station }: Props) {
               <div {...getRootProps()} className="h-full">
                 <input {...getInputProps()} />
                 <div className="h-full w-full text-center flex flex-col justify-center items-center">
-                  <div className="h-full w-full rounded-full overflow-hidden">
-                    {image && imageError ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={image.preview}
-                        alt={image.name}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <Avatar
-                        profile={station}
-                        width={150}
-                        height={150}
-                        fontSize="text-6xl"
-                      />
-                    )}
-                  </div>
+                  {image && imageError ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={image.preview}
+                      alt={image.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : station?.bannerImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={station.bannerImage}
+                      alt={station.displayName}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <MdFileUpload size={25} />
+                  )}
                 </div>
               </div>
             </section>
@@ -89,7 +89,7 @@ export default function StationImage({ station }: Props) {
       )}
 
       {image && !imageError && (
-        <ImageModal
+        <BannerModal
           station={station}
           image={image}
           cancelUpload={cancelUpload}

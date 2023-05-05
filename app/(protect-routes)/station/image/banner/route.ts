@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { getMyAccount, updateStationImage } from "@/graphql"
+import { getMyAccount, updateStationBannerImage } from "@/graphql"
 import type { Account } from "@/graphql/types"
 
 export async function POST(req: Request) {
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   if (!stationId) throw new Error("Station id is required")
 
   // Update station image in the database
-  const result = await updateStationImage({
+  const result = await updateStationBannerImage({
     idToken,
     image,
     imageRef,

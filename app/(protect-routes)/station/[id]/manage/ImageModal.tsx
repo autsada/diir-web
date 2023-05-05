@@ -15,7 +15,7 @@ interface Props {
   cancelUpload: () => void
 }
 
-export default function UploadModal({ station, image, cancelUpload }: Props) {
+export default function ImageModal({ station, image, cancelUpload }: Props) {
   const [loading, setLoading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState("")
@@ -28,7 +28,7 @@ export default function UploadModal({ station, image, cancelUpload }: Props) {
 
       setLoading(true)
       // Upload the image to cloud storage
-      const { url } = await uploadFile({
+      const { url, fileRef } = await uploadFile({
         folder: `${stationFolder}/${station?.name}/profile`,
         file: image,
         setProgress: setUploadProgress,
@@ -38,7 +38,11 @@ export default function UploadModal({ station, image, cancelUpload }: Props) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ image: url, stationId: station.id }),
+        body: JSON.stringify({
+          image: url,
+          imageRef: fileRef,
+          stationId: station.id,
+        }),
       })
 
       await result.json()
@@ -80,6 +84,8 @@ export default function UploadModal({ station, image, cancelUpload }: Props) {
           </div>
         </div>
       </ConfirmModal>
+
+      {/* Prevent interaction while loading */}
       {loading && <Mask />}
     </>
   )

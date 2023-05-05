@@ -22,6 +22,7 @@ import {
   UPDATE_DISPLAY_NAME_MUTATION,
   VALIDATE_DISPLAY_NAME_MUTATION,
   UPDATE_PROFILE_IMAGE_MUTATION,
+  UPDATE_BANNER_IMAGE_MUTATION,
 } from "./mutations"
 
 const { API_URL_DEV, API_URL_TEST, NODE_ENV } = process.env
@@ -259,6 +260,7 @@ export async function updateStationImage({
   owner,
   accountId,
   image,
+  imageRef,
   stationId,
   signature,
 }: {
@@ -266,6 +268,7 @@ export async function updateStationImage({
   owner: string
   accountId: string
   image: string
+  imageRef: string
   stationId: string // Station id to be updated
   signature?: string
 }) {
@@ -279,10 +282,46 @@ export async function updateStationImage({
       MutationReturnType<"updateProfileImage">,
       MutationArgsType<"updateProfileImage">
     >(UPDATE_PROFILE_IMAGE_MUTATION, {
-      input: { owner, accountId, image, stationId },
+      input: { owner, accountId, image, imageRef, stationId },
     })
 
   return data?.updateProfileImage
+}
+
+/**
+ * Update station banner image in the database
+ */
+export async function updateStationBannerImage({
+  idToken,
+  owner,
+  accountId,
+  image,
+  imageRef,
+  stationId,
+  signature,
+}: {
+  idToken: string
+  owner: string
+  accountId: string
+  image: string
+  imageRef: string
+  stationId: string // Station id to be updated
+  signature?: string
+}) {
+  const data = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      MutationReturnType<"updateBannerImage">,
+      MutationArgsType<"updateBannerImage">
+    >(UPDATE_BANNER_IMAGE_MUTATION, {
+      input: { owner, accountId, image, imageRef, stationId },
+    })
+
+  return data?.updateBannerImage
 }
 
 /**

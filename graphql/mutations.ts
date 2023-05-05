@@ -61,8 +61,16 @@ export const UPDATE_DISPLAY_NAME_MUTATION = gql`
 `
 
 export const UPDATE_PROFILE_IMAGE_MUTATION = gql`
-  mutation UpdateProfileImage($input: UpdateProfileImageInput!) {
+  mutation UpdateProfileImage($input: UpdateImageInput!) {
     updateProfileImage(input: $input) {
+      status
+    }
+  }
+`
+
+export const UPDATE_BANNER_IMAGE_MUTATION = gql`
+  mutation UpdateBannerImage($input: UpdateImageInput!) {
+    updateBannerImage(input: $input) {
       status
     }
   }
