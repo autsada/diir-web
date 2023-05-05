@@ -83,6 +83,13 @@ export interface NexusGenInputs {
     receiverId: string // String!
     senderId: string // String!
   }
+  UpdateDisplayNameInput: {
+    // input type
+    accountId: string // String!
+    name: string // String!
+    owner: string // String!
+    stationId: string // String!
+  }
   UpdatePublishInput: {
     // input type
     accountId: string // String!
@@ -358,8 +365,10 @@ export interface NexusGenFieldTypes {
     mintFirstStationNFT: NexusGenRootTypes["MintStationNFTResult"] | null // MintStationNFTResult
     mintStationNFT: NexusGenRootTypes["MintStationNFTResult"] | null // MintStationNFTResult
     sendTips: NexusGenRootTypes["SendTipsResult"] | null // SendTipsResult
+    updateDisplayName: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updatePublish: NexusGenRootTypes["Publish"] | null // Publish
-    validateName: boolean // Boolean!
+    validateDisplayName: boolean | null // Boolean
+    validateName: boolean | null // Boolean
   }
   PageInfo: {
     // field return type
@@ -552,7 +561,9 @@ export interface NexusGenFieldTypeNames {
     mintFirstStationNFT: "MintStationNFTResult"
     mintStationNFT: "MintStationNFTResult"
     sendTips: "SendTipsResult"
+    updateDisplayName: "WriteResult"
     updatePublish: "Publish"
+    validateDisplayName: "Boolean"
     validateName: "Boolean"
   }
   PageInfo: {
@@ -714,9 +725,17 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs["SendTipsInput"] // SendTipsInput!
     }
+    updateDisplayName: {
+      // args
+      input: NexusGenInputs["UpdateDisplayNameInput"] // UpdateDisplayNameInput!
+    }
     updatePublish: {
       // args
       input: NexusGenInputs["UpdatePublishInput"] // UpdatePublishInput!
+    }
+    validateDisplayName: {
+      // args
+      name: string // String!
     }
     validateName: {
       // args

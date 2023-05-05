@@ -11,6 +11,12 @@ export const CREATE_ACCOUNT_MUTATION = gql`
   }
 `
 
+export const VALIDATE_DISPLAY_NAME_MUTATION = gql`
+  mutation ValidateDisplayName($name: String!) {
+    validateDisplayName(name: $name)
+  }
+`
+
 export const VALIDATE_NAME_MUTATION = gql`
   mutation ValidateName($name: String!) {
     validateName(name: $name)
@@ -42,6 +48,14 @@ export const CREATE_STATION_MUTATION = gql`
       owner
       accountId
       tokenId
+    }
+  }
+`
+
+export const UPDATE_DISPLAY_NAME_MUTATION = gql`
+  mutation UpdateDisplayName($input: UpdateDisplayNameInput!) {
+    updateDisplayName(input: $input) {
+      status
     }
   }
 `

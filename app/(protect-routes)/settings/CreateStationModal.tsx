@@ -9,13 +9,9 @@ import React, {
 import { useRouter } from "next/navigation"
 import _ from "lodash"
 import { useContractWrite } from "wagmi"
-// import Image from "next/image"
-// import Dropzone from "react-dropzone"
-// import { CiTrash } from "react-icons/ci"
-// import { BsUpload } from "react-icons/bs"
 
 import CloseButton from "@/components/CloseButton"
-import Input from "@/components/Input"
+import NameInput from "@/app/(protect-routes)/settings/NameInput"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
 import ModalWrapper from "@/components/ModalWrapper"
@@ -36,9 +32,6 @@ export default function CreateStationModal({ account, closeModal }: Props) {
   const [isNameValid, setIsNameValid] = useState<boolean>()
   const [loading, setLoading] = useState(false)
   const [isError, setIsError] = useState(false)
-  //   const [image, setImage] = useState<FileWithPrview>()
-  //   const [uploading, setUploading] = useState(false)
-  //   const [imageError, setImageError] = useState("")
 
   const router = useRouter()
   const { config } = usePrepareStationContractWrite(
@@ -69,23 +62,8 @@ export default function CreateStationModal({ account, closeModal }: Props) {
     }
   }, [])
 
-  //   const onDrop = useCallback((acceptedFiles: File[]) => {
-  //     // Do something with the files
-  //     const f = acceptedFiles[0] as FileWithPrview
-
-  //     // Check size
-  //     if (f.size / 1000 > 4096) {
-  //       setImageError("File too big")
-  //     }
-  //     const fileWithPreview = Object.assign(f, {
-  //       preview: URL.createObjectURL(f),
-  //     })
-
-  //     setImage(fileWithPreview)
-  //   }, [])
-
   const validateName = useCallback(async (n: string) => {
-    const result = await fetch(`/station/validate`, {
+    const result = await fetch(`/station/validate/name`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -171,7 +149,7 @@ export default function CreateStationModal({ account, closeModal }: Props) {
 
         <form onSubmit={onCreate}>
           <div className="my-5">
-            <Input
+            <NameInput
               name="Name"
               placeholder="Station name"
               value={name}
@@ -183,6 +161,7 @@ export default function CreateStationModal({ account, closeModal }: Props) {
                   : "")
               }
               isMandatory={true}
+              valid={isNameValid}
             />
           </div>
 

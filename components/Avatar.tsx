@@ -7,9 +7,21 @@ interface Props {
   profile: Station | null | undefined // Profile is a logged in station
   width?: number
   height?: number
+  fontSize?:
+    | "text-base"
+    | "text-lg"
+    | "text-xl"
+    | "text-2xl"
+    | "text-4xl"
+    | "text-6xl"
 }
 
-export default function Avatar({ profile, width = 40, height = 40 }: Props) {
+export default function Avatar({
+  profile,
+  width = 40,
+  height = 40,
+  fontSize = "text-base",
+}: Props) {
   return (
     <div
       className={`flex items-center justify-center rounded-full overflow-hidden cursor-pointer`}
@@ -24,7 +36,9 @@ export default function Avatar({ profile, width = 40, height = 40 }: Props) {
             DiiR
           </div>
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-orange-500 text-white">
+          <div
+            className={`w-full h-full flex items-center justify-center bg-orange-500 text-white ${fontSize}`}
+          >
             {profile.displayName.slice(0, 1).toUpperCase()}
           </div>
         )

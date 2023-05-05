@@ -3,6 +3,7 @@ import Image from "next/image"
 
 import ContentTabs from "./ContentTabs"
 import type { Station } from "@/graphql/types"
+import Link from "next/link"
 
 interface Props {
   station: Station
@@ -60,9 +61,14 @@ export default function StationLayout({ station }: Props) {
 
           <div className="absolute inset-0 flex items-start sm:items-center justify-end">
             {station?.isOwner ? (
-              <button type="button" className="btn-dark mx-0 px-5 rounded-full">
-                Manage station
-              </button>
+              <Link href={`/station/${station.id}/manage`}>
+                <button
+                  type="button"
+                  className="btn-dark mx-0 px-5 rounded-full"
+                >
+                  Manage station
+                </button>
+              </Link>
             ) : station?.isFollowing ? (
               <button type="button" className="btn-dark mx-0 px-5 rounded-full">
                 Following

@@ -19,6 +19,8 @@ import {
   MINT_STATION_NFT_MUTATION,
   VALIDATE_NAME_MUTATION,
   CACHE_SESSION_MUTATION,
+  UPDATE_DISPLAY_NAME_MUTATION,
+  VALIDATE_DISPLAY_NAME_MUTATION,
 } from "./mutations"
 
 const { API_URL_DEV, API_URL_TEST, NODE_ENV } = process.env
@@ -68,6 +70,18 @@ export async function createAccount(idToken: string, signature?: string) {
     })
 
   return data?.createAccount
+}
+
+/**
+ * Validate station display name
+ */
+export async function validateStationDisplayName(name: string) {
+  const data = await client.request<
+    MutationReturnType<"validateDisplayName">,
+    MutationArgsType<"validateDisplayName">
+  >(VALIDATE_DISPLAY_NAME_MUTATION, { name })
+
+  return data?.validateDisplayName
 }
 
 /**
@@ -200,6 +214,40 @@ export async function getStationByName(name: string, requestorId?: string) {
   })
 
   return data?.getStationByName
+}
+
+/**
+ * Update station name in the database
+ */
+export async function updateStationName({
+  idToken,
+  owner,
+  accountId,
+  name,
+  stationId,
+  signature,
+}: {
+  idToken: string
+  owner: string
+  accountId: string
+  name: string
+  stationId: string // Station id to be updated
+  signature?: string
+}) {
+  const data = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      MutationReturnType<"updateDisplayName">,
+      MutationArgsType<"updateDisplayName">
+    >(UPDATE_DISPLAY_NAME_MUTATION, {
+      input: { owner, accountId, name, stationId },
+    })
+
+  return data?.updateDisplayName
 }
 
 /**

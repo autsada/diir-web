@@ -9,6 +9,7 @@ interface Props {
   onConfirm: () => void
   loading?: boolean
   error?: string
+  disabled?: boolean
 }
 
 export default function ConfirmModal({
@@ -17,6 +18,7 @@ export default function ConfirmModal({
   onConfirm,
   loading,
   error,
+  disabled,
 }: Props) {
   return (
     <ModalWrapper visible>
@@ -31,7 +33,10 @@ export default function ConfirmModal({
             Cancel
           </button>
           <button
-            className="btn-dark w-[100px] rounded-full"
+            className={`btn-dark w-[100px] rounded-full ${
+              disabled ? "opacity-30 cursor-not-allowed" : "opacity-100"
+            }`}
+            disabled={typeof disabled === "boolean" && disabled}
             onClick={onConfirm}
           >
             {loading ? <ButtonLoader loading size={8} /> : "Confirm"}
