@@ -12,7 +12,17 @@ interface Props {
 export default function StationLayout({ station }: Props) {
   return (
     <>
-      <div className="relative flex">
+      {station?.bannerImage && (
+        <div className="w-full">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={station.bannerImage}
+            alt={station?.displayName}
+            className="w-full h-[120px] sm:h-[160px] md:h-[200px] object-cover"
+          />
+        </div>
+      )}
+      <div className="relative flex mt-5">
         <div className="flex items-center justify-center w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] rounded-full overflow-hidden cursor-pointer">
           {!station || !station.image ? (
             !station ? (
