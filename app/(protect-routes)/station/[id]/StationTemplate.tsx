@@ -25,10 +25,11 @@ export default function StationLayout({ station }: Props) {
               </div>
             )
           ) : (
-            <Image
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
               src={station.image}
               alt={station.displayName}
-              className="w-full h-full"
+              className="w-full h-full object-cover"
             />
           )}
         </div>

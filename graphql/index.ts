@@ -21,6 +21,7 @@ import {
   CACHE_SESSION_MUTATION,
   UPDATE_DISPLAY_NAME_MUTATION,
   VALIDATE_DISPLAY_NAME_MUTATION,
+  UPDATE_PROFILE_IMAGE_MUTATION,
 } from "./mutations"
 
 const { API_URL_DEV, API_URL_TEST, NODE_ENV } = process.env
@@ -248,6 +249,40 @@ export async function updateStationName({
     })
 
   return data?.updateDisplayName
+}
+
+/**
+ * Update station profile image in the database
+ */
+export async function updateStationImage({
+  idToken,
+  owner,
+  accountId,
+  image,
+  stationId,
+  signature,
+}: {
+  idToken: string
+  owner: string
+  accountId: string
+  image: string
+  stationId: string // Station id to be updated
+  signature?: string
+}) {
+  const data = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      MutationReturnType<"updateProfileImage">,
+      MutationArgsType<"updateProfileImage">
+    >(UPDATE_PROFILE_IMAGE_MUTATION, {
+      input: { owner, accountId, image, stationId },
+    })
+
+  return data?.updateProfileImage
 }
 
 /**

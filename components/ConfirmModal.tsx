@@ -33,6 +33,7 @@ export default function ConfirmModal({
             Cancel
           </button>
           <button
+            type="button"
             className={`btn-dark w-[100px] rounded-full ${
               disabled ? "opacity-30 cursor-not-allowed" : "opacity-100"
             }`}

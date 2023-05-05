@@ -123,7 +123,7 @@ export default function StationName({ station }: Props) {
             station?.displayName === name || !!nameError || !isNameValid
           }
         >
-          <form className="bg-white">
+          <div className="bg-white">
             <h6 className="mb-4">Edit name</h6>
 
             <NameInput
@@ -140,7 +140,7 @@ export default function StationName({ station }: Props) {
               isMandatory={true}
               valid={name !== station?.displayName && !nameError && isNameValid}
             />
-          </form>
+          </div>
         </ConfirmModal>
       )}
 

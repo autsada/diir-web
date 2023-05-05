@@ -2,11 +2,11 @@ import React from "react"
 import { redirect } from "next/navigation"
 import { MdModeEditOutline } from "react-icons/md"
 
-import UploadImage from "@/components/UploadImage"
+import StationName from "./StationName"
+import StationImage from "./StationImage"
 import { getAccount } from "@/lib"
 import { getStationById } from "@/graphql"
 import type { Station } from "@/graphql/types"
-import StationName from "./StationName"
 
 export default async function ManageStation({
   params,
@@ -40,13 +40,16 @@ export default async function ManageStation({
         <p className="font-light text-textLight">
           Your station profile image to be used as an avatar of the station.
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 sm:gap-x-5 mt-2">
-          <div className="py-5 bg-gray-50">
-            <UploadImage station={station} />
+        <div className="grid grid-cols-2 lg:grid-cols-3 sm:gap-x-5 mt-2">
+          <div className="relative pt-2 pb-5 bg-gray-50">
+            <p className="font-light text-textLight text-center mb-1">
+              Click image to upload.
+            </p>
+            <StationImage station={station} />
           </div>
           <div className="px-5">
             <p className="font-light text-textLight">
-              Accept png, jpg, or jpeg with at least 100 x 100 pixels and 2MB or
+              Accept png, jpg, or jpeg with at least 100 x 100 pixels and 4MB or
               less.
             </p>
           </div>

@@ -43,10 +43,11 @@ export default function Avatar({
           </div>
         )
       ) : (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={profile.image}
           alt={profile.displayName}
-          className="w-full h-full"
+          className="w-full h-full object-cover"
         />
       )}
     </div>

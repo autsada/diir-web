@@ -60,6 +60,14 @@ export const UPDATE_DISPLAY_NAME_MUTATION = gql`
   }
 `
 
+export const UPDATE_PROFILE_IMAGE_MUTATION = gql`
+  mutation UpdateProfileImage($input: UpdateProfileImageInput!) {
+    updateProfileImage(input: $input) {
+      status
+    }
+  }
+`
+
 export const CACHE_SESSION_MUTATION = gql`
   mutation CacheSession($input: CacheSessionInput!) {
     cacheSession(input: $input) {
