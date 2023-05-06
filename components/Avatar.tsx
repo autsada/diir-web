@@ -22,6 +22,9 @@ export default function Avatar({
   height = 40,
   fontSize = "text-base",
 }: Props) {
+  const profileColor = profile?.defaultColor
+  const bgColor = profileColor || "#f97316"
+
   return (
     <div
       className={`flex items-center justify-center rounded-full overflow-hidden cursor-pointer`}
@@ -37,16 +40,24 @@ export default function Avatar({
           </div>
         ) : (
           <div
-            className={`w-full h-full flex items-center justify-center bg-orange-500 text-white ${fontSize}`}
+            className={`w-full h-full flex items-center justify-center text-white ${fontSize}`}
+            style={{ backgroundColor: bgColor }}
           >
             {profile.displayName.slice(0, 1).toUpperCase()}
           </div>
         )
       ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        // // eslint-disable-next-line @next/next/no-img-element
+        // <img
+        //   src={profile.image}
+        //   alt={profile.displayName}
+        //   className="w-full h-full object-cover"
+        // />
+        <Image
           src={profile.image}
           alt={profile.displayName}
+          width={width}
+          height={height}
           className="w-full h-full object-cover"
         />
       )}

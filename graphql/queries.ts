@@ -16,6 +16,7 @@ export const GET_ACCOUNT_QUERY = gql`
         imageRef
         bannerImage
         bannerImageRef
+        defaultColor
         followersCount
         followingCount
         publishesCount
@@ -29,6 +30,7 @@ export const GET_ACCOUNT_QUERY = gql`
         imageRef
         bannerImage
         bannerImageRef
+        defaultColor
         followersCount
         followingCount
         publishesCount
@@ -47,6 +49,7 @@ export const GET_STATION_BY_ID_QUERY = gql`
       imageRef
       bannerImage
       bannerImageRef
+      defaultColor
       accountId
       owner
       createdAt
@@ -83,6 +86,7 @@ export const GET_STATION_BY_NAME_QUERY = gql`
       imageRef
       bannerImage
       bannerImageRef
+      defaultColor
       accountId
       owner
       createdAt
