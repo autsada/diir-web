@@ -2,6 +2,7 @@ import type {
   NexusGenFieldTypes,
   NexusGenArgTypes,
   NexusGenObjects,
+  NexusGenEnums,
 } from "./typegen"
 
 export type QueryReturnType<T extends keyof NexusGenFieldTypes["Query"]> = {
@@ -31,3 +32,4 @@ export type Station = NexusGenObjects["Station"] & {
 }
 
 export type Publish = NexusGenObjects["Publish"]
+export type PublishCategory = NexusGenEnums["Category"]

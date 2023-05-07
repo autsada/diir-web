@@ -37,6 +37,7 @@ export interface NexusGenInputs {
     // input type
     accountId: string // String!
     creatorId: string // String!
+    filename: string // String!
     owner: string // String!
   }
   CreateStationInput: {
@@ -180,6 +181,11 @@ export interface NexusGenObjects {
     publishId: string // String!
     updatedAt?: NexusGenScalars["DateTime"] | null // DateTime
   }
+  CreateDraftPublishResult: {
+    // root type
+    filename?: string | null // String
+    id: string // String!
+  }
   CreateWalletResult: {
     // root type
     address: string // String!
@@ -189,6 +195,7 @@ export interface NexusGenObjects {
     // root type
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     creatorId: string // String!
+    filename: string // String!
     id: string // String!
     public: boolean // Boolean!
     transcodeError: boolean // Boolean!
@@ -338,6 +345,11 @@ export interface NexusGenFieldTypes {
     publishId: string // String!
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
   }
+  CreateDraftPublishResult: {
+    // field return type
+    filename: string | null // String
+    id: string // String!
+  }
   CreateWalletResult: {
     // field return type
     address: string // String!
@@ -347,6 +359,7 @@ export interface NexusGenFieldTypes {
     // field return type
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     creatorId: string // String!
+    filename: string // String!
     id: string // String!
     public: boolean // Boolean!
     transcodeError: boolean // Boolean!
@@ -367,7 +380,7 @@ export interface NexusGenFieldTypes {
     cacheSession: NexusGenRootTypes["WriteResult"] // WriteResult!
     calculateTips: NexusGenRootTypes["CalculateTipsResult"] | null // CalculateTipsResult
     createAccount: NexusGenRootTypes["Account"] | null // Account
-    createDraftPublish: NexusGenRootTypes["DraftPublish"] | null // DraftPublish
+    createDraftPublish: NexusGenRootTypes["CreateDraftPublishResult"] | null // CreateDraftPublishResult
     createStation: NexusGenRootTypes["Station"] | null // Station
     createTip: NexusGenRootTypes["Tip"] | null // Tip
     createUser: NexusGenRootTypes["AuthUser"] | null // AuthUser
@@ -436,6 +449,7 @@ export interface NexusGenFieldTypes {
     getBalance: string // String!
     getMyAccount: NexusGenRootTypes["Account"] | null // Account
     getPublishById: NexusGenRootTypes["Publish"] | null // Publish
+    getPublishForCreator: NexusGenRootTypes["Publish"] | null // Publish
     getStationById: NexusGenRootTypes["Station"] | null // Station
     getStationByName: NexusGenRootTypes["Station"] | null // Station
     listCommentsByCommentId: Array<NexusGenRootTypes["Comment"] | null> // [Comment]!
@@ -537,6 +551,11 @@ export interface NexusGenFieldTypeNames {
     publishId: "String"
     updatedAt: "DateTime"
   }
+  CreateDraftPublishResult: {
+    // field return type name
+    filename: "String"
+    id: "String"
+  }
   CreateWalletResult: {
     // field return type name
     address: "String"
@@ -546,6 +565,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     createdAt: "DateTime"
     creatorId: "String"
+    filename: "String"
     id: "String"
     public: "Boolean"
     transcodeError: "Boolean"
@@ -566,7 +586,7 @@ export interface NexusGenFieldTypeNames {
     cacheSession: "WriteResult"
     calculateTips: "CalculateTipsResult"
     createAccount: "Account"
-    createDraftPublish: "DraftPublish"
+    createDraftPublish: "CreateDraftPublishResult"
     createStation: "Station"
     createTip: "Tip"
     createUser: "AuthUser"
@@ -635,6 +655,7 @@ export interface NexusGenFieldTypeNames {
     getBalance: "String"
     getMyAccount: "Account"
     getPublishById: "Publish"
+    getPublishForCreator: "Publish"
     getStationById: "Station"
     getStationByName: "Station"
     listCommentsByCommentId: "Comment"
@@ -775,6 +796,10 @@ export interface NexusGenArgTypes {
       input: NexusGenInputs["GetMyAccountInput"] // GetMyAccountInput!
     }
     getPublishById: {
+      // args
+      id: string // String!
+    }
+    getPublishForCreator: {
       // args
       id: string // String!
     }

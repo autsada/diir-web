@@ -9,6 +9,7 @@ import type {
 import {
   GET_ACCOUNT_QUERY,
   GET_BALANCE_QUERY,
+  GET_CREATOR_PUBLISH_QUERY,
   GET_STATION_BY_ID_QUERY,
   GET_STATION_BY_NAME_QUERY,
 } from "./queries"
@@ -23,6 +24,7 @@ import {
   VALIDATE_DISPLAY_NAME_MUTATION,
   UPDATE_PROFILE_IMAGE_MUTATION,
   UPDATE_BANNER_IMAGE_MUTATION,
+  CREATE_DRAFT_PUBLISH_MUTATION,
 } from "./mutations"
 
 const { API_URL_DEV, API_URL_TEST, NODE_ENV } = process.env
@@ -366,4 +368,50 @@ export async function cacheLoggedInSession({
     >(CACHE_SESSION_MUTATION, { input: { address, stationId, accountId } })
 
   return data?.cacheSession
+}
+
+/**
+ * Cache a draft publish
+ */
+export async function createDraftPublish({
+  idToken,
+  signature,
+  owner,
+  creatorId,
+  accountId,
+  filename,
+}: {
+  idToken: string
+  signature?: string
+  owner: string
+  creatorId: string
+  accountId: string
+  filename: string
+}) {
+  const data = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      MutationReturnType<"createDraftPublish">,
+      MutationArgsType<"createDraftPublish">
+    >(CREATE_DRAFT_PUBLISH_MUTATION, {
+      input: { owner, creatorId, accountId, filename },
+    })
+
+  return data?.createDraftPublish
+}
+
+/**
+ * Get an uploaded publish for use in the upload action
+ */
+export async function getUploadedPublish(id: string) {
+  const data = await client.request<
+    QueryReturnType<"getPublishForCreator">,
+    QueryArgsType<"getPublishForCreator">
+  >(GET_CREATOR_PUBLISH_QUERY, { id })
+
+  return data?.getPublishForCreator
 }

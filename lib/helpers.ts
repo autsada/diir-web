@@ -19,3 +19,25 @@ export function getCountryNames() {
 export function wait(time: number) {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
+
+export const contentCategories = [
+  "Music",
+  "Movies",
+  "Entertainment",
+  "Sports",
+  "Food",
+  "Travel",
+  "Gaming",
+  "News",
+  "Animals",
+  "Education",
+  "Science",
+  "Technology",
+  "Programming",
+  "LifeStyle",
+  "Vehicles",
+  "Children",
+  "Women",
+  "Men",
+  "Other",
+] as const

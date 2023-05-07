@@ -8,12 +8,12 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const data = await getAccount()
+  const account = await getAccount()
 
   return (
     <>
       {children}
-      {data && !data.defaultStation && (
+      {account && !account.defaultStation && (
         <Suspense>
           <InformModal />
         </Suspense>

@@ -118,3 +118,26 @@ export const GET_BALANCE_QUERY = gql`
     getBalance(address: $address)
   }
 `
+
+export const GET_CREATOR_PUBLISH_QUERY = gql`
+  query GetPublishForCreator($id: String!) {
+    getPublishForCreator(id: $id) {
+      id
+      creatorId
+      title
+      description
+      primaryCategory
+      secondaryCategory
+      public
+      filename
+      playback {
+        id
+        thumbnail
+        preview
+        duration
+        dash
+        hls
+      }
+    }
+  }
+`

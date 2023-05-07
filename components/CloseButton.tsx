@@ -8,7 +8,7 @@ interface Props {
 export default function CloseButton({ onClick, className }: Props) {
   return (
     <button
-      type="submit"
+      type="button"
       className={`text-xl text-textExtraLight ${className || ""}`}
       onClick={onClick}
     >
