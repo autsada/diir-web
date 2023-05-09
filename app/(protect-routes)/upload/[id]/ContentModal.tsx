@@ -25,10 +25,16 @@ export default function ContentModal({ publish, updatePublish }: Props) {
           action={updatePublish}
         >
           {/* This hidden input will send the publish id to the mutation action */}
-          <input type="text" name="id" className="hidden" value={publish.id} />
+          <input
+            type="text"
+            name="id"
+            className="hidden"
+            value={publish.id}
+            onChange={() => {}}
+          />
 
           <div className="w-full h-[60px] px-5 flex items-center justify-between border-b border-gray-100">
-            <h6>{publish.id}</h6>
+            <h6>Publish id: {publish.id}</h6>
             <div>
               <CloseButton
                 onClick={() => router.back()}

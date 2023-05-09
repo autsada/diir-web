@@ -9,7 +9,5 @@ export async function GET(req: Request) {
 
   const publish = await getUploadedPublish(id)
 
-  console.log("publish -->", publish)
-
   return NextResponse.json(publish)
 }

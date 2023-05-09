@@ -9,7 +9,12 @@ import UploadModal from "./UploadModal"
 
 type ContentType = "video" | "blog"
 
-export default function Upload() {
+interface Props {
+  idToken: string
+  stationName: string
+}
+
+export default function Upload({ idToken, stationName }: Props) {
   const [contentType, setContentType] = useState<ContentType>()
 
   const selectContentType = useCallback((t: ContentType) => {
@@ -39,7 +44,11 @@ export default function Upload() {
       </div>
 
       {contentType === "video" && (
-        <UploadModal cancelUpload={cancelSelectContentType} />
+        <UploadModal
+          cancelUpload={cancelSelectContentType}
+          idToken={idToken}
+          stationName={stationName}
+        />
       )}
     </>
   )

@@ -14,7 +14,8 @@ export default async function ManageStation({
 }: {
   params: { id: string }
 }) {
-  const account = await getAccount()
+  const data = await getAccount()
+  const account = data?.account
   const station = (await getStationById(
     params.id,
     account?.defaultStation?.id

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback } from "react"
 import { MdFileUpload } from "react-icons/md"
 import { useDropzone } from "react-dropzone"
 import { useRouter } from "next/navigation"
@@ -11,16 +11,53 @@ import type { FileWithPrview } from "@/types"
 
 interface Props {
   cancelUpload: () => void
+  idToken: string
+  stationName: string
 }
 
-export default function UploadModal({ cancelUpload }: Props) {
+/**
+ * A function to call an upload route in the Upload Service
+ */
+function upload({
+  idToken,
+  file,
+  publishId,
+  stationName,
+}: {
+  idToken: string
+  file: File
+  publishId: string
+  stationName: string
+}) {
+  const uploadURL =
+    process.env.NEXT_PUBLIC_UPLOAD_URL || "http://localhost:4444"
+
+  const formData = new FormData()
+  formData.append("file", file!)
+  formData.append("publishId", publishId)
+  formData.append("stationName", stationName)
+
+  return fetch(`${uploadURL}/publishes/upload`, {
+    method: "POST",
+    headers: {
+      "id-token": idToken,
+    },
+    body: formData,
+  })
+}
+
+export default function UploadModal({
+  cancelUpload,
+  idToken,
+  stationName,
+}: Props) {
   const [fileError, setFileError] = useState("")
   const [draftLoading, setDraftLoading] = useState(false)
 
   const router = useRouter()
 
   const createDraft = useCallback(
-    async (filename: string) => {
+    async (file: FileWithPrview) => {
       setDraftLoading(true)
       const result = await fetch(`/upload/draft`, {
         method: "POST",
@@ -28,16 +65,16 @@ export default function UploadModal({ cancelUpload }: Props) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          filename,
+          filename: file.name,
         }),
       })
       const data = await result.json()
-      setDraftLoading(false)
-      // setPublishId(data?.id)
+      // Upload file to cloud storage (without waiting)
+      upload({ idToken, file, publishId: data?.id, stationName })
       // Push user to upload/[id]
       router.push(`/upload/${data?.id}`)
     },
-    [router]
+    [router, idToken, stationName]
   )
 
   const onDrop = useCallback(
@@ -55,8 +92,7 @@ export default function UploadModal({ cancelUpload }: Props) {
       })
 
       // Create a draft publish immediately
-      createDraft(fileWithPreview.name)
-      // TODO: Upload file to cloud storage
+      createDraft(fileWithPreview)
     },
     [createDraft]
   )

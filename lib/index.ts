@@ -21,7 +21,7 @@ export async function getAccount() {
       account = (await createAccount(idToken, signature)) as Account
     }
 
-    return account
+    return { account, idToken, signature }
   } catch (error) {
     return null
   }

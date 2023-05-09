@@ -6,9 +6,10 @@ import { getAccount } from "@/lib"
 
 export default async function Verify() {
   const data = await getAccount()
+  const account = data?.account
 
   // If user already logged in, redirect to homepage
-  if (data) {
+  if (account) {
     redirect("/")
   }
 

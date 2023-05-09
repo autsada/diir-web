@@ -12,7 +12,8 @@ export default async function Station({
   params: { id: string }
   children: React.ReactNode
 }) {
-  const account = await getAccount()
+  const data = await getAccount()
+  const account = data?.account
   const station = (await getStationById(
     params.id,
     account?.defaultStation?.id

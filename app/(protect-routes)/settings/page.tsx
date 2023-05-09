@@ -8,7 +8,8 @@ import { getAccount } from "@/lib"
 import { getBalance } from "@/graphql"
 
 export default async function Settings() {
-  const account = await getAccount()
+  const data = await getAccount()
+  const account = data?.account
   const balance = await getBalance(account?.owner || "")
 
   return (

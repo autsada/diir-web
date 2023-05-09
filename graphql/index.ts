@@ -27,9 +27,9 @@ import {
   CREATE_DRAFT_PUBLISH_MUTATION,
 } from "./mutations"
 
-const { API_URL_DEV, API_URL_TEST, NODE_ENV } = process.env
+const { API_URL, NODE_ENV } = process.env
 
-const apiURL = NODE_ENV === "development" ? API_URL_DEV : API_URL_TEST
+const apiURL = NODE_ENV === "development" ? "http://localhost:4000" : API_URL
 const client = new GraphQLClient(`${apiURL}/graphql`, {
   headers: {
     "Content-Type": "application/json",

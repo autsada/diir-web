@@ -10,6 +10,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   async function updatePublish(formData: FormData) {
     "use server"
+
     const id = formData.get("id")
     const title = formData.get("title")
     const description = formData.get("description")

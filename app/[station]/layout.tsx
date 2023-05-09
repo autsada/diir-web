@@ -13,7 +13,8 @@ export default async function Layout({
   children: React.ReactNode
   params: { station: string; tab: string }
 }) {
-  const account = await getAccount()
+  const data = await getAccount()
+  const account = data?.account
   const name = params.station.replace("%40", "")
 
   if (!name) {

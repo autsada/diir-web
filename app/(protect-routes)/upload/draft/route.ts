@@ -1,35 +1,26 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import { createDraftPublish, getMyAccount } from "@/graphql"
-import type { Account } from "@/graphql/types"
+import { createDraftPublish } from "@/graphql"
+import { getAccount } from "@/lib"
 
 export async function POST(req: Request) {
-  const cookieStore = cookies()
-  const token = cookieStore.get("dtoken")
-
-  if (!token || !token.value) return null
-  const idToken = token.value
-  if (!idToken) throw new Error("Unauthenticated")
-
-  const signedMessage = cookieStore.get("dsignature")
-  const signature = signedMessage?.value
-
-  // Get an account
-  const account = (await getMyAccount(idToken, signature)) as Account
+  const data = await getAccount()
+  const account = data?.account
   if (!account || !account?.defaultStation)
-    throw new Error("No account/station found")
+    throw new Error("No account/station found.")
+
+  const idToken = data?.idToken
+  if (!idToken) throw new Error("Please sign in to proceed.")
 
   const { filename } = (await req.json()) as { filename: string }
   if (!filename) throw new Error("Bad input")
 
-  // Create a draft publish in the database
   const result = await createDraftPublish({
     idToken,
-    signature,
-    owner: account.owner,
-    creatorId: account.defaultStation?.id,
+    signature: data?.signature,
     accountId: account.id,
+    creatorId: account.defaultStation.id,
     filename,
+    owner: account.owner,
   })
 
   return NextResponse.json(result)

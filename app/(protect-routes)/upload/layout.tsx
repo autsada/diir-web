@@ -8,7 +8,8 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const account = await getAccount()
+  const data = await getAccount()
+  const account = data?.account
 
   return (
     <>

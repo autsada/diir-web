@@ -1,13 +1,14 @@
 import React, { Suspense } from "react"
+import { redirect } from "next/navigation"
 
 import Upload from "./Upload"
 import { getAccount } from "@/lib"
 import { getStationById } from "@/graphql"
-import { redirect } from "next/navigation"
 import type { Station } from "@/graphql/types"
 
 export default async function Page() {
-  const account = await getAccount()
+  const data = await getAccount()
+  const account = data?.account
   if (!account?.defaultStation) {
     redirect("/")
   }
@@ -24,7 +25,7 @@ export default async function Page() {
       <h5>Upload content</h5>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <Upload />
+        <Upload idToken={data?.idToken || ""} stationName={station?.name} />
       </Suspense>
     </>
   )
