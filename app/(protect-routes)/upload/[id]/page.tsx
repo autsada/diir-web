@@ -4,9 +4,10 @@ import { revalidatePath } from "next/cache"
 import { getUploadedPublish } from "@/graphql"
 import { redirect } from "next/navigation"
 import ContentModal from "./ContentModal"
+import type { UploadedPublish } from "@/graphql/types"
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const publish = await getUploadedPublish(params.id)
+  const publish = (await getUploadedPublish(params.id)) as UploadedPublish
 
   async function updatePublish(formData: FormData) {
     "use server"

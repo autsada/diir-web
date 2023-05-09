@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
 import { getStorage } from "firebase/storage"
+import { getFirestore } from "firebase/firestore"
 
 const firebaseConfig = {
   apiKey: "AIzaSyCsRsWjtOFyiDhsa-2xfVi11_gj1zqgpR8",
@@ -16,5 +17,7 @@ const app = initializeApp(firebaseConfig)
 export const firebaseAuth = getAuth(app)
 firebaseAuth.useDeviceLanguage()
 export const storage = getStorage(app)
+export const db = getFirestore(app)
 
 export const stationFolder = "stations"
+export const uploadsCollection = "uploads"

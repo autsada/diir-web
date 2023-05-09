@@ -1,21 +1,37 @@
 "use client"
 
-import React from "react"
+import React, { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { doc, onSnapshot } from "firebase/firestore"
 
 import ModalWrapper from "@/components/ModalWrapper"
 import CategorySelect from "./CategorySelect"
 import CloseButton from "@/components/CloseButton"
-import type { Publish } from "@/graphql/types"
 import { contentCategories } from "@/lib/helpers"
+import { db, uploadsCollection } from "@/firebase/config"
+import type { UploadedPublish } from "@/graphql/types"
+import ButtonLoader from "@/components/ButtonLoader"
 
 interface Props {
-  publish: Publish
+  publish: UploadedPublish
   updatePublish: any
 }
 
 export default function ContentModal({ publish, updatePublish }: Props) {
   const router = useRouter()
+
+  // Listen to upload finished update in Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      doc(db, uploadsCollection, publish?.id),
+      (doc) => {
+        // Reload data to get the most updated publish
+        router.refresh()
+      }
+    )
+
+    return unsubscribe
+  }, [router, publish?.id])
 
   return (
     <ModalWrapper visible>
@@ -133,8 +149,36 @@ export default function ContentModal({ publish, updatePublish }: Props) {
               </div>
 
               <div className="sm:px-5">
-                <div className="h-[180px] sm:h-[160px] lg:h-[260px] mb-5 bg-red-200">
-                  Video
+                <div className="mb-5">
+                  <div className="h-[180px] sm:h-[160px] lg:h-[260px] mb-2 flex items-center justify-center bg-gray-100">
+                    {publish.playback ? (
+                      <video
+                        controls
+                        className="w-full h-full object-cover"
+                        poster={publish.playback.thumbnail}
+                      >
+                        <source src={publish.playback.hls} type="video/mp4" />
+                        <source src={publish.playback.dash} type="video/oog" />
+                      </video>
+                    ) : (
+                      <div className="text-center">
+                        <p>Uploading...</p>
+                        <ButtonLoader loading color="#f97316" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="px-4 py-2 border border-gray-100 rounded-sm">
+                    {publish.playback && (
+                      <div className="mb-4">
+                        <p className="font-thin">Playback link</p>
+                        <p></p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-thin">Filename</p>
+                      <p>{publish.filename || ""}</p>
+                    </div>
+                  </div>
                 </div>
 
                 <label

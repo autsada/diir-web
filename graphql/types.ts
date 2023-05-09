@@ -33,3 +33,6 @@ export type Station = NexusGenObjects["Station"] & {
 
 export type Publish = NexusGenObjects["Publish"]
 export type PublishCategory = NexusGenEnums["Category"]
+export type UploadedPublish = Publish & {
+  playback: NexusGenObjects["PlaybackLink"]
+}
