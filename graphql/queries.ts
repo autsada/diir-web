@@ -135,6 +135,7 @@ export const GET_CREATOR_PUBLISH_QUERY = gql`
       transcodeError
       playback {
         id
+        videoId
         thumbnail
         preview
         duration

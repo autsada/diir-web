@@ -228,6 +228,7 @@ export interface NexusGenObjects {
     publishId: string // String!
     thumbnail: string // String!
     updatedAt?: NexusGenScalars["DateTime"] | null // DateTime
+    videoId: string // String!
   }
   Publish: {
     // root type
@@ -410,6 +411,7 @@ export interface NexusGenFieldTypes {
     publishId: string // String!
     thumbnail: string // String!
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
+    videoId: string // String!
   }
   Publish: {
     // field return type
@@ -616,6 +618,7 @@ export interface NexusGenFieldTypeNames {
     publishId: "String"
     thumbnail: "String"
     updatedAt: "DateTime"
+    videoId: "String"
   }
   Publish: {
     // field return type name

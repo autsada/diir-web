@@ -3,6 +3,7 @@
 import React, { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { doc, onSnapshot } from "firebase/firestore"
+import { Stream } from "@cloudflare/stream-react"
 
 import ModalWrapper from "@/components/ModalWrapper"
 import CategorySelect from "./CategorySelect"
@@ -150,16 +151,15 @@ export default function ContentModal({ publish, updatePublish }: Props) {
 
               <div className="sm:px-5">
                 <div className="mb-5">
-                  <div className="h-[180px] sm:h-[160px] lg:h-[260px] mb-2 flex items-center justify-center bg-gray-100">
+                  <div className="w-full mb-2 flex items-center justify-center bg-gray-100">
                     {publish.playback ? (
-                      <video
-                        controls
-                        className="w-full h-full object-cover"
-                        poster={publish.playback.thumbnail}
-                      >
-                        <source src={publish.playback.hls} type="video/mp4" />
-                        <source src={publish.playback.dash} type="video/oog" />
-                      </video>
+                      <div className="w-full">
+                        <Stream
+                          controls
+                          src={publish.playback.videoId}
+                          poster={publish.playback.thumbnail}
+                        />
+                      </div>
                     ) : (
                       <div className="text-center">
                         <p>Uploading...</p>
