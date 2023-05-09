@@ -11,7 +11,7 @@ import _ from "lodash"
 import { useContractWrite } from "wagmi"
 
 import CloseButton from "@/components/CloseButton"
-import NameInput from "@/app/(protect-routes)/settings/NameInput"
+import NameInput from "@/app/(non-watch)/(protect-routes)/settings/NameInput"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
 import ModalWrapper from "@/components/ModalWrapper"

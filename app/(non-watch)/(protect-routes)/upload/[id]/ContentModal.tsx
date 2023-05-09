@@ -171,7 +171,16 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                     {publish.playback && (
                       <div className="mb-4">
                         <p className="font-thin">Playback link</p>
-                        <p></p>
+                        <div>
+                          <a
+                            href={` http://localhost:3000/watch/${publish.id}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sm text-blueBase"
+                          >
+                            http://localhost:3000/watch/{publish.id}
+                          </a>
+                        </div>
                       </div>
                     )}
                     <div>

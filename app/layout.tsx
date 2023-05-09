@@ -30,7 +30,7 @@ export default async function RootLayout({
           {/* @ts-expect-error Async Server Component */}
           <AppLayoutServer />
 
-          <div className="min-h-screen pt-[70px] sm:ml-[100px] overflow-y-auto">
+          <div className="min-h-screen pt-[70px] overflow-y-auto">
             {children}
           </div>
 

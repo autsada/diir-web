@@ -9,7 +9,8 @@ export default async function Page({
 }: {
   params: { station: string; tab: string }
 }) {
-  const account = await getAccount()
+  const data = await getAccount()
+  const account = data?.account
   const name = params.station.replace("%40", "")
 
   // Query station by name

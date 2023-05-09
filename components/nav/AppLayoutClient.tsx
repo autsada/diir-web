@@ -7,7 +7,7 @@ import MainNav from "./MainNav"
 import AuthModal from "../auth/AuthModal"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
-import SideBar from "./SideBar"
+// import SideBar from "./SideBar"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
 import type { Account } from "@/graphql/types"
 
@@ -91,10 +91,6 @@ export default function AppLayoutClient({ account, isAuthenticated }: Props) {
           openLeftDrawer={openLeftDrawer}
           openRightDrawer={openRightDrawer}
         />
-      </div>
-
-      <div className="hidden w-[100px] fixed top-[70px] bottom-0 bg-white py-5 px-2 sm:block overflow-y-auto">
-        <SideBar />
       </div>
 
       <LeftDrawer isOpen={leftDrawerVisible} closeDrawer={closeLeftDrawer} />
