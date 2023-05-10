@@ -36,3 +36,4 @@ export type PublishCategory = NexusGenEnums["Category"]
 export type UploadedPublish = Publish & {
   playback: NexusGenObjects["PlaybackLink"]
 }
+export type ThumbSource = NexusGenEnums["ThumbSource"]

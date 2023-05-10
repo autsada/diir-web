@@ -46,7 +46,7 @@ export default function StationImage({ station }: Props) {
             : "border border-gray-200"
         }`}
       >
-        <Dropzone onDrop={onDrop} multiple={false}>
+        <Dropzone onDrop={onDrop} multiple={false} accept={{ "image/*": [] }}>
           {({ getRootProps, getInputProps }) => (
             <section className="h-full w-full">
               <div {...getRootProps()} className="h-full">
