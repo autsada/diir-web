@@ -9,6 +9,7 @@ import { HiDotsVertical } from "react-icons/hi"
 import { IoCaretDownSharp } from "react-icons/io5"
 import { useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
+import _ from "lodash"
 
 import ModalWrapper from "@/components/ModalWrapper"
 import CloseButton from "@/components/CloseButton"
@@ -32,6 +33,7 @@ type FormData = {
   description: string
   primaryCat: PublishCategory
   secondaryCat: PublishCategory
+  visibility: "private" | "public"
 }
 
 export default function ContentModal({ publish, updatePublish }: Props) {
@@ -41,6 +43,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
   const [thumbSource, setThumbSource] = useState<ThumbSource>(() =>
     !publish?.thumbSource ? "generated" : publish.thumbSource
   )
+  const [isChanged, setIsChanged] = useState<boolean>()
 
   const router = useRouter()
   const hiddenInputRef = useRef<HTMLInputElement>(null)
@@ -114,7 +117,28 @@ export default function ContentModal({ publish, updatePublish }: Props) {
     }
   }, [hiddenInputRef])
 
-  const handleSave = handleSubmit((data) => console.log(data))
+  const handleSave = handleSubmit((data) => {
+    const oldData = {
+      title: publish.title,
+      description: publish.description || "",
+      thumbSource: !publish.thumbSource ? "generated" : publish.thumbSource,
+      primaryCategory: publish.primaryCategory || undefined,
+      secondaryCategory: publish.secondaryCategory || undefined,
+      public: publish.public,
+    }
+    const newData = {
+      title: data.title,
+      description: data.description,
+      thumbSource,
+      primaryCategory: data.primaryCat,
+      secondaryCategory: data.secondaryCat,
+      public: data.visibility === "public",
+    }
+
+    const isEqual = _.isEqual(oldData, newData)
+    setIsChanged(!isEqual)
+    if (isEqual) return
+  })
 
   return (
     <ModalWrapper visible>
@@ -483,10 +507,10 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                     >
                       <input
                         type="radio"
-                        name="visibility"
                         value="private"
                         defaultChecked={true}
                         className="cursor-pointer mr-4"
+                        {...register("visibility")}
                       />
                       Private
                     </label>
@@ -496,9 +520,10 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                     >
                       <input
                         type="radio"
-                        name="visibility"
+                        // name="visibility"
                         value="public"
                         className="cursor-pointer mr-4"
+                        {...register("visibility")}
                       />
                       Public
                     </label>
@@ -509,6 +534,9 @@ export default function ContentModal({ publish, updatePublish }: Props) {
           </div>
 
           <div className="w-full h-[70px] py-2 px-5 border-t border-gray-100 flex items-center justify-end">
+            {typeof isChanged === "boolean" && !isChanged && (
+              <p className="error mr-5">No changes</p>
+            )}
             <button type="submit" className="btn-blue mx-0 w-[100px]">
               Update
             </button>
