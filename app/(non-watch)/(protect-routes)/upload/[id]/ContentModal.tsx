@@ -6,20 +6,32 @@ import { doc, onSnapshot } from "firebase/firestore"
 import { Stream } from "@cloudflare/stream-react"
 import { MdFileUpload, MdOutlineWarning } from "react-icons/md"
 import { HiDotsVertical } from "react-icons/hi"
+import { IoCaretDownSharp } from "react-icons/io5"
 import { useDropzone } from "react-dropzone"
+import { useForm } from "react-hook-form"
 
 import ModalWrapper from "@/components/ModalWrapper"
-import CategorySelect from "./CategorySelect"
 import CloseButton from "@/components/CloseButton"
 import ButtonLoader from "@/components/ButtonLoader"
 import { contentCategories } from "@/lib/helpers"
 import { db, uploadsCollection } from "@/firebase/config"
-import type { ThumbSource, UploadedPublish } from "@/graphql/types"
+import type {
+  PublishCategory,
+  ThumbSource,
+  UploadedPublish,
+} from "@/graphql/types"
 import type { FileWithPrview } from "@/types"
 
 interface Props {
   publish: UploadedPublish
   updatePublish: any
+}
+
+type FormData = {
+  title: string
+  description: string
+  primaryCat: PublishCategory
+  secondaryCat: PublishCategory
 }
 
 export default function ContentModal({ publish, updatePublish }: Props) {
@@ -32,6 +44,13 @@ export default function ContentModal({ publish, updatePublish }: Props) {
 
   const router = useRouter()
   const hiddenInputRef = useRef<HTMLInputElement>(null)
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>()
+  const watchPrimary = watch("primaryCat")
 
   // Listen to upload finished update in Firestore
   useEffect(() => {
@@ -95,12 +114,14 @@ export default function ContentModal({ publish, updatePublish }: Props) {
     }
   }, [hiddenInputRef])
 
+  const handleSave = handleSubmit((data) => console.log(data))
+
   return (
     <ModalWrapper visible>
       <div className="w-full h-full min-w-full min-h-full max-w-full max-h-full flex items-center justify-center">
         <form
           className="relative w-[95%] h-[95%] bg-white rounded-md flex flex-col"
-          action={updatePublish}
+          onSubmit={handleSave}
         >
           {/* This hidden input will send the publish id to the mutation action */}
           <input
@@ -111,7 +132,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
             onChange={() => {}}
           />
 
-          <div className="w-full h-[60px] px-5 flex items-center justify-between border-b border-gray-100">
+          <div className="w-full h-[70px] px-5 flex items-center justify-between border-b border-gray-100">
             <h6 className="text-sm sm:text-base lg:text-textRegular">
               Publish id: {publish.id}
             </h6>
@@ -135,13 +156,20 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                   <div className="relative">
                     <input
                       type="text"
-                      name="title"
-                      minLength={1}
-                      maxLength={100}
                       defaultValue={publish.filename || ""}
                       placeholder="Publish title"
-                      className={`block w-full h-12 px-2 sm:px-4 rounded-sm border border-gray-200 focus:outline-none focus:border-orange-500`}
+                      className={`block w-full h-12 px-2 sm:px-4 rounded-sm focus:outline-none focus:border-orange-500 border ${
+                        errors.title ? "border-red-500" : "border-gray-200"
+                      }`}
+                      {...register("title", {
+                        required: "Required",
+                        minLength: 1,
+                        maxLength: 64,
+                      })}
                     />
+                    <p className="error">
+                      {errors.title ? errors.title.message : <>&nbsp;</>}
+                    </p>
                   </div>
                 </label>
 
@@ -152,14 +180,22 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                   Description
                   <div className="relative">
                     <textarea
-                      name="description"
-                      maxLength={5000}
                       defaultValue={publish.description || ""}
                       placeholder="Tell viewers about your content"
                       rows={6}
                       className={`block w-full py-1 px-2 sm:px-4 rounded-sm border border-gray-200 focus:outline-none focus:border-orange-500`}
+                      {...register("description", {
+                        maxLength: 5000,
+                      })}
                     />
                   </div>
+                  <p className="error">
+                    {errors.description ? (
+                      errors.description.message
+                    ) : (
+                      <>&nbsp;</>
+                    )}
+                  </p>
                 </label>
 
                 <label
@@ -329,28 +365,67 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                     You can choose up to 2 relevant categories.
                   </p>
                   <div className="mt-2 grid grid-cols-2 gap-x-2">
-                    <div className="relative border border-gray-200 py-1 pl-4 rounded-sm">
+                    <div
+                      className={`relative py-1 pl-4 rounded-sm border ${
+                        errors.primaryCat ? "border-red-500" : "border-gray-200"
+                      }`}
+                    >
                       <label htmlFor="primaryCat" className="block font-thin">
                         Primary <span className="text-textDark">*</span>
                       </label>
-                      <CategorySelect
-                        name="primary"
-                        preSelectOption="Select"
-                        options={contentCategories}
-                        value={publish.primaryCategory}
-                      />
+                      <select
+                        className="relative z-10 w-full bg-transparent appearance-none outline-none focus:outline-none cursor-pointer"
+                        defaultValue={publish.primaryCategory || undefined}
+                        {...register("primaryCat", {
+                          required: "Required",
+                        })}
+                      >
+                        <option value="">Select</option>
+                        {contentCategories.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute z-0 top-0 right-2 h-full flex flex-col justify-center">
+                        <IoCaretDownSharp />
+                      </div>
                     </div>
-                    <div className="relative border border-gray-200 py-1 pl-4 rounded-sm">
+                    <div
+                      className={`relative border border-gray-200 py-1 pl-4 rounded-sm ${
+                        !watchPrimary ? "opacity-50" : "opacity-100"
+                      }`}
+                    >
                       <label htmlFor="secondaryCat" className="block font-thin">
                         Secondary
                       </label>
-                      <CategorySelect
-                        name="secondary"
-                        preSelectOption="Select"
-                        options={contentCategories}
-                        value={publish.secondaryCategory}
-                      />
+                      <select
+                        className="relative z-10 w-full bg-transparent appearance-none outline-none focus:outline-none cursor-pointer"
+                        defaultValue={publish.secondaryCategory || undefined}
+                        disabled={!watchPrimary}
+                        {...register("secondaryCat")}
+                      >
+                        <option value="">Select</option>
+                        {contentCategories
+                          .filter((cat) => cat !== watchPrimary)
+                          .map((cat) => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
+                      </select>
+                      <div className="absolute z-0 top-0 right-2 h-full flex flex-col justify-center">
+                        <IoCaretDownSharp />
+                      </div>
                     </div>
+
+                    <p className="error">
+                      {errors.primaryCat ? (
+                        errors.primaryCat.message
+                      ) : (
+                        <>&nbsp;</>
+                      )}
+                    </p>
                   </div>
                 </label>
               </div>
@@ -433,7 +508,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
             </div>
           </div>
 
-          <div className="w-full h-[60px] py-2 px-5 border-t border-gray-100 flex items-center justify-end">
+          <div className="w-full h-[70px] py-2 px-5 border-t border-gray-100 flex items-center justify-end">
             <button type="submit" className="btn-blue mx-0 w-[100px]">
               Update
             </button>
