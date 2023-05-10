@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState } from "react"
 import { Web3Button } from "@web3modal/react"
 import { useAccount, useSignMessage, useDisconnect } from "wagmi"
 import { setCookie } from "cookies-next"
-import { signInAnonymously, browserSessionPersistence } from "firebase/auth"
+import { signInAnonymously } from "firebase/auth"
 import { useRouter } from "next/navigation"
 
 import PageLoader from "../PageLoader"
@@ -18,7 +18,7 @@ export default function WalletAuth({ closeModal }: Props) {
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
-  const { address, isConnected, status } = useAccount()
+  const { isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const { signMessage } = useSignMessage({
     onSuccess: async (data, variables) => {
@@ -35,8 +35,8 @@ export default function WalletAuth({ closeModal }: Props) {
     if (!signMessage) return
     try {
       setLoading(true)
-      // Set auth state persistance to session
-      await firebaseAuth.setPersistence(browserSessionPersistence)
+      // // Set auth state persistance to session
+      // await firebaseAuth.setPersistence(browserSessionPersistence)
       // Sign in anonymously with Firebase auth
       await signInAnonymously(firebaseAuth)
     } catch (error) {
