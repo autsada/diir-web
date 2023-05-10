@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import type { ChangeEvent } from "react"
 
 interface Props {
@@ -13,8 +14,17 @@ export default function EmailInput({
   placeholder = "Email address",
   disabled = false,
 }: Props) {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (inputRef?.current) {
+      inputRef.current.focus()
+    }
+  }, [inputRef])
+
   return (
     <input
+      ref={inputRef}
       type="email"
       name="email"
       className="h-14 md:h-12 w-full border border-orange-400 rounded-lg px-5 outline-none placeholder:font-extralight font-normal text-textRegular text-lg placeholder:text-textExtraLight focus:outline-none focus:border-[2px] focus:border-orange-500"
