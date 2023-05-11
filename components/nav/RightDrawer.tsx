@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { IoSettingsOutline, IoSettings } from "react-icons/io5"
 import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
+import { BsCollectionPlay, BsCollectionPlayFill } from "react-icons/bs"
 import { useDisconnect } from "wagmi"
 
 import ActiveLink from "./ActiveLink"
@@ -156,6 +157,14 @@ export default function RightDrawer({
                 href={profile ? `/station/${profile.id}` : "/station"}
                 ActiveIcon={MdVideoLibrary}
                 InActiveIcon={MdOutlineVideoLibrary}
+              />
+            </div>
+            <div className="w-full px-5 mt-5">
+              <ActiveLink
+                name="Publishes Dashboard"
+                href="/upload/publishes"
+                ActiveIcon={BsCollectionPlayFill}
+                InActiveIcon={BsCollectionPlay}
               />
             </div>
             <div className="w-full px-5 mt-5">

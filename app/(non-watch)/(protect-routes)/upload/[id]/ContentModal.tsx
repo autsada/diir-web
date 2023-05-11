@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useCallback, useEffect, useState, useRef } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { doc, onSnapshot } from "firebase/firestore"
 import { Stream } from "@cloudflare/stream-react"
@@ -652,14 +653,24 @@ export default function ContentModal({ publish, stationName }: Props) {
             </div>
           </div>
 
-          <div className="w-full h-[70px] py-2 px-5 border-t border-gray-100 flex items-center justify-end">
-            {typeof isChanged === "boolean" && !isChanged && (
-              <p className="error mr-5">No changes</p>
-            )}
-            {error && <p className="error mr-5">{error}</p>}
-            <button type="submit" className="btn-blue mx-0 w-[100px]">
-              {loading ? <ButtonLoader loading /> : "Save"}
-            </button>
+          <div className="w-full h-[70px] py-2 px-5 border-t border-gray-100 flex items-center justify-between">
+            <Link href="/upload/publishes">
+              <button
+                type="button"
+                className="text-orange-500 hover:text-orange-400"
+              >
+                View all publishes
+              </button>
+            </Link>
+            <div>
+              {typeof isChanged === "boolean" && !isChanged && (
+                <p className="error mr-5">No changes</p>
+              )}
+              {error && <p className="error mr-5">{error}</p>}
+              <button type="submit" className="btn-blue mx-0 w-[100px]">
+                {loading ? <ButtonLoader loading /> : "Save"}
+              </button>
+            </div>
           </div>
         </form>
       </div>
