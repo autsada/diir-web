@@ -7,6 +7,7 @@ interface Props {
   bgColor?: string
   progressColor?: string
   barRadius?: number
+  zIndex?: number
 }
 
 export default function ProgressBar({
@@ -16,10 +17,11 @@ export default function ProgressBar({
   bgColor = "#f3f4f6",
   progressColor = "#3b82f6",
   barRadius = 8,
+  zIndex = 50,
 }: Props) {
   return (
     <div className="absolute left-0 right-0 bottom-2 flex justify-center">
-      <div className="mx-auto" style={{ width: `${width}px` }}>
+      <div className="mx-auto" style={{ width: `${width}px`, zIndex }}>
         {!!progress && (
           <div
             className="w-full min-w-full mx-auto rounded-lg"

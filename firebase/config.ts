@@ -19,5 +19,6 @@ firebaseAuth.useDeviceLanguage()
 export const storage = getStorage(app)
 export const db = getFirestore(app)
 
-export const stationFolder = "stations"
+export const stationsFolder = "stations"
+export const publishesFolder = "publishes"
 export const uploadsCollection = "uploads"

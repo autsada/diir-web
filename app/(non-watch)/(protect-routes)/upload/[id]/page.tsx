@@ -1,13 +1,21 @@
 import React from "react"
 import { revalidatePath } from "next/cache"
 
-import { getUploadedPublish } from "@/graphql"
+import { getStationById, getUploadedPublish } from "@/graphql"
 import { redirect } from "next/navigation"
 import ContentModal from "./ContentModal"
 import type { UploadedPublish } from "@/graphql/types"
 
 export default async function Page({ params }: { params: { id: string } }) {
+  // Get publish from the database
   const publish = (await getUploadedPublish(params.id)) as UploadedPublish
+
+  if (!publish) {
+    redirect("/upload")
+  }
+
+  // Get creator station from the database
+  const station = await getStationById(publish.creatorId)
 
   async function updatePublish(formData: FormData) {
     "use server"
@@ -29,15 +37,11 @@ export default async function Page({ params }: { params: { id: string } }) {
     revalidatePath(`/upload/${id}`)
   }
 
-  if (!publish) {
-    redirect("/upload")
-  }
-
   return (
     <>
       <h5>Publish: {params.id}</h5>
 
-      <ContentModal publish={publish} updatePublish={updatePublish} />
+      <ContentModal publish={publish} stationName={station?.name || ""} />
     </>
   )
 }

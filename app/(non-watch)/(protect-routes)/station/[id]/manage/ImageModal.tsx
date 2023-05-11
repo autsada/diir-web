@@ -5,7 +5,7 @@ import ConfirmModal from "@/components/ConfirmModal"
 import ProgressBar from "@/components/ProgressBar"
 import Mask from "@/components/Mask"
 import { uploadFile } from "@/firebase/helpers"
-import { stationFolder } from "@/firebase/config"
+import { stationsFolder } from "@/firebase/config"
 import type { FileWithPrview } from "@/types"
 import type { Station } from "@/graphql/types"
 
@@ -29,7 +29,7 @@ export default function ImageModal({ station, image, cancelUpload }: Props) {
       setLoading(true)
       // Upload the image to cloud storage
       const { url, fileRef } = await uploadFile({
-        folder: `${stationFolder}/${station?.name}/profile`,
+        folder: `${stationsFolder}/${station?.name}/profile`,
         file: image,
         setProgress: setUploadProgress,
       })

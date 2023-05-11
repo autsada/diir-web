@@ -128,11 +128,15 @@ export const GET_CREATOR_PUBLISH_QUERY = gql`
       description
       primaryCategory
       secondaryCategory
-      public
+      visibility
       filename
+      thumbnail
+      thumbnailRef
+      thumbSource
       uploading
       uploadError
       transcodeError
+      kind
       playback {
         id
         videoId

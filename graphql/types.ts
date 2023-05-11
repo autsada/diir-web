@@ -3,6 +3,7 @@ import type {
   NexusGenArgTypes,
   NexusGenObjects,
   NexusGenEnums,
+  NexusGenInputs,
 } from "./typegen"
 
 export type QueryReturnType<T extends keyof NexusGenFieldTypes["Query"]> = {
@@ -37,3 +38,5 @@ export type UploadedPublish = Publish & {
   playback: NexusGenObjects["PlaybackLink"]
 }
 export type ThumbSource = NexusGenEnums["ThumbSource"]
+export type PublishKind = NexusGenEnums["PublishKind"]
+export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]

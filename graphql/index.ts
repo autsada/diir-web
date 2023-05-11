@@ -5,6 +5,7 @@ import type {
   QueryArgsType,
   MutationArgsType,
   MutationReturnType,
+  UpdatePublishInput,
 } from "./types"
 import {
   GET_ACCOUNT_QUERY,
@@ -25,6 +26,7 @@ import {
   UPDATE_PROFILE_IMAGE_MUTATION,
   UPDATE_BANNER_IMAGE_MUTATION,
   CREATE_DRAFT_PUBLISH_MUTATION,
+  UPDATE_PUBLISH_MUTATION,
 } from "./mutations"
 
 const { API_URL, NODE_ENV } = process.env
@@ -414,4 +416,32 @@ export async function getUploadedPublish(id: string) {
   >(GET_CREATOR_PUBLISH_QUERY, { id })
 
   return data?.getPublishForCreator
+}
+
+/**
+ * Update publish
+ */
+export async function updatePublish({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: UpdatePublishInput
+}) {
+  const result = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      MutationReturnType<"updatePublish">,
+      MutationArgsType<"updatePublish">
+    >(UPDATE_PUBLISH_MUTATION, {
+      input: data,
+    })
+
+  return result?.updatePublish
 }

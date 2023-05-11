@@ -91,3 +91,11 @@ export const CREATE_DRAFT_PUBLISH_MUTATION = gql`
     }
   }
 `
+
+export const UPDATE_PUBLISH_MUTATION = gql`
+  mutation UpdatePublish($input: UpdatePublishInput!) {
+    updatePublish(input: $input) {
+      id
+    }
+  }
+`

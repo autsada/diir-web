@@ -14,10 +14,14 @@ import _ from "lodash"
 import ModalWrapper from "@/components/ModalWrapper"
 import CloseButton from "@/components/CloseButton"
 import ButtonLoader from "@/components/ButtonLoader"
+import ProgressBar from "@/components/ProgressBar"
+import Mask from "@/components/Mask"
 import { contentCategories } from "@/lib/helpers"
-import { db, uploadsCollection } from "@/firebase/config"
+import { db, publishesFolder, uploadsCollection } from "@/firebase/config"
+import { deleteFile, uploadFile } from "@/firebase/helpers"
 import type {
   PublishCategory,
+  PublishKind,
   ThumbSource,
   UploadedPublish,
 } from "@/graphql/types"
@@ -25,7 +29,7 @@ import type { FileWithPrview } from "@/types"
 
 interface Props {
   publish: UploadedPublish
-  updatePublish: any
+  stationName: string
 }
 
 type FormData = {
@@ -34,9 +38,10 @@ type FormData = {
   primaryCat: PublishCategory
   secondaryCat: PublishCategory
   visibility: "private" | "public"
+  kind: PublishKind
 }
 
-export default function ContentModal({ publish, updatePublish }: Props) {
+export default function ContentModal({ publish, stationName }: Props) {
   const [thumbnail, setThumbnail] = useState<FileWithPrview>()
   const [thumbnailError, setThumbnailError] = useState("")
   const [isChangingThumb, setIsChangingThumb] = useState(false)
@@ -44,6 +49,10 @@ export default function ContentModal({ publish, updatePublish }: Props) {
     !publish?.thumbSource ? "generated" : publish.thumbSource
   )
   const [isChanged, setIsChanged] = useState<boolean>()
+  const [thumbnailLoading, setThumbnailLoading] = useState(false)
+  const [thumbnailProgress, setThumbnailProgress] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const router = useRouter()
   const hiddenInputRef = useRef<HTMLInputElement>(null)
@@ -117,27 +126,84 @@ export default function ContentModal({ publish, updatePublish }: Props) {
     }
   }, [hiddenInputRef])
 
-  const handleSave = handleSubmit((data) => {
-    const oldData = {
-      title: publish.title,
-      description: publish.description || "",
-      thumbSource: !publish.thumbSource ? "generated" : publish.thumbSource,
-      primaryCategory: publish.primaryCategory || undefined,
-      secondaryCategory: publish.secondaryCategory || undefined,
-      public: publish.public,
-    }
-    const newData = {
-      title: data.title,
-      description: data.description,
-      thumbSource,
-      primaryCategory: data.primaryCat,
-      secondaryCategory: data.secondaryCat,
-      public: data.visibility === "public",
-    }
+  const handleSave = handleSubmit(async (data) => {
+    try {
+      if (!stationName) return
 
-    const isEqual = _.isEqual(oldData, newData)
-    setIsChanged(!isEqual)
-    if (isEqual) return
+      setLoading(true)
+
+      // If user upload thumbnail, upload the thumbnail image to cloud storage first
+      let thumbnailURI = ""
+      let thumbnailRef = ""
+      if (thumbnail) {
+        setThumbnailLoading(true)
+        const { url, fileRef } = await uploadFile({
+          file: thumbnail,
+          folder: `${publishesFolder}/${stationName}/${publish.id}`,
+          setProgress: setThumbnailProgress,
+        })
+        setThumbnailLoading(false)
+        thumbnailURI = url
+        thumbnailRef = fileRef
+
+        if (publish.thumbnailRef) {
+          // Delete the old thumbnail from cloud storage (without waiting)
+          deleteFile(publish.thumbnailRef)
+        }
+      } else {
+        thumbnailURI = publish.thumbnail || ""
+        thumbnailRef = publish.thumbnailRef || ""
+      }
+
+      const oldData = {
+        thumbnail: publish.thumbnail || "",
+        thumbnailRef: publish.thumbnailRef || "",
+        title: publish.title,
+        description: publish.description || "",
+        thumbSource: !publish.thumbSource ? "generated" : publish.thumbSource,
+        primaryCategory: publish.primaryCategory || "",
+        secondaryCategory: publish.secondaryCategory || "",
+        visibility: publish.visibility,
+        kind: publish.kind || "",
+      }
+      const newData = {
+        thumbnail: thumbnailURI,
+        thumbnailRef,
+        title: data.title || "",
+        description: data.description || "",
+        thumbSource: thumbSource || "",
+        primaryCategory: data.primaryCat || "",
+        secondaryCategory: data.secondaryCat || "",
+        visibility: data.visibility,
+        kind: data.kind || "",
+      }
+
+      const isEqual = _.isEqual(oldData, newData)
+      setIsChanged(!isEqual)
+
+      if (isEqual) {
+        setLoading(false)
+        return
+      }
+
+      // Call api route to update the publish in the database
+      const res = await fetch(`/upload/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ publishId: publish.id, ...newData }),
+      })
+      await res.json()
+
+      // Reload data
+      router.refresh()
+      // Push to all publishes page
+      router.push("/upload/publishes")
+    } catch (error) {
+      setLoading(false)
+      setError("Save failed, please try again.")
+    }
   })
 
   return (
@@ -180,9 +246,9 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                   <div className="relative">
                     <input
                       type="text"
-                      defaultValue={publish.filename || ""}
+                      defaultValue={publish.title || publish.filename || ""}
                       placeholder="Publish title"
-                      className={`block w-full h-12 px-2 sm:px-4 rounded-sm focus:outline-none focus:border-orange-500 border ${
+                      className={`block w-full h-12 px-2 font-normal text-base sm:px-4 rounded-sm focus:outline-none focus:border-orange-500 border ${
                         errors.title ? "border-red-500" : "border-gray-200"
                       }`}
                       {...register("title", {
@@ -207,7 +273,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                       defaultValue={publish.description || ""}
                       placeholder="Tell viewers about your content"
                       rows={6}
-                      className={`block w-full py-1 px-2 sm:px-4 rounded-sm border border-gray-200 focus:outline-none focus:border-orange-500`}
+                      className={`block w-full py-1 px-2 font-normal text-base  sm:px-4 rounded-sm border border-gray-200 focus:outline-none focus:border-orange-500`}
                       {...register("description", {
                         maxLength: 5000,
                       })}
@@ -224,7 +290,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
 
                 <label
                   htmlFor="thumbnail"
-                  className="block text-start font-semibold mb-5"
+                  className="block text-start font-semibold mb-10"
                 >
                   Thumbnail
                   <p className="font-light text-textExtraLight text-sm">
@@ -259,6 +325,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                           <p className="mt-2 text-center font-light text-xs text-textLight">
                             Generating thumbnail...
                           </p>
+                          <ButtonLoader loading color="#f97316" />
                         </>
                       )}
                     </div>
@@ -332,6 +399,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                           {/* A button to be clicked to open upload box */}
                           {isChangingThumb && (
                             <button
+                              type="button" // Makue sure to set type to "button"
                               className="absolute z-20 btn-orange px-5 rounded-full"
                               onClick={onChangeThumb}
                             >
@@ -350,6 +418,13 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                           >
                             <input {...getInputProps()} ref={hiddenInputRef} />
                           </div>
+
+                          {/* Progress bar when uploading thumbnail */}
+                          {thumbnailLoading && (
+                            <div className="absolute z-30 inset-0 bg-white opacity-50">
+                              <ProgressBar progress={thumbnailProgress} />
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div
@@ -404,7 +479,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                           required: "Required",
                         })}
                       >
-                        <option value="">Select</option>
+                        <option value="">----</option>
                         {contentCategories.map((cat) => (
                           <option key={cat} value={cat}>
                             {cat}
@@ -420,27 +495,37 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                         !watchPrimary ? "opacity-50" : "opacity-100"
                       }`}
                     >
-                      <label htmlFor="secondaryCat" className="block font-thin">
-                        Secondary
-                      </label>
-                      <select
-                        className="relative z-10 w-full bg-transparent appearance-none outline-none focus:outline-none cursor-pointer"
-                        defaultValue={publish.secondaryCategory || undefined}
-                        disabled={!watchPrimary}
-                        {...register("secondaryCat")}
-                      >
-                        <option value="">Select</option>
-                        {contentCategories
-                          .filter((cat) => cat !== watchPrimary)
-                          .map((cat) => (
-                            <option key={cat} value={cat}>
-                              {cat}
-                            </option>
-                          ))}
-                      </select>
-                      <div className="absolute z-0 top-0 right-2 h-full flex flex-col justify-center">
-                        <IoCaretDownSharp />
-                      </div>
+                      {watchPrimary && (
+                        <>
+                          <label
+                            htmlFor="secondaryCat"
+                            className="block font-thin"
+                          >
+                            Secondary
+                          </label>
+                          <select
+                            id="secondary"
+                            className="relative z-10 w-full bg-transparent appearance-none outline-none focus:outline-none cursor-pointer"
+                            defaultValue={
+                              publish.secondaryCategory || undefined
+                            }
+                            disabled={!watchPrimary}
+                            {...register("secondaryCat")}
+                          >
+                            <option value="">----</option>
+                            {contentCategories
+                              .filter((cat) => cat !== watchPrimary)
+                              .map((cat) => (
+                                <option key={cat} value={cat}>
+                                  {cat}
+                                </option>
+                              ))}
+                          </select>
+                          <div className="absolute z-0 top-0 right-2 h-full flex flex-col justify-center">
+                            <IoCaretDownSharp />
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     <p className="error">
@@ -455,7 +540,7 @@ export default function ContentModal({ publish, updatePublish }: Props) {
               </div>
 
               <div className="sm:px-5">
-                <div className="mb-5">
+                <div className="mb-10">
                   <div className="w-full mb-2 flex items-center justify-center bg-gray-100">
                     {publish.playback ? (
                       <div className="w-full">
@@ -496,6 +581,40 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                 </div>
 
                 <label
+                  htmlFor="kind"
+                  className="block text-start font-semibold mb-10"
+                >
+                  Publish Kind
+                  <div className="px-5 mt-2">
+                    <label
+                      htmlFor="Video"
+                      className="block font-light text-textLight"
+                    >
+                      <input
+                        type="radio"
+                        value="Video"
+                        defaultChecked={true}
+                        className="cursor-pointer mr-4"
+                        {...register("kind")}
+                      />
+                      Video
+                    </label>
+                    <label
+                      htmlFor="Podcast"
+                      className="block font-light text-textLight"
+                    >
+                      <input
+                        type="radio"
+                        value="Podcast"
+                        className="cursor-pointer mr-4"
+                        {...register("kind")}
+                      />
+                      Podcast
+                    </label>
+                  </div>
+                </label>
+
+                <label
                   htmlFor="visibility"
                   className="block text-start font-semibold mb-5"
                 >
@@ -503,12 +622,12 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                   <div className="px-5 mt-2">
                     <label
                       htmlFor="private"
-                      className="block font-light text-textLight mb-4"
+                      className="block font-light text-textLight"
                     >
                       <input
                         type="radio"
                         value="private"
-                        defaultChecked={true}
+                        defaultChecked={publish.visibility === "private"}
                         className="cursor-pointer mr-4"
                         {...register("visibility")}
                       />
@@ -520,8 +639,8 @@ export default function ContentModal({ publish, updatePublish }: Props) {
                     >
                       <input
                         type="radio"
-                        // name="visibility"
                         value="public"
+                        defaultChecked={publish.visibility === "public"}
                         className="cursor-pointer mr-4"
                         {...register("visibility")}
                       />
@@ -537,12 +656,15 @@ export default function ContentModal({ publish, updatePublish }: Props) {
             {typeof isChanged === "boolean" && !isChanged && (
               <p className="error mr-5">No changes</p>
             )}
+            {error && <p className="error mr-5">{error}</p>}
             <button type="submit" className="btn-blue mx-0 w-[100px]">
-              Update
+              {loading ? <ButtonLoader loading /> : "Save"}
             </button>
           </div>
         </form>
       </div>
+
+      {loading && <Mask />}
     </ModalWrapper>
   )
 }
