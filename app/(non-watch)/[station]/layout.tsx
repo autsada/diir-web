@@ -32,7 +32,7 @@ export default async function Layout({
   }
 
   return (
-    <div className="w-full px-4 py-2 sm:px-12">
+    <div className="w-full px-4 py-2">
       <StationTemplate station={station} />
 
       {children}

@@ -9,7 +9,7 @@ interface Props {
   station: Station
 }
 
-export default function StationLayout({ station }: Props) {
+export default function StationTemplate({ station }: Props) {
   return (
     <>
       {station?.bannerImage && (
@@ -23,7 +23,7 @@ export default function StationLayout({ station }: Props) {
         </div>
       )}
 
-      <div className="mt-2 sm:px-10">
+      <div className="mt-2">
         <div className="relative flex mt-5">
           <div className="flex items-center justify-center w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] rounded-full overflow-hidden cursor-pointer">
             {!station || !station.image ? (

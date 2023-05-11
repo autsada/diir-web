@@ -12,13 +12,13 @@ export default async function Layout({
   const account = data?.account
 
   return (
-    <>
+    <div className="py-2">
       {children}
       {account && !account.defaultStation && (
         <Suspense>
           <InformModal />
         </Suspense>
       )}
-    </>
+    </div>
   )
 }

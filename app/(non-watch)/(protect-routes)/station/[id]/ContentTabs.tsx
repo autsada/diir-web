@@ -1,9 +1,9 @@
 "use client"
 
 import React from "react"
-import Link from "next/link"
 import { useParams } from "next/navigation"
 
+import Tab from "@/components/Tab"
 import type { Station } from "@/graphql/types"
 
 interface Props {
@@ -41,28 +41,6 @@ export default function ContentTabs({ station }: Props) {
         name="BLOGS"
         isActive={tab === "blogs"}
       />
-    </div>
-  )
-}
-
-function Tab({
-  href,
-  name,
-  isActive,
-}: {
-  href: string
-  name: string
-  isActive: boolean
-}) {
-  return (
-    <div
-      className={`px-1 sm:px-2 text-base cursor-pointer ${
-        isActive
-          ? "font-semibold border-b-[2px] border-gray-600"
-          : "text-textLight border-none"
-      }`}
-    >
-      <Link href={href}>{name}</Link>
     </div>
   )
 }
