@@ -254,8 +254,14 @@ export default function ContentModal({ publish, stationName }: Props) {
                       }`}
                       {...register("title", {
                         required: "Required",
-                        minLength: 1,
-                        maxLength: 64,
+                        minLength: {
+                          value: 3,
+                          message: "Too short (min 3 characters)",
+                        },
+                        maxLength: {
+                          value: 64,
+                          message: "Too long (max 64 characters)",
+                        },
                       })}
                     />
                     <p className="error">
@@ -276,7 +282,10 @@ export default function ContentModal({ publish, stationName }: Props) {
                       rows={6}
                       className={`block w-full py-1 px-2 font-normal text-base  sm:px-4 rounded-sm border border-gray-200 focus:outline-none focus:border-orange-500`}
                       {...register("description", {
-                        maxLength: 5000,
+                        maxLength: {
+                          value: 5000,
+                          message: "Too long",
+                        },
                       })}
                     />
                   </div>
@@ -589,7 +598,7 @@ export default function ContentModal({ publish, stationName }: Props) {
                   <div className="px-5 mt-2">
                     <label
                       htmlFor="Video"
-                      className="block font-light text-textLight"
+                      className="block font-light text-textLight mb-2"
                     >
                       <input
                         type="radio"
@@ -620,17 +629,23 @@ export default function ContentModal({ publish, stationName }: Props) {
                   className="block text-start font-semibold mb-5"
                 >
                   Visibility
-                  <div className="px-5 mt-2">
+                  <div
+                    className={`px-5 mt-2 pt-1  border rounded-sm ${
+                      errors.visibility
+                        ? "border-red-500"
+                        : "border-transparent"
+                    }`}
+                  >
                     <label
                       htmlFor="private"
-                      className="block font-light text-textLight"
+                      className="block font-light text-textLight mb-2"
                     >
                       <input
                         type="radio"
                         value="private"
                         defaultChecked={publish.visibility === "private"}
                         className="cursor-pointer mr-4"
-                        {...register("visibility")}
+                        {...register("visibility", { required: "Required" })}
                       />
                       Private
                     </label>
@@ -643,34 +658,31 @@ export default function ContentModal({ publish, stationName }: Props) {
                         value="public"
                         defaultChecked={publish.visibility === "public"}
                         className="cursor-pointer mr-4"
-                        {...register("visibility")}
+                        {...register("visibility", { required: "Required" })}
                       />
                       Public
                     </label>
                   </div>
+                  <p className="error">
+                    {errors.visibility ? (
+                      errors.visibility.message
+                    ) : (
+                      <>&nbsp;</>
+                    )}
+                  </p>
                 </label>
               </div>
             </div>
           </div>
 
-          <div className="w-full h-[70px] py-2 px-5 border-t border-gray-100 flex items-center justify-between">
-            <Link href="/upload/publishes">
-              <button
-                type="button"
-                className="text-orange-500 hover:text-orange-400"
-              >
-                View all publishes
-              </button>
-            </Link>
-            <div>
-              {typeof isChanged === "boolean" && !isChanged && (
-                <p className="error mr-5">No changes</p>
-              )}
-              {error && <p className="error mr-5">{error}</p>}
-              <button type="submit" className="btn-blue mx-0 w-[100px]">
-                {loading ? <ButtonLoader loading /> : "Save"}
-              </button>
-            </div>
+          <div className="w-full h-[70px] py-2 px-5 border-t border-gray-100 flex items-center justify-end">
+            {typeof isChanged === "boolean" && !isChanged && (
+              <p className="error mr-5">No changes</p>
+            )}
+            {error && <p className="error mr-5">{error}</p>}
+            <button type="submit" className="btn-blue mx-0 w-[100px]">
+              {loading ? <ButtonLoader loading /> : "Save"}
+            </button>
           </div>
         </form>
       </div>

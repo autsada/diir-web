@@ -89,11 +89,11 @@ export default function EmailAuth() {
               email. Please try again.
             </p>
           ) : isSent ? (
-            <h6 className="text-center text-lg">
+            <h6 className="text-center text-lg text-blueBase">
               We have sent you a sign-in link, please check your email.
             </h6>
           ) : (
-            <p className="text-center text-lg text-blueBase">
+            <p className="font-light text-center text-lg text-blueBase">
               We will send a sign-in link to your email.
             </p>
           )}

@@ -1,4 +1,5 @@
 import React from "react"
+import { useRouter } from "next/navigation"
 
 import Avatar from "@/components/Avatar"
 import Online from "@/components/Online"
@@ -15,12 +16,14 @@ export default function StationItem({
   defaultId,
   onRequestToSwitchStation,
 }: Props) {
+  const router = useRouter()
+
   return (
     <div
       className="py-2 px-2 sm:px-4 flex items-center cursor-pointer rounded-lg hover:bg-gray-50"
       onClick={
         item.id === defaultId
-          ? undefined
+          ? () => router.push(`/station/${defaultId}`)
           : onRequestToSwitchStation.bind(undefined, item.id)
       }
     >

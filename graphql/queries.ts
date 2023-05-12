@@ -170,6 +170,7 @@ export const GET_MY_PUBLISHES_QUERY = gql`
       uploading
       uploadError
       tipsCount
+      visibility
       playback {
         id
         thumbnail

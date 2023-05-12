@@ -14,7 +14,7 @@ export default async function Layout({
   const data = await getAccount()
   const account = data?.account
   if (!account?.defaultStation) {
-    redirect("/")
+    redirect("/station")
   }
 
   // Query station by id

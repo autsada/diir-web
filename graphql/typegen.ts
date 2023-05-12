@@ -150,7 +150,7 @@ export interface NexusGenEnums {
   CommentType: "COMMENT" | "PUBLISH"
   PublishKind: "Adds" | "Blog" | "Podcast" | "Short" | "Video"
   ThumbSource: "custom" | "generated"
-  Visibility: "private" | "public"
+  Visibility: "draft" | "private" | "public"
 }
 
 export interface NexusGenScalars {
