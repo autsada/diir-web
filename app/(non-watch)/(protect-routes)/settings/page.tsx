@@ -4,7 +4,7 @@ import Address from "./Address"
 import Divider from "@/components/Divider"
 import ManageStations from "./ManageStations"
 import ManageStationsTemplate from "./ManageStationsTemplate"
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import { getBalance } from "@/graphql"
 
 export default async function Settings() {

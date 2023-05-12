@@ -1,7 +1,7 @@
 import React from "react"
 import { redirect } from "next/navigation"
 
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
 import type { Station } from "@/graphql/types"
 import StationTemplate from "./StationTemplate"

@@ -1,6 +1,6 @@
 import React, { Suspense } from "react"
 
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import InformModal from "./InformModal"
 
 export default async function Layout({

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createDraftPublish } from "@/graphql"
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 
 export async function POST(req: Request) {
   const data = await getAccount()

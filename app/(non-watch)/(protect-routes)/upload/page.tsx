@@ -2,7 +2,7 @@ import React, { Suspense } from "react"
 import { redirect } from "next/navigation"
 
 import Upload from "./Upload"
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
 import type { Station } from "@/graphql/types"
 

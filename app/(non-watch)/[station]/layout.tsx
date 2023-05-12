@@ -1,7 +1,7 @@
 import React from "react"
 import { notFound } from "next/navigation"
 
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import { getStationByName } from "@/graphql"
 import type { Station } from "@/graphql/types"
 import StationTemplate from "../(protect-routes)/station/[id]/StationTemplate"

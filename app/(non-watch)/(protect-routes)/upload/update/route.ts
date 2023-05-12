@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 
 import { updatePublish } from "@/graphql"
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import type { UpdatePublishInput } from "@/graphql/types"
 
 export async function POST(req: Request) {

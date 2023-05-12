@@ -2,7 +2,7 @@ import React, { Suspense } from "react"
 import { redirect } from "next/navigation"
 
 import VerifyEmail from "./Verify"
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 
 export default async function Verify() {
   const data = await getAccount()

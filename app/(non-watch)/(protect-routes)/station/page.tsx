@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 
 import Station from "./Station"
 import PageLoader from "@/components/PageLoader"
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 
 export default async function Page() {
   const data = await getAccount()

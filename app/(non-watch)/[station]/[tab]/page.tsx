@@ -1,6 +1,6 @@
 import React from "react"
 
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import { getStationByName } from "@/graphql"
 import type { Station } from "@/graphql/types"
 

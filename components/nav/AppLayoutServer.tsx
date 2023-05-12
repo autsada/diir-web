@@ -2,7 +2,7 @@ import React, { Suspense } from "react"
 
 import AppLayoutClient from "./AppLayoutClient"
 import TempAppLayout from "./TempAppLayout"
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 
 export default async function AppLayoutServer() {
   const data = await getAccount()

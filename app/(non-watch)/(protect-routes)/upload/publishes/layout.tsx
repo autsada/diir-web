@@ -1,6 +1,6 @@
 import React from "react"
 
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
 import { redirect } from "next/navigation"
 import type { Station } from "@/graphql/types"

@@ -1,7 +1,7 @@
 import React from "react"
 import { redirect } from "next/navigation"
 
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 
 export default async function Layout({
   children,

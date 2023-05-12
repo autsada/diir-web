@@ -5,7 +5,7 @@ import { MdModeEditOutline } from "react-icons/md"
 import StationName from "./StationName"
 import StationImage from "./StationImage"
 import BannerImage from "./BannerImage"
-import { getAccount } from "@/lib"
+import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
 import type { Station } from "@/graphql/types"
 
