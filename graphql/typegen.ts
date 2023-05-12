@@ -65,6 +65,7 @@ export interface NexusGenInputs {
     // input type
     accountId: string // String!
     creatorId: string // String!
+    kind: NexusGenEnums["QueryPublishKind"] // QueryPublishKind!
     owner: string // String!
   }
   MintStationNFTInput: {
@@ -149,6 +150,7 @@ export interface NexusGenEnums {
     | "Women"
   CommentType: "COMMENT" | "PUBLISH"
   PublishKind: "Adds" | "Blog" | "Podcast" | "Short" | "Video"
+  QueryPublishKind: "adds" | "all" | "blogs" | "podcasts" | "videos"
   ThumbSource: "custom" | "generated"
   Visibility: "draft" | "private" | "public"
 }

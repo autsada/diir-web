@@ -44,4 +44,5 @@ export type UploadedPublish = Publish & {
 export type ThumbSource = NexusGenEnums["ThumbSource"]
 export type PublishKind = NexusGenEnums["PublishKind"]
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
+export type QueryPublishKind = NexusGenEnums["QueryPublishKind"]
 export type GetMyPublishesInput = NexusGenInputs["GetMyPublishesInput"]

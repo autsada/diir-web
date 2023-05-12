@@ -1,31 +1,53 @@
 import React from "react"
+import { redirect } from "next/navigation"
 
+import Publishes from "../Publishes"
 import { getAccount } from "@/lib/server"
-import { getStationByName } from "@/graphql"
-import type { Station } from "@/graphql/types"
+import { getMyPublishes, getStationById } from "@/graphql"
+import type {
+  QueryPublishKind,
+  Station,
+  UploadedPublish,
+} from "@/graphql/types"
 
 export default async function Page({
   params,
 }: {
-  params: { station: string; tab: string }
+  params: { kind: QueryPublishKind }
 }) {
   const data = await getAccount()
   const account = data?.account
+  const idToken = data?.idToken
+  const signature = data?.signature
 
-  //   // Query station by name
-  //   const station = (await getStationByName(
-  //     name,
-  //     account?.defaultStation?.id
-  //   )) as Station
+  if (!idToken) {
+    redirect("/")
+  }
 
-  return (
-    <>
-      {/* {station?.publishes.length === 0 ? (
-          <h6 className="text-textLight text-center">No content found</h6>
-        ) : (
-          <div></div>
-        )} */}
-      Publish by kind
-    </>
-  )
+  if (!account?.defaultStation) {
+    redirect("/station")
+  }
+
+  // Query station by id
+  const station = (await getStationById(account?.defaultStation?.id)) as Station
+
+  if (!station) {
+    redirect("/settings")
+  }
+
+  // Query all publishes by kind.
+  const kind = params.kind
+
+  let publishes = (await getMyPublishes({
+    idToken,
+    signature,
+    data: {
+      accountId: account.id,
+      owner: account.owner,
+      creatorId: station.id,
+      kind,
+    },
+  })) as UploadedPublish[]
+
+  return <Publishes publishes={publishes} />
 }
