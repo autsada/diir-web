@@ -36,7 +36,12 @@ export type Publish = NexusGenObjects["Publish"]
 export type PublishCategory = NexusGenEnums["Category"]
 export type UploadedPublish = Publish & {
   playback: NexusGenObjects["PlaybackLink"]
+  commentsCount: number
+  likesCount: number
+  disLikesCount: number
+  tipsCount: number
 }
 export type ThumbSource = NexusGenEnums["ThumbSource"]
 export type PublishKind = NexusGenEnums["PublishKind"]
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
+export type GetMyPublishesInput = NexusGenInputs["GetMyPublishesInput"]

@@ -11,7 +11,6 @@ export default async function Page({
 }) {
   const data = await getAccount()
   const account = data?.account
-  console.log("params: ", params)
 
   //   // Query station by name
   //   const station = (await getStationByName(
@@ -21,14 +20,12 @@ export default async function Page({
 
   return (
     <>
-      <div className="mt-2">
-        {/* {station?.publishes.length === 0 ? (
+      {/* {station?.publishes.length === 0 ? (
           <h6 className="text-textLight text-center">No content found</h6>
         ) : (
           <div></div>
         )} */}
-        Publish by kind
-      </div>
+      Publish by kind
     </>
   )
 }

@@ -14,7 +14,6 @@ export default function PublishTabs({ station }: Props) {
   const params = useParams()
   const kind = params?.kind
 
-  console.log("kind: ", kind)
   return (
     <div className="flex gap-x-1 sm:gap-x-4">
       <Tab

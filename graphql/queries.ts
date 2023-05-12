@@ -149,3 +149,32 @@ export const GET_CREATOR_PUBLISH_QUERY = gql`
     }
   }
 `
+
+export const GET_MY_PUBLISHES_QUERY = gql`
+  query GetMyPublishes($input: GetMyPublishesInput!) {
+    getMyPublishes(input: $input) {
+      id
+      createdAt
+      contentURI
+      contentRef
+      filename
+      thumbnail
+      thumbnailRef
+      thumbSource
+      title
+      description
+      views
+      commentsCount
+      likesCount
+      disLikesCount
+      uploading
+      uploadError
+      tipsCount
+      playback {
+        id
+        thumbnail
+        duration
+      }
+    }
+  }
+`

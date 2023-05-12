@@ -6,11 +6,13 @@ import type {
   MutationArgsType,
   MutationReturnType,
   UpdatePublishInput,
+  GetMyPublishesInput,
 } from "./types"
 import {
   GET_ACCOUNT_QUERY,
   GET_BALANCE_QUERY,
   GET_CREATOR_PUBLISH_QUERY,
+  GET_MY_PUBLISHES_QUERY,
   GET_STATION_BY_ID_QUERY,
   GET_STATION_BY_NAME_QUERY,
 } from "./queries"
@@ -444,4 +446,32 @@ export async function updatePublish({
     })
 
   return result?.updatePublish
+}
+
+/**
+ * Get creator publishes
+ */
+export async function getMyPublishes({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: GetMyPublishesInput
+}) {
+  const result = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      QueryReturnType<"getMyPublishes">,
+      QueryArgsType<"getMyPublishes">
+    >(GET_MY_PUBLISHES_QUERY, {
+      input: data,
+    })
+
+  return result?.getMyPublishes
 }

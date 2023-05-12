@@ -24,10 +24,10 @@ export default async function Layout({
     redirect("/settings")
   }
   return (
-    <div className="w-full">
+    <>
       <PublishTemplate station={station} />
 
-      {children}
-    </div>
+      <div className="mt-2">{children}</div>
+    </>
   )
 }
