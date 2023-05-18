@@ -15,6 +15,7 @@ import {
   GET_MY_PUBLISHES_QUERY,
   GET_STATION_BY_ID_QUERY,
   GET_STATION_BY_NAME_QUERY,
+  GET_WATCHING_PUBLISH_QUERY,
 } from "./queries"
 import {
   CREATE_ACCOUNT_MUTATION,
@@ -30,6 +31,7 @@ import {
   CREATE_DRAFT_PUBLISH_MUTATION,
   UPDATE_PUBLISH_MUTATION,
 } from "./mutations"
+import { NexusGenInputs } from "./typegen"
 
 const { API_URL, NODE_ENV } = process.env
 
@@ -474,4 +476,20 @@ export async function getMyPublishes({
     })
 
   return result?.getMyPublishes
+}
+
+/**
+ * Get a publish for watch page
+ */
+export async function getWatchingPublish(
+  data: NexusGenInputs["QueryByIdInput"]
+) {
+  const result = await client.request<
+    QueryReturnType<"getPublishById">,
+    QueryArgsType<"getPublishById">
+  >(GET_WATCHING_PUBLISH_QUERY, {
+    input: data,
+  })
+
+  return result?.getPublishById
 }

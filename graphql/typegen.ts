@@ -430,6 +430,7 @@ export interface NexusGenFieldTypes {
   }
   Publish: {
     // field return type
+    comments: Array<NexusGenRootTypes["Comment"] | null> // [Comment]!
     commentsCount: number // Int!
     contentRef: string | null // String
     contentURI: string | null // String
@@ -640,6 +641,7 @@ export interface NexusGenFieldTypeNames {
   }
   Publish: {
     // field return type name
+    comments: "Comment"
     commentsCount: "Int"
     contentRef: "String"
     contentURI: "String"
@@ -825,7 +827,7 @@ export interface NexusGenArgTypes {
     }
     getPublishById: {
       // args
-      id: string // String!
+      input: NexusGenInputs["QueryByIdInput"] // QueryByIdInput!
     }
     getPublishForCreator: {
       // args

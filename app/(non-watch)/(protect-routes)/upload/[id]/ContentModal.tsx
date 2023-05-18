@@ -1,10 +1,8 @@
 "use client"
 
 import React, { useCallback, useEffect, useState, useRef } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { doc, onSnapshot } from "firebase/firestore"
-import { Stream } from "@cloudflare/stream-react"
 import { MdFileUpload, MdOutlineWarning } from "react-icons/md"
 import { HiDotsVertical } from "react-icons/hi"
 import { IoCaretDownSharp } from "react-icons/io5"
@@ -16,6 +14,7 @@ import ModalWrapper from "@/components/ModalWrapper"
 import CloseButton from "@/components/CloseButton"
 import ButtonLoader from "@/components/ButtonLoader"
 import ProgressBar from "@/components/ProgressBar"
+import VideoPlayer from "@/components/VideoPlayer"
 import Mask from "@/components/Mask"
 import { contentCategories } from "@/lib/helpers"
 import { db, publishesFolder, uploadsCollection } from "@/firebase/config"
@@ -24,12 +23,12 @@ import type {
   PublishCategory,
   PublishKind,
   ThumbSource,
-  UploadedPublish,
+  Publish,
 } from "@/graphql/types"
 import type { FileWithPrview } from "@/types"
 
 interface Props {
-  publish: UploadedPublish
+  publish: Publish
   stationName: string
 }
 
@@ -553,12 +552,8 @@ export default function ContentModal({ publish, stationName }: Props) {
                 <div className="mb-10">
                   <div className="w-full mb-2 flex items-center justify-center bg-gray-100">
                     {publish.playback ? (
-                      <div className="w-full">
-                        <Stream
-                          controls
-                          src={publish.playback.videoId}
-                          poster={publish.playback.thumbnail}
-                        />
+                      <div className="relative w-full h-[180px] min-h-[180px] sm:min-h-[160px] lg:min-h-[260px]">
+                        <VideoPlayer playback={publish.playback} />
                       </div>
                     ) : (
                       <div className="h-[180px] sm:h-[160px] lg:h-[260px] flex flex-col items-center justify-center">
@@ -573,7 +568,8 @@ export default function ContentModal({ publish, stationName }: Props) {
                         <p className="font-thin">Playback link</p>
                         <div>
                           <a
-                            href={` http://localhost:3000/watch/${publish.id}`}
+                            href={`http://localhost:3000/watch/${publish.id}`}
+                            // href={`https://5429-2405-9800-b961-39d-5525-e14-5891-4bec.ngrok-free.app/watch/${publish.id}`}
                             target="_blank"
                             rel="noreferrer"
                             className="text-base text-blueBase break-words"

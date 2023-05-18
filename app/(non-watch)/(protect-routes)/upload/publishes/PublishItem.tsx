@@ -7,11 +7,11 @@ import { onSnapshot, doc } from "firebase/firestore"
 
 import { formatDate, getPostExcerpt, secondsToHourFormat } from "@/lib/client"
 import { db, uploadsCollection } from "@/firebase/config"
-import type { UploadedPublish } from "@/graphql/types"
+import type { Publish } from "@/graphql/types"
 import ButtonLoader from "@/components/ButtonLoader"
 
 interface Props {
-  publish: UploadedPublish
+  publish: Publish
 }
 
 export default function PublishItem({ publish }: Props) {

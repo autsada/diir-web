@@ -32,17 +32,39 @@ export type Station = NexusGenObjects["Station"] & {
   publishes: Publish[]
 }
 
-export type Publish = NexusGenObjects["Publish"]
-export type PublishCategory = NexusGenEnums["Category"]
-export type UploadedPublish = Publish & {
-  playback: NexusGenObjects["PlaybackLink"]
-  commentsCount: number
+export type Publish = NexusGenObjects["Publish"] & {
+  creator: Station
+  playback: Playback
+  likes: Station[]
   likesCount: number
+  liked: boolean
   disLikesCount: number
+  disLiked: boolean
+  tips: Tip[]
   tipsCount: number
+  commentsCount: number
+  lastComment: Comment
+  comments: Comment[]
 }
+export type PublishCategory = NexusGenEnums["Category"]
 export type ThumbSource = NexusGenEnums["ThumbSource"]
 export type PublishKind = NexusGenEnums["PublishKind"]
-export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
 export type QueryPublishKind = NexusGenEnums["QueryPublishKind"]
+export type Playback = NexusGenObjects["PlaybackLink"]
+export type Comment = NexusGenObjects["Comment"] & {
+  creator: Station
+  likes: Station[]
+  likesCount: number
+  liked: boolean
+  disLikesCount: number
+  disLiked: boolean
+  commentsCount: number
+}
+export type Tip = NexusGenObjects["Tip"] & {
+  publish: Publish
+  sender: Station
+  receiver: Station
+}
+
+export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
 export type GetMyPublishesInput = NexusGenInputs["GetMyPublishesInput"]

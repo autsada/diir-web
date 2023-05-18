@@ -1,10 +1,10 @@
 import React from "react"
 
 import PublishItem from "./PublishItem"
-import type { UploadedPublish } from "@/graphql/types"
+import type { Publish } from "@/graphql/types"
 
 interface Props {
-  publishes: UploadedPublish[]
+  publishes: Publish[]
 }
 
 export default function Publishes({ publishes }: Props) {

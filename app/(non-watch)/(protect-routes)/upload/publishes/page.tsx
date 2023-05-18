@@ -4,7 +4,7 @@ import Publishes from "./Publishes"
 import { getAccount } from "@/lib/server"
 import { getMyPublishes, getStationById } from "@/graphql"
 import { redirect } from "next/navigation"
-import type { Station, UploadedPublish } from "@/graphql/types"
+import type { Station, Publish } from "@/graphql/types"
 
 export default async function AllPublishes() {
   const data = await getAccount()
@@ -37,7 +37,7 @@ export default async function AllPublishes() {
       creatorId: station.id,
       kind: "all",
     },
-  })) as UploadedPublish[]
+  })) as Publish[]
 
   return <Publishes publishes={publishes} />
 }

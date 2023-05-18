@@ -84,7 +84,7 @@ export default function AppLayoutClient({ account, isAuthenticated }: Props) {
 
   return (
     <>
-      <div className="fixed z-0 top-0 left-0 right-0">
+      <div className="fixed z-20 top-0 left-0 right-0">
         <MainNav
           account={account}
           openAuthModal={openAuthModal}

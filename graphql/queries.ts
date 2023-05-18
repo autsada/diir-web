@@ -179,3 +179,41 @@ export const GET_MY_PUBLISHES_QUERY = gql`
     }
   }
 `
+
+export const GET_WATCHING_PUBLISH_QUERY = gql`
+  query GetPublishById($input: QueryByIdInput!) {
+    getPublishById(input: $input) {
+      id
+      title
+      description
+      primaryCategory
+      secondaryCategory
+      playback {
+        id
+        videoId
+        duration
+        hls
+        dash
+        thumbnail
+      }
+      liked
+      disLiked
+      likesCount
+      commentsCount
+      comments {
+        id
+        creator {
+          id
+          name
+          displayName
+          image
+        }
+        content
+        liked
+        disLiked
+        likesCount
+        commentType
+      }
+    }
+  }
+`

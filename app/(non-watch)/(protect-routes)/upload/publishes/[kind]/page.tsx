@@ -4,11 +4,7 @@ import { redirect } from "next/navigation"
 import Publishes from "../Publishes"
 import { getAccount } from "@/lib/server"
 import { getMyPublishes, getStationById } from "@/graphql"
-import type {
-  QueryPublishKind,
-  Station,
-  UploadedPublish,
-} from "@/graphql/types"
+import type { QueryPublishKind, Station, Publish } from "@/graphql/types"
 
 export default async function Page({
   params,
@@ -47,7 +43,7 @@ export default async function Page({
       creatorId: station.id,
       kind,
     },
-  })) as UploadedPublish[]
+  })) as Publish[]
 
   return <Publishes publishes={publishes} />
 }
