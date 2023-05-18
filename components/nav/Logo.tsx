@@ -1,10 +1,21 @@
 import React from "react"
 import Image from "next/image"
 
-import DiiRLogo from "../../public/logo.png"
+import DiiRLight from "../../public/diir.png"
+import DiiRDark from "../../public/diir-dark.png"
 
-export default function Logo({ size = "h-[70px]" }: { size?: string }) {
+export default function Logo({
+  size = "h-[70px]",
+  theme = "light",
+}: {
+  size?: string
+  theme?: "light" | "dark"
+}) {
   return (
-    <Image src={DiiRLogo} alt="DiiR" className={`${size} cursor-pointer`} />
+    <Image
+      src={theme === "light" ? DiiRLight : DiiRDark}
+      alt="DiiR"
+      className={`${size} cursor-pointer`}
+    />
   )
 }

@@ -1,5 +1,6 @@
 import React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
 
@@ -20,33 +21,50 @@ export default function MainNav({
   openLeftDrawer,
   openRightDrawer,
 }: Props) {
+  const pathname = usePathname()
+  const isWatchPage = pathname.startsWith("/watch")
+
   return (
-    <div className="h-[70px] px-2 flex items-center justify-between bg-white">
+    <div
+      className={`h-[70px] px-2 flex items-center justify-between ${
+        isWatchPage ? "bg-gray-950" : "bg-white"
+      }`}
+    >
       <div className="h-full w-[140px] min-w-[140px] flex items-center">
         <div className="h-full w-[50px] flex items-center">
-          <div className="cursor-pointer p-2 rounded-full hover:bg-gray-100">
+          <div
+            className={`cursor-pointer p-2 rounded-full ${
+              isWatchPage ? "hover:bg-gray-600" : "hover:bg-gray-100"
+            }`}
+          >
             <RxHamburgerMenu
               size={28}
-              className="text-textLight"
+              className={isWatchPage ? "text-white" : "text-textLight"}
               onClick={openLeftDrawer}
             />
           </div>
         </div>
         <div className="h-full ml-2 flex items-center justify-center">
           <Link href="/">
-            <Logo />
+            <Logo theme={isWatchPage ? "dark" : "light"} />
           </Link>
         </div>
       </div>
       <div className="h-full flex-grow flex items-center justify-center">
-        <div className="w-full h-[50px] max-w-[500px] flex items-center px-3 md:border md:border-gray-200 md:rounded-full">
+        <div
+          className={`w-full h-[50px] max-w-[500px] flex items-center px-3 md:border ${
+            isWatchPage ? "md:border-gray-500" : "md:border-gray-200"
+          } md:rounded-full`}
+        >
           <div>
             <IoSearchOutline size={24} className="text-textExtraLight" />
           </div>
           <div className="w-full">
             <input
               type="text"
-              className="block w-full h-full max-w-full md:pl-4"
+              className={`block w-full h-full max-w-full md:pl-4 bg-transparent ${
+                isWatchPage ? "text-white" : ""
+              }`}
             />
           </div>
         </div>

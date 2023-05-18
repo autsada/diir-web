@@ -26,6 +26,7 @@ export default async function Watch({ params }: { params: { id: string } }) {
     redirect("/")
   }
 
+  console.log("pub -->", publish)
   return (
     <div>
       <div className="w-full h-[240px] sm:h-[320px] md:h-[400px] lg:h-[480px] bg-black text-white">
