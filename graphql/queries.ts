@@ -186,8 +186,18 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
       id
       title
       description
+      createdAt
       primaryCategory
       secondaryCategory
+      creatorId
+      creator {
+        id
+        name
+        displayName
+        image
+        followersCount
+        isFollowing
+      }
       playback {
         id
         videoId
