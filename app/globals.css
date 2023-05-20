@@ -183,23 +183,23 @@
   }
 
   .btn-light {
-    @apply bg-neutral-200 font-semibold rounded-md shadow-md hover:bg-neutral-100 focus:outline-none;
+    @apply bg-neutral-200 font-semibold rounded-md shadow-sm hover:bg-neutral-100 focus:outline-none;
   }
 
   .btn-dark {
-    @apply bg-neutral-800 text-white font-semibold rounded-md shadow-md hover:bg-neutral-700 focus:outline-none;
+    @apply bg-neutral-800 text-white font-semibold rounded-md shadow-sm hover:bg-neutral-700 focus:outline-none;
   }
 
   .btn-blue {
-    @apply bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none;
+    @apply bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none;
   }
 
   .btn-orange {
-    @apply bg-orange-500 text-white font-semibold rounded-md shadow-md hover:bg-orange-600 focus:outline-none;
+    @apply bg-orange-500 text-white font-semibold rounded-md shadow-sm hover:bg-orange-600 focus:outline-none;
   }
 
   .btn-cancel {
-    @apply bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none;
+    @apply bg-red-500 text-white font-semibold rounded-md shadow-sm hover:bg-red-600 focus:outline-none;
   }
 
   .error {

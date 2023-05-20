@@ -24,11 +24,11 @@ export default function ActiveLink({
   return (
     <Link href={href} scroll={false}>
       <div
-        className={`flex cursor-pointer items-center hover:bg-gray-100 rounded-md ${
+        className={`flex cursor-pointer items-center hover:bg-neutral-100 rounded-md ${
           isVertical
             ? "flex-col justify-center h-[80px]"
             : "flex-row px-2 h-[50px]"
-        } ${isActive ? "bg-gray-100" : "bg-white"}`}
+        } ${isActive ? "bg-neutral-100" : "bg-white"}`}
       >
         <div
           className={`flex ${
