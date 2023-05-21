@@ -25,8 +25,8 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <WalletClient>
-        <body className="text-textRegular">
+      <body className="text-textRegular">
+        <WalletClient>
           {/* @ts-expect-error Async Server Component */}
           <AppLayoutServer />
 
@@ -37,8 +37,8 @@ export default async function RootLayout({
           <div className="fixed bottom-10 right-8 max-w-max sm:hidden">
             <UploadBtn />
           </div>
-        </body>
-      </WalletClient>
+        </WalletClient>
+      </body>
     </html>
   )
 }
