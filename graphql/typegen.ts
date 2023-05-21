@@ -470,6 +470,7 @@ export interface NexusGenFieldTypes {
   Query: {
     // field return type
     fetchAllVideos: Array<NexusGenRootTypes["Publish"] | null> // [Publish]!
+    fetchVideosByCategory: Array<NexusGenRootTypes["Publish"] | null> // [Publish]!
     getBalance: string // String!
     getMyAccount: NexusGenRootTypes["Account"] | null // Account
     getMyPublishes: Array<NexusGenRootTypes["Publish"] | null> // [Publish]!
@@ -681,6 +682,7 @@ export interface NexusGenFieldTypeNames {
   Query: {
     // field return type name
     fetchAllVideos: "Publish"
+    fetchVideosByCategory: "Publish"
     getBalance: "String"
     getMyAccount: "Account"
     getMyPublishes: "Publish"
@@ -817,6 +819,10 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    fetchVideosByCategory: {
+      // args
+      input: NexusGenInputs["FetchPublishesByCatInput"] // FetchPublishesByCatInput!
+    }
     getBalance: {
       // args
       address: string // String!

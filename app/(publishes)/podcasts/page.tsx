@@ -1,5 +1,11 @@
 import React from "react"
 
-export default function Podcasts() {
-  return <div>Podcasts</div>
+import Podcasts from "./Podcasts"
+
+export default function Page() {
+  return (
+    <main>
+      <Podcasts />
+    </main>
+  )
 }

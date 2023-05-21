@@ -54,7 +54,7 @@ export default function PublishItem({ publish, onAction, setPOS }: Props) {
             <div>
               <Avatar profile={publish.creator} />
             </div>
-            <div className="text-left">
+            <div className="w-full text-left mr-8">
               <h6>{getPostExcerpt(publish.title || "", 60)}</h6>
               <p className="text-textLight">
                 {publish.creator?.displayName}{" "}

@@ -1,5 +1,9 @@
-import React from "react"
+import Shorts from "./Shorts"
 
-export default function Shorts() {
-  return <div>Shorts</div>
+export default function Page() {
+  return (
+    <main>
+      <Shorts />
+    </main>
+  )
 }

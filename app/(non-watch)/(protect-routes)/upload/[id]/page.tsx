@@ -1,5 +1,4 @@
 import React from "react"
-import { revalidatePath } from "next/cache"
 
 import { getStationById, getUploadedPublish } from "@/graphql"
 import { redirect } from "next/navigation"

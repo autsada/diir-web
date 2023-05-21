@@ -1,5 +1,11 @@
 import React from "react"
 
-export default function Blogs() {
-  return <div>Blogs</div>
+import Blogs from "./Blogs"
+
+export default function Page() {
+  return (
+    <main>
+      <Blogs />
+    </main>
+  )
 }

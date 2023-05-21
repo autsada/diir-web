@@ -7,9 +7,11 @@ import type {
   MutationReturnType,
   UpdatePublishInput,
   GetMyPublishesInput,
+  PublishCategory,
 } from "./types"
 import {
   FETCH_ALL_VIDEOS_QUERY,
+  FETCH_VIDEOS_BY_CAT_QUERY,
   GET_ACCOUNT_QUERY,
   GET_BALANCE_QUERY,
   GET_CREATOR_PUBLISH_QUERY,
@@ -496,7 +498,7 @@ export async function getWatchingPublish(
 }
 
 /**
- * Get videos
+ * Get all videos
  */
 export async function getAllVideos() {
   const result = await client.request<QueryReturnType<"fetchAllVideos">>(
@@ -504,4 +506,16 @@ export async function getAllVideos() {
   )
 
   return result?.fetchAllVideos
+}
+
+/**
+ * Get videos by category
+ */
+export async function getVideosByCategory(category: PublishCategory) {
+  const result = await client.request<
+    QueryReturnType<"fetchVideosByCategory">,
+    QueryArgsType<"fetchVideosByCategory">
+  >(FETCH_VIDEOS_BY_CAT_QUERY, { input: { category } })
+
+  return result?.fetchVideosByCategory
 }

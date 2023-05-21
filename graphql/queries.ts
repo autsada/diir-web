@@ -236,6 +236,40 @@ export const FETCH_ALL_VIDEOS_QUERY = gql`
       createdAt
       views
       visibility
+      thumbSource
+      thumbnail
+      primaryCategory
+      secondaryCategory
+      creator {
+        id
+        name
+        displayName
+        image
+      }
+      playback {
+        id
+        videoId
+        duration
+        hls
+        dash
+        thumbnail
+      }
+    }
+  }
+`
+
+export const FETCH_VIDEOS_BY_CAT_QUERY = gql`
+  query FetchVideosByCategory($input: FetchPublishesByCatInput!) {
+    fetchVideosByCategory(input: $input) {
+      id
+      title
+      createdAt
+      views
+      visibility
+      thumbSource
+      thumbnail
+      primaryCategory
+      secondaryCategory
       creator {
         id
         name
