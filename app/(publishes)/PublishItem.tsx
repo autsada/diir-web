@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useCallback } from "react"
 import Link from "next/link"
 import { HiDotsVertical } from "react-icons/hi"
 
@@ -18,23 +18,38 @@ interface Props {
 }
 
 export default function PublishItem({ publish, onAction, setPOS }: Props) {
+  const [playing, setPlaying] = useState(false)
+
   function onClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (!publish) return
     onAction(publish)
     setPOS(e.clientX, e.clientY, window?.innerHeight)
   }
 
+  const onMouseOn = useCallback(() => {
+    setPlaying(true)
+  }, [])
+
+  const onMouseLeave = useCallback(() => {
+    setPlaying(false)
+  }, [])
+
   if (!publish) return null
 
+  console.log("playing -->", playing)
   return (
     <div className="relative w-full bg-white cursor-pointer">
       <div className="relative z-0">
         <Link href={`/watch/${publish.id}`}>
-          <div className="relative w-full h-[200px] bg-neutral-600 rounded-none sm:rounded-xl overflow-hidden">
+          <div
+            className="relative w-full h-[200px] bg-neutral-600 rounded-none sm:rounded-xl overflow-hidden"
+            onMouseOver={onMouseOn}
+            onMouseLeave={onMouseLeave}
+          >
             <VideoPlayer
               playback={publish.playback}
-              autoPlay
-              controls={false}
+              controls={playing}
+              playing={playing}
               thumbnail={
                 publish.thumbSource === "custom" && publish.thumbnail
                   ? publish.thumbnail

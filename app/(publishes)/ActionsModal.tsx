@@ -1,5 +1,9 @@
 import React from "react"
-import { AiOutlineClockCircle, AiOutlineFlag } from "react-icons/ai"
+import {
+  AiOutlineClockCircle,
+  AiOutlineFlag,
+  AiOutlineShareAlt,
+} from "react-icons/ai"
 import { MdPlaylistAdd } from "react-icons/md"
 import type { IconType } from "react-icons"
 
@@ -18,7 +22,7 @@ export default function ActionsModal({ closeModal, top, left }: Props) {
         <div className="relative z-0 w-full h-full" onClick={closeModal}></div>
 
         <div
-          className={`absolute z-10 flex flex-col items-center justify-center bg-white rounded-xl w-[300px] h-[200px]`}
+          className={`absolute z-10 flex flex-col items-center justify-center bg-white rounded-xl w-[300px] h-[240px]`}
           style={{
             top,
             left,
@@ -26,6 +30,7 @@ export default function ActionsModal({ closeModal, top, left }: Props) {
         >
           <Item Icon={AiOutlineClockCircle} text="Add to Watch Later" />
           <Item Icon={MdPlaylistAdd} text="Add to Playlist" />
+          <Item Icon={AiOutlineShareAlt} text="Share" />
           <Item Icon={AiOutlineFlag} text="Report" />
         </div>
       </div>

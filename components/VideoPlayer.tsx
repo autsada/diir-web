@@ -7,7 +7,7 @@ import type { Playback } from "@/graphql/types"
 
 interface Props {
   playback: Playback
-  autoPlay?: boolean
+  playing?: boolean
   controls?: boolean
   thumbnail?: string
   playIcon?: ReactElement<any, string | JSXElementConstructor<any>> | undefined
@@ -15,7 +15,7 @@ interface Props {
 
 export default function VideoPlayer({
   playback,
-  autoPlay = false,
+  playing = false,
   controls = true,
   thumbnail,
   playIcon,
@@ -26,13 +26,13 @@ export default function VideoPlayer({
     <Player
       url={playback?.hls}
       controls={controls}
-      light={thumbnail || undefined}
+      light={playing ? undefined : thumbnail || undefined}
       width="100%"
       height="100%"
       pip={true}
       playsinline={true}
       muted={true}
-      playing={autoPlay}
+      playing={playing}
       playIcon={playIcon}
     />
   )

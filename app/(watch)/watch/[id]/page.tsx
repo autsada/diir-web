@@ -31,7 +31,6 @@ export default async function Watch({ params }: { params: { id: string } }) {
     redirect("/")
   }
 
-  console.log("is owner -->", isOwner)
   return (
     <div className="w-full overflow-y-hidden">
       <div className="w-full h-[240px] sm:h-[320px] md:h-[400px] lg:h-[480px] bg-black text-white">
@@ -43,7 +42,7 @@ export default async function Watch({ params }: { params: { id: string } }) {
           ) : (
             <div className="w-full h-full">
               <Suspense fallback={<ButtonLoader loading />}>
-                <VideoPlayer playback={publish.playback} autoPlay={true} />
+                <VideoPlayer playback={publish.playback} playing={true} />
               </Suspense>
             </div>
           )}
