@@ -1,10 +1,8 @@
 "use client"
 
 import React, { useState, useCallback, useEffect } from "react"
-import { AiOutlineClockCircle } from "react-icons/ai"
 
 import PublishItem from "./PublishItem"
-import ModalWrapper from "@/components/ModalWrapper"
 import type { Publish } from "@/graphql/types"
 import ActionsModal from "./ActionsModal"
 
