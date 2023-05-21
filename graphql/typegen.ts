@@ -57,6 +57,10 @@ export interface NexusGenInputs {
     senderId: string // String!
     to: string // String!
   }
+  FetchPublishesByCatInput: {
+    // input type
+    category: NexusGenEnums["Category"] // Category!
+  }
   GetMyAccountInput: {
     // input type
     accountType: NexusGenEnums["AccountType"] // AccountType!
@@ -465,7 +469,7 @@ export interface NexusGenFieldTypes {
   }
   Query: {
     // field return type
-    fetchPublishes: Array<NexusGenRootTypes["Publish"] | null> // [Publish]!
+    fetchAllVideos: Array<NexusGenRootTypes["Publish"] | null> // [Publish]!
     getBalance: string // String!
     getMyAccount: NexusGenRootTypes["Account"] | null // Account
     getMyPublishes: Array<NexusGenRootTypes["Publish"] | null> // [Publish]!
@@ -676,7 +680,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: {
     // field return type name
-    fetchPublishes: "Publish"
+    fetchAllVideos: "Publish"
     getBalance: "String"
     getMyAccount: "Account"
     getMyPublishes: "Publish"

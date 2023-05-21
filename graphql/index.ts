@@ -9,6 +9,7 @@ import type {
   GetMyPublishesInput,
 } from "./types"
 import {
+  FETCH_ALL_VIDEOS_QUERY,
   GET_ACCOUNT_QUERY,
   GET_BALANCE_QUERY,
   GET_CREATOR_PUBLISH_QUERY,
@@ -492,4 +493,15 @@ export async function getWatchingPublish(
   })
 
   return result?.getPublishById
+}
+
+/**
+ * Get videos
+ */
+export async function getAllVideos() {
+  const result = await client.request<QueryReturnType<"fetchAllVideos">>(
+    FETCH_ALL_VIDEOS_QUERY
+  )
+
+  return result?.fetchAllVideos
 }

@@ -227,3 +227,29 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
     }
   }
 `
+
+export const FETCH_ALL_VIDEOS_QUERY = gql`
+  query FetchAllVideos {
+    fetchAllVideos {
+      id
+      title
+      createdAt
+      views
+      visibility
+      creator {
+        id
+        name
+        displayName
+        image
+      }
+      playback {
+        id
+        videoId
+        duration
+        hls
+        dash
+        thumbnail
+      }
+    }
+  }
+`
