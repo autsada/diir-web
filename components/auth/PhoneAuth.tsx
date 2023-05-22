@@ -220,19 +220,23 @@ export default function PhoneAuth() {
           </div>
 
           <div className="my-6 h-[50px] px-1 flex items-center justify-center">
-            <p className="text-center text-lg text-blueBase">
-              {isNumberValid ? (
-                isOtpSent ? (
-                  "A verification sent."
-                ) : requestOtpLoading ? (
-                  "Sending a verification code"
-                ) : (
-                  "We will send you a 6-digits verification code."
-                )
+            {isNumberValid ? (
+              isOtpSent ? (
+                <p className="text-center text-lg text-blueBase">
+                  A verification sent.
+                </p>
+              ) : requestOtpLoading ? (
+                <p className="text-center text-lg text-textLight">
+                  Sending a verification code
+                </p>
               ) : (
-                <>&nbsp;</>
-              )}
-            </p>
+                <p className="text-center text-lg text-textLight">
+                  We will send you a 6-digits verification code.
+                </p>
+              )
+            ) : (
+              <p>&nbsp;</p>
+            )}
           </div>
 
           <button
@@ -245,6 +249,19 @@ export default function PhoneAuth() {
           >
             Get Code
           </button>
+          <p className="error mt-1">
+            {requestError ? requestError : <>&nbsp;</>}
+          </p>
+
+          {/* {isOtpSent && (
+            <button
+              className="absolute bottom-[80px] right-0 text-orange-500 px-4"
+              disabled={!isNumberValid || requestOtpLoading}
+              onClick={requestOtp}
+            >
+              Resend
+            </button>
+          )} */}
         </div>
 
         {/* Step 2 Confirm Code */}
