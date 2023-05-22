@@ -59,7 +59,7 @@ export default async function Watch({ params }: { params: { id: string } }) {
             description={publish.description}
           />
 
-          <div className="my-2 flex items-start justify-between h-[50px] gap-x-4">
+          <div className="my-5 flex items-start justify-between h-[50px] gap-x-4">
             <Avatar profile={publish.creator} />
 
             <div className="flex-grow h-full">
