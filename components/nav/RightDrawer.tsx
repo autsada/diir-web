@@ -35,6 +35,20 @@ export default function RightDrawer({
   const router = useRouter()
   const { disconnect } = useDisconnect()
 
+  // Disable body scroll when modal openned
+  useEffect(() => {
+    const els = document?.getElementsByTagName("body")
+    if (isOpen) {
+      if (els[0]) {
+        els[0].style.overflow = "hidden"
+      }
+    } else {
+      if (els[0]) {
+        els[0].style.overflow = "auto"
+      }
+    }
+  }, [isOpen])
+
   // Reset stations expanded state when the modal is close
   useEffect(() => {
     if (!isOpen) {

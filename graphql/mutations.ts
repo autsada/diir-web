@@ -99,3 +99,11 @@ export const UPDATE_PUBLISH_MUTATION = gql`
     }
   }
 `
+
+export const ADD_TO_WATCH_LATER_MUTATION = gql`
+  mutation AddToWatchLater($input: SavePublishToPlayListInput!) {
+    addToWatchLater(input: $input) {
+      status
+    }
+  }
+`

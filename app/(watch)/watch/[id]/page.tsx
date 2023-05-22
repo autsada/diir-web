@@ -3,22 +3,23 @@ import { redirect } from "next/navigation"
 
 import VideoPlayer from "@/components/VideoPlayer"
 import ButtonLoader from "@/components/ButtonLoader"
-import { getAccount } from "@/lib/server"
-import { getStationById, getWatchingPublish } from "@/graphql"
-import type { Publish, Station } from "@/graphql/types"
-import { calculateTimeElapsed, formatDate, getPostExcerpt } from "@/lib/client"
 import Reactions from "./Reactions"
 import Description from "./Description"
 import Avatar from "@/components/Avatar"
+import { getAccount } from "@/lib/server"
+import { getStationById, getWatchingPublish } from "@/graphql"
+import { calculateTimeElapsed } from "@/lib/client"
+import type { Publish, Station } from "@/graphql/types"
 
 export default async function Watch({ params }: { params: { id: string } }) {
   const data = await getAccount()
   const account = data?.account
 
   // Query station by id
-  const station = account
-    ? ((await getStationById(account?.defaultStation?.id)) as Station)
-    : null
+  const station =
+    account && account.defaultStation
+      ? ((await getStationById(account?.defaultStation?.id)) as Station)
+      : null
 
   // Query a publish
   const publish = (await getWatchingPublish({

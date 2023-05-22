@@ -171,6 +171,7 @@ export const GET_MY_PUBLISHES_QUERY = gql`
       uploadError
       tipsCount
       visibility
+      kind
       playback {
         id
         thumbnail
@@ -189,6 +190,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
       createdAt
       primaryCategory
       secondaryCategory
+      kind
       creatorId
       creator {
         id
@@ -240,11 +242,13 @@ export const FETCH_ALL_VIDEOS_QUERY = gql`
       thumbnail
       primaryCategory
       secondaryCategory
+      kind
       creator {
         id
         name
         displayName
         image
+        defaultColor
       }
       playback {
         id
@@ -270,11 +274,13 @@ export const FETCH_VIDEOS_BY_CAT_QUERY = gql`
       thumbnail
       primaryCategory
       secondaryCategory
+      kind
       creator {
         id
         name
         displayName
         image
+        defaultColor
       }
       playback {
         id
@@ -283,6 +289,44 @@ export const FETCH_VIDEOS_BY_CAT_QUERY = gql`
         hls
         dash
         thumbnail
+      }
+    }
+  }
+`
+
+export const FETCH_WATCH_LATER_QUERY = gql`
+  query GetWatchLater($input: GetWatchLaterInput!) {
+    getWatchLater(input: $input) {
+      id
+      createdAt
+      stationId
+      publishId
+      publish {
+        id
+        title
+        createdAt
+        views
+        visibility
+        thumbSource
+        thumbnail
+        primaryCategory
+        secondaryCategory
+        kind
+        creator {
+          id
+          name
+          displayName
+          image
+          defaultColor
+        }
+        playback {
+          id
+          videoId
+          duration
+          hls
+          dash
+          thumbnail
+        }
       }
     }
   }

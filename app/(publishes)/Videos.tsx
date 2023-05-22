@@ -4,15 +4,17 @@ import React, { useState, useCallback, useEffect } from "react"
 
 import ContentTabs from "./ContentTabs"
 import PublishItem from "./PublishItem"
-import ActionsModal from "./ActionsModal"
-import type { Publish, PublishCategory } from "@/graphql/types"
 import Mask from "@/components/Mask"
+import ActionsModal from "./ActionsModal"
+import type { Publish, PublishCategory, Station } from "@/graphql/types"
 
 interface Props {
+  isAuthenticated: boolean
+  profile: Station | undefined
   allVideos: Publish[]
 }
 
-export default function Videos({ allVideos }: Props) {
+export default function Videos({ isAuthenticated, profile, allVideos }: Props) {
   const [selectedCat, setSelectedCat] = useState<PublishCategory | "All">("All")
   const [videosByCat, setVideosByCat] = useState<Publish[]>(allVideos)
   const [loading, setLoading] = useState(false)
@@ -109,11 +111,14 @@ export default function Videos({ allVideos }: Props) {
 
             {targetPublish && (
               <ActionsModal
+                isAuthenticated={isAuthenticated}
+                profile={profile}
                 closeModal={closeModal}
                 top={
                   screenHeight - positionY < 200 ? positionY - 200 : positionY
                 } // 200 is modal height
                 left={positionX - 300} // 300 is modal width
+                targetPublish={targetPublish}
               />
             )}
           </div>

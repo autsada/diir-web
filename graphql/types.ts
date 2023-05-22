@@ -68,3 +68,5 @@ export type Tip = NexusGenObjects["Tip"] & {
 
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
 export type GetMyPublishesInput = NexusGenInputs["GetMyPublishesInput"]
+export type AddToPlayListInput = NexusGenInputs["SavePublishToPlayListInput"]
+export type GetWatchLaterInput = NexusGenInputs["GetWatchLaterInput"]

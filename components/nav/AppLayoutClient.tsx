@@ -2,12 +2,13 @@
 
 import React, { useCallback, useState, useEffect } from "react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 import MainNav from "./MainNav"
 import AuthModal from "../auth/AuthModal"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
-// import SideBar from "./SideBar"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
 import type { Account } from "@/graphql/types"
 
@@ -117,6 +118,20 @@ export default function AppLayoutClient({ account, isAuthenticated }: Props) {
       />
 
       <AuthModal visible={authModalVisible} closeModal={closeAuthModal} />
+
+      {/* Toast */}
+      <ToastContainer
+        position="bottom-left"
+        autoClose={1000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        icon={false}
+      />
     </>
   )
 }

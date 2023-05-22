@@ -552,8 +552,19 @@ export default function ContentModal({ publish, stationName }: Props) {
                 <div className="mb-10">
                   <div className="w-full mb-2 flex items-center justify-center bg-gray-100">
                     {publish.playback ? (
-                      <div className="relative w-full h-[180px] min-h-[180px] sm:min-h-[160px] lg:min-h-[260px]">
-                        <VideoPlayer playback={publish.playback} />
+                      <div className="relative w-full h-[180px] min-h-[180px] sm:min-h-[160px] lg:min-h-[260px] bg-black">
+                        <VideoPlayer
+                          playback={publish.playback}
+                          thumbnail={
+                            publish.kind === "Short"
+                              ? undefined
+                              : publish.thumbSource === "custom" &&
+                                publish.thumbnail
+                              ? publish.thumbnail
+                              : publish.playback?.thumbnail
+                          }
+                          playIcon={<></>}
+                        />
                       </div>
                     ) : (
                       <div className="h-[180px] sm:h-[160px] lg:h-[260px] flex flex-col items-center justify-center">

@@ -9,11 +9,16 @@ import {
 } from "react-icons/ri"
 import { IoRadioOutline, IoRadio } from "react-icons/io5"
 import { AiOutlineRead, AiFillRead } from "react-icons/ai"
+import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
 
 import ActiveLink from "./ActiveLink"
 import UploadBtn from "@/components/UploadBtn"
 
-export default function SideBar() {
+interface Props {
+  isAuthenticated: boolean
+}
+
+export default function SideBar({ isAuthenticated }: Props) {
   return (
     <>
       <div className="mb-3">
@@ -52,6 +57,17 @@ export default function SideBar() {
           isVertical={true}
         />
       </div>
+      {isAuthenticated && (
+        <div className="mb-3">
+          <ActiveLink
+            name="Library"
+            href="/library"
+            ActiveIcon={MdVideoLibrary}
+            InActiveIcon={MdOutlineVideoLibrary}
+            isVertical={true}
+          />
+        </div>
+      )}
       <div className="py-5">
         <UploadBtn />
       </div>

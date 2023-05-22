@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation"
 import { BsEye, BsEyeSlash } from "react-icons/bs"
 import { onSnapshot, doc } from "firebase/firestore"
 
+import ButtonLoader from "@/components/ButtonLoader"
 import { formatDate, getPostExcerpt, secondsToHourFormat } from "@/lib/client"
 import { db, uploadsCollection } from "@/firebase/config"
 import type { Publish } from "@/graphql/types"
-import ButtonLoader from "@/components/ButtonLoader"
 
 interface Props {
   publish: Publish
@@ -46,21 +46,23 @@ export default function PublishItem({ publish }: Props) {
         <div className="relative w-full h-full">
           {publish.thumbnail || publish.playback ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={
-                publish.thumbnail && publish.thumbSource === "custom"
-                  ? publish.thumbnail
-                  : publish.playback?.thumbnail
-              }
-              alt={publish.title || ""}
-              className="w-full h-full max-h-[64px] lg:max-h-[84px] object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <button>
-                <ButtonLoader loading color="#f97316" />
-              </button>
+            <div className="w-full h-full bg-black">
+              <img
+                src={
+                  publish.thumbnail && publish.thumbSource === "custom"
+                    ? publish.thumbnail
+                    : publish.playback?.thumbnail
+                }
+                alt={publish.title || ""}
+                className={`w-full h-full max-h-[64px] lg:max-h-[84px] ${
+                  publish.kind === "Short" ? "object-contain" : "object-cover"
+                }`}
+              />
             </div>
+          ) : (
+            <button>
+              <ButtonLoader loading color="#f97316" />
+            </button>
           )}
           {publish.playback && (
             <div className="absolute bottom-[1px] right-[2px] px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">

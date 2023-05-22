@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import {
   RiHome4Fill,
   RiHome4Line,
@@ -7,6 +7,7 @@ import {
 } from "react-icons/ri"
 import { IoRadioOutline, IoRadio } from "react-icons/io5"
 import { AiOutlineRead, AiFillRead } from "react-icons/ai"
+import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
 
 import Logo from "./Logo"
 import ActiveLink from "./ActiveLink"
@@ -19,12 +20,26 @@ interface Props {
 }
 
 export default function LeftDrawer({ isOpen = false, closeDrawer }: Props) {
+  // Disable body scroll when modal openned
+  useEffect(() => {
+    const els = document?.getElementsByTagName("body")
+    if (isOpen) {
+      if (els[0]) {
+        els[0].style.overflow = "hidden"
+      }
+    } else {
+      if (els[0]) {
+        els[0].style.overflow = "auto"
+      }
+    }
+  }, [isOpen])
+
   return (
     <>
       <div
         className={`fixed z-50 ${
           isOpen ? "top-0 bottom-0 left-0" : "top-0 bottom-0 -left-[100%]"
-        } w-[260px] bg-white transition-all duration-300`}
+        } w-[260px] bg-white transition-all duration-300 overflow-y-auto pb-10`}
       >
         <div className="w-full px-5 flex items-center justify-between">
           <div className="w-[80px]">
@@ -71,6 +86,14 @@ export default function LeftDrawer({ isOpen = false, closeDrawer }: Props) {
             href="/blogs"
             ActiveIcon={AiFillRead}
             InActiveIcon={AiOutlineRead}
+          />
+        </div>
+        <div className="w-full px-5 mt-5">
+          <ActiveLink
+            name="Library"
+            href="/library"
+            ActiveIcon={MdVideoLibrary}
+            InActiveIcon={MdOutlineVideoLibrary}
           />
         </div>
         <div className="py-5">

@@ -36,7 +36,6 @@ export default function PublishItem({ publish, onAction, setPOS }: Props) {
 
   if (!publish) return null
 
-  console.log("playing -->", playing)
   return (
     <div className="relative w-full bg-white cursor-pointer">
       <div className="relative z-0">
@@ -51,7 +50,9 @@ export default function PublishItem({ publish, onAction, setPOS }: Props) {
               controls={playing}
               playing={playing}
               thumbnail={
-                publish.thumbSource === "custom" && publish.thumbnail
+                publish.kind === "Short"
+                  ? undefined
+                  : publish.thumbSource === "custom" && publish.thumbnail
                   ? publish.thumbnail
                   : publish.playback?.thumbnail
               }

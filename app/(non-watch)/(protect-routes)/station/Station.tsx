@@ -26,7 +26,8 @@ export default function Station({ account }: Props) {
     <>
       <h5>Create station</h5>
       <p className="text-textExtraLight">
-        To start upload content, you need a station.
+        To start upload and add publishes to playlist, you need a station.
+        Please create one.
       </p>
 
       {modalVisible && (

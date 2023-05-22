@@ -8,10 +8,13 @@ import type {
   UpdatePublishInput,
   GetMyPublishesInput,
   PublishCategory,
+  AddToPlayListInput,
+  GetWatchLaterInput,
 } from "./types"
 import {
   FETCH_ALL_VIDEOS_QUERY,
   FETCH_VIDEOS_BY_CAT_QUERY,
+  FETCH_WATCH_LATER_QUERY,
   GET_ACCOUNT_QUERY,
   GET_BALANCE_QUERY,
   GET_CREATOR_PUBLISH_QUERY,
@@ -33,6 +36,7 @@ import {
   UPDATE_BANNER_IMAGE_MUTATION,
   CREATE_DRAFT_PUBLISH_MUTATION,
   UPDATE_PUBLISH_MUTATION,
+  ADD_TO_WATCH_LATER_MUTATION,
 } from "./mutations"
 import { NexusGenInputs } from "./typegen"
 
@@ -518,4 +522,60 @@ export async function getVideosByCategory(category: PublishCategory) {
   >(FETCH_VIDEOS_BY_CAT_QUERY, { input: { category } })
 
   return result?.fetchVideosByCategory
+}
+
+/**
+ * Add publish to watch later
+ */
+export async function addToWatchLater({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: AddToPlayListInput
+}) {
+  const result = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      MutationReturnType<"addToWatchLater">,
+      MutationArgsType<"addToWatchLater">
+    >(ADD_TO_WATCH_LATER_MUTATION, {
+      input: data,
+    })
+
+  return result?.addToWatchLater
+}
+
+/**
+ * Get watch later videos of a station
+ */
+export async function getWatchLater({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: GetWatchLaterInput
+}) {
+  const result = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<QueryReturnType<"getWatchLater">, QueryArgsType<"getWatchLater">>(
+      FETCH_WATCH_LATER_QUERY,
+      {
+        input: data,
+      }
+    )
+
+  return result?.getWatchLater
 }
