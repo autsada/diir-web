@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen"
   },
   "dependencies": {
     "@types/node": "18.15.11",
@@ -22,6 +23,7 @@
     "eslint-config-next": "^13.4.1",
     "ethers": "^5.7.2",
     "firebase": "^9.20.0",
+    "graphql": "^16.6.0",
     "graphql-request": "^6.0.0",
     "lodash": "^4.17.21",
     "next": "^13.4.3",
@@ -43,6 +45,8 @@
     "wagmi": "^1.0.3"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^4.0.0",
+    "@graphql-codegen/client-preset": "^4.0.0",
     "@types/lodash": "^4.14.194"
   }
 }
