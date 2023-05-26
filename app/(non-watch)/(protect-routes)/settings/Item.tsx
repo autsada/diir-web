@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation"
 
 import Avatar from "@/components/Avatar"
 import Online from "@/components/Online"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   item: Station

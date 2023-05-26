@@ -2,9 +2,9 @@ import React from "react"
 
 import Publishes from "./Publishes"
 import { getAccount } from "@/lib/server"
-import { getMyPublishes, getStationById } from "@/graphql"
+import { fetchMyPublishes, getStationById } from "@/graphql"
 import { redirect } from "next/navigation"
-import type { Station, Publish } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 export default async function AllPublishes() {
   const data = await getAccount()
@@ -27,8 +27,8 @@ export default async function AllPublishes() {
     redirect("/settings")
   }
 
-  // Query all publishes created by the station.
-  const publishes = (await getMyPublishes({
+  // First query to all publishes created by the station.
+  const result = await fetchMyPublishes({
     idToken,
     signature,
     data: {
@@ -36,8 +36,9 @@ export default async function AllPublishes() {
       owner: account.owner,
       creatorId: station.id,
       kind: "all",
+      cursor: null,
     },
-  })) as Publish[]
+  })
 
-  return <Publishes publishes={publishes} />
+  return <Publishes fetchResult={result || undefined} />
 }

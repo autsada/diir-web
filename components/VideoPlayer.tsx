@@ -3,10 +3,10 @@
 import Player from "react-player"
 import { JSXElementConstructor, ReactElement } from "react"
 
-import type { Playback } from "@/graphql/types"
+import type { PlaybackLink } from "@/graphql/codegen/graphql"
 
 interface Props {
-  playback: Playback
+  playback: PlaybackLink | undefined
   playing?: boolean
   controls?: boolean
   thumbnail?: string

@@ -3,7 +3,7 @@ import React from "react"
 import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
 import { redirect } from "next/navigation"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 import PublishTemplate from "./PublishTemplate"
 
 export default async function Layout({

@@ -1,19 +1,21 @@
 import { NextResponse } from "next/server"
+import type { Maybe } from "graphql/jsutils/Maybe"
 
-import { getAllVideos, getVideosByCategory } from "@/graphql"
-import type { Publish, PublishCategory } from "@/graphql/types"
+import { fetchAllVideos, fetchVideosByCategory } from "@/graphql"
+import type { PublishCategory } from "@/graphql/types"
+import type { FetchPublishesResponse } from "@/graphql/codegen/graphql"
 
 export async function POST(req: Request) {
   const body = (await req.json()) as { category: PublishCategory | "All" }
   const category = body.category
 
-  let publishes: Publish[] = []
+  let result: Maybe<FetchPublishesResponse> | undefined = undefined
 
   if (category === "All") {
-    publishes = (await getAllVideos()) as Publish[]
+    result = await fetchAllVideos()
   } else {
-    publishes = (await getVideosByCategory(category)) as Publish[]
+    result = await fetchVideosByCategory(category)
   }
 
-  return NextResponse.json({ publishes })
+  return NextResponse.json({ result })
 }

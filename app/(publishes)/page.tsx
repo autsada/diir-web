@@ -1,7 +1,6 @@
 import Videos from "./Videos"
 import { getAccount } from "@/lib/server"
-import { getAllVideos, getStationById } from "@/graphql"
-import type { Publish, Station } from "@/graphql/types"
+import { fetchAllVideos, getStationById } from "@/graphql"
 
 export default async function Home() {
   const data = await getAccount()
@@ -11,11 +10,11 @@ export default async function Home() {
   const station =
     !account || !account.defaultStation
       ? undefined
-      : ((await getStationById(account?.defaultStation?.id)) as Station)
+      : await getStationById(account?.defaultStation?.id)
 
-  let allVideos = (await getAllVideos()) as Publish[]
+  let result = await fetchAllVideos()
 
-  if (allVideos.length === 0)
+  if (!result || result?.edges?.length === 0)
     return (
       <div className="w-full py-10 text-center">
         <h6>No videos found</h6>
@@ -25,8 +24,8 @@ export default async function Home() {
   return (
     <main>
       <Videos
-        allVideos={allVideos}
-        profile={station}
+        fetchResult={result}
+        profile={station || undefined}
         isAuthenticated={!!account}
       />
     </main>

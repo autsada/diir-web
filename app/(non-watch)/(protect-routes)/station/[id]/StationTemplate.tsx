@@ -2,7 +2,7 @@ import React from "react"
 import Image from "next/image"
 
 import ContentTabs from "./ContentTabs"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 import Link from "next/link"
 
 interface Props {

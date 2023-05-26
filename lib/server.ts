@@ -1,7 +1,7 @@
 import { cookies } from "next/headers"
 
 import { createAccount, getMyAccount } from "@/graphql"
-import type { Account } from "@/graphql/types"
+import type { Account } from "@/graphql/codegen/graphql"
 
 export async function getAccount() {
   try {

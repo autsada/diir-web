@@ -6,17 +6,27 @@ import ContentTabs from "./ContentTabs"
 import PublishItem from "./PublishItem"
 import Mask from "@/components/Mask"
 import ActionsModal from "./ActionsModal"
-import type { Publish, PublishCategory, Station } from "@/graphql/types"
+import type { PublishCategory } from "@/graphql/types"
+import type {
+  Publish,
+  Station,
+  FetchPublishesResponse,
+} from "@/graphql/codegen/graphql"
 
 interface Props {
   isAuthenticated: boolean
   profile: Station | undefined
-  allVideos: Publish[]
+  fetchResult: FetchPublishesResponse
 }
 
-export default function Videos({ isAuthenticated, profile, allVideos }: Props) {
+export default function Videos({
+  isAuthenticated,
+  profile,
+  fetchResult,
+}: Props) {
   const [selectedCat, setSelectedCat] = useState<PublishCategory | "All">("All")
-  const [videosByCat, setVideosByCat] = useState<Publish[]>(allVideos)
+  const [resultByCat, setResultByCat] =
+    useState<FetchPublishesResponse>(fetchResult)
   const [loading, setLoading] = useState(false)
   const [targetPublish, setTargetPublish] = useState<Publish>()
   const [positionX, setPositionX] = useState(0)
@@ -71,8 +81,8 @@ export default function Videos({ isAuthenticated, profile, allVideos }: Props) {
         },
         body: JSON.stringify({ category: cat }),
       })
-      const data = (await res.json()) as { publishes: Publish[] }
-      setVideosByCat(data.publishes)
+      const data = (await res.json()) as { result: FetchPublishesResponse }
+      setResultByCat(data?.result)
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -94,16 +104,16 @@ export default function Videos({ isAuthenticated, profile, allVideos }: Props) {
       </div>
 
       <div className="mt-[40px] py-2 sm:px-4 sm:ml-[100px]">
-        {videosByCat.length === 0 ? (
+        {resultByCat?.edges?.length === 0 ? (
           <div className="w-full py-10 text-center">
             <h6>No videos found</h6>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2 sm:gap-y-6 sm:gap-x-6 py-1 pb-20 sm:p-5 bg-white divide-y-[4px] sm:divide-y-0 divide-neutral-200">
-            {videosByCat.map((vid) => (
+            {resultByCat.edges.map((edge) => (
               <PublishItem
-                key={vid?.id}
-                publish={vid}
+                key={edge?.node?.id}
+                publish={edge?.node}
                 onAction={onReactToPublish}
                 setPOS={setPOS}
               />

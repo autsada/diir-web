@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 
 import { getAccount } from "@/lib/server"
 import { getStationById, getWatchLater } from "@/graphql"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 export default async function WatchLater() {
   const data = await getAccount()

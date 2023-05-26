@@ -6,7 +6,7 @@ import { MdFileUpload } from "react-icons/md"
 
 import BannerModal from "./BannerModal"
 import type { FileWithPrview } from "@/types"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   station: Station

@@ -7,7 +7,7 @@ import StationItem from "./Item"
 import CreateStationModal from "./CreateStationModal"
 import ConfirmModal from "@/components/ConfirmModal"
 import Mask from "@/components/Mask"
-import type { Account } from "@/graphql/types"
+import type { Account } from "@/graphql/codegen/graphql"
 
 interface Props {
   account: Account

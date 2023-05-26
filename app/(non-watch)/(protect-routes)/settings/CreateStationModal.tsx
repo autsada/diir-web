@@ -15,7 +15,7 @@ import NameInput from "@/app/(non-watch)/(protect-routes)/settings/NameInput"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
 import ModalWrapper from "@/components/ModalWrapper"
-import type { Account } from "@/graphql/types"
+import type { Account } from "@/graphql/codegen/graphql"
 import {
   usePrepareStationContractWrite,
   useStationMintedEvent,

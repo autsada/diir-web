@@ -9,7 +9,7 @@ import {
   getPostExcerpt,
   secondsToHourFormat,
 } from "@/lib/client"
-import type { Publish } from "@/graphql/types"
+import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
   publish: Publish | null | undefined
@@ -46,7 +46,7 @@ export default function PublishItem({ publish, onAction, setPOS }: Props) {
             onMouseLeave={onMouseLeave}
           >
             <VideoPlayer
-              playback={publish.playback}
+              playback={publish.playback || undefined}
               controls={playing}
               playing={playing}
               thumbnail={

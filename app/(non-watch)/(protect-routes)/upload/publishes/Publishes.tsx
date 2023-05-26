@@ -1,14 +1,14 @@
 import React from "react"
 
 import PublishItem from "./PublishItem"
-import type { Publish } from "@/graphql/types"
+import type { FetchPublishesResponse } from "@/graphql/codegen/graphql"
 
 interface Props {
-  publishes: Publish[]
+  fetchResult: FetchPublishesResponse | undefined
 }
 
-export default function Publishes({ publishes }: Props) {
-  return publishes.length === 0 ? (
+export default function Publishes({ fetchResult }: Props) {
+  return !fetchResult || fetchResult.edges?.length === 0 ? (
     <div className="px-4">
       <p className="font-normal">No publishes found</p>
     </div>
@@ -51,9 +51,9 @@ export default function Publishes({ publishes }: Props) {
         </thead>
 
         <tbody>
-          {publishes.map((publish) => (
-            <PublishItem key={publish.id} publish={publish} />
-          ))}
+          {fetchResult.edges?.map(({ cursor, node: publish }) =>
+            !publish ? null : <PublishItem key={publish.id} publish={publish} />
+          )}
         </tbody>
       </table>
     </div>

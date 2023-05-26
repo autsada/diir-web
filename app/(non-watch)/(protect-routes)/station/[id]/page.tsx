@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 
 import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 import StationTemplate from "./StationTemplate"
 
 export default async function Station({

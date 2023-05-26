@@ -1,7 +1,7 @@
 import React from "react"
 
 import PublishTabs from "./PublishTabs"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   station: Station

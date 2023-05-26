@@ -5,7 +5,7 @@ import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
 
 import Logo from "./Logo"
-import type { Account } from "@/graphql/types"
+import type { Account } from "@/graphql/codegen/graphql"
 import Avatar from "../Avatar"
 
 interface Props {

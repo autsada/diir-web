@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 
 import { getAccount } from "@/lib/server"
 import { getStationByName } from "@/graphql"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 import StationTemplate from "../(protect-routes)/station/[id]/StationTemplate"
 
 export default async function Layout({

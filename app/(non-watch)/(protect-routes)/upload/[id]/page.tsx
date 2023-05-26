@@ -3,7 +3,7 @@ import React from "react"
 import { getStationById, getUploadedPublish } from "@/graphql"
 import { redirect } from "next/navigation"
 import ContentModal from "./ContentModal"
-import type { Publish } from "@/graphql/types"
+import type { Publish } from "@/graphql/codegen/graphql"
 
 export default async function Page({ params }: { params: { id: string } }) {
   // Get publish from the database

@@ -2,7 +2,7 @@ import React from "react"
 
 import { getAccount } from "@/lib/server"
 import { getStationByName } from "@/graphql"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 export default async function Page({
   params,

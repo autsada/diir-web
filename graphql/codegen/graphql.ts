@@ -69,21 +69,41 @@ export enum Category {
 
 export type Comment = {
   __typename?: 'Comment';
+  comment?: Maybe<Comment>;
   commentId?: Maybe<Scalars['String']['output']>;
   commentType: CommentType;
+  comments: Array<Comment>;
   commentsCount: Scalars['Int']['output'];
   content: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
-  creator?: Maybe<Station>;
+  creator: Station;
   creatorId: Scalars['String']['output'];
   disLiked?: Maybe<Scalars['Boolean']['output']>;
+  disLikes: Array<CommentDisLike>;
   disLikesCount: Scalars['Int']['output'];
-  id: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   liked?: Maybe<Scalars['Boolean']['output']>;
-  likes: Array<Maybe<Station>>;
+  likes: Array<CommentLike>;
   likesCount: Scalars['Int']['output'];
+  publish: Publish;
   publishId: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type CommentDisLike = {
+  __typename?: 'CommentDisLike';
+  comment: Comment;
+  commentId: Scalars['String']['output'];
+  station: Station;
+  stationId: Scalars['String']['output'];
+};
+
+export type CommentLike = {
+  __typename?: 'CommentLike';
+  comment: Comment;
+  commentId: Scalars['String']['output'];
+  station: Station;
+  stationId: Scalars['String']['output'];
 };
 
 export enum CommentType {
@@ -127,26 +147,37 @@ export type CreateWalletResult = {
   uid: Scalars['String']['output'];
 };
 
-export type DraftPublish = {
-  __typename?: 'DraftPublish';
+export type DisLike = {
+  __typename?: 'DisLike';
   createdAt: Scalars['DateTime']['output'];
-  creatorId: Scalars['String']['output'];
-  filename: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  public: Scalars['Boolean']['output'];
-  transcodeError: Scalars['Boolean']['output'];
-  uploadError: Scalars['Boolean']['output'];
-  uploading: Scalars['Boolean']['output'];
+  publish: Publish;
+  publishId: Scalars['String']['output'];
+  station: Station;
+  stationId: Scalars['String']['output'];
 };
 
-export type Edge = {
-  __typename?: 'Edge';
-  cursor?: Maybe<Scalars['String']['output']>;
-  node?: Maybe<Account>;
+export type FetchMyPublishesInput = {
+  accountId: Scalars['String']['input'];
+  creatorId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  kind: QueryPublishKind;
+  owner: Scalars['String']['input'];
 };
 
 export type FetchPublishesByCatInput = {
   category: Category;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FetchPublishesInput = {
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  prefer?: InputMaybe<Array<Category>>;
+};
+
+export type FetchPublishesResponse = {
+  __typename?: 'FetchPublishesResponse';
+  edges: Array<PublishEdge>;
+  pageInfo: PageInfo;
 };
 
 export type Follow = {
@@ -161,17 +192,19 @@ export type GetMyAccountInput = {
   accountType: AccountType;
 };
 
-export type GetMyPublishesInput = {
-  accountId: Scalars['String']['input'];
-  creatorId: Scalars['String']['input'];
-  kind: QueryPublishKind;
-  owner: Scalars['String']['input'];
-};
-
 export type GetWatchLaterInput = {
   accountId: Scalars['String']['input'];
   owner: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
+};
+
+export type Like = {
+  __typename?: 'Like';
+  createdAt: Scalars['DateTime']['output'];
+  publish: Publish;
+  publishId: Scalars['String']['output'];
+  station: Station;
+  stationId: Scalars['String']['output'];
 };
 
 export type MintStationNftInput = {
@@ -303,8 +336,9 @@ export type PlaybackLink = {
   dash: Scalars['String']['output'];
   duration: Scalars['Float']['output'];
   hls: Scalars['String']['output'];
-  id: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   preview: Scalars['String']['output'];
+  publish?: Maybe<Publish>;
   publishId: Scalars['String']['output'];
   thumbnail: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -318,22 +352,23 @@ export type Publish = {
   contentRef?: Maybe<Scalars['String']['output']>;
   contentURI?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
-  creator?: Maybe<Station>;
+  creator: Station;
   creatorId: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   disLiked?: Maybe<Scalars['Boolean']['output']>;
   disLikesCount: Scalars['Int']['output'];
+  dislikes: Array<DisLike>;
   filename?: Maybe<Scalars['String']['output']>;
-  id: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   kind?: Maybe<PublishKind>;
   lastComment?: Maybe<Comment>;
   liked?: Maybe<Scalars['Boolean']['output']>;
-  likes: Array<Maybe<Station>>;
+  likes: Array<Like>;
   likesCount: Scalars['Int']['output'];
   playback?: Maybe<PlaybackLink>;
   primaryCategory?: Maybe<Category>;
   secondaryCategory?: Maybe<Category>;
-  thumbSource: ThumbSource;
+  thumbSource: ThumbnailSource;
   thumbnail?: Maybe<Scalars['String']['output']>;
   thumbnailRef?: Maybe<Scalars['String']['output']>;
   tips: Array<Maybe<Tip>>;
@@ -347,6 +382,12 @@ export type Publish = {
   visibility: Visibility;
 };
 
+export type PublishEdge = {
+  __typename?: 'PublishEdge';
+  cursor?: Maybe<Scalars['String']['output']>;
+  node?: Maybe<Publish>;
+};
+
 export enum PublishKind {
   Adds = 'Adds',
   Blog = 'Blog',
@@ -357,18 +398,27 @@ export enum PublishKind {
 
 export type Query = {
   __typename?: 'Query';
-  fetchAllVideos: Array<Maybe<Publish>>;
-  fetchVideosByCategory: Array<Maybe<Publish>>;
+  fetchAllVideos?: Maybe<FetchPublishesResponse>;
+  fetchMyPublishes?: Maybe<FetchPublishesResponse>;
+  fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
   getBalance: Scalars['String']['output'];
   getMyAccount?: Maybe<Account>;
-  getMyPublishes: Array<Maybe<Publish>>;
   getPublishById?: Maybe<Publish>;
-  getPublishForCreator?: Maybe<Publish>;
   getStationById?: Maybe<Station>;
   getStationByName?: Maybe<Station>;
   getWatchLater: Array<Maybe<WatchLater>>;
   listCommentsByCommentId: Array<Maybe<Comment>>;
   listCommentsByPublishId: Array<Maybe<Comment>>;
+};
+
+
+export type QueryFetchAllVideosArgs = {
+  input: FetchPublishesInput;
+};
+
+
+export type QueryFetchMyPublishesArgs = {
+  input: FetchMyPublishesInput;
 };
 
 
@@ -387,18 +437,8 @@ export type QueryGetMyAccountArgs = {
 };
 
 
-export type QueryGetMyPublishesArgs = {
-  input: GetMyPublishesInput;
-};
-
-
 export type QueryGetPublishByIdArgs = {
   input: QueryByIdInput;
-};
-
-
-export type QueryGetPublishForCreatorArgs = {
-  id: Scalars['String']['input'];
 };
 
 
@@ -449,12 +489,6 @@ export type RemovePublishToPlayListInput = {
   id: Scalars['String']['input'];
   owner: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
-};
-
-export type Response = {
-  __typename?: 'Response';
-  edges: Array<Maybe<Edge>>;
-  pageInfo: PageInfo;
 };
 
 export type SavePublishToPlayListInput = {
@@ -508,18 +542,23 @@ export enum ThumbSource {
   Generated = 'generated'
 }
 
+export enum ThumbnailSource {
+  Custom = 'custom',
+  Generated = 'generated'
+}
+
 export type Tip = {
   __typename?: 'Tip';
   amount: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   fee: Scalars['String']['output'];
   from: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  publish?: Maybe<Publish>;
+  id: Scalars['ID']['output'];
+  publish: Publish;
   publishId: Scalars['String']['output'];
-  receiver?: Maybe<Station>;
+  receiver: Station;
   receiverId: Scalars['String']['output'];
-  sender?: Maybe<Station>;
+  sender: Station;
   senderId: Scalars['String']['output'];
   to: Scalars['String']['output'];
 };
@@ -566,9 +605,10 @@ export enum Visibility {
 export type WatchLater = {
   __typename?: 'WatchLater';
   createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  publish?: Maybe<Publish>;
+  id: Scalars['ID']['output'];
+  publish: Publish;
   publishId: Scalars['String']['output'];
+  station: Station;
   stationId: Scalars['String']['output'];
 };
 

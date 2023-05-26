@@ -10,7 +10,7 @@ import AuthModal from "../auth/AuthModal"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
-import type { Account } from "@/graphql/types"
+import type { Account } from "@/graphql/codegen/graphql"
 
 interface Props {
   account: Account | null

@@ -8,7 +8,7 @@ import { onSnapshot, doc } from "firebase/firestore"
 import ButtonLoader from "@/components/ButtonLoader"
 import { formatDate, getPostExcerpt, secondsToHourFormat } from "@/lib/client"
 import { db, uploadsCollection } from "@/firebase/config"
-import type { Publish } from "@/graphql/types"
+import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
   publish: Publish
@@ -45,8 +45,8 @@ export default function PublishItem({ publish }: Props) {
       <th className="w-[33%] sm:w-[13%] font-normal py-2 break-words">
         <div className="relative w-full h-full">
           {publish.thumbnail || publish.playback ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <div className="w-full h-full bg-black">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={
                   publish.thumbnail && publish.thumbSource === "custom"

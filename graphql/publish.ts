@@ -2,11 +2,11 @@ import { gql } from "graphql-request"
 
 import { client } from "./client"
 import type {
+  FetchMyPublishesInput,
   QueryReturnType,
   QueryArgsType,
   MutationReturnType,
   MutationArgsType,
-  GetMyPublishesInput,
   PublishCategory,
   AddToPlayListInput,
   QueryByIdInput,
@@ -17,9 +17,9 @@ import type {
 /**
  * Get an uploaded publish for use in the upload action
  */
-export const GET_CREATOR_PUBLISH_QUERY = gql`
-  query GetPublishForCreator($id: String!) {
-    getPublishForCreator(id: $id) {
+export const GET_UPLOADED_PUBLISH_QUERY = gql`
+  query GetPublishById($input: QueryByIdInput!) {
+    getPublishById(input: $input) {
       id
       creatorId
       title
@@ -49,54 +49,63 @@ export const GET_CREATOR_PUBLISH_QUERY = gql`
 `
 export async function getUploadedPublish(id: string) {
   const data = await client.request<
-    QueryReturnType<"getPublishForCreator">,
-    QueryArgsType<"getPublishForCreator">
-  >(GET_CREATOR_PUBLISH_QUERY, { id })
+    QueryReturnType<"getPublishById">,
+    QueryArgsType<"getPublishById">
+  >(GET_UPLOADED_PUBLISH_QUERY, { input: { targetId: id } })
 
-  return data?.getPublishForCreator
+  return data?.getPublishById
 }
 
 /**
- * Get creator publishes
+ * Fetch creator publishes
  */
-export const GET_MY_PUBLISHES_QUERY = gql`
-  query GetMyPublishes($input: GetMyPublishesInput!) {
-    getMyPublishes(input: $input) {
-      id
-      createdAt
-      contentURI
-      contentRef
-      filename
-      thumbnail
-      thumbnailRef
-      thumbSource
-      title
-      description
-      views
-      commentsCount
-      likesCount
-      disLikesCount
-      uploading
-      uploadError
-      tipsCount
-      visibility
-      kind
-      playback {
-        id
-        thumbnail
-        duration
+export const FETCH_CREATOR_PUBLISHES_QUERY = gql`
+  query FetchMyPublishes($input: FetchMyPublishesInput!) {
+    fetchMyPublishes(input: $input) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          createdAt
+          contentURI
+          contentRef
+          filename
+          thumbnail
+          thumbnailRef
+          thumbSource
+          title
+          description
+          views
+          commentsCount
+          likesCount
+          disLikesCount
+          uploading
+          uploadError
+          tipsCount
+          visibility
+          kind
+          playback {
+            id
+            thumbnail
+            duration
+          }
+        }
       }
     }
   }
 `
-export async function getMyPublishes({
+export async function fetchMyPublishes({
   idToken,
   signature,
   data,
 }: {
   idToken: string
   signature?: string
-  data: GetMyPublishesInput
+  data: FetchMyPublishesInput
 }) {
   const result = await client
     .setHeaders({
@@ -105,13 +114,126 @@ export async function getMyPublishes({
       "auth-wallet-signature": signature || "",
     })
     .request<
-      QueryReturnType<"getMyPublishes">,
-      QueryArgsType<"getMyPublishes">
-    >(GET_MY_PUBLISHES_QUERY, {
+      QueryReturnType<"fetchMyPublishes">,
+      QueryArgsType<"fetchMyPublishes">
+    >(FETCH_CREATOR_PUBLISHES_QUERY, {
       input: data,
     })
 
-  return result?.getMyPublishes
+  return result?.fetchMyPublishes
+}
+
+/**
+ * Fetch all videos
+ */
+export const FETCH_ALL_VIDEOS_QUERY = gql`
+  query FetchAllVideos($input: FetchPublishesInput!) {
+    fetchAllVideos(input: $input) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          title
+          createdAt
+          views
+          visibility
+          thumbSource
+          thumbnail
+          primaryCategory
+          secondaryCategory
+          kind
+          creator {
+            id
+            name
+            displayName
+            image
+            defaultColor
+          }
+          playback {
+            id
+            videoId
+            duration
+            hls
+            dash
+            thumbnail
+          }
+        }
+      }
+    }
+  }
+`
+
+export async function fetchAllVideos(
+  cursor?: string,
+  prefer?: PublishCategory[]
+) {
+  const result = await client.request<
+    QueryReturnType<"fetchAllVideos">,
+    QueryArgsType<"fetchAllVideos">
+  >(FETCH_ALL_VIDEOS_QUERY, {
+    input: { cursor, prefer },
+  })
+
+  return result?.fetchAllVideos
+}
+
+/**
+ * Fetch videos by category
+ */
+export const FETCH_VIDEOS_BY_CAT_QUERY = gql`
+  query FetchVideosByCategory($input: FetchPublishesByCatInput!) {
+    fetchVideosByCategory(input: $input) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          title
+          createdAt
+          views
+          visibility
+          thumbSource
+          thumbnail
+          primaryCategory
+          secondaryCategory
+          kind
+          creator {
+            id
+            name
+            displayName
+            image
+            defaultColor
+          }
+          playback {
+            id
+            videoId
+            duration
+            hls
+            dash
+            thumbnail
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchVideosByCategory(
+  category: PublishCategory,
+  cursor?: string
+) {
+  const result = await client.request<
+    QueryReturnType<"fetchVideosByCategory">,
+    QueryArgsType<"fetchVideosByCategory">
+  >(FETCH_VIDEOS_BY_CAT_QUERY, { input: { category, cursor } })
+
+  return result?.fetchVideosByCategory
 }
 
 /**
@@ -174,91 +296,6 @@ export async function getWatchingPublish(data: QueryByIdInput) {
   })
 
   return result?.getPublishById
-}
-
-/**
- * Get all videos
- */
-export const FETCH_ALL_VIDEOS_QUERY = gql`
-  query FetchAllVideos {
-    fetchAllVideos {
-      id
-      title
-      createdAt
-      views
-      visibility
-      thumbSource
-      thumbnail
-      primaryCategory
-      secondaryCategory
-      kind
-      creator {
-        id
-        name
-        displayName
-        image
-        defaultColor
-      }
-      playback {
-        id
-        videoId
-        duration
-        hls
-        dash
-        thumbnail
-      }
-    }
-  }
-`
-export async function getAllVideos() {
-  const result = await client.request<QueryReturnType<"fetchAllVideos">>(
-    FETCH_ALL_VIDEOS_QUERY
-  )
-
-  return result?.fetchAllVideos
-}
-
-/**
- * Get videos by category
- */
-export const FETCH_VIDEOS_BY_CAT_QUERY = gql`
-  query FetchVideosByCategory($input: FetchPublishesByCatInput!) {
-    fetchVideosByCategory(input: $input) {
-      id
-      title
-      createdAt
-      views
-      visibility
-      thumbSource
-      thumbnail
-      primaryCategory
-      secondaryCategory
-      kind
-      creator {
-        id
-        name
-        displayName
-        image
-        defaultColor
-      }
-      playback {
-        id
-        videoId
-        duration
-        hls
-        dash
-        thumbnail
-      }
-    }
-  }
-`
-export async function getVideosByCategory(category: PublishCategory) {
-  const result = await client.request<
-    QueryReturnType<"fetchVideosByCategory">,
-    QueryArgsType<"fetchVideosByCategory">
-  >(FETCH_VIDEOS_BY_CAT_QUERY, { input: { category } })
-
-  return result?.fetchVideosByCategory
 }
 
 /**

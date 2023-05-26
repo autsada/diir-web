@@ -11,7 +11,7 @@ import { toast } from "react-toastify"
 
 import ModalWrapper from "@/components/ModalWrapper"
 import { addVideoToWatchLater } from "./actions"
-import type { Publish, Station } from "@/graphql/types"
+import type { Publish, Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   isAuthenticated: boolean

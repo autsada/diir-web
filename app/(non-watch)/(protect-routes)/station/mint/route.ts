@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
 import { getMyAccount, mintFirstStationNFT, mintStationNFT } from "@/graphql"
-import type { Account } from "@/graphql/types"
+import type { Account } from "@/graphql/codegen/graphql"
 
 export async function POST(req: Request) {
   const cookieStore = cookies()

@@ -14,7 +14,7 @@ import { MdModeEditOutline } from "react-icons/md"
 import ConfirmModal from "@/components/ConfirmModal"
 import NameInput from "@/app/(non-watch)/(protect-routes)/settings/NameInput"
 import Mask from "@/components/Mask"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   station: Station

@@ -7,7 +7,7 @@ import StationImage from "./StationImage"
 import BannerImage from "./BannerImage"
 import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 export default async function ManageStation({
   params,

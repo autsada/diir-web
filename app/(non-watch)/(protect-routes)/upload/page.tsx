@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 import Upload from "./Upload"
 import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 export default async function Page() {
   const data = await getAccount()

@@ -6,7 +6,7 @@ import Dropzone from "react-dropzone"
 import Avatar from "@/components/Avatar"
 import ImageModal from "./ImageModal"
 import type { FileWithPrview } from "@/types"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   station: Station

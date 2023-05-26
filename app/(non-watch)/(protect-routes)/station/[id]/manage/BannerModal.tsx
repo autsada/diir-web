@@ -7,7 +7,7 @@ import Mask from "@/components/Mask"
 import { uploadFile } from "@/firebase/helpers"
 import { stationsFolder } from "@/firebase/config"
 import type { FileWithPrview } from "@/types"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   station: Station

@@ -4,7 +4,7 @@ import React from "react"
 import { useParams } from "next/navigation"
 
 import Tab from "@/components/Tab"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   station: Station

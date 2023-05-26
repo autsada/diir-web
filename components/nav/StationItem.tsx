@@ -2,7 +2,7 @@ import React from "react"
 
 import Avatar from "../Avatar"
 import Online from "../Online"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   item: Station

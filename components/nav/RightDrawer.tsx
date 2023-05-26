@@ -13,7 +13,7 @@ import ButtonLoader from "../ButtonLoader"
 import StationItem from "./StationItem"
 import Mask from "../Mask"
 import { firebaseAuth } from "@/firebase/config"
-import type { Station } from "@/graphql/types"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   profile: Station | null | undefined // Profile is a logged in station
