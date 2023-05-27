@@ -20,6 +20,7 @@ export type MutationReturnType<T extends keyof NexusGenFieldTypes["Mutation"]> =
 export type MutationArgsType<T extends keyof NexusGenArgTypes["Mutation"]> =
   NexusGenArgTypes["Mutation"][T]
 
+export type QueryByIdInput = NexusGenInputs["QueryByIdInput"]
 export type PublishCategory = NexusGenEnums["Category"]
 export type ThumbSource = NexusGenEnums["ThumbSource"]
 export type PublishKind = NexusGenEnums["PublishKind"]
@@ -27,5 +28,4 @@ export type QueryPublishKind = NexusGenEnums["QueryPublishKind"]
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
 export type FetchMyPublishesInput = NexusGenInputs["FetchMyPublishesInput"]
 export type AddToPlayListInput = NexusGenInputs["SavePublishToPlayListInput"]
-export type GetWatchLaterInput = NexusGenInputs["GetWatchLaterInput"]
-export type QueryByIdInput = NexusGenInputs["QueryByIdInput"]
+export type FetchWatchLaterInput = NexusGenInputs["FetchWatchLaterInput"]

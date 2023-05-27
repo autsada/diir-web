@@ -180,6 +180,19 @@ export type FetchPublishesResponse = {
   pageInfo: PageInfo;
 };
 
+export type FetchWatchLaterInput = {
+  accountId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  owner: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
+export type FetchWatchLaterResponse = {
+  __typename?: 'FetchWatchLaterResponse';
+  edges: Array<WatchLaterEdge>;
+  pageInfo: PageInfo;
+};
+
 export type Follow = {
   __typename?: 'Follow';
   follower: Station;
@@ -190,12 +203,6 @@ export type Follow = {
 
 export type GetMyAccountInput = {
   accountType: AccountType;
-};
-
-export type GetWatchLaterInput = {
-  accountId: Scalars['String']['input'];
-  owner: Scalars['String']['input'];
-  stationId: Scalars['String']['input'];
 };
 
 export type Like = {
@@ -401,12 +408,12 @@ export type Query = {
   fetchAllVideos?: Maybe<FetchPublishesResponse>;
   fetchMyPublishes?: Maybe<FetchPublishesResponse>;
   fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
+  fetchWatchLater?: Maybe<FetchWatchLaterResponse>;
   getBalance: Scalars['String']['output'];
   getMyAccount?: Maybe<Account>;
   getPublishById?: Maybe<Publish>;
   getStationById?: Maybe<Station>;
   getStationByName?: Maybe<Station>;
-  getWatchLater: Array<Maybe<WatchLater>>;
   listCommentsByCommentId: Array<Maybe<Comment>>;
   listCommentsByPublishId: Array<Maybe<Comment>>;
 };
@@ -424,6 +431,11 @@ export type QueryFetchMyPublishesArgs = {
 
 export type QueryFetchVideosByCategoryArgs = {
   input: FetchPublishesByCatInput;
+};
+
+
+export type QueryFetchWatchLaterArgs = {
+  input: FetchWatchLaterInput;
 };
 
 
@@ -449,11 +461,6 @@ export type QueryGetStationByIdArgs = {
 
 export type QueryGetStationByNameArgs = {
   input: QueryByNameInput;
-};
-
-
-export type QueryGetWatchLaterArgs = {
-  input: GetWatchLaterInput;
 };
 
 
@@ -610,6 +617,12 @@ export type WatchLater = {
   publishId: Scalars['String']['output'];
   station: Station;
   stationId: Scalars['String']['output'];
+};
+
+export type WatchLaterEdge = {
+  __typename?: 'WatchLaterEdge';
+  cursor?: Maybe<Scalars['String']['output']>;
+  node?: Maybe<WatchLater>;
 };
 
 export type WriteResult = {

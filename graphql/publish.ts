@@ -10,7 +10,6 @@ import type {
   PublishCategory,
   AddToPlayListInput,
   QueryByIdInput,
-  GetWatchLaterInput,
   UpdatePublishInput,
 } from "./types"
 
@@ -299,71 +298,6 @@ export async function getWatchingPublish(data: QueryByIdInput) {
 }
 
 /**
- * Get watch later videos of a station
- */
-export const FETCH_WATCH_LATER_QUERY = gql`
-  query GetWatchLater($input: GetWatchLaterInput!) {
-    getWatchLater(input: $input) {
-      id
-      createdAt
-      stationId
-      publishId
-      publish {
-        id
-        title
-        createdAt
-        views
-        visibility
-        thumbSource
-        thumbnail
-        primaryCategory
-        secondaryCategory
-        kind
-        creator {
-          id
-          name
-          displayName
-          image
-          defaultColor
-        }
-        playback {
-          id
-          videoId
-          duration
-          hls
-          dash
-          thumbnail
-        }
-      }
-    }
-  }
-`
-export async function getWatchLater({
-  idToken,
-  signature,
-  data,
-}: {
-  idToken: string
-  signature?: string
-  data: GetWatchLaterInput
-}) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<QueryReturnType<"getWatchLater">, QueryArgsType<"getWatchLater">>(
-      FETCH_WATCH_LATER_QUERY,
-      {
-        input: data,
-      }
-    )
-
-  return result?.getWatchLater
-}
-
-/**
  * Cache a draft publish
  */
 export const CREATE_DRAFT_PUBLISH_MUTATION = gql`
@@ -437,39 +371,4 @@ export async function updatePublish({
     })
 
   return result?.updatePublish
-}
-
-/**
- * Add publish to watch later
- */
-export const ADD_TO_WATCH_LATER_MUTATION = gql`
-  mutation AddToWatchLater($input: SavePublishToPlayListInput!) {
-    addToWatchLater(input: $input) {
-      status
-    }
-  }
-`
-export async function addToWatchLater({
-  idToken,
-  signature,
-  data,
-}: {
-  idToken: string
-  signature?: string
-  data: AddToPlayListInput
-}) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"addToWatchLater">,
-      MutationArgsType<"addToWatchLater">
-    >(ADD_TO_WATCH_LATER_MUTATION, {
-      input: data,
-    })
-
-  return result?.addToWatchLater
 }

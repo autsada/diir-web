@@ -2,8 +2,7 @@ import React from "react"
 import { redirect } from "next/navigation"
 
 import { getAccount } from "@/lib/server"
-import { getStationById, getWatchLater } from "@/graphql"
-import type { Station } from "@/graphql/codegen/graphql"
+import { getStationById, fetchWatchLater } from "@/graphql"
 
 export default async function WatchLater() {
   const data = await getAccount()
@@ -20,24 +19,28 @@ export default async function WatchLater() {
   }
 
   // Query station by id
-  const station = (await getStationById(account?.defaultStation?.id)) as Station
+  const station = await getStationById(account?.defaultStation?.id)
 
   if (!station) {
     redirect("/")
   }
 
-  // Get watch later videos from the database
-  const watchLaterVids = await getWatchLater({
+  // Get watch later videos from the database for the first render
+  const watchLaterVids = await fetchWatchLater({
     idToken,
     signature,
     data: {
       accountId: account?.id,
       owner: account?.owner,
       stationId: station?.id,
+      cursor: null,
     },
   })
 
-  console.log("watch later vids -->", watchLaterVids)
+  // console.log(
+  //   "watch later vids -->",
+  //   JSON.stringify(watchLaterVids, undefined, 2)
+  // )
 
   return <div>Watch Later</div>
 }

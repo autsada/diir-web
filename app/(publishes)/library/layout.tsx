@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 
 import { getAccount } from "@/lib/server"
+import { getStationById } from "@/graphql"
 
 export default async function Layout({
   children,
@@ -9,8 +10,21 @@ export default async function Layout({
 }) {
   const data = await getAccount()
   const account = data?.account || null
+  const idToken = data?.idToken
+  const signature = data?.signature
 
-  if (!data || !account) {
+  if (!data || !account || !idToken) {
+    redirect("/")
+  }
+
+  if (!account?.defaultStation) {
+    redirect("/station")
+  }
+
+  // Query station by id
+  const station = await getStationById(account?.defaultStation?.id)
+
+  if (!station) {
     redirect("/")
   }
 
