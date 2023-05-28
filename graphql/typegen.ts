@@ -27,10 +27,32 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  AddToPlaylistInput: {
+    // input type
+    accountId: string // String!
+    owner: string // String!
+    playlistId: string // String!
+    publishId: string // String!
+    stationId: string // String!
+  }
+  AddToWatchLaterInput: {
+    // input type
+    accountId: string // String!
+    owner: string // String!
+    publishId: string // String!
+    stationId: string // String!
+  }
   CacheSessionInput: {
     // input type
     accountId: string // String!
     address: string // String!
+    stationId: string // String!
+  }
+  CheckPublishPlaylistsInput: {
+    // input type
+    accountId: string // String!
+    owner: string // String!
+    publishId: string // String!
     stationId: string // String!
   }
   CreateDraftPublishInput: {
@@ -39,6 +61,14 @@ export interface NexusGenInputs {
     creatorId: string // String!
     filename: string // String!
     owner: string // String!
+  }
+  CreatePlayListInput: {
+    // input type
+    accountId: string // String!
+    name: string // String!
+    owner: string // String!
+    publishId: string // String!
+    stationId: string // String!
   }
   CreateStationInput: {
     // input type
@@ -56,6 +86,13 @@ export interface NexusGenInputs {
     receiverId: string // String!
     senderId: string // String!
     to: string // String!
+  }
+  FetchMyPlaylistsInput: {
+    // input type
+    accountId: string // String!
+    cursor?: string | null // String
+    owner: string // String!
+    stationId: string // String!
   }
   FetchMyPublishesInput: {
     // input type
@@ -92,6 +129,11 @@ export interface NexusGenInputs {
     name: string // String!
     to: string // String!
   }
+  PlaylistItemStatus: {
+    // input type
+    isInPlaylist: boolean // Boolean!
+    playlistId: string // String!
+  }
   QueryByIdInput: {
     // input type
     requestorId?: string | null // String
@@ -102,16 +144,10 @@ export interface NexusGenInputs {
     name: string // String!
     requestorId?: string | null // String
   }
-  RemovePublishToPlayListInput: {
+  RemoveFromWatchLaterInput: {
     // input type
     accountId: string // String!
-    id: string // String!
-    owner: string // String!
-    stationId: string // String!
-  }
-  SavePublishToPlayListInput: {
-    // input type
-    accountId: string // String!
+    id?: string | null // String
     owner: string // String!
     publishId: string // String!
     stationId: string // String!
@@ -136,6 +172,14 @@ export interface NexusGenInputs {
     image: string // String!
     imageRef: string // String!
     owner: string // String!
+    stationId: string // String!
+  }
+  UpdatePlaylistsInput: {
+    // input type
+    accountId: string // String!
+    owner: string // String!
+    playlists: NexusGenInputs["PlaylistItemStatus"][] // [PlaylistItemStatus!]!
+    publishId: string // String!
     stationId: string // String!
   }
   UpdatePublishInput: {
@@ -211,6 +255,12 @@ export interface NexusGenObjects {
     // root type
     tips: number // Int!
   }
+  CheckPublishPlaylistsResponse: {
+    // root type
+    isInWatchLater: boolean // Boolean!
+    items: NexusGenRootTypes["PlaylistItem"][] // [PlaylistItem!]!
+    publishId: string // String!
+  }
   Comment: {
     // root type
     commentId?: string | null // String
@@ -247,6 +297,11 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     publishId: string // String!
     stationId: string // String!
+  }
+  FetchPlaylistsResponse: {
+    // root type
+    edges: NexusGenRootTypes["PlaylistEdge"][] // [PlaylistEdge!]!
+    pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
   }
   FetchPublishesResponse: {
     // root type
@@ -291,6 +346,25 @@ export interface NexusGenObjects {
     thumbnail: string // String!
     updatedAt?: NexusGenScalars["DateTime"] | null // DateTime
     videoId: string // String!
+  }
+  Playlist: {
+    // root type
+    createdAt: NexusGenScalars["DateTime"] // DateTime!
+    id: string // ID!
+    name: string // String!
+    ownerId: string // String!
+  }
+  PlaylistEdge: {
+    // root type
+    cursor?: string | null // String
+    node?: NexusGenRootTypes["Playlist"] | null // Playlist
+  }
+  PlaylistItem: {
+    // root type
+    createdAt: NexusGenScalars["DateTime"] // DateTime!
+    id: string // ID!
+    playlistId: string // String!
+    publishId: string // String!
   }
   Publish: {
     // root type
@@ -400,6 +474,12 @@ export interface NexusGenFieldTypes {
     // field return type
     tips: number // Int!
   }
+  CheckPublishPlaylistsResponse: {
+    // field return type
+    isInWatchLater: boolean // Boolean!
+    items: NexusGenRootTypes["PlaylistItem"][] // [PlaylistItem!]!
+    publishId: string // String!
+  }
   Comment: {
     // field return type
     comment: NexusGenRootTypes["Comment"] | null // Comment
@@ -454,6 +534,11 @@ export interface NexusGenFieldTypes {
     station: NexusGenRootTypes["Station"] // Station!
     stationId: string // String!
   }
+  FetchPlaylistsResponse: {
+    // field return type
+    edges: NexusGenRootTypes["PlaylistEdge"][] // [PlaylistEdge!]!
+    pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
+  }
   FetchPublishesResponse: {
     // field return type
     edges: NexusGenRootTypes["PublishEdge"][] // [PublishEdge!]!
@@ -485,6 +570,8 @@ export interface NexusGenFieldTypes {
   }
   Mutation: {
     // field return type
+    addToNewPlaylist: NexusGenRootTypes["WriteResult"] | null // WriteResult
+    addToPlaylist: NexusGenRootTypes["WriteResult"] | null // WriteResult
     addToWatchLater: NexusGenRootTypes["WriteResult"] | null // WriteResult
     cacheSession: NexusGenRootTypes["WriteResult"] // WriteResult!
     calculateTips: NexusGenRootTypes["CalculateTipsResult"] | null // CalculateTipsResult
@@ -498,6 +585,7 @@ export interface NexusGenFieldTypes {
     sendTips: NexusGenRootTypes["SendTipsResult"] | null // SendTipsResult
     updateBannerImage: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updateDisplayName: NexusGenRootTypes["WriteResult"] | null // WriteResult
+    updatePlaylists: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updateProfileImage: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updatePublish: NexusGenRootTypes["Publish"] | null // Publish
     validateDisplayName: boolean | null // Boolean
@@ -521,6 +609,29 @@ export interface NexusGenFieldTypes {
     thumbnail: string // String!
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
     videoId: string // String!
+  }
+  Playlist: {
+    // field return type
+    createdAt: NexusGenScalars["DateTime"] // DateTime!
+    id: string // ID!
+    items: NexusGenRootTypes["PlaylistItem"][] // [PlaylistItem!]!
+    name: string // String!
+    owner: NexusGenRootTypes["Station"] // Station!
+    ownerId: string // String!
+  }
+  PlaylistEdge: {
+    // field return type
+    cursor: string | null // String
+    node: NexusGenRootTypes["Playlist"] | null // Playlist
+  }
+  PlaylistItem: {
+    // field return type
+    createdAt: NexusGenScalars["DateTime"] // DateTime!
+    id: string // ID!
+    playlist: NexusGenRootTypes["Playlist"] // Playlist!
+    playlistId: string // String!
+    publish: NexusGenRootTypes["Publish"] // Publish!
+    publishId: string // String!
   }
   Publish: {
     // field return type
@@ -565,7 +676,11 @@ export interface NexusGenFieldTypes {
   }
   Query: {
     // field return type
+    checkPublishPlaylists:
+      | NexusGenRootTypes["CheckPublishPlaylistsResponse"]
+      | null // CheckPublishPlaylistsResponse
     fetchAllVideos: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    fetchMyPlaylists: NexusGenRootTypes["FetchPlaylistsResponse"] | null // FetchPlaylistsResponse
     fetchMyPublishes: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchVideosByCategory: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchWatchLater: NexusGenRootTypes["FetchWatchLaterResponse"] | null // FetchWatchLaterResponse
@@ -606,6 +721,7 @@ export interface NexusGenFieldTypes {
     publishesCount: number // Int!
     tokenId: number | null // Int
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
+    watchLater: NexusGenRootTypes["WatchLater"][] // [WatchLater!]!
   }
   Tip: {
     // field return type
@@ -657,6 +773,12 @@ export interface NexusGenFieldTypeNames {
   CalculateTipsResult: {
     // field return type name
     tips: "Int"
+  }
+  CheckPublishPlaylistsResponse: {
+    // field return type name
+    isInWatchLater: "Boolean"
+    items: "PlaylistItem"
+    publishId: "String"
   }
   Comment: {
     // field return type name
@@ -712,6 +834,11 @@ export interface NexusGenFieldTypeNames {
     station: "Station"
     stationId: "String"
   }
+  FetchPlaylistsResponse: {
+    // field return type name
+    edges: "PlaylistEdge"
+    pageInfo: "PageInfo"
+  }
   FetchPublishesResponse: {
     // field return type name
     edges: "PublishEdge"
@@ -743,6 +870,8 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: {
     // field return type name
+    addToNewPlaylist: "WriteResult"
+    addToPlaylist: "WriteResult"
     addToWatchLater: "WriteResult"
     cacheSession: "WriteResult"
     calculateTips: "CalculateTipsResult"
@@ -756,6 +885,7 @@ export interface NexusGenFieldTypeNames {
     sendTips: "SendTipsResult"
     updateBannerImage: "WriteResult"
     updateDisplayName: "WriteResult"
+    updatePlaylists: "WriteResult"
     updateProfileImage: "WriteResult"
     updatePublish: "Publish"
     validateDisplayName: "Boolean"
@@ -779,6 +909,29 @@ export interface NexusGenFieldTypeNames {
     thumbnail: "String"
     updatedAt: "DateTime"
     videoId: "String"
+  }
+  Playlist: {
+    // field return type name
+    createdAt: "DateTime"
+    id: "ID"
+    items: "PlaylistItem"
+    name: "String"
+    owner: "Station"
+    ownerId: "String"
+  }
+  PlaylistEdge: {
+    // field return type name
+    cursor: "String"
+    node: "Playlist"
+  }
+  PlaylistItem: {
+    // field return type name
+    createdAt: "DateTime"
+    id: "ID"
+    playlist: "Playlist"
+    playlistId: "String"
+    publish: "Publish"
+    publishId: "String"
   }
   Publish: {
     // field return type name
@@ -823,7 +976,9 @@ export interface NexusGenFieldTypeNames {
   }
   Query: {
     // field return type name
+    checkPublishPlaylists: "CheckPublishPlaylistsResponse"
     fetchAllVideos: "FetchPublishesResponse"
+    fetchMyPlaylists: "FetchPlaylistsResponse"
     fetchMyPublishes: "FetchPublishesResponse"
     fetchVideosByCategory: "FetchPublishesResponse"
     fetchWatchLater: "FetchWatchLaterResponse"
@@ -864,6 +1019,7 @@ export interface NexusGenFieldTypeNames {
     publishesCount: "Int"
     tokenId: "Int"
     updatedAt: "DateTime"
+    watchLater: "WatchLater"
   }
   Tip: {
     // field return type name
@@ -902,9 +1058,17 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    addToNewPlaylist: {
+      // args
+      input: NexusGenInputs["CreatePlayListInput"] // CreatePlayListInput!
+    }
+    addToPlaylist: {
+      // args
+      input: NexusGenInputs["AddToPlaylistInput"] // AddToPlaylistInput!
+    }
     addToWatchLater: {
       // args
-      input: NexusGenInputs["SavePublishToPlayListInput"] // SavePublishToPlayListInput!
+      input: NexusGenInputs["AddToWatchLaterInput"] // AddToWatchLaterInput!
     }
     cacheSession: {
       // args
@@ -940,7 +1104,7 @@ export interface NexusGenArgTypes {
     }
     removeFromWatchLater: {
       // args
-      input: NexusGenInputs["RemovePublishToPlayListInput"] // RemovePublishToPlayListInput!
+      input: NexusGenInputs["RemoveFromWatchLaterInput"] // RemoveFromWatchLaterInput!
     }
     sendTips: {
       // args
@@ -953,6 +1117,10 @@ export interface NexusGenArgTypes {
     updateDisplayName: {
       // args
       input: NexusGenInputs["UpdateDisplayNameInput"] // UpdateDisplayNameInput!
+    }
+    updatePlaylists: {
+      // args
+      input: NexusGenInputs["UpdatePlaylistsInput"] // UpdatePlaylistsInput!
     }
     updateProfileImage: {
       // args
@@ -972,9 +1140,17 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    checkPublishPlaylists: {
+      // args
+      input: NexusGenInputs["CheckPublishPlaylistsInput"] // CheckPublishPlaylistsInput!
+    }
     fetchAllVideos: {
       // args
       input: NexusGenInputs["FetchPublishesInput"] // FetchPublishesInput!
+    }
+    fetchMyPlaylists: {
+      // args
+      input: NexusGenInputs["FetchMyPlaylistsInput"] // FetchMyPlaylistsInput!
     }
     fetchMyPublishes: {
       // args

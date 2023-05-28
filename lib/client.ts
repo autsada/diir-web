@@ -1,5 +1,10 @@
 import _ from "lodash"
 
+import type {
+  CheckPublishPlaylistsResponse,
+  FetchPlaylistsResponse,
+} from "@/graphql/codegen/graphql"
+
 // Transform seconds to hour format
 export function secondsToHourFormat(sec: number) {
   const h = Math.floor(sec / 3600)
@@ -95,4 +100,23 @@ export function calculateTimeElapsed(time: string) {
 
     return `${elapse} ${elapse > 1 ? "years" : "year"} ago`
   }
+}
+
+export function transformPlaylists(
+  playlists: FetchPlaylistsResponse | undefined,
+  data: CheckPublishPlaylistsResponse | undefined
+) {
+  return !playlists
+    ? []
+    : playlists.edges.map((edge) => {
+        const isInPlaylist = !data
+          ? undefined
+          : data.items
+              .map((item) => item?.playlist?.id)
+              .includes(edge.node?.id || "")
+        return {
+          isInPlaylist,
+          list: edge.node,
+        }
+      })
 }

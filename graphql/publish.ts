@@ -8,7 +8,6 @@ import type {
   MutationReturnType,
   MutationArgsType,
   PublishCategory,
-  AddToPlayListInput,
   QueryByIdInput,
   UpdatePublishInput,
 } from "./types"

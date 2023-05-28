@@ -19,12 +19,8 @@ import Mask from "@/components/Mask"
 import { contentCategories } from "@/lib/helpers"
 import { db, publishesFolder, uploadsCollection } from "@/firebase/config"
 import { deleteFile, uploadFile } from "@/firebase/helpers"
-import type {
-  PublishCategory,
-  PublishKind,
-  ThumbSource,
-  Publish,
-} from "@/graphql/types"
+import type { PublishCategory, PublishKind, ThumbSource } from "@/graphql/types"
+import type { Publish } from "@/graphql/codegen/graphql"
 import type { FileWithPrview } from "@/types"
 
 interface Props {

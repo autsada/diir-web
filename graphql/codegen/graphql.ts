@@ -34,6 +34,21 @@ export enum AccountType {
   Wallet = 'WALLET'
 }
 
+export type AddToPlaylistInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  playlistId: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
+export type AddToWatchLaterInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
 export type CacheSessionInput = {
   accountId: Scalars['String']['input'];
   address: Scalars['String']['input'];
@@ -66,6 +81,20 @@ export enum Category {
   Vehicles = 'Vehicles',
   Women = 'Women'
 }
+
+export type CheckPublishPlaylistsInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
+export type CheckPublishPlaylistsResponse = {
+  __typename?: 'CheckPublishPlaylistsResponse';
+  isInWatchLater: Scalars['Boolean']['output'];
+  items: Array<PlaylistItem>;
+  publishId: Scalars['String']['output'];
+};
 
 export type Comment = {
   __typename?: 'Comment';
@@ -124,6 +153,14 @@ export type CreateDraftPublishResult = {
   id: Scalars['String']['output'];
 };
 
+export type CreatePlayListInput = {
+  accountId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
 export type CreateStationInput = {
   accountId: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -156,12 +193,25 @@ export type DisLike = {
   stationId: Scalars['String']['output'];
 };
 
+export type FetchMyPlaylistsInput = {
+  accountId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  owner: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
 export type FetchMyPublishesInput = {
   accountId: Scalars['String']['input'];
   creatorId: Scalars['String']['input'];
   cursor?: InputMaybe<Scalars['String']['input']>;
   kind: QueryPublishKind;
   owner: Scalars['String']['input'];
+};
+
+export type FetchPlaylistsResponse = {
+  __typename?: 'FetchPlaylistsResponse';
+  edges: Array<PlaylistEdge>;
+  pageInfo: PageInfo;
 };
 
 export type FetchPublishesByCatInput = {
@@ -227,6 +277,8 @@ export type MintStationNftResult = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addToNewPlaylist?: Maybe<WriteResult>;
+  addToPlaylist?: Maybe<WriteResult>;
   addToWatchLater?: Maybe<WriteResult>;
   cacheSession: WriteResult;
   calculateTips?: Maybe<CalculateTipsResult>;
@@ -240,6 +292,7 @@ export type Mutation = {
   sendTips?: Maybe<SendTipsResult>;
   updateBannerImage?: Maybe<WriteResult>;
   updateDisplayName?: Maybe<WriteResult>;
+  updatePlaylists?: Maybe<WriteResult>;
   updateProfileImage?: Maybe<WriteResult>;
   updatePublish?: Maybe<Publish>;
   validateDisplayName?: Maybe<Scalars['Boolean']['output']>;
@@ -247,8 +300,18 @@ export type Mutation = {
 };
 
 
+export type MutationAddToNewPlaylistArgs = {
+  input: CreatePlayListInput;
+};
+
+
+export type MutationAddToPlaylistArgs = {
+  input: AddToPlaylistInput;
+};
+
+
 export type MutationAddToWatchLaterArgs = {
-  input: SavePublishToPlayListInput;
+  input: AddToWatchLaterInput;
 };
 
 
@@ -293,7 +356,7 @@ export type MutationMintStationNftArgs = {
 
 
 export type MutationRemoveFromWatchLaterArgs = {
-  input: RemovePublishToPlayListInput;
+  input: RemoveFromWatchLaterInput;
 };
 
 
@@ -309,6 +372,11 @@ export type MutationUpdateBannerImageArgs = {
 
 export type MutationUpdateDisplayNameArgs = {
   input: UpdateDisplayNameInput;
+};
+
+
+export type MutationUpdatePlaylistsArgs = {
+  input: UpdatePlaylistsInput;
 };
 
 
@@ -350,6 +418,37 @@ export type PlaybackLink = {
   thumbnail: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   videoId: Scalars['String']['output'];
+};
+
+export type Playlist = {
+  __typename?: 'Playlist';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  items: Array<PlaylistItem>;
+  name: Scalars['String']['output'];
+  owner: Station;
+  ownerId: Scalars['String']['output'];
+};
+
+export type PlaylistEdge = {
+  __typename?: 'PlaylistEdge';
+  cursor?: Maybe<Scalars['String']['output']>;
+  node?: Maybe<Playlist>;
+};
+
+export type PlaylistItem = {
+  __typename?: 'PlaylistItem';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  playlist: Playlist;
+  playlistId: Scalars['String']['output'];
+  publish: Publish;
+  publishId: Scalars['String']['output'];
+};
+
+export type PlaylistItemStatus = {
+  isInPlaylist: Scalars['Boolean']['input'];
+  playlistId: Scalars['String']['input'];
 };
 
 export type Publish = {
@@ -405,7 +504,9 @@ export enum PublishKind {
 
 export type Query = {
   __typename?: 'Query';
+  checkPublishPlaylists?: Maybe<CheckPublishPlaylistsResponse>;
   fetchAllVideos?: Maybe<FetchPublishesResponse>;
+  fetchMyPlaylists?: Maybe<FetchPlaylistsResponse>;
   fetchMyPublishes?: Maybe<FetchPublishesResponse>;
   fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
   fetchWatchLater?: Maybe<FetchWatchLaterResponse>;
@@ -419,8 +520,18 @@ export type Query = {
 };
 
 
+export type QueryCheckPublishPlaylistsArgs = {
+  input: CheckPublishPlaylistsInput;
+};
+
+
 export type QueryFetchAllVideosArgs = {
   input: FetchPublishesInput;
+};
+
+
+export type QueryFetchMyPlaylistsArgs = {
+  input: FetchMyPlaylistsInput;
 };
 
 
@@ -491,15 +602,9 @@ export enum QueryPublishKind {
   Videos = 'videos'
 }
 
-export type RemovePublishToPlayListInput = {
+export type RemoveFromWatchLaterInput = {
   accountId: Scalars['String']['input'];
-  id: Scalars['String']['input'];
-  owner: Scalars['String']['input'];
-  stationId: Scalars['String']['input'];
-};
-
-export type SavePublishToPlayListInput = {
-  accountId: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['String']['input']>;
   owner: Scalars['String']['input'];
   publishId: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
@@ -542,6 +647,7 @@ export type Station = {
   publishesCount: Scalars['Int']['output'];
   tokenId?: Maybe<Scalars['Int']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  watchLater: Array<WatchLater>;
 };
 
 export enum ThumbSource {
@@ -582,6 +688,14 @@ export type UpdateImageInput = {
   image: Scalars['String']['input'];
   imageRef: Scalars['String']['input'];
   owner: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
+export type UpdatePlaylistsInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  playlists: Array<PlaylistItemStatus>;
+  publishId: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
 };
 

@@ -1,5 +1,4 @@
 import React, { useTransition, useState } from "react"
-import { useRouter } from "next/navigation"
 import {
   AiOutlineClockCircle,
   AiOutlineFlag,
@@ -10,53 +9,77 @@ import type { IconType } from "react-icons"
 import { toast } from "react-toastify"
 
 import ModalWrapper from "@/components/ModalWrapper"
-import { addVideoToWatchLater } from "./actions"
-import type { Publish, Station } from "@/graphql/codegen/graphql"
+import InformModal from "./InformModal"
+import { saveToWatchLater } from "./actions"
+import type {
+  CheckPublishPlaylistsResponse,
+  Publish,
+  Station,
+} from "@/graphql/codegen/graphql"
 
 interface Props {
   isAuthenticated: boolean
   profile: Station | undefined
   closeModal: () => void
+  closeModalAndReset: () => void
   top: number
   left: number
   targetPublish?: Publish
+  setPlaylistData: (p: CheckPublishPlaylistsResponse) => void
+  setLoadingPlaylistData: (l: boolean) => void
 }
 
 export default function ActionsModal({
   isAuthenticated,
   profile,
+  closeModalAndReset,
   closeModal,
   top,
   left,
   targetPublish,
+  setPlaylistData,
+  setLoadingPlaylistData,
 }: Props) {
   const [informModalVisible, setInformModalVisible] = useState(false)
+
   const [isPending, startTransition] = useTransition()
 
-  const router = useRouter()
-
-  function saveToWatchLater() {
+  function addToWatchLater() {
     if (!targetPublish) return
 
     if (isAuthenticated && !profile) {
       setInformModalVisible(true)
     } else {
-      startTransition(() => addVideoToWatchLater(targetPublish.id))
+      startTransition(() => saveToWatchLater(targetPublish.id))
       toast.success("Added to Watch later", { theme: "dark" })
+      closeModalAndReset()
+    }
+  }
+
+  async function startAddToPlaylist() {
+    if (!targetPublish) return
+
+    if (isAuthenticated && !profile) {
+      setInformModalVisible(true)
+    } else {
+      // Call the api route to check if the publish already add to any user's playlists
+      setLoadingPlaylistData(true)
+      const res = await fetch(`/library/playlists/publish`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ publishId: targetPublish.id }),
+      })
+      const data = (await res.json()) as {
+        result: CheckPublishPlaylistsResponse
+      }
+      setPlaylistData(data.result)
+      setLoadingPlaylistData(false)
       closeModal()
     }
   }
 
-  function saveToPlaylist() {
-    if (!targetPublish) return
-
-    if (isAuthenticated && !profile) {
-      setInformModalVisible(true)
-    } else {
-    }
-  }
-
-  console.log("ispending -->", isPending)
   return (
     <ModalWrapper visible>
       <div className="relative z-0 w-full h-full">
@@ -77,12 +100,12 @@ export default function ActionsModal({
               <Item
                 Icon={AiOutlineClockCircle}
                 text="Add to Watch Later"
-                onClick={saveToWatchLater}
+                onClick={addToWatchLater}
               />
               <Item
                 Icon={MdPlaylistAdd}
                 text="Add to Playlist"
-                onClick={saveToPlaylist}
+                onClick={startAddToPlaylist}
               />
             </>
           )}
@@ -91,29 +114,7 @@ export default function ActionsModal({
         </div>
 
         {/* Inform modal */}
-        {informModalVisible && (
-          <ModalWrapper visible>
-            <div className="w-[90%] sm:w-[60%] lg:w-[40%] p-10 bg-white rounded-xl text-center">
-              <h6>You need a station to add publishes to playlist.</h6>
-
-              <button
-                type="button"
-                className="btn-dark mt-6 px-6 rounded-full"
-                onClick={() => router.push("/station")}
-              >
-                Create a station
-              </button>
-
-              <button
-                type="button"
-                className="mt-6 text-orange-500"
-                onClick={closeModal}
-              >
-                Maybe later
-              </button>
-            </div>
-          </ModalWrapper>
-        )}
+        {informModalVisible && <InformModal closeModal={closeModal} />}
       </div>
     </ModalWrapper>
   )

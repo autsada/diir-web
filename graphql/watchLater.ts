@@ -5,11 +5,11 @@ import type {
   QueryReturnType,
   QueryArgsType,
   FetchWatchLaterInput,
-  AddToPlayListInput,
+  AddToWatchLaterInput,
   MutationArgsType,
   MutationReturnType,
+  RemoveFromWatchLaterInput,
 } from "./types"
-
 /**
  * Fetch watch later videos of a station
  */
@@ -85,10 +85,10 @@ export async function fetchWatchLater({
 }
 
 /**
- * Add publish to watch later
+ * Add a publish to watch later
  */
 export const ADD_TO_WATCH_LATER_MUTATION = gql`
-  mutation AddToWatchLater($input: SavePublishToPlayListInput!) {
+  mutation AddToWatchLater($input: AddToWatchLaterInput!) {
     addToWatchLater(input: $input) {
       status
     }
@@ -101,7 +101,7 @@ export async function addToWatchLater({
 }: {
   idToken: string
   signature?: string
-  data: AddToPlayListInput
+  data: AddToWatchLaterInput
 }) {
   const result = await client
     .setHeaders({
@@ -117,4 +117,39 @@ export async function addToWatchLater({
     })
 
   return result?.addToWatchLater
+}
+
+/**
+ * Remove a publish from watch later
+ */
+export const REMOVE_FROM_WATCH_LATER_MUTATION = gql`
+  mutation RemoveFromWatchLater($input: RemoveFromWatchLaterInput!) {
+    removeFromWatchLater(input: $input) {
+      status
+    }
+  }
+`
+export async function removeWatchLater({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: RemoveFromWatchLaterInput
+}) {
+  const result = await client
+    .setHeaders({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+      "auth-wallet-signature": signature || "",
+    })
+    .request<
+      MutationReturnType<"removeFromWatchLater">,
+      MutationArgsType<"removeFromWatchLater">
+    >(REMOVE_FROM_WATCH_LATER_MUTATION, {
+      input: data,
+    })
+
+  return result?.removeFromWatchLater
 }

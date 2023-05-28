@@ -6,32 +6,41 @@ import ContentTabs from "./ContentTabs"
 import PublishItem from "./PublishItem"
 import Mask from "@/components/Mask"
 import ActionsModal from "./ActionsModal"
+import AddToPlaylistModal from "./AddToPlaylistModal"
 import type { PublishCategory } from "@/graphql/types"
 import type {
   Publish,
   Station,
   FetchPublishesResponse,
+  FetchPlaylistsResponse,
+  CheckPublishPlaylistsResponse,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
   isAuthenticated: boolean
   profile: Station | undefined
-  fetchResult: FetchPublishesResponse
+  videosResult: FetchPublishesResponse
+  playlistsResult: FetchPlaylistsResponse | undefined
 }
 
 export default function Videos({
   isAuthenticated,
   profile,
-  fetchResult,
+  videosResult,
+  playlistsResult,
 }: Props) {
   const [selectedCat, setSelectedCat] = useState<PublishCategory | "All">("All")
   const [resultByCat, setResultByCat] =
-    useState<FetchPublishesResponse>(fetchResult)
+    useState<FetchPublishesResponse>(videosResult)
   const [loading, setLoading] = useState(false)
   const [targetPublish, setTargetPublish] = useState<Publish>()
+  const [actionsModalVisible, setActionsModalVisible] = useState(false)
   const [positionX, setPositionX] = useState(0)
   const [positionY, setPositionY] = useState(0)
   const [screenHeight, setScreenHeight] = useState(0)
+  const [loadingPlaylistData, setLoadingPlaylistData] = useState(false)
+  const [playlistData, setPlaylistData] =
+    useState<CheckPublishPlaylistsResponse>()
 
   // Disable body scroll when modal openned
   useEffect(() => {
@@ -55,6 +64,7 @@ export default function Videos({
 
   const onReactToPublish = useCallback((p: Publish) => {
     setTargetPublish(p)
+    setActionsModalVisible(true)
   }, [])
 
   const setPOS = useCallback(
@@ -66,8 +76,13 @@ export default function Videos({
     []
   )
 
-  const closeModal = useCallback(() => {
+  const closeModalAndResetState = useCallback(() => {
     setTargetPublish(undefined)
+    setActionsModalVisible(false)
+  }, [])
+
+  const closeModal = useCallback(() => {
+    setActionsModalVisible(false)
   }, [])
 
   async function queryVideosByCat(cat: PublishCategory | "All") {
@@ -88,6 +103,11 @@ export default function Videos({
       setLoading(false)
     }
   }
+
+  const cancelAddToPlaylist = useCallback(() => {
+    setPlaylistData(undefined)
+    setTargetPublish(undefined)
+  }, [])
 
   return (
     <>
@@ -119,23 +139,39 @@ export default function Videos({
               />
             ))}
 
-            {targetPublish && (
+            {/* Actions modal */}
+            {actionsModalVisible && (
               <ActionsModal
                 isAuthenticated={isAuthenticated}
                 profile={profile}
+                closeModalAndReset={closeModalAndResetState}
                 closeModal={closeModal}
                 top={
                   screenHeight - positionY < 200 ? positionY - 200 : positionY
                 } // 200 is modal height
                 left={positionX - 300} // 300 is modal width
                 targetPublish={targetPublish}
+                setPlaylistData={setPlaylistData}
+                setLoadingPlaylistData={setLoadingPlaylistData}
               />
             )}
           </div>
         )}
       </div>
 
+      {/* Add to playlist modal */}
+      {playlistData && targetPublish && (
+        <AddToPlaylistModal
+          data={playlistData}
+          close={cancelAddToPlaylist}
+          publishId={targetPublish.id}
+          playlistsResult={playlistsResult}
+        />
+      )}
+
       {loading && <Mask backgroundColor="#fff" opacity={0.4} />}
+
+      {loadingPlaylistData && <Mask backgroundColor="#fff" opacity={0.2} />}
     </>
   )
 }
