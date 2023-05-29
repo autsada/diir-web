@@ -1,5 +1,4 @@
-import { Query } from "./codegen/graphql"
-
+import type { Maybe, Playlist, Query } from "./codegen/graphql"
 import type {
   NexusGenFieldTypes,
   NexusGenArgTypes,
@@ -37,3 +36,7 @@ export type CheckPublishPlaylistsInput =
 export type CreatePlayListInput = NexusGenInputs["CreatePlayListInput"]
 export type AddToPlaylistInput = NexusGenInputs["AddToPlaylistInput"]
 export type UpdatePlaylistsInput = NexusGenInputs["UpdatePlaylistsInput"]
+export type DisplayedPlaylist = {
+  isInPlaylist: boolean | undefined
+  list: Maybe<Playlist> | undefined
+}

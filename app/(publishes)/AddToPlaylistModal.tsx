@@ -1,41 +1,38 @@
-import React, { useState, useCallback, useMemo } from "react"
+import React, { useState, useCallback } from "react"
 import { BsPlusLg } from "react-icons/bs"
 import { MdOutlineKeyboardBackspace } from "react-icons/md"
 
 import ModalWrapper from "@/components/ModalWrapper"
 import CreatePlaylistForm from "./CreatePlaylistForm"
 import UpdatePlaylistsForm from "./UpdatePlaylistsForm"
-import { transformPlaylists } from "@/lib/client"
 import type {
   CheckPublishPlaylistsResponse,
-  FetchPlaylistsResponse,
+  PageInfo,
+  PlaylistEdge,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
-  // List of the playlists that the publish was in
-  publishPlaylistsData: CheckPublishPlaylistsResponse | undefined
-  close: () => void
+  closeModal: () => void
   publishId: string
-  // User's playlists (first 100 items)
-  playlistsResult: FetchPlaylistsResponse | undefined
+  playlists: PlaylistEdge[]
+  setPlaylists: React.Dispatch<React.SetStateAction<PlaylistEdge[]>>
+  playlistsPageInfo: PageInfo | undefined
+  setPlaylistsPageInfo: React.Dispatch<
+    React.SetStateAction<PageInfo | undefined>
+  >
+  publishPlaylistsData: CheckPublishPlaylistsResponse
 }
 
 export default function AddToPlaylistModal({
-  publishPlaylistsData,
-  close,
+  closeModal,
   publishId,
-  playlistsResult,
+  playlists,
+  setPlaylists,
+  playlistsPageInfo,
+  setPlaylistsPageInfo,
+  publishPlaylistsData,
 }: Props) {
   const [createFormVisible, setCreateFormVisible] = useState(false)
-  const prevPlaylists = useMemo(
-    () => transformPlaylists(playlistsResult, publishPlaylistsData),
-    [playlistsResult, publishPlaylistsData]
-  )
-
-  const [playlists, setPlaylists] = useState(prevPlaylists)
-  const [hasMorePlaylists, setHasMorePlaylists] = useState(
-    playlistsResult?.pageInfo?.hasNextPage
-  )
 
   const onStartCreateNewPlaylist = useCallback(() => {
     setCreateFormVisible(true)
@@ -45,12 +42,10 @@ export default function AddToPlaylistModal({
     setCreateFormVisible(false)
   }, [])
 
-  if (!publishPlaylistsData) return null
-
   return (
     <ModalWrapper visible>
-      <div className="fixed z-10 inset-0" onClick={close}></div>
-      <div className="relative z-20 pt-5 w-[300px] max-w-[80%] text-center bg-white rounded-xl overflow-hidden">
+      <div className="fixed z-10 inset-0" onClick={closeModal}></div>
+      <div className="relative z-20 pt-5 w-[400px] max-w-[80%] text-center bg-white rounded-xl overflow-hidden">
         <div className="px-10 flex items-center justify-between gap-x-5">
           <p className="text-lg">Add to...</p>
           <div
@@ -64,7 +59,7 @@ export default function AddToPlaylistModal({
             {!createFormVisible ? (
               <>
                 <BsPlusLg size={20} className="text-blueBase" />
-                <div className="flex-grow text-blueBase">Create playlist</div>
+                <div className="text-blueBase">Create playlist</div>
               </>
             ) : (
               <MdOutlineKeyboardBackspace size={24} className="text-blueBase" />
@@ -75,12 +70,15 @@ export default function AddToPlaylistModal({
         {!createFormVisible ? (
           <UpdatePlaylistsForm
             publishId={publishId}
-            onFinished={close}
+            onFinished={closeModal}
             playlists={playlists}
+            setPlaylists={setPlaylists}
+            playlistsPageInfo={playlistsPageInfo}
+            setPlaylistsPageInfo={setPlaylistsPageInfo}
             publishPlaylistsData={publishPlaylistsData}
           />
         ) : (
-          <CreatePlaylistForm publishId={publishId} onFinished={close} />
+          <CreatePlaylistForm publishId={publishId} onFinished={closeModal} />
         )}
       </div>
     </ModalWrapper>

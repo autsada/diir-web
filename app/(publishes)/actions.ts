@@ -1,4 +1,6 @@
 "use server"
+import { revalidatePath } from "next/cache"
+import _ from "lodash"
 
 import {
   addToWatchLater,
@@ -7,10 +9,7 @@ import {
   updatePlaylists,
 } from "@/graphql"
 import { getAccount } from "@/lib/server"
-import { revalidatePath } from "next/cache"
-import _ from "lodash"
-import type { Maybe } from "graphql/jsutils/Maybe"
-import type { Playlist } from "@/graphql/codegen/graphql"
+import type { DisplayedPlaylist } from "@/graphql/types"
 
 /**
  * Create a new playlist and add a publish to it
@@ -124,10 +123,9 @@ export async function saveToPlaylist(formData: FormData) {
   }
 
   // Get playlists values (old, new)
-  const oldPlaylists = JSON.parse(formData.get("playlists") as string) as {
-    isInPlaylist: boolean | undefined
-    list: Maybe<Playlist> | undefined
-  }[]
+  const oldPlaylists = JSON.parse(
+    formData.get("playlists") as string
+  ) as DisplayedPlaylist[]
   const newPlaylists = oldPlaylists.map((pl) => {
     const checked = formData.get(pl.list?.id || "")
 
@@ -140,10 +138,7 @@ export async function saveToPlaylist(formData: FormData) {
   const isPlaylistsEqual = _.isEqual(oldPlaylists, newPlaylists)
 
   // If the playlists are updated, get the ones that are updated and put them in a new array, so all the items in this array are the playlists to be updated.
-  const updatedPlaylists: {
-    isInPlaylist: boolean | undefined
-    list: Maybe<Playlist> | undefined
-  }[] = []
+  const updatedPlaylists: DisplayedPlaylist[] = []
   if (!isPlaylistsEqual) {
     newPlaylists.forEach((pl, index) => {
       if (!_.isEqual(oldPlaylists[index], pl)) {
@@ -167,8 +162,5 @@ export async function saveToPlaylist(formData: FormData) {
         })),
       },
     })
-
-    // Revalidate publishes page
-    revalidatePath(`/`)
   }
 }

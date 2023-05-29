@@ -1,40 +1,111 @@
-import { Maybe } from "graphql/jsutils/Maybe"
-import React, { useRef, useCallback } from "react"
+import React, { useRef, useCallback, useState, useEffect, useMemo } from "react"
 
 import { saveToPlaylist } from "./actions"
+import ButtonLoader from "@/components/ButtonLoader"
+import { transformPlaylists } from "@/lib/client"
 import type {
   CheckPublishPlaylistsResponse,
-  Playlist,
+  FetchPlaylistsResponse,
+  PageInfo,
+  PlaylistEdge,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
   publishId: string
   onFinished: () => void
-  // List of the playlists that the publish was in
+  playlists: PlaylistEdge[]
+  setPlaylists: React.Dispatch<React.SetStateAction<PlaylistEdge[]>>
+  playlistsPageInfo: PageInfo | undefined
+  setPlaylistsPageInfo: React.Dispatch<
+    React.SetStateAction<PageInfo | undefined>
+  >
   publishPlaylistsData: CheckPublishPlaylistsResponse
-  playlists: {
-    isInPlaylist: boolean | undefined
-    list: Maybe<Playlist> | undefined
-  }[]
 }
 
 export default function UpdatePlaylistsForm({
   publishId,
   onFinished,
-  publishPlaylistsData,
   playlists,
+  setPlaylists,
+  playlistsPageInfo,
+  setPlaylistsPageInfo,
+  publishPlaylistsData,
 }: Props) {
+  const [loading, setLoading] = useState(false)
+
+  // Transform playlist objects for displaying
+  const transformedPlaylists = useMemo(
+    () => transformPlaylists(playlists, publishPlaylistsData),
+    [playlists, publishPlaylistsData]
+  )
+
+  const observedRef = useRef<HTMLDivElement>(null)
+
+  const fetchMorePlaylists = useCallback(async () => {
+    if (
+      !playlistsPageInfo ||
+      !playlistsPageInfo.endCursor ||
+      !playlistsPageInfo.hasNextPage
+    )
+      return
+
+    try {
+      setLoading(true)
+      const res = await fetch(`/library/playlists`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cursor: playlistsPageInfo?.endCursor }),
+      })
+      const data = (await res.json()) as {
+        result: FetchPlaylistsResponse
+      }
+      setPlaylists((prev) => [...prev, ...data.result?.edges])
+      setPlaylistsPageInfo(data.result?.pageInfo)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }, [playlistsPageInfo, setPlaylists, setPlaylistsPageInfo])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    if (!observedRef?.current) return
+    const ref = observedRef.current
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (entry.intersectionRatio >= 0.5) {
+            fetchMorePlaylists()
+          }
+        }
+      },
+      { root: null, threshold: 0.5 }
+    )
+
+    observer.observe(ref)
+
+    return () => {
+      if (ref) {
+        observer.unobserve(ref)
+      }
+    }
+  }, [fetchMorePlaylists])
+
   return (
     <form className="w-full mt-5" action={saveToPlaylist} onSubmit={onFinished}>
       <div className="px-10 max-h-[60vh] overflow-y-auto">
         <PlaylistItem
           name="newWL"
           title="Watch later"
-          defaultChecked={publishPlaylistsData.isInWatchLater}
+          defaultChecked={publishPlaylistsData?.isInWatchLater}
         />
 
-        {playlists.length > 0 &&
-          playlists.map((playlist) => (
+        {transformedPlaylists.length > 0 &&
+          transformedPlaylists.map((playlist) => (
             <PlaylistItem
               key={playlist.list?.id}
               name={playlist.list?.id || ""}
@@ -56,7 +127,7 @@ export default function UpdatePlaylistsForm({
           type="text"
           name="oldWL"
           className="hidden"
-          defaultValue={publishPlaylistsData.isInWatchLater ? "on" : "off"}
+          defaultValue={publishPlaylistsData?.isInWatchLater ? "on" : "off"}
         />
 
         {/* Hidden input to send old playlists array to the server action */}
@@ -64,8 +135,17 @@ export default function UpdatePlaylistsForm({
           type="text"
           name="playlists"
           className="hidden"
-          defaultValue={JSON.stringify(playlists)}
+          defaultValue={JSON.stringify(transformedPlaylists)}
         />
+
+        <div
+          ref={observedRef}
+          className="w-full h-4 flex items-center justify-center"
+        >
+          {loading && (
+            <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
+          )}
+        </div>
       </div>
 
       <div className="w-full border-t border-neutral-100 bg-white">

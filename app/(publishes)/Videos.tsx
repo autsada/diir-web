@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback, useEffect, useMemo } from "react"
 
 import ContentTabs from "./ContentTabs"
 import PublishItem from "./PublishItem"
@@ -14,6 +14,8 @@ import type {
   FetchPublishesResponse,
   FetchPlaylistsResponse,
   CheckPublishPlaylistsResponse,
+  PlaylistEdge,
+  PageInfo,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -42,6 +44,19 @@ export default function Videos({
     useState(false)
   const [publishPlaylistsData, setPublishPlaylistsData] =
     useState<CheckPublishPlaylistsResponse>()
+
+  const initialPlaylists = useMemo(
+    () => playlistsResult?.edges || [],
+    [playlistsResult]
+  )
+  const initialPageInfo = useMemo(
+    () => playlistsResult?.pageInfo,
+    [playlistsResult]
+  )
+  const [playlists, setPlaylists] = useState<PlaylistEdge[]>([])
+  const [playlistsPageInfo, setPlaylistsPageInfo] = useState<
+    PageInfo | undefined
+  >()
 
   // Disable body scroll when modal openned
   useEffect(() => {
@@ -110,6 +125,11 @@ export default function Videos({
     setTargetPublish(undefined)
   }, [])
 
+  useEffect(() => {
+    setPlaylists(initialPlaylists)
+    setPlaylistsPageInfo(initialPageInfo)
+  }, [initialPlaylists, initialPageInfo])
+
   return (
     <>
       <div className="fixed z-10 top-[70px] left-0 sm:left-[116px] right-0 h-[40px] bg-white">
@@ -163,10 +183,13 @@ export default function Videos({
       {/* Add to playlist modal */}
       {publishPlaylistsData && targetPublish && (
         <AddToPlaylistModal
-          publishPlaylistsData={publishPlaylistsData}
-          close={cancelAddToPlaylist}
+          closeModal={cancelAddToPlaylist}
           publishId={targetPublish.id}
-          playlistsResult={playlistsResult}
+          playlists={playlists}
+          setPlaylists={setPlaylists}
+          playlistsPageInfo={playlistsPageInfo}
+          setPlaylistsPageInfo={setPlaylistsPageInfo}
+          publishPlaylistsData={publishPlaylistsData}
         />
       )}
 

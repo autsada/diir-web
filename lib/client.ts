@@ -2,7 +2,7 @@ import _ from "lodash"
 
 import type {
   CheckPublishPlaylistsResponse,
-  FetchPlaylistsResponse,
+  PlaylistEdge,
 } from "@/graphql/codegen/graphql"
 
 // Transform seconds to hour format
@@ -103,20 +103,21 @@ export function calculateTimeElapsed(time: string) {
 }
 
 export function transformPlaylists(
-  playlists: FetchPlaylistsResponse | undefined,
+  // playlists: FetchPlaylistsResponse | undefined,
+  playlists: PlaylistEdge[],
   data: CheckPublishPlaylistsResponse | undefined
 ) {
   return !playlists
     ? []
-    : playlists.edges.map((edge) => {
+    : playlists.map((pl) => {
         const isInPlaylist = !data
           ? undefined
           : data.items
               .map((item) => item?.playlist?.id)
-              .includes(edge.node?.id || "")
+              .includes(pl.node?.id || "")
         return {
           isInPlaylist,
-          list: edge.node,
+          list: pl.node,
         }
       })
 }
