@@ -38,8 +38,9 @@ export default function Videos({
   const [positionX, setPositionX] = useState(0)
   const [positionY, setPositionY] = useState(0)
   const [screenHeight, setScreenHeight] = useState(0)
-  const [loadingPlaylistData, setLoadingPlaylistData] = useState(false)
-  const [playlistData, setPlaylistData] =
+  const [loadingPublishPlaylistsData, setLoadingPublishPlaylistsData] =
+    useState(false)
+  const [publishPlaylistsData, setPublishPlaylistsData] =
     useState<CheckPublishPlaylistsResponse>()
 
   // Disable body scroll when modal openned
@@ -105,7 +106,7 @@ export default function Videos({
   }
 
   const cancelAddToPlaylist = useCallback(() => {
-    setPlaylistData(undefined)
+    setPublishPlaylistsData(undefined)
     setTargetPublish(undefined)
   }, [])
 
@@ -151,8 +152,8 @@ export default function Videos({
                 } // 200 is modal height
                 left={positionX - 300} // 300 is modal width
                 targetPublish={targetPublish}
-                setPlaylistData={setPlaylistData}
-                setLoadingPlaylistData={setLoadingPlaylistData}
+                setPlaylistData={setPublishPlaylistsData}
+                setLoadingPlaylistData={setLoadingPublishPlaylistsData}
               />
             )}
           </div>
@@ -160,9 +161,9 @@ export default function Videos({
       </div>
 
       {/* Add to playlist modal */}
-      {playlistData && targetPublish && (
+      {publishPlaylistsData && targetPublish && (
         <AddToPlaylistModal
-          data={playlistData}
+          publishPlaylistsData={publishPlaylistsData}
           close={cancelAddToPlaylist}
           publishId={targetPublish.id}
           playlistsResult={playlistsResult}
@@ -171,7 +172,9 @@ export default function Videos({
 
       {loading && <Mask backgroundColor="#fff" opacity={0.4} />}
 
-      {loadingPlaylistData && <Mask backgroundColor="#fff" opacity={0.2} />}
+      {loadingPublishPlaylistsData && (
+        <Mask backgroundColor="#fff" opacity={0.2} />
+      )}
     </>
   )
 }
