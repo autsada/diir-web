@@ -78,10 +78,7 @@ export default function AddToPlaylistModal({
           <form
             className="w-full mt-5 px-2"
             action={saveToPlaylist}
-            onSubmit={() => {
-              close()
-              toast.success("Playlists updated", { theme: "dark" })
-            }}
+            onSubmit={close}
           >
             {/* Hidden input to send publish id to the server action */}
             <input
