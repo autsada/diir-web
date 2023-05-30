@@ -17,6 +17,7 @@ import type {
   PlaylistEdge,
   PageInfo,
 } from "@/graphql/codegen/graphql"
+import ShareModal from "./ShareModal"
 
 interface Props {
   isAuthenticated: boolean
@@ -40,10 +41,13 @@ export default function Videos({
   const [positionX, setPositionX] = useState(0)
   const [positionY, setPositionY] = useState(0)
   const [screenHeight, setScreenHeight] = useState(0)
-  const [loadingPublishPlaylistsData, setLoadingPublishPlaylistsData] =
+
+  const [addToPlaylistModalVisible, setAddToPlaylistModalVisible] =
     useState(false)
   const [publishPlaylistsData, setPublishPlaylistsData] =
     useState<CheckPublishPlaylistsResponse>()
+  const [loadingPublishPlaylistsData, setLoadingPublishPlaylistsData] =
+    useState(false)
 
   const initialPlaylists = useMemo(
     () => playlistsResult?.edges || [],
@@ -57,6 +61,8 @@ export default function Videos({
   const [playlistsPageInfo, setPlaylistsPageInfo] = useState<
     PageInfo | undefined
   >()
+
+  const [shareModalVisible, setShareModalVisible] = useState(false)
 
   // Query videos when use clicks category
   useEffect(() => {
@@ -105,16 +111,32 @@ export default function Videos({
     }
   }
 
-  const cancelAddToPlaylist = useCallback(() => {
+  const openAddToPlaylistModal = useCallback(() => {
+    setAddToPlaylistModalVisible(true)
+  }, [])
+
+  const closeAddToPlaylistModal = useCallback(() => {
+    setAddToPlaylistModalVisible(false)
     setPublishPlaylistsData(undefined)
     setTargetPublish(undefined)
   }, [])
 
+  // Set playlists and playlists page info based on initial values
   useEffect(() => {
     setPlaylists(initialPlaylists)
     setPlaylistsPageInfo(initialPageInfo)
   }, [initialPlaylists, initialPageInfo])
 
+  const openShareModal = useCallback(() => {
+    setShareModalVisible(true)
+  }, [])
+
+  const closeShareModal = useCallback(() => {
+    setShareModalVisible(false)
+    setTargetPublish(undefined)
+  }, [])
+
+  console.log("publish -->", targetPublish)
   return (
     <>
       <div className="fixed z-10 top-[70px] left-0 sm:left-[116px] right-0 h-[40px] bg-white">
@@ -157,8 +179,13 @@ export default function Videos({
                 } // 200 is modal height
                 left={positionX - 300} // 300 is modal width
                 targetPublish={targetPublish}
+                setTargetPublish={setTargetPublish}
+                addToPlaylistModalVisible={addToPlaylistModalVisible}
+                openAddToPlaylistModal={openAddToPlaylistModal}
                 setPlaylistData={setPublishPlaylistsData}
                 setLoadingPlaylistData={setLoadingPublishPlaylistsData}
+                shareModalVisible={shareModalVisible}
+                openShareModal={openShareModal}
               />
             )}
           </div>
@@ -166,9 +193,9 @@ export default function Videos({
       </div>
 
       {/* Add to playlist modal */}
-      {publishPlaylistsData && targetPublish && (
+      {addToPlaylistModalVisible && publishPlaylistsData && targetPublish && (
         <AddToPlaylistModal
-          closeModal={cancelAddToPlaylist}
+          closeModal={closeAddToPlaylistModal}
           publishId={targetPublish.id}
           playlists={playlists}
           setPlaylists={setPlaylists}
@@ -176,6 +203,11 @@ export default function Videos({
           setPlaylistsPageInfo={setPlaylistsPageInfo}
           publishPlaylistsData={publishPlaylistsData}
         />
+      )}
+
+      {/* Share modal */}
+      {shareModalVisible && targetPublish && (
+        <ShareModal publishId={targetPublish.id} title={targetPublish.title!} closeModal={closeShareModal} />
       )}
 
       {loading && <Mask backgroundColor="#fff" opacity={0.4} />}

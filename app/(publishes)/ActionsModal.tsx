@@ -1,4 +1,4 @@
-import React, { useTransition, useState } from "react"
+import React, { useTransition, useState, useCallback } from "react"
 import {
   AiOutlineClockCircle,
   AiOutlineFlag,
@@ -25,8 +25,13 @@ interface Props {
   top: number
   left: number
   targetPublish?: Publish
+  setTargetPublish: React.Dispatch<React.SetStateAction<Publish | undefined>>
+  addToPlaylistModalVisible: boolean
+  openAddToPlaylistModal: () => void
   setPlaylistData: (p: CheckPublishPlaylistsResponse) => void
   setLoadingPlaylistData: (l: boolean) => void
+  shareModalVisible: boolean
+  openShareModal: () => void
 }
 
 export default function ActionsModal({
@@ -37,8 +42,13 @@ export default function ActionsModal({
   top,
   left,
   targetPublish,
+  setTargetPublish,
+  addToPlaylistModalVisible,
+  openAddToPlaylistModal,
   setPlaylistData,
   setLoadingPlaylistData,
+  shareModalVisible,
+  openShareModal,
 }: Props) {
   const [informModalVisible, setInformModalVisible] = useState(false)
 
@@ -55,6 +65,18 @@ export default function ActionsModal({
       closeModalAndReset()
     }
   }
+
+  const onCancelActions = useCallback(() => {
+    if (!addToPlaylistModalVisible && !shareModalVisible) {
+      setTargetPublish(undefined)
+    }
+    closeModal()
+  }, [
+    addToPlaylistModalVisible,
+    shareModalVisible,
+    setTargetPublish,
+    closeModal,
+  ])
 
   async function startAddToPlaylist() {
     if (!targetPublish) return
@@ -74,16 +96,46 @@ export default function ActionsModal({
       const data = (await res.json()) as {
         result: CheckPublishPlaylistsResponse
       }
+      openAddToPlaylistModal()
       setPlaylistData(data.result)
       setLoadingPlaylistData(false)
       closeModal()
     }
   }
 
+  const onStartShare = useCallback(async () => {
+    if (typeof window === "undefined" || !targetPublish) return
+
+    const shareData = {
+      title: `${
+        targetPublish.title || ""
+      } https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/watch/${
+        targetPublish.id
+      }`,
+      text: targetPublish.title || "",
+      url: `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/watch/${targetPublish.id}`,
+    }
+
+    if (navigator.share && navigator.canShare(shareData)) {
+      try {
+        closeModal()
+        await navigator.share(shareData)
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      openShareModal()
+      closeModal()
+    }
+  }, [targetPublish, openShareModal, closeModal])
+
   return (
     <ModalWrapper visible>
       <div className="relative z-0 w-full h-full">
-        <div className="relative z-0 w-full h-full" onClick={closeModal}></div>
+        <div
+          className="relative z-0 w-full h-full"
+          onClick={onCancelActions}
+        ></div>
 
         <div
           className={`absolute z-10 flex flex-col items-center justify-center bg-white rounded-xl w-[300px] ${
@@ -109,12 +161,12 @@ export default function ActionsModal({
               />
             </>
           )}
-          <Item Icon={AiOutlineShareAlt} text="Share" onClick={() => {}} />
+          <Item Icon={AiOutlineShareAlt} text="Share" onClick={onStartShare} />
           <Item Icon={AiOutlineFlag} text="Report" onClick={() => {}} />
         </div>
 
         {/* Inform modal */}
-        {informModalVisible && <InformModal closeModal={closeModal} />}
+        {informModalVisible && <InformModal closeModal={onCancelActions} />}
       </div>
     </ModalWrapper>
   )

@@ -1,5 +1,6 @@
 import React, { Suspense } from "react"
 import { redirect } from "next/navigation"
+import { Metadata, ResolvingMetadata } from "next"
 
 import VideoPlayer from "@/components/VideoPlayer"
 import ButtonLoader from "@/components/ButtonLoader"
@@ -9,23 +10,62 @@ import Avatar from "@/components/Avatar"
 import { getAccount } from "@/lib/server"
 import { getStationById, getWatchingPublish } from "@/graphql"
 import { calculateTimeElapsed } from "@/lib/client"
-import type { Publish, Station } from "@/graphql/types"
 
-export default async function Watch({ params }: { params: { id: string } }) {
+type Props = {
+  params: { id: string }
+}
+
+export async function generateMetadata(
+  { params }: Props,
+  parent?: ResolvingMetadata
+): Promise<Metadata> {
+  // Query a publish
+  const publish = await getWatchingPublish({
+    targetId: params.id,
+  })
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = !parent ? [] : (await parent).openGraph?.images || []
+
+  return {
+    title: publish?.title || "",
+    openGraph: {
+      images: !publish
+        ? previousImages
+        : publish.thumbSource === "generated" && publish.thumbnail
+        ? [publish.thumbnail, ...previousImages]
+        : publish.playback
+        ? [publish.playback.thumbnail, ...previousImages]
+        : previousImages,
+    },
+    description: publish?.description || "",
+    twitter: {
+      site: `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app`,
+      images:
+        publish?.thumbSource === "generated" && publish?.thumbnail
+          ? publish.thumbnail
+          : publish?.playback
+          ? publish.playback.thumbnail
+          : "",
+    },
+  }
+}
+
+export default async function Watch({ params }: Props) {
   const data = await getAccount()
   const account = data?.account
 
   // Query station by id
   const station =
     account && account.defaultStation
-      ? ((await getStationById(account?.defaultStation?.id)) as Station)
+      ? await getStationById(account?.defaultStation?.id)
       : null
 
   // Query a publish
-  const publish = (await getWatchingPublish({
+  const publish = await getWatchingPublish({
     targetId: params.id,
     requestorId: station ? station.id : null,
-  })) as Publish
+  })
   const isOwner = station && publish && station.id === publish.creatorId
 
   if (!publish) {
