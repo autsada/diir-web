@@ -222,15 +222,15 @@ export default function PhoneAuth() {
           <div className="my-6 h-[50px] px-1 flex items-center justify-center">
             {isNumberValid ? (
               isOtpSent ? (
-                <p className="text-center text-lg text-blueBase">
-                  A verification sent.
-                </p>
+                <h6 className="text-center text-lg text-blueBase">
+                  A verification code sent.
+                </h6>
               ) : requestOtpLoading ? (
-                <p className="text-center text-lg text-textLight">
+                <p className="font-light text-center text-lg text-blueBase">
                   Sending a verification code
                 </p>
               ) : (
-                <p className="text-center text-lg text-textLight">
+                <p className="font-light text-center text-lg text-blueBase">
                   We will send you a 6-digits verification code.
                 </p>
               )
