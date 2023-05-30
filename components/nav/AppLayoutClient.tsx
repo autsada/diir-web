@@ -41,21 +41,6 @@ export default function AppLayoutClient({ account, isAuthenticated }: Props) {
     // }
   }, [idToken, router])
 
-  // Disable body scroll when modal openned
-  useEffect(() => {
-    const els = document?.getElementsByTagName("body")
-
-    if (authModalVisible) {
-      if (els[0]) {
-        els[0].style.overflow = "hidden"
-      }
-    } else {
-      if (els[0]) {
-        els[0].style.overflow = "auto"
-      }
-    }
-  }, [authModalVisible])
-
   // Close auth modal when user is authenticated (account not null)
   useEffect(() => {
     if (isAuthenticated && authModalVisible) {

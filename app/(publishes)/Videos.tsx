@@ -58,21 +58,6 @@ export default function Videos({
     PageInfo | undefined
   >()
 
-  // Disable body scroll when modal openned
-  useEffect(() => {
-    if (!targetPublish) return
-    const els = document?.getElementsByTagName("body")
-    if (els[0]) {
-      els[0].style.overflow = "hidden"
-    }
-
-    return () => {
-      if (els[0]) {
-        els[0].style.overflow = "auto"
-      }
-    }
-  }, [targetPublish])
-
   // Query videos when use clicks category
   useEffect(() => {
     queryVideosByCat(selectedCat)
