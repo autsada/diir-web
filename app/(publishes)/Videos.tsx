@@ -157,7 +157,7 @@ export default function Videos({
             <h6>No videos found</h6>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2 sm:gap-y-6 sm:gap-x-6 py-1 pb-20 sm:p-5 bg-white divide-y-[4px] sm:divide-y-0 divide-neutral-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2 sm:gap-y-6 sm:gap-x-4 py-1 pb-20 sm:p-5 bg-white divide-y-[4px] sm:divide-y-0 divide-neutral-200">
             {resultByCat.edges.map((edge) => (
               <PublishItem
                 key={edge?.node?.id}
@@ -207,7 +207,11 @@ export default function Videos({
 
       {/* Share modal */}
       {shareModalVisible && targetPublish && (
-        <ShareModal publishId={targetPublish.id} title={targetPublish.title!} closeModal={closeShareModal} />
+        <ShareModal
+          publishId={targetPublish.id}
+          title={targetPublish.title!}
+          closeModal={closeShareModal}
+        />
       )}
 
       {loading && <Mask backgroundColor="#fff" opacity={0.4} />}

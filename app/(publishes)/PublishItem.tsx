@@ -41,7 +41,7 @@ export default function PublishItem({ publish, onAction, setPOS }: Props) {
       <div className="relative z-0">
         <Link href={`/watch/${publish.id}`}>
           <div
-            className="relative w-full h-[200px] bg-neutral-600 rounded-none sm:rounded-xl overflow-hidden"
+            className="relative w-full h-[240px] sm:h-[220px] bg-neutral-600 rounded-none sm:rounded-xl overflow-hidden"
             onMouseOver={onMouseOn}
             onMouseLeave={onMouseLeave}
           >
@@ -87,7 +87,10 @@ export default function PublishItem({ publish, onAction, setPOS }: Props) {
         </Link>
       </div>
 
-      <div className="absolute top-[210px] right-2 p-[10px]" onClick={onClick}>
+      <div
+        className="absolute top-[250px] sm:top-[230px] right-2 p-[10px]"
+        onClick={onClick}
+      >
         <HiDotsVertical />
       </div>
     </div>
