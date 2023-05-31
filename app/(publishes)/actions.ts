@@ -7,6 +7,7 @@ import {
   removeWatchLater,
   addToNewPlaylist,
   updatePlaylists,
+  dontRecommend,
 } from "@/graphql"
 import { getAccount } from "@/lib/server"
 import type { DisplayedPlaylist } from "@/graphql/types"
@@ -163,4 +164,34 @@ export async function saveToPlaylist(formData: FormData) {
       },
     })
   }
+}
+
+/**
+ * @param targetId A station id to be added to don't recommend list
+ */
+export async function dontRecommendStation(targetId: string) {
+  const data = await getAccount()
+  const account = data?.account
+  const idToken = data?.idToken
+  const signature = data?.signature
+  if (!account || !account?.defaultStation || !idToken)
+    throw new Error("Please sign in to proceed.")
+
+  if (!targetId) throw new Error("Bad input")
+  // If user added their own station to the list, just return
+  if (account.defaultStation.id === targetId) return
+
+  await dontRecommend({
+    idToken,
+    signature,
+    data: {
+      accountId: account.id,
+      owner: account.owner,
+      stationId: account.defaultStation?.id,
+      targetId,
+    },
+  })
+
+  // Revalidate watch later page
+  revalidatePath(`/`)
 }

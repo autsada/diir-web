@@ -87,6 +87,20 @@ export interface NexusGenInputs {
     senderId: string // String!
     to: string // String!
   }
+  DontRecommendInput: {
+    // input type
+    accountId: string // String!
+    owner: string // String!
+    stationId: string // String!
+    targetId: string // String!
+  }
+  FetchDontRecommendsInput: {
+    // input type
+    accountId: string // String!
+    cursor?: string | null // String
+    owner: string // String!
+    requestorId: string // String!
+  }
   FetchMyPlaylistsInput: {
     // input type
     accountId: string // String!
@@ -106,11 +120,13 @@ export interface NexusGenInputs {
     // input type
     category: NexusGenEnums["Category"] // Category!
     cursor?: string | null // String
+    requestorId?: string | null // String
   }
   FetchPublishesInput: {
     // input type
     cursor?: string | null // String
     prefer?: NexusGenEnums["Category"][] | null // [Category!]
+    requestorId?: string | null // String
   }
   FetchWatchLaterInput: {
     // input type
@@ -297,6 +313,22 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     publishId: string // String!
     stationId: string // String!
+  }
+  DontRecommend: {
+    // root type
+    createdAt: NexusGenScalars["DateTime"] // DateTime!
+    requestorId: string // String!
+    targetId: string // String!
+  }
+  DontRecommendEdge: {
+    // root type
+    cursor?: string | null // String
+    node?: NexusGenRootTypes["DontRecommend"] | null // DontRecommend
+  }
+  FetchDontRecommendsResponse: {
+    // root type
+    edges: NexusGenRootTypes["DontRecommendEdge"][] // [DontRecommendEdge!]!
+    pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
   }
   FetchPlaylistsResponse: {
     // root type
@@ -534,6 +566,23 @@ export interface NexusGenFieldTypes {
     station: NexusGenRootTypes["Station"] // Station!
     stationId: string // String!
   }
+  DontRecommend: {
+    // field return type
+    createdAt: NexusGenScalars["DateTime"] // DateTime!
+    requestorId: string // String!
+    target: NexusGenRootTypes["Station"] // Station!
+    targetId: string // String!
+  }
+  DontRecommendEdge: {
+    // field return type
+    cursor: string | null // String
+    node: NexusGenRootTypes["DontRecommend"] | null // DontRecommend
+  }
+  FetchDontRecommendsResponse: {
+    // field return type
+    edges: NexusGenRootTypes["DontRecommendEdge"][] // [DontRecommendEdge!]!
+    pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
+  }
   FetchPlaylistsResponse: {
     // field return type
     edges: NexusGenRootTypes["PlaylistEdge"][] // [PlaylistEdge!]!
@@ -579,8 +628,10 @@ export interface NexusGenFieldTypes {
     createDraftPublish: NexusGenRootTypes["CreateDraftPublishResult"] | null // CreateDraftPublishResult
     createStation: NexusGenRootTypes["Station"] | null // Station
     createTip: NexusGenRootTypes["Tip"] | null // Tip
+    dontRecommend: NexusGenRootTypes["WriteResult"] | null // WriteResult
     mintFirstStationNFT: NexusGenRootTypes["MintStationNFTResult"] | null // MintStationNFTResult
     mintStationNFT: NexusGenRootTypes["MintStationNFTResult"] | null // MintStationNFTResult
+    removeDontRecommend: NexusGenRootTypes["WriteResult"] | null // WriteResult
     removeFromWatchLater: NexusGenRootTypes["WriteResult"] | null // WriteResult
     sendTips: NexusGenRootTypes["SendTipsResult"] | null // SendTipsResult
     updateBannerImage: NexusGenRootTypes["WriteResult"] | null // WriteResult
@@ -680,6 +731,7 @@ export interface NexusGenFieldTypes {
       | NexusGenRootTypes["CheckPublishPlaylistsResponse"]
       | null // CheckPublishPlaylistsResponse
     fetchAllVideos: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    fetchDontRecommends: NexusGenRootTypes["FetchDontRecommendsResponse"] | null // FetchDontRecommendsResponse
     fetchMyPlaylists: NexusGenRootTypes["FetchPlaylistsResponse"] | null // FetchPlaylistsResponse
     fetchMyPublishes: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchVideosByCategory: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
@@ -834,6 +886,23 @@ export interface NexusGenFieldTypeNames {
     station: "Station"
     stationId: "String"
   }
+  DontRecommend: {
+    // field return type name
+    createdAt: "DateTime"
+    requestorId: "String"
+    target: "Station"
+    targetId: "String"
+  }
+  DontRecommendEdge: {
+    // field return type name
+    cursor: "String"
+    node: "DontRecommend"
+  }
+  FetchDontRecommendsResponse: {
+    // field return type name
+    edges: "DontRecommendEdge"
+    pageInfo: "PageInfo"
+  }
   FetchPlaylistsResponse: {
     // field return type name
     edges: "PlaylistEdge"
@@ -879,8 +948,10 @@ export interface NexusGenFieldTypeNames {
     createDraftPublish: "CreateDraftPublishResult"
     createStation: "Station"
     createTip: "Tip"
+    dontRecommend: "WriteResult"
     mintFirstStationNFT: "MintStationNFTResult"
     mintStationNFT: "MintStationNFTResult"
+    removeDontRecommend: "WriteResult"
     removeFromWatchLater: "WriteResult"
     sendTips: "SendTipsResult"
     updateBannerImage: "WriteResult"
@@ -978,6 +1049,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     checkPublishPlaylists: "CheckPublishPlaylistsResponse"
     fetchAllVideos: "FetchPublishesResponse"
+    fetchDontRecommends: "FetchDontRecommendsResponse"
     fetchMyPlaylists: "FetchPlaylistsResponse"
     fetchMyPublishes: "FetchPublishesResponse"
     fetchVideosByCategory: "FetchPublishesResponse"
@@ -1094,6 +1166,10 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs["CreateTipInput"] // CreateTipInput!
     }
+    dontRecommend: {
+      // args
+      input: NexusGenInputs["DontRecommendInput"] // DontRecommendInput!
+    }
     mintFirstStationNFT: {
       // args
       input: NexusGenInputs["MintStationNFTInput"] // MintStationNFTInput!
@@ -1101,6 +1177,10 @@ export interface NexusGenArgTypes {
     mintStationNFT: {
       // args
       input: NexusGenInputs["MintStationNFTInput"] // MintStationNFTInput!
+    }
+    removeDontRecommend: {
+      // args
+      input: NexusGenInputs["DontRecommendInput"] // DontRecommendInput!
     }
     removeFromWatchLater: {
       // args
@@ -1147,6 +1227,10 @@ export interface NexusGenArgTypes {
     fetchAllVideos: {
       // args
       input: NexusGenInputs["FetchPublishesInput"] // FetchPublishesInput!
+    }
+    fetchDontRecommends: {
+      // args
+      input: NexusGenInputs["FetchDontRecommendsInput"] // FetchDontRecommendsInput!
     }
     fetchMyPlaylists: {
       // args

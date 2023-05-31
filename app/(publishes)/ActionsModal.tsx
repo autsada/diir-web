@@ -3,6 +3,7 @@ import {
   AiOutlineClockCircle,
   AiOutlineFlag,
   AiOutlineShareAlt,
+  AiOutlineMinusCircle,
 } from "react-icons/ai"
 import { MdPlaylistAdd } from "react-icons/md"
 import type { IconType } from "react-icons"
@@ -10,7 +11,7 @@ import { toast } from "react-toastify"
 
 import ModalWrapper from "@/components/ModalWrapper"
 import InformModal from "./InformModal"
-import { saveToWatchLater } from "./actions"
+import { saveToWatchLater, dontRecommendStation } from "./actions"
 import type {
   CheckPublishPlaylistsResponse,
   Publish,
@@ -125,6 +126,20 @@ export default function ActionsModal({
     }
   }, [targetPublish, openShareModal, closeModal])
 
+  function dontRecommendCreator() {
+    if (!targetPublish) return
+
+    if (isAuthenticated && !profile) {
+      setInformModalVisible(true)
+    } else {
+      startTransition(() => dontRecommendStation(targetPublish.creator?.id))
+      toast.success("This station will not be recommended again", {
+        theme: "dark",
+      })
+      closeModalAndReset()
+    }
+  }
+
   return (
     <ModalWrapper visible>
       <div className="relative z-0 w-full h-full">
@@ -135,7 +150,7 @@ export default function ActionsModal({
 
         <div
           className={`absolute z-10 flex flex-col items-center justify-center bg-white rounded-xl w-[300px] ${
-            !isAuthenticated ? "h-[120px]" : "h-[240px]"
+            !isAuthenticated ? "h-[150px]" : "h-[280px]"
           }`}
           style={{
             top,
@@ -158,6 +173,13 @@ export default function ActionsModal({
             </>
           )}
           <Item Icon={AiOutlineShareAlt} text="Share" onClick={onStartShare} />
+          {isAuthenticated && (
+            <Item
+              Icon={AiOutlineMinusCircle}
+              text="Don't recommend"
+              onClick={dontRecommendCreator}
+            />
+          )}
           <Item Icon={AiOutlineFlag} text="Report" onClick={() => {}} />
         </div>
 

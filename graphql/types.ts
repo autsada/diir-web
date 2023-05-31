@@ -26,6 +26,9 @@ export type QueryPublishKind = NexusGenEnums["QueryPublishKind"]
 export type QueryByIdInput = NexusGenInputs["QueryByIdInput"]
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
 export type FetchMyPublishesInput = NexusGenInputs["FetchMyPublishesInput"]
+export type FetchPublishesInput = NexusGenInputs["FetchPublishesInput"]
+export type FetchPublishesByCatInput =
+  NexusGenInputs["FetchPublishesByCatInput"]
 export type AddToWatchLaterInput = NexusGenInputs["AddToWatchLaterInput"]
 export type RemoveFromWatchLaterInput =
   NexusGenInputs["RemoveFromWatchLaterInput"]
@@ -40,3 +43,6 @@ export type DisplayedPlaylist = {
   isInPlaylist: boolean | undefined
   list: Maybe<Playlist> | undefined
 }
+export type DontRecommendInput = NexusGenInputs["DontRecommendInput"]
+export type FetchDontRecommendsInput =
+  NexusGenInputs["FetchDontRecommendsInput"]

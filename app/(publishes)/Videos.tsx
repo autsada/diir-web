@@ -33,14 +33,15 @@ export default function Videos({
   playlistsResult,
 }: Props) {
   const [selectedCat, setSelectedCat] = useState<PublishCategory | "All">("All")
-  const [resultByCat, setResultByCat] =
-    useState<FetchPublishesResponse>(videosResult)
+  const [resultByCat, setResultByCat] = useState<FetchPublishesResponse>()
   const [loading, setLoading] = useState(false)
   const [targetPublish, setTargetPublish] = useState<Publish>()
   const [actionsModalVisible, setActionsModalVisible] = useState(false)
   const [positionX, setPositionX] = useState(0)
   const [positionY, setPositionY] = useState(0)
   const [screenHeight, setScreenHeight] = useState(0)
+
+  const displayedResult = selectedCat === "All" ? videosResult : resultByCat
 
   const [addToPlaylistModalVisible, setAddToPlaylistModalVisible] =
     useState(false)
@@ -66,8 +67,30 @@ export default function Videos({
 
   // Query videos when use clicks category
   useEffect(() => {
+    async function queryVideosByCat(cat: PublishCategory | "All") {
+      try {
+        // Call api route to query videos
+        setLoading(true)
+        const res = await fetch(`/videos/query`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            requestorId: profile?.id || "",
+            category: cat,
+          }),
+        })
+        const data = (await res.json()) as { result: FetchPublishesResponse }
+        setResultByCat(data?.result)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
+    }
+
     queryVideosByCat(selectedCat)
-  }, [selectedCat])
+  }, [selectedCat, profile?.id])
 
   const onReactToPublish = useCallback((p: Publish) => {
     setTargetPublish(p)
@@ -91,25 +114,6 @@ export default function Videos({
   const closeModal = useCallback(() => {
     setActionsModalVisible(false)
   }, [])
-
-  async function queryVideosByCat(cat: PublishCategory | "All") {
-    try {
-      // Call api route to query videos
-      setLoading(true)
-      const res = await fetch(`/videos/query`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ category: cat }),
-      })
-      const data = (await res.json()) as { result: FetchPublishesResponse }
-      setResultByCat(data?.result)
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-    }
-  }
 
   const openAddToPlaylistModal = useCallback(() => {
     setAddToPlaylistModalVisible(true)
@@ -136,7 +140,6 @@ export default function Videos({
     setTargetPublish(undefined)
   }, [])
 
-  console.log("publish -->", targetPublish)
   return (
     <>
       <div className="fixed z-10 top-[70px] left-0 sm:left-[116px] right-0 h-[40px] bg-white">
@@ -152,13 +155,13 @@ export default function Videos({
       </div>
 
       <div className="mt-[40px] py-2 sm:px-4 sm:ml-[100px]">
-        {resultByCat?.edges?.length === 0 ? (
+        {!displayedResult || displayedResult?.edges?.length === 0 ? (
           <div className="w-full py-10 text-center">
             <h6>No videos found</h6>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2 sm:gap-y-6 sm:gap-x-4 py-1 pb-20 sm:p-5 bg-white divide-y-[4px] sm:divide-y-0 divide-neutral-200">
-            {resultByCat.edges.map((edge) => (
+            {displayedResult.edges.map((edge) => (
               <PublishItem
                 key={edge?.node?.id}
                 publish={edge?.node}
@@ -175,7 +178,9 @@ export default function Videos({
                 closeModalAndReset={closeModalAndResetState}
                 closeModal={closeModal}
                 top={
-                  screenHeight - positionY < 200 ? positionY - 200 : positionY
+                  screenHeight - positionY < (isAuthenticated ? 300 : 200)
+                    ? positionY - (isAuthenticated ? 300 : 200)
+                    : positionY
                 } // 200 is modal height
                 left={positionX - 300} // 300 is modal width
                 targetPublish={targetPublish}

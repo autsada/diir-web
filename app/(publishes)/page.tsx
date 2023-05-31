@@ -14,7 +14,7 @@ export default async function Home() {
       ? undefined
       : await getStationById(account?.defaultStation?.id)
 
-  let videosResult = await fetchAllVideos()
+  let videosResult = await fetchAllVideos({ requestorId: station?.id })
 
   // Fetch user's playlists if user is authenticated
   const playlistsResult = !station

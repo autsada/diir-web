@@ -193,6 +193,40 @@ export type DisLike = {
   stationId: Scalars['String']['output'];
 };
 
+export type DontRecommend = {
+  __typename?: 'DontRecommend';
+  createdAt: Scalars['DateTime']['output'];
+  requestorId: Scalars['String']['output'];
+  target: Station;
+  targetId: Scalars['String']['output'];
+};
+
+export type DontRecommendEdge = {
+  __typename?: 'DontRecommendEdge';
+  cursor?: Maybe<Scalars['String']['output']>;
+  node?: Maybe<DontRecommend>;
+};
+
+export type DontRecommendInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+  targetId: Scalars['String']['input'];
+};
+
+export type FetchDontRecommendsInput = {
+  accountId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  owner: Scalars['String']['input'];
+  requestorId: Scalars['String']['input'];
+};
+
+export type FetchDontRecommendsResponse = {
+  __typename?: 'FetchDontRecommendsResponse';
+  edges: Array<DontRecommendEdge>;
+  pageInfo: PageInfo;
+};
+
 export type FetchMyPlaylistsInput = {
   accountId: Scalars['String']['input'];
   cursor?: InputMaybe<Scalars['String']['input']>;
@@ -286,8 +320,10 @@ export type Mutation = {
   createDraftPublish?: Maybe<CreateDraftPublishResult>;
   createStation?: Maybe<Station>;
   createTip?: Maybe<Tip>;
+  dontRecommend?: Maybe<WriteResult>;
   mintFirstStationNFT?: Maybe<MintStationNftResult>;
   mintStationNFT?: Maybe<MintStationNftResult>;
+  removeDontRecommend?: Maybe<WriteResult>;
   removeFromWatchLater?: Maybe<WriteResult>;
   sendTips?: Maybe<SendTipsResult>;
   updateBannerImage?: Maybe<WriteResult>;
@@ -345,6 +381,11 @@ export type MutationCreateTipArgs = {
 };
 
 
+export type MutationDontRecommendArgs = {
+  input: DontRecommendInput;
+};
+
+
 export type MutationMintFirstStationNftArgs = {
   input: MintStationNftInput;
 };
@@ -352,6 +393,11 @@ export type MutationMintFirstStationNftArgs = {
 
 export type MutationMintStationNftArgs = {
   input: MintStationNftInput;
+};
+
+
+export type MutationRemoveDontRecommendArgs = {
+  input: DontRecommendInput;
 };
 
 
@@ -506,6 +552,7 @@ export type Query = {
   __typename?: 'Query';
   checkPublishPlaylists?: Maybe<CheckPublishPlaylistsResponse>;
   fetchAllVideos?: Maybe<FetchPublishesResponse>;
+  fetchDontRecommends?: Maybe<FetchDontRecommendsResponse>;
   fetchMyPlaylists?: Maybe<FetchPlaylistsResponse>;
   fetchMyPublishes?: Maybe<FetchPublishesResponse>;
   fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
@@ -527,6 +574,11 @@ export type QueryCheckPublishPlaylistsArgs = {
 
 export type QueryFetchAllVideosArgs = {
   input: FetchPublishesInput;
+};
+
+
+export type QueryFetchDontRecommendsArgs = {
+  input: FetchDontRecommendsInput;
 };
 
 

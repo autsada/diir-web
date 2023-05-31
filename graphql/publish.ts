@@ -3,6 +3,7 @@ import { gql } from "graphql-request"
 import { client } from "./client"
 import type {
   FetchMyPublishesInput,
+  FetchPublishesInput,
   QueryReturnType,
   QueryArgsType,
   MutationReturnType,
@@ -10,6 +11,7 @@ import type {
   PublishCategory,
   QueryByIdInput,
   UpdatePublishInput,
+  FetchPublishesByCatInput,
 } from "./types"
 
 /**
@@ -173,16 +175,17 @@ export const FETCH_ALL_VIDEOS_QUERY = gql`
   }
 `
 
-export async function fetchAllVideos(
-  cursor?: string,
-  prefer?: PublishCategory[]
-) {
+export async function fetchAllVideos({
+  requestorId,
+  cursor,
+  prefer,
+}: FetchPublishesInput) {
   try {
     const result = await client.request<
       QueryReturnType<"fetchAllVideos">,
       QueryArgsType<"fetchAllVideos">
     >(FETCH_ALL_VIDEOS_QUERY, {
-      input: { cursor, prefer },
+      input: { cursor, prefer, requestorId },
     })
 
     return result?.fetchAllVideos
@@ -234,15 +237,16 @@ export const FETCH_VIDEOS_BY_CAT_QUERY = gql`
     }
   }
 `
-export async function fetchVideosByCategory(
-  category: PublishCategory,
-  cursor?: string
-) {
+export async function fetchVideosByCategory({
+  category,
+  cursor,
+  requestorId,
+}: FetchPublishesByCatInput) {
   try {
     const result = await client.request<
       QueryReturnType<"fetchVideosByCategory">,
       QueryArgsType<"fetchVideosByCategory">
-    >(FETCH_VIDEOS_BY_CAT_QUERY, { input: { category, cursor } })
+    >(FETCH_VIDEOS_BY_CAT_QUERY, { input: { category, cursor, requestorId } })
 
     return result?.fetchVideosByCategory
   } catch (error) {
