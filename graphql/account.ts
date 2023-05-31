@@ -74,14 +74,18 @@ export const GET_BALANCE_QUERY = gql`
   }
 `
 export async function getBalance(address: string) {
-  const data = await client.request<
-    QueryReturnType<"getBalance">,
-    QueryArgsType<"getBalance">
-  >(GET_BALANCE_QUERY, {
-    address,
-  })
+  try {
+    const data = await client.request<
+      QueryReturnType<"getBalance">,
+      QueryArgsType<"getBalance">
+    >(GET_BALANCE_QUERY, {
+      address,
+    })
 
-  return data?.getBalance
+    return data?.getBalance
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
