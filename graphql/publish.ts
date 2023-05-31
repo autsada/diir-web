@@ -46,12 +46,16 @@ export const GET_UPLOADED_PUBLISH_QUERY = gql`
   }
 `
 export async function getUploadedPublish(id: string) {
-  const data = await client.request<
-    QueryReturnType<"getPublishById">,
-    QueryArgsType<"getPublishById">
-  >(GET_UPLOADED_PUBLISH_QUERY, { input: { targetId: id } })
+  try {
+    const data = await client.request<
+      QueryReturnType<"getPublishById">,
+      QueryArgsType<"getPublishById">
+    >(GET_UPLOADED_PUBLISH_QUERY, { input: { targetId: id } })
 
-  return data?.getPublishById
+    return data?.getPublishById
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -105,20 +109,24 @@ export async function fetchMyPublishes({
   signature?: string
   data: FetchMyPublishesInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      QueryReturnType<"fetchMyPublishes">,
-      QueryArgsType<"fetchMyPublishes">
-    >(FETCH_CREATOR_PUBLISHES_QUERY, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        QueryReturnType<"fetchMyPublishes">,
+        QueryArgsType<"fetchMyPublishes">
+      >(FETCH_CREATOR_PUBLISHES_QUERY, {
+        input: data,
+      })
 
-  return result?.fetchMyPublishes
+    return result?.fetchMyPublishes
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -169,14 +177,18 @@ export async function fetchAllVideos(
   cursor?: string,
   prefer?: PublishCategory[]
 ) {
-  const result = await client.request<
-    QueryReturnType<"fetchAllVideos">,
-    QueryArgsType<"fetchAllVideos">
-  >(FETCH_ALL_VIDEOS_QUERY, {
-    input: { cursor, prefer },
-  })
+  try {
+    const result = await client.request<
+      QueryReturnType<"fetchAllVideos">,
+      QueryArgsType<"fetchAllVideos">
+    >(FETCH_ALL_VIDEOS_QUERY, {
+      input: { cursor, prefer },
+    })
 
-  return result?.fetchAllVideos
+    return result?.fetchAllVideos
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -226,12 +238,16 @@ export async function fetchVideosByCategory(
   category: PublishCategory,
   cursor?: string
 ) {
-  const result = await client.request<
-    QueryReturnType<"fetchVideosByCategory">,
-    QueryArgsType<"fetchVideosByCategory">
-  >(FETCH_VIDEOS_BY_CAT_QUERY, { input: { category, cursor } })
+  try {
+    const result = await client.request<
+      QueryReturnType<"fetchVideosByCategory">,
+      QueryArgsType<"fetchVideosByCategory">
+    >(FETCH_VIDEOS_BY_CAT_QUERY, { input: { category, cursor } })
 
-  return result?.fetchVideosByCategory
+    return result?.fetchVideosByCategory
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -289,14 +305,18 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
   }
 `
 export async function getWatchingPublish(data: QueryByIdInput) {
-  const result = await client.request<
-    QueryReturnType<"getPublishById">,
-    QueryArgsType<"getPublishById">
-  >(GET_WATCHING_PUBLISH_QUERY, {
-    input: data,
-  })
+  try {
+    const result = await client.request<
+      QueryReturnType<"getPublishById">,
+      QueryArgsType<"getPublishById">
+    >(GET_WATCHING_PUBLISH_QUERY, {
+      input: data,
+    })
 
-  return result?.getPublishById
+    return result?.getPublishById
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -324,20 +344,24 @@ export async function createDraftPublish({
   accountId: string
   filename: string
 }) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"createDraftPublish">,
-      MutationArgsType<"createDraftPublish">
-    >(CREATE_DRAFT_PUBLISH_MUTATION, {
-      input: { owner, creatorId, accountId, filename },
-    })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"createDraftPublish">,
+        MutationArgsType<"createDraftPublish">
+      >(CREATE_DRAFT_PUBLISH_MUTATION, {
+        input: { owner, creatorId, accountId, filename },
+      })
 
-  return data?.createDraftPublish
+    return data?.createDraftPublish
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -359,18 +383,22 @@ export async function updatePublish({
   signature?: string
   data: UpdatePublishInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"updatePublish">,
-      MutationArgsType<"updatePublish">
-    >(UPDATE_PUBLISH_MUTATION, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updatePublish">,
+        MutationArgsType<"updatePublish">
+      >(UPDATE_PUBLISH_MUTATION, {
+        input: data,
+      })
 
-  return result?.updatePublish
+    return result?.updatePublish
+  } catch (error) {
+    throw error
+  }
 }

@@ -52,17 +52,21 @@ export const GET_ACCOUNT_QUERY = gql`
   }
 `
 export async function getMyAccount(idToken: string, signature?: string) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<QueryReturnType<"getMyAccount">, QueryArgsType<"getMyAccount">>(
-      GET_ACCOUNT_QUERY,
-      { input: { accountType: signature ? "WALLET" : "TRADITIONAL" } }
-    )
-  return data?.getMyAccount
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<QueryReturnType<"getMyAccount">, QueryArgsType<"getMyAccount">>(
+        GET_ACCOUNT_QUERY,
+        { input: { accountType: signature ? "WALLET" : "TRADITIONAL" } }
+      )
+    return data?.getMyAccount
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -103,20 +107,24 @@ export const CREATE_ACCOUNT_MUTATION = gql`
   }
 `
 export async function createAccount(idToken: string, signature?: string) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"createAccount">,
-      MutationArgsType<"createAccount">
-    >(CREATE_ACCOUNT_MUTATION, {
-      input: { accountType: signature ? "WALLET" : "TRADITIONAL" },
-    })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"createAccount">,
+        MutationArgsType<"createAccount">
+      >(CREATE_ACCOUNT_MUTATION, {
+        input: { accountType: signature ? "WALLET" : "TRADITIONAL" },
+      })
 
-  return data?.createAccount
+    return data?.createAccount
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -142,16 +150,20 @@ export async function cacheLoggedInSession({
   stationId: string
   accountId: string
 }) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"cacheSession">,
-      MutationArgsType<"cacheSession">
-    >(CACHE_SESSION_MUTATION, { input: { address, stationId, accountId } })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"cacheSession">,
+        MutationArgsType<"cacheSession">
+      >(CACHE_SESSION_MUTATION, { input: { address, stationId, accountId } })
 
-  return data?.cacheSession
+    return data?.cacheSession
+  } catch (error) {
+    throw error
+  }
 }

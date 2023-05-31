@@ -48,14 +48,18 @@ export const GET_STATION_BY_ID_QUERY = gql`
   }
 `
 export async function getStationById(targetId: string, requestorId?: string) {
-  const data = await client.request<
-    QueryReturnType<"getStationById">,
-    QueryArgsType<"getStationById">
-  >(GET_STATION_BY_ID_QUERY, {
-    input: { targetId, requestorId: requestorId || null },
-  })
+  try {
+    const data = await client.request<
+      QueryReturnType<"getStationById">,
+      QueryArgsType<"getStationById">
+    >(GET_STATION_BY_ID_QUERY, {
+      input: { targetId, requestorId: requestorId || null },
+    })
 
-  return data?.getStationById
+    return data?.getStationById
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -98,14 +102,18 @@ export const GET_STATION_BY_NAME_QUERY = gql`
   }
 `
 export async function getStationByName(name: string, requestorId?: string) {
-  const data = await client.request<
-    QueryReturnType<"getStationByName">,
-    QueryArgsType<"getStationByName">
-  >(GET_STATION_BY_NAME_QUERY, {
-    input: { name, requestorId: requestorId || null },
-  })
+  try {
+    const data = await client.request<
+      QueryReturnType<"getStationByName">,
+      QueryArgsType<"getStationByName">
+    >(GET_STATION_BY_NAME_QUERY, {
+      input: { name, requestorId: requestorId || null },
+    })
 
-  return data?.getStationByName
+    return data?.getStationByName
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -117,12 +125,16 @@ export const VALIDATE_DISPLAY_NAME_MUTATION = gql`
   }
 `
 export async function validateStationDisplayName(name: string) {
-  const data = await client.request<
-    MutationReturnType<"validateDisplayName">,
-    MutationArgsType<"validateDisplayName">
-  >(VALIDATE_DISPLAY_NAME_MUTATION, { name })
+  try {
+    const data = await client.request<
+      MutationReturnType<"validateDisplayName">,
+      MutationArgsType<"validateDisplayName">
+    >(VALIDATE_DISPLAY_NAME_MUTATION, { name })
 
-  return data?.validateDisplayName
+    return data?.validateDisplayName
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -134,12 +146,16 @@ export const VALIDATE_NAME_MUTATION = gql`
   }
 `
 export async function validateStationName(name: string) {
-  const data = await client.request<
-    MutationReturnType<"validateName">,
-    MutationArgsType<"validateName">
-  >(VALIDATE_NAME_MUTATION, { name })
+  try {
+    const data = await client.request<
+      MutationReturnType<"validateName">,
+      MutationArgsType<"validateName">
+    >(VALIDATE_NAME_MUTATION, { name })
 
-  return data?.validateName
+    return data?.validateName
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -165,18 +181,22 @@ export async function mintFirstStationNFT({
   name: string
   accountId: string
 }) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"mintFirstStationNFT">,
-      MutationArgsType<"mintFirstStationNFT">
-    >(MINT_FIRST_STATION_NFT_MUTATION, { input: { to, name, accountId } })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"mintFirstStationNFT">,
+        MutationArgsType<"mintFirstStationNFT">
+      >(MINT_FIRST_STATION_NFT_MUTATION, { input: { to, name, accountId } })
 
-  return data?.mintFirstStationNFT
+    return data?.mintFirstStationNFT
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -202,18 +222,22 @@ export async function mintStationNFT({
   name: string
   accountId: string
 }) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"mintStationNFT">,
-      MutationArgsType<"mintStationNFT">
-    >(MINT_STATION_NFT_MUTATION, { input: { to, name, accountId } })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"mintStationNFT">,
+        MutationArgsType<"mintStationNFT">
+      >(MINT_STATION_NFT_MUTATION, { input: { to, name, accountId } })
 
-  return data?.mintStationNFT
+    return data?.mintStationNFT
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -246,18 +270,22 @@ export async function createStation({
   tokenId: number // Station NFT token id
   signature?: string
 }) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"createStation">,
-      MutationArgsType<"createStation">
-    >(CREATE_STATION_MUTATION, { input: { owner, accountId, name, tokenId } })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"createStation">,
+        MutationArgsType<"createStation">
+      >(CREATE_STATION_MUTATION, { input: { owner, accountId, name, tokenId } })
 
-  return data?.createStation
+    return data?.createStation
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -285,20 +313,24 @@ export async function updateStationName({
   stationId: string // Station id to be updated
   signature?: string
 }) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"updateDisplayName">,
-      MutationArgsType<"updateDisplayName">
-    >(UPDATE_DISPLAY_NAME_MUTATION, {
-      input: { owner, accountId, name, stationId },
-    })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updateDisplayName">,
+        MutationArgsType<"updateDisplayName">
+      >(UPDATE_DISPLAY_NAME_MUTATION, {
+        input: { owner, accountId, name, stationId },
+      })
 
-  return data?.updateDisplayName
+    return data?.updateDisplayName
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -328,20 +360,24 @@ export async function updateStationImage({
   stationId: string // Station id to be updated
   signature?: string
 }) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"updateProfileImage">,
-      MutationArgsType<"updateProfileImage">
-    >(UPDATE_PROFILE_IMAGE_MUTATION, {
-      input: { owner, accountId, image, imageRef, stationId },
-    })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updateProfileImage">,
+        MutationArgsType<"updateProfileImage">
+      >(UPDATE_PROFILE_IMAGE_MUTATION, {
+        input: { owner, accountId, image, imageRef, stationId },
+      })
 
-  return data?.updateProfileImage
+    return data?.updateProfileImage
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -371,18 +407,22 @@ export async function updateStationBannerImage({
   stationId: string // Station id to be updated
   signature?: string
 }) {
-  const data = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"updateBannerImage">,
-      MutationArgsType<"updateBannerImage">
-    >(UPDATE_BANNER_IMAGE_MUTATION, {
-      input: { owner, accountId, image, imageRef, stationId },
-    })
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updateBannerImage">,
+        MutationArgsType<"updateBannerImage">
+      >(UPDATE_BANNER_IMAGE_MUTATION, {
+        input: { owner, accountId, image, imageRef, stationId },
+      })
 
-  return data?.updateBannerImage
+    return data?.updateBannerImage
+  } catch (error) {
+    throw error
+  }
 }

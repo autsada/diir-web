@@ -44,20 +44,24 @@ export async function fetchMyPlaylists({
   signature?: string
   data: FetchMyPlaylistsInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      QueryReturnType<"fetchMyPlaylists">,
-      QueryArgsType<"fetchMyPlaylists">
-    >(FETCH_MY_PLAYLISTS_QUERY, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        QueryReturnType<"fetchMyPlaylists">,
+        QueryArgsType<"fetchMyPlaylists">
+      >(FETCH_MY_PLAYLISTS_QUERY, {
+        input: data,
+      })
 
-  return result?.fetchMyPlaylists
+    return result?.fetchMyPlaylists
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -87,20 +91,24 @@ export async function checkPublishPlaylists({
   signature?: string
   data: CheckPublishPlaylistsInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      QueryReturnType<"checkPublishPlaylists">,
-      QueryArgsType<"checkPublishPlaylists">
-    >(CHECK_PUBLISH_PLAYLISTS_QUERY, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        QueryReturnType<"checkPublishPlaylists">,
+        QueryArgsType<"checkPublishPlaylists">
+      >(CHECK_PUBLISH_PLAYLISTS_QUERY, {
+        input: data,
+      })
 
-  return result?.checkPublishPlaylists
+    return result?.checkPublishPlaylists
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -122,20 +130,24 @@ export async function addToNewPlaylist({
   signature?: string
   data: CreatePlayListInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"addToNewPlaylist">,
-      MutationArgsType<"addToNewPlaylist">
-    >(ADD_TO_NEW_PLAYLIST_MUTATION, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"addToNewPlaylist">,
+        MutationArgsType<"addToNewPlaylist">
+      >(ADD_TO_NEW_PLAYLIST_MUTATION, {
+        input: data,
+      })
 
-  return result?.addToNewPlaylist
+    return result?.addToNewPlaylist
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -157,20 +169,24 @@ export async function addToPlaylist({
   signature?: string
   data: AddToPlaylistInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"addToPlaylist">,
-      MutationArgsType<"addToPlaylist">
-    >(ADD_TO_PLAYLIST_MUTATION, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"addToPlaylist">,
+        MutationArgsType<"addToPlaylist">
+      >(ADD_TO_PLAYLIST_MUTATION, {
+        input: data,
+      })
 
-  return result?.addToPlaylist
+    return result?.addToPlaylist
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -192,18 +208,22 @@ export async function updatePlaylists({
   signature?: string
   data: UpdatePlaylistsInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"updatePlaylists">,
-      MutationArgsType<"updatePlaylists">
-    >(UPDATE_PLAYLISTS_MUTATION, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updatePlaylists">,
+        MutationArgsType<"updatePlaylists">
+      >(UPDATE_PLAYLISTS_MUTATION, {
+        input: data,
+      })
 
-  return result?.updatePlaylists
+    return result?.updatePlaylists
+  } catch (error) {
+    throw error
+  }
 }

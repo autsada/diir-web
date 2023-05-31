@@ -68,20 +68,24 @@ export async function fetchWatchLater({
   signature?: string
   data: FetchWatchLaterInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      QueryReturnType<"fetchWatchLater">,
-      QueryArgsType<"fetchWatchLater">
-    >(FETCH_WATCH_LATER_QUERY, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        QueryReturnType<"fetchWatchLater">,
+        QueryArgsType<"fetchWatchLater">
+      >(FETCH_WATCH_LATER_QUERY, {
+        input: data,
+      })
 
-  return result?.fetchWatchLater
+    return result?.fetchWatchLater
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -103,20 +107,24 @@ export async function addToWatchLater({
   signature?: string
   data: AddToWatchLaterInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"addToWatchLater">,
-      MutationArgsType<"addToWatchLater">
-    >(ADD_TO_WATCH_LATER_MUTATION, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"addToWatchLater">,
+        MutationArgsType<"addToWatchLater">
+      >(ADD_TO_WATCH_LATER_MUTATION, {
+        input: data,
+      })
 
-  return result?.addToWatchLater
+    return result?.addToWatchLater
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -138,18 +146,22 @@ export async function removeWatchLater({
   signature?: string
   data: RemoveFromWatchLaterInput
 }) {
-  const result = await client
-    .setHeaders({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-      "auth-wallet-signature": signature || "",
-    })
-    .request<
-      MutationReturnType<"removeFromWatchLater">,
-      MutationArgsType<"removeFromWatchLater">
-    >(REMOVE_FROM_WATCH_LATER_MUTATION, {
-      input: data,
-    })
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"removeFromWatchLater">,
+        MutationArgsType<"removeFromWatchLater">
+      >(REMOVE_FROM_WATCH_LATER_MUTATION, {
+        input: data,
+      })
 
-  return result?.removeFromWatchLater
+    return result?.removeFromWatchLater
+  } catch (error) {
+    throw error
+  }
 }
