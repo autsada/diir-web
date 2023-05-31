@@ -257,6 +257,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
         image
         followersCount
         isFollowing
+        defaultColor
       }
       playback {
         id

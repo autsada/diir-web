@@ -51,7 +51,7 @@ export default function StationTemplate({ station }: Props) {
               {station?.displayName}
             </h4>
             <h6 className="font-normal text-textLight">@{station?.name}</h6>
-            <div className="mt-2 flex gap-x-1 sm:gap-x-4">
+            <div className="mt-2 flex gap-x-2 sm:gap-x-4">
               <p className="font-light text-textExtraLight">
                 <span className="text-textRegular">
                   {station?.followersCount}

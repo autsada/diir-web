@@ -12,12 +12,12 @@ export default async function Layout({
   const account = data?.account
 
   return (
-    <>
+    <div className="pt-[70px]">
       <div className="hidden w-[100px] fixed top-[70px] bottom-0 bg-white py-5 px-2 sm:block overflow-y-auto">
         <SideBar isAuthenticated={!!account} />
       </div>
 
       <div className="sm:ml-[100px]">{children}</div>
-    </>
+    </div>
   )
 }

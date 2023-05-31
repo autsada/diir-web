@@ -101,7 +101,7 @@ export default async function Watch({ params }: Props) {
 
   return (
     <div className="w-full overflow-y-hidden">
-      <div className="relative z-10 w-full h-[240px] sm:h-[320px] md:h-[400px] lg:h-[480px] bg-black text-white">
+      <div className="w-full h-[240px] sm:h-[320px] md:h-[400px] lg:h-[480px] bg-black text-white">
         <div className="mx-auto w-full h-full lg:w-[65%]">
           {!publish.playback ? (
             <div className="w-full h-full flex items-center justify-center">
@@ -117,7 +117,7 @@ export default async function Watch({ params }: Props) {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-5 gap-y-2 sm:gap-x-1 py-2 overflow-x-hidden">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-5 gap-y-2 sm:gap-x-1 py-2 overflow-x-hidden bg-white">
         <div className="w-full col-span-3 px-2 sm:px-8">
           <h6 className="sm:text-2xl">{publish.title}</h6>
 

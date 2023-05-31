@@ -87,9 +87,7 @@ export default async function RootLayout({
           {/* @ts-expect-error Async Server Component */}
           <AppLayoutServer />
 
-          <div className="min-h-screen pt-[70px] overflow-y-auto">
-            {children}
-          </div>
+          <div className="min-h-screen overflow-y-auto">{children}</div>
 
           <div className="fixed bottom-10 right-8 max-w-max sm:hidden">
             <UploadBtn />

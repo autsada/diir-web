@@ -27,7 +27,7 @@ export default function MainNav({
   return (
     <div
       className={`h-[70px] px-2 flex items-center justify-between ${
-        isWatchPage ? "bg-gray-950" : "bg-white"
+        isWatchPage ? "bg-neutral-900" : "bg-white"
       }`}
     >
       <div className="h-full w-[140px] min-w-[140px] flex items-center">
