@@ -248,6 +248,8 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
       secondaryCategory
       kind
       creatorId
+      thumbnail
+      thumbSource
       creator {
         id
         name

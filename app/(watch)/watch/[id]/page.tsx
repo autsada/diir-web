@@ -24,29 +24,56 @@ export async function generateMetadata(
     targetId: params.id,
   })
 
-  // optionally access and extend (rather than replace) parent metadata
-  const previousImages = !parent ? [] : (await parent).openGraph?.images || []
+  const imageUrl =
+    publish?.thumbSource === "custom" && publish?.thumbnail
+      ? publish.thumbnail
+      : publish?.playback
+      ? publish.playback.thumbnail
+      : ""
 
   return {
     title: publish?.title || "",
-    openGraph: {
-      images: !publish
-        ? previousImages
-        : publish.thumbSource === "generated" && publish.thumbnail
-        ? [publish.thumbnail, ...previousImages]
-        : publish.playback
-        ? [publish.playback.thumbnail, ...previousImages]
-        : previousImages,
-    },
     description: publish?.description || "",
+    openGraph: {
+      title: publish?.title || "",
+      description: publish?.description || "",
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 600,
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
     twitter: {
-      site: `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app`,
-      images:
-        publish?.thumbSource === "generated" && publish?.thumbnail
-          ? publish.thumbnail
-          : publish?.playback
-          ? publish.playback.thumbnail
-          : "",
+      title: publish?.title || "",
+      description: publish?.description || "",
+      card: "summary_large_image",
+      site: "@DiiRxyz",
+      creator: "@DiiRxyz",
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 600,
+          alt: publish?.title || "",
+        },
+      ],
+    },
+    robots: {
+      index: false,
+      follow: true,
+      nocache: true,
+      googleBot: {
+        index: true,
+        follow: false,
+        noimageindex: true,
+        "max-video-preview": -1,
+        "max-image-preview": "standard",
+        "max-snippet": -1,
+      },
     },
   }
 }
@@ -74,7 +101,7 @@ export default async function Watch({ params }: Props) {
 
   return (
     <div className="w-full overflow-y-hidden">
-      <div className="w-full h-[240px] sm:h-[320px] md:h-[400px] lg:h-[480px] bg-black text-white">
+      <div className="relative z-10 w-full h-[240px] sm:h-[320px] md:h-[400px] lg:h-[480px] bg-black text-white">
         <div className="mx-auto w-full h-full lg:w-[65%]">
           {!publish.playback ? (
             <div className="w-full h-full flex items-center justify-center">

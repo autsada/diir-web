@@ -107,11 +107,7 @@ export default function ActionsModal({
     if (typeof window === "undefined" || !targetPublish) return
 
     const shareData = {
-      title: `${
-        targetPublish.title || ""
-      } https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/watch/${
-        targetPublish.id
-      }`,
+      title: targetPublish.title || "",
       text: targetPublish.title || "",
       url: `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/watch/${targetPublish.id}`,
     }
