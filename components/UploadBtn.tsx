@@ -2,14 +2,34 @@
 
 import React from "react"
 import Link from "next/link"
-import { HiPlus } from "react-icons/hi2"
+import { MdOutlineVideoCall } from "react-icons/md"
 
-export default function UploadBtn() {
-  return (
-    <div className="w-[60px] h-[60px] mx-auto flex items-center justify-center rounded-full cursor-pointer bg-blueBase hover:bg-blueDark">
-      <Link href="/upload">
-        <HiPlus size={26} className="text-white" />
-      </Link>
+export default function UploadBtn({
+  isAuthenticated,
+  onClick,
+  size = 30,
+  color = "white",
+}: {
+  isAuthenticated: boolean
+  onClick?: () => void
+  size?: number
+  color?: string
+}) {
+  return !isAuthenticated ? (
+    <div onClick={onClick}>
+      <MdOutlineVideoCall
+        size={size}
+        color={color}
+        className="cursor-pointer"
+      />
     </div>
+  ) : (
+    <Link href="/upload">
+      <MdOutlineVideoCall
+        size={size}
+        color={color}
+        className="cursor-pointer"
+      />
+    </Link>
   )
 }

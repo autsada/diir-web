@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState, useEffect } from "react"
 import { MdKeyboardBackspace } from "react-icons/md"
 
 import ModalWrapper from "../ModalWrapper"
@@ -20,6 +20,12 @@ export default function AuthModal({ visible, closeModal }: Props) {
 
   const { windowWidth, windowHeight } = useWindowDimension()
 
+  useEffect(() => {
+    if (!visible) {
+      setAuthMethod(undefined)
+    }
+  }, [visible])
+
   function closeAuthModal() {
     setAuthMethod(undefined)
     closeModal()
@@ -32,6 +38,8 @@ export default function AuthModal({ visible, closeModal }: Props) {
   const deSelectMethod = useCallback(() => {
     setAuthMethod(undefined)
   }, [])
+
+  if (!visible) return null
 
   return (
     <ModalWrapper visible={visible}>

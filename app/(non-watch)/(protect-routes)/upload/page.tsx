@@ -4,7 +4,6 @@ import { redirect } from "next/navigation"
 import Upload from "./Upload"
 import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
-import type { Station } from "@/graphql/codegen/graphql"
 
 export default async function Page() {
   const data = await getAccount()
@@ -14,7 +13,9 @@ export default async function Page() {
   }
 
   // Query station by id
-  const station = (await getStationById(account?.defaultStation?.id)) as Station
+  const station = !account?.defaultStation
+    ? null
+    : await getStationById(account?.defaultStation?.id)
 
   if (!station) {
     redirect("/settings")
@@ -25,7 +26,10 @@ export default async function Page() {
       <h5>Upload content</h5>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <Upload idToken={data?.idToken || ""} stationName={station?.name} />
+        <Upload
+          idToken={data?.idToken || ""}
+          stationName={station?.name || ""}
+        />
       </Suspense>
     </>
   )

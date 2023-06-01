@@ -94,7 +94,12 @@ export default function AppLayoutClient({ account, isAuthenticated }: Props) {
         />
       </div>
 
-      <LeftDrawer isOpen={leftDrawerVisible} closeDrawer={closeLeftDrawer} />
+      <LeftDrawer
+        isAuthenticated={!!account}
+        openAuthModal={openAuthModal}
+        isOpen={leftDrawerVisible}
+        closeDrawer={closeLeftDrawer}
+      />
       <RightDrawer
         profile={account?.defaultStation}
         stations={account?.stations || []}

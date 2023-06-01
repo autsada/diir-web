@@ -1,4 +1,3 @@
-import UploadBtn from "../components/UploadBtn"
 import "./globals.css"
 
 import AppLayoutServer from "@/components/nav/AppLayoutServer"
@@ -75,7 +74,7 @@ export const metadata = {
   },
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -88,10 +87,6 @@ export default async function RootLayout({
           <AppLayoutServer />
 
           <div className="min-h-screen overflow-y-auto">{children}</div>
-
-          <div className="fixed bottom-10 right-8 max-w-max sm:hidden">
-            <UploadBtn />
-          </div>
         </WalletClient>
       </body>
     </html>

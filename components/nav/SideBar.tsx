@@ -12,7 +12,6 @@ import { AiOutlineRead, AiFillRead } from "react-icons/ai"
 import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
 
 import ActiveLink from "./ActiveLink"
-import UploadBtn from "@/components/UploadBtn"
 
 interface Props {
   isAuthenticated: boolean
@@ -68,9 +67,6 @@ export default function SideBar({ isAuthenticated }: Props) {
           />
         </div>
       )}
-      <div className="py-5">
-        <UploadBtn />
-      </div>
     </>
   )
 }

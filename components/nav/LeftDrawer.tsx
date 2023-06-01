@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useCallback } from "react"
 import {
   RiHome4Fill,
   RiHome4Line,
@@ -17,9 +17,16 @@ import UploadBtn from "@/components/UploadBtn"
 interface Props {
   isOpen: boolean
   closeDrawer: () => void
+  isAuthenticated: boolean
+  openAuthModal: () => void
 }
 
-export default function LeftDrawer({ isOpen = false, closeDrawer }: Props) {
+export default function LeftDrawer({
+  isOpen = false,
+  closeDrawer,
+  isAuthenticated,
+  openAuthModal,
+}: Props) {
   // Disable body scroll when modal openned
   useEffect(() => {
     const els = document?.getElementsByTagName("body")
@@ -33,6 +40,11 @@ export default function LeftDrawer({ isOpen = false, closeDrawer }: Props) {
       }
     }
   }, [isOpen])
+
+  const onClickUpload = useCallback(() => {
+    openAuthModal()
+    closeDrawer()
+  }, [openAuthModal, closeDrawer])
 
   return (
     <>
@@ -96,8 +108,13 @@ export default function LeftDrawer({ isOpen = false, closeDrawer }: Props) {
             InActiveIcon={MdOutlineVideoLibrary}
           />
         </div>
-        <div className="py-5">
-          <UploadBtn />
+        <div className="mt-5 py-5 flex sm:hidden items-center justify-center">
+          <UploadBtn
+            isAuthenticated={isAuthenticated}
+            onClick={onClickUpload}
+            color="#2096F3"
+            size={40}
+          />
         </div>
       </div>
       <Backdrop visible={isOpen} onClick={closeDrawer} />

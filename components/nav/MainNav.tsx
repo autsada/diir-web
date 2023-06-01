@@ -7,6 +7,7 @@ import { IoSearchOutline } from "react-icons/io5"
 import Logo from "./Logo"
 import type { Account } from "@/graphql/codegen/graphql"
 import Avatar from "../Avatar"
+import UploadBtn from "../UploadBtn"
 
 interface Props {
   account: Account | null
@@ -68,6 +69,14 @@ export default function MainNav({
             />
           </div>
         </div>
+      </div>
+      <div className="hidden sm:block mr-6">
+        <UploadBtn
+          isAuthenticated={!!account}
+          onClick={openAuthModal}
+          color="#2096F3"
+          size={40}
+        />
       </div>
       <div className="h-full w-[80px] flex items-center justify-end pr-2">
         {account ? (
