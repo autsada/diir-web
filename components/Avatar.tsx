@@ -35,7 +35,7 @@ export default function Avatar({
     >
       {!profile || !profile.image ? (
         !profile ? (
-          <div className="w-full h-full flex items-center justify-center bg-blue-500 text-white text-xs">
+          <div className="w-full h-full flex items-center justify-center bg-blueBase text-white text-xs">
             DiiR
           </div>
         ) : (
@@ -47,12 +47,6 @@ export default function Avatar({
           </div>
         )
       ) : (
-        // // eslint-disable-next-line @next/next/no-img-element
-        // <img
-        //   src={profile.image}
-        //   alt={profile.displayName}
-        //   className="w-full h-full object-cover"
-        // />
         <Image
           src={profile.image}
           alt={profile.displayName}

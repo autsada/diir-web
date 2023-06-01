@@ -24,9 +24,20 @@ import {
 interface Props {
   account: Account
   closeModal: () => void
+  title?: string
+  additionalInfo?: string
+  useDoItLaterClose?: boolean
+  doItLaterText?: string
 }
 
-export default function CreateStationModal({ account, closeModal }: Props) {
+export default function CreateStationModal({
+  account,
+  closeModal,
+  title = "Create Station",
+  additionalInfo,
+  useDoItLaterClose = false,
+  doItLaterText = "",
+}: Props) {
   const [name, setName] = useState("")
   const [nameError, setNameError] = useState("")
   const [isNameValid, setIsNameValid] = useState<boolean>()
@@ -79,6 +90,10 @@ export default function CreateStationModal({ account, closeModal }: Props) {
     () => _.debounce(validateName, 200),
     [validateName]
   )
+
+  useEffect(() => {
+    if (isWriteError) setLoading(false)
+  }, [isWriteError])
 
   useEffect(() => {
     if (name && !nameError) {
@@ -135,17 +150,22 @@ export default function CreateStationModal({ account, closeModal }: Props) {
       }
     } catch (error) {
       setLoading(false)
-      setIsError(false)
+      setIsError(true)
     }
   }
 
   return (
     <ModalWrapper visible withBackdrop>
-      <div className="relative z-50 w-[90%] sm:w-[60%] md:w-[50%] lg:w-[35%] mx-auto p-10 bg-white rounded-xl text-center">
-        <div className="absolute top-2 right-4">
-          <CloseButton onClick={closeModal} className="text-base" />
-        </div>
-        <h6>Create Station</h6>
+      <div className="relative z-50 w-[90%] sm:w-[60%] md:w-[50%] lg:w-[35%] mx-auto px-10 pt-10 pb-6 bg-white rounded-xl text-center">
+        {!useDoItLaterClose && (
+          <div className="absolute top-2 right-4">
+            <CloseButton onClick={closeModal} className="text-base" />
+          </div>
+        )}
+        <h4>{title}</h4>
+        {additionalInfo && (
+          <p className="pt-2 text-textLight">{additionalInfo}</p>
+        )}
 
         <form onSubmit={onCreate}>
           <div className="my-5">
@@ -180,6 +200,11 @@ export default function CreateStationModal({ account, closeModal }: Props) {
             {isError || isWriteError ? "Create station failed" : <>&nbsp;</>}
           </p>
         </form>
+        {useDoItLaterClose && (
+          <button onClick={closeModal} className="w-full text-blueBase">
+            {doItLaterText || "Maybe later"}
+          </button>
+        )}
       </div>
       {loading && <Mask />}
     </ModalWrapper>

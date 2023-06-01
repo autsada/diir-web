@@ -11,16 +11,24 @@ import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
 import type { Account } from "@/graphql/codegen/graphql"
+import CreateStationModal from "@/app/(non-watch)/(protect-routes)/settings/CreateStationModal"
 
 interface Props {
   account: Account | null
   isAuthenticated: boolean // True when account is not null
+  isNoStation: boolean // Authenticated and doesn't have a station yet
 }
 
-export default function AppLayoutClient({ account, isAuthenticated }: Props) {
+export default function AppLayoutClient({
+  account,
+  isAuthenticated,
+  isNoStation,
+}: Props) {
   const [authModalVisible, setAuthModalVisible] = useState(false)
   const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
   const [rightDrawerVisible, setRightDrawerVisible] = useState(false)
+  const [createStationModalVisible, setCreateStationModalVisible] =
+    useState<boolean>()
 
   const router = useRouter()
   const pathname = usePathname()
@@ -59,6 +67,13 @@ export default function AppLayoutClient({ account, isAuthenticated }: Props) {
     }
   }, [pathname, searchParams])
 
+  // Show create station modal if user is authenticated and doesn't have a station yet
+  useEffect(() => {
+    if (isNoStation) {
+      setCreateStationModalVisible(true)
+    }
+  }, [isNoStation])
+
   const openAuthModal = useCallback(() => {
     setAuthModalVisible(true)
   }, [])
@@ -81,6 +96,10 @@ export default function AppLayoutClient({ account, isAuthenticated }: Props) {
 
   const closeRightDrawer = useCallback(() => {
     setRightDrawerVisible(false)
+  }, [])
+
+  const closeCreateStationModal = useCallback(() => {
+    setCreateStationModalVisible(false)
   }, [])
 
   return (
@@ -108,6 +127,17 @@ export default function AppLayoutClient({ account, isAuthenticated }: Props) {
       />
 
       <AuthModal visible={authModalVisible} closeModal={closeAuthModal} />
+
+      {createStationModalVisible && account && (
+        <CreateStationModal
+          account={account!}
+          closeModal={closeCreateStationModal}
+          title="Create Station"
+          additionalInfo="You will need a station to start upload, like, comment, follow, or add publishes to library."
+          useDoItLaterClose={true}
+          doItLaterText="I will do it later"
+        />
+      )}
 
       {/* Toast */}
       <ToastContainer
