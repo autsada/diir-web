@@ -65,26 +65,32 @@ export default function PublishItem({ publish, onAction, setPOS }: Props) {
               </div>
             )}
           </div>
+        </Link>
 
-          <div className="flex items-start py-4 px-2 gap-x-5">
-            <div>
-              <Avatar profile={publish.creator} />
-            </div>
-            <div className="w-full text-left mr-8">
+        <div className="flex items-start py-4 px-2 gap-x-5">
+          <Link href={`/@${publish.creator?.name}`}>
+            <Avatar profile={publish.creator} />
+          </Link>
+          <div className="w-full text-left mr-8">
+            <Link href={`/watch/${publish.id}`}>
               <h6>{getPostExcerpt(publish.title || "", 60)}</h6>
+            </Link>
+            <Link href={`/@${publish.creator?.name}`}>
               <p className="text-textLight">
                 {publish.creator?.displayName}{" "}
                 <span className="italic font-light text-textExtraLight">
                   @{publish.creator?.name}
                 </span>
               </p>
+            </Link>
+            <Link href={`/watch/${publish.id}`}>
               <div className="flex items-center gap-x-4 text-textLight">
                 <p>{publish.views || 0} views</p>
                 <p>{calculateTimeElapsed(publish.createdAt)}</p>
               </div>
-            </div>
+            </Link>
           </div>
-        </Link>
+        </div>
       </div>
 
       <div

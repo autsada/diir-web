@@ -1,5 +1,4 @@
 import React from "react"
-import Image from "next/image"
 
 import ContentTabs from "./ContentTabs"
 import type { Station } from "@/graphql/codegen/graphql"
@@ -10,6 +9,9 @@ interface Props {
 }
 
 export default function StationTemplate({ station }: Props) {
+  const profileColor = station?.defaultColor
+  const bgColor = profileColor || "#f97316"
+
   return (
     <>
       {station?.bannerImage && (
@@ -32,7 +34,10 @@ export default function StationTemplate({ station }: Props) {
                   DiiR
                 </div>
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-orange-500 text-white">
+                <div
+                  className="w-full h-full flex items-center justify-center text-white"
+                  style={{ backgroundColor: bgColor }}
+                >
                   {station.displayName.slice(0, 1).toUpperCase()}
                 </div>
               )
@@ -58,12 +63,14 @@ export default function StationTemplate({ station }: Props) {
                 </span>{" "}
                 Followers
               </p>
-              <p className="font-light text-textExtraLight">
-                <span className="text-textRegular">
-                  {station?.followingCount}
-                </span>{" "}
-                Following
-              </p>
+              {station?.isOwner && (
+                <p className="font-light text-textExtraLight">
+                  <span className="text-textRegular">
+                    {station?.followingCount}
+                  </span>{" "}
+                  Following
+                </p>
+              )}
               <p className="font-light text-textExtraLight">
                 <span className="text-textRegular">
                   {station?.publishesCount}
@@ -72,7 +79,7 @@ export default function StationTemplate({ station }: Props) {
               </p>
             </div>
 
-            <div className="absolute inset-0 flex items-start sm:items-center justify-end">
+            <div className="absolute inset-0 pr-0 sm:pr-5 lg:pr-10 flex items-start sm:items-center justify-end">
               {station?.isOwner ? (
                 <Link href={`/station/${station.id}/manage`}>
                   <button
