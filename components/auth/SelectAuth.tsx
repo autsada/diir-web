@@ -18,13 +18,13 @@ export default function SelectAuth({ selectMethod }: Props) {
 
       <div className="w-full px-8 sm:px-12">
         <h5 className="text-center font-bold leading-10">
-          Creators/audience-centric content sharing platform.
+          Creators/audience centric content sharing platform.
         </h5>
       </div>
 
       <div className="mt-10">
         <div
-          className="btn-light bg-gray-50 hover:bg-gray-100 flex justify-between items-center w-72 h-14 rounded-full mx-auto px-3 mb-8"
+          className="btn-blue flex justify-between items-center w-72 h-14 rounded-full mx-auto px-3 mb-8"
           onClick={selectMethod.bind(undefined, "phone")}
         >
           <div className=" w-14 flex justify-center items-center">
@@ -32,7 +32,7 @@ export default function SelectAuth({ selectMethod }: Props) {
           </div>
           <button
             type="button"
-            className="w-full text-lg ml-5 flex justify-start items-center focus:outline-none"
+            className="w-full text-lg ml-5 flex justify-start items-center text-white focus:outline-none"
           >
             Continue with Phone
           </button>

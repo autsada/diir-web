@@ -23,13 +23,17 @@ import Mask from "../Mask"
 import PageLoader from "../PageLoader"
 import { firebaseAuth } from "@/firebase/config"
 import { getCountryNames, wait } from "@/lib/helpers"
+import Counter from "./Counter"
 
 export default function PhoneAuth() {
   const [country, setCountry] = useState<Country>("TH")
   const [phoneNumber, setPhoneNumber] = useState<string>()
   const [isNumberValid, setIsNumberValid] = useState(false)
+  const [appVerifier, setAppVerifier] = useState<RecaptchaVerifier>()
   const [requestOtpLoading, setRequestOtpLoading] = useState(false)
   const [requestError, setRequestError] = useState("")
+  const [timer, setTimer] = useState(0)
+  const [isTimerDone, setIsTimerDone] = useState(false)
   const [confirmationResult, setConfirmationResult] =
     useState<ConfirmationResult>()
   const [isOtpSent, setIsOtpSent] = useState(false)
@@ -109,6 +113,8 @@ export default function PhoneAuth() {
         firebaseAuth
       )
 
+      // Store verifier for use in resend code function
+      setAppVerifier(recaptchaVerifier)
       const confirmation = await signInWithPhoneNumber(
         firebaseAuth,
         phoneNumber,
@@ -121,6 +127,8 @@ export default function PhoneAuth() {
       // Store the instance on the window object
       window.recaptchaVerifier = recaptchaVerifier
       const widgetId = await recaptchaVerifier.render()
+      // Start timer to countdown before user can request to resend new otp
+      setTimer(60)
       window.widgetId = widgetId
     } catch (error) {
       setRequestError("Error attempting to send OTP, please try again.")
@@ -146,6 +154,9 @@ export default function PhoneAuth() {
 
     try {
       setVerifyOtpLoading(true)
+      // Reset timer
+      setTimer(0)
+      setIsTimerDone(true)
       const result = await confirmationResult.confirm(userOtp)
 
       if (result.user) {
@@ -156,6 +167,38 @@ export default function PhoneAuth() {
     } catch (error) {
       setVerifyOtpLoading(false)
       setVerifyError("Verify code failed")
+    }
+  }
+
+  async function resendOtp() {
+    try {
+      if (!appVerifier || !isOtpSent) return
+      if (!phoneNumber) {
+        setRequestError("Phone number is required.")
+        return
+      }
+      // Start the process
+      setRequestOtpLoading(true)
+      setIsTimerDone(false)
+
+      const confirmation = await signInWithPhoneNumber(
+        firebaseAuth,
+        phoneNumber,
+        appVerifier
+      )
+      setConfirmationResult(confirmation)
+      setTimer(60)
+      setRequestOtpLoading(false)
+      if (requestError) setRequestError("")
+    } catch (error) {
+      setRequestError("Error attempting to send OTP, please try again.")
+      setRequestOtpLoading(false)
+      if (isOtpSent) setIsOtpSent(false)
+
+      // Reset the recaptcha so the user can try again
+      if (window.grecaptcha) {
+        window.grecaptcha.reset(window.widgetId)
+      }
     }
   }
 
@@ -245,9 +288,17 @@ export default function PhoneAuth() {
               !isNumberValid || requestOtpLoading ? "opacity-10" : "opacity-100"
             }`}
             disabled={!isNumberValid || requestOtpLoading}
-            onClick={requestOtp}
+            onClick={
+              !isOtpSent ? requestOtp : isTimerDone ? resendOtp : undefined
+            }
           >
-            Get Code
+            {!isOtpSent ? (
+              "Get Code"
+            ) : isTimerDone ? (
+              "Resend Code"
+            ) : (
+              <Counter initialTime={timer} setIsTimerDone={setIsTimerDone} />
+            )}
           </button>
           <p className="error mt-1">
             {requestError ? requestError : <>&nbsp;</>}
@@ -266,7 +317,7 @@ export default function PhoneAuth() {
 
         {/* Step 2 Confirm Code */}
         {isOtpSent && (
-          <div className="pt-14">
+          <div className="pt-10">
             <div className="relative mb-12">
               <OtpInput
                 value={userOtp}
