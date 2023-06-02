@@ -1,101 +1,51 @@
 "use client"
 
-import React from "react"
-import {
-  AiOutlineDislike,
-  AiFillDislike,
-  AiFillLike,
-  AiOutlineLike,
-  AiOutlineDollarCircle,
-  AiFillDollarCircle,
-  AiOutlineShareAlt,
-  AiOutlineFlag,
-  AiFillFlag,
-  AiOutlineFolderAdd,
-  AiFillFolderAdd,
-} from "react-icons/ai"
-import type { IconType } from "react-icons"
+import React, { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { onSnapshot, doc } from "firebase/firestore"
 
-export default function Reactions() {
-  return (
-    <>
-      <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x">
-        <Reaction
-          IconOutline={AiOutlineLike}
-          IconFill={AiFillLike}
-          desc="0"
-          isActive={false}
-        />
-        <Reaction
-          IconOutline={AiOutlineDislike}
-          IconFill={AiFillDislike}
-          isActive={false}
-        />
-      </div>
+import LikeReaction from "./LikeReaction"
+import TipReaction from "./TipReaction"
+import ShareReaction from "./ShareReaction"
+import SaveReaction from "./SaveReaction"
+import ReportReaction from "./ReportReaction"
 
-      <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
-        <Reaction
-          IconOutline={AiOutlineDollarCircle}
-          IconFill={AiFillDollarCircle}
-          desc="Tip"
-          isActive={false}
-        />
-      </div>
+import type { Publish } from "@/graphql/codegen/graphql"
+import { db, publishesCollection } from "@/firebase/config"
 
-      <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
-        <Reaction
-          IconOutline={AiOutlineShareAlt}
-          IconFill={AiOutlineShareAlt}
-          desc="Share"
-          isActive={false}
-        />
-      </div>
-
-      <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
-        <Reaction
-          IconOutline={AiOutlineFolderAdd}
-          IconFill={AiFillFolderAdd}
-          desc="Save"
-          isActive={false}
-        />
-      </div>
-
-      <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
-        <Reaction
-          IconOutline={AiOutlineFlag}
-          IconFill={AiFillFlag}
-          desc="Report"
-          isActive={false}
-        />
-      </div>
-    </>
-  )
+interface Props {
+  publish: Publish
 }
 
-function Reaction({
-  IconOutline,
-  IconFill,
-  size = 22,
-  desc,
-  isActive,
-}: {
-  IconOutline: IconType
-  IconFill: IconType
-  size?: number
-  desc?: string
-  isActive: boolean
-}) {
-  return (
-    <div className="h-full px-5 flex items-center gap-x-2 cursor-pointer bg-gray-100 hover:bg-gray-200">
-      <div className="h-full flex items-center justify-center">
-        {isActive ? <IconFill size={size} /> : <IconOutline size={size} />}
-      </div>
+export default function Reactions({ publish }: Props) {
+  const router = useRouter()
 
-      {desc && (
-        <div className="h-full text-sm sm:text-base flex items-center justify-center">
-          {desc}
-        </div>
-      )}
-    </div>
+  // Listen to upload finished update in Firestore
+  useEffect(() => {
+    if (!publish?.id) return
+
+    const unsubscribe = onSnapshot(
+      doc(db, publishesCollection, publish?.id),
+      (doc) => {
+        // Reload data to get the most updated publish
+        router.refresh()
+      }
+    )
+
+    return unsubscribe
+  }, [router, publish?.id])
+
+  return (
+    <>
+      <LikeReaction
+        publishId={publish?.id}
+        liked={!!publish.liked}
+        likesCount={publish.likesCount}
+      />
+      <TipReaction />
+      <ShareReaction />
+      <SaveReaction />
+      <ReportReaction />
+    </>
   )
 }

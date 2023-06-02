@@ -8,10 +8,10 @@ import type {
   QueryArgsType,
   MutationReturnType,
   MutationArgsType,
-  PublishCategory,
   QueryByIdInput,
   UpdatePublishInput,
   FetchPublishesByCatInput,
+  LikePublishInput,
 } from "./types"
 
 /**
@@ -403,6 +403,45 @@ export async function updatePublish({
       })
 
     return result?.updatePublish
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Like / Undo like pubulish
+ */
+export const LIKE_PUBLISH_MUTATION = gql`
+  mutation LikePublish($input: LikePublishInput!) {
+    likePublish(input: $input) {
+      status
+    }
+  }
+`
+export async function like({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: LikePublishInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"likePublish">,
+        MutationArgsType<"likePublish">
+      >(LIKE_PUBLISH_MUTATION, {
+        input: data,
+      })
+
+    return result?.likePublish
   } catch (error) {
     throw error
   }

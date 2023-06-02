@@ -300,6 +300,13 @@ export type Like = {
   stationId: Scalars['String']['output'];
 };
 
+export type LikePublishInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
 export type MintStationNftInput = {
   accountId: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -323,6 +330,7 @@ export type Mutation = {
   createStation?: Maybe<Station>;
   createTip?: Maybe<Tip>;
   dontRecommend?: Maybe<WriteResult>;
+  likePublish?: Maybe<WriteResult>;
   mintFirstStationNFT?: Maybe<MintStationNftResult>;
   mintStationNFT?: Maybe<MintStationNftResult>;
   removeDontRecommend?: Maybe<WriteResult>;
@@ -386,6 +394,11 @@ export type MutationCreateTipArgs = {
 
 export type MutationDontRecommendArgs = {
   input: DontRecommendInput;
+};
+
+
+export type MutationLikePublishArgs = {
+  input: LikePublishInput;
 };
 
 

@@ -4,13 +4,13 @@ import type { Metadata, ResolvingMetadata } from "next"
 
 import VideoPlayer from "@/components/VideoPlayer"
 import ButtonLoader from "@/components/ButtonLoader"
-import Reactions from "./Reactions"
 import Description from "./Description"
 import Avatar from "@/components/Avatar"
+import Comments from "./Comments"
+import Reactions from "./Reactions"
 import { getAccount } from "@/lib/server"
 import { getStationById, getWatchingPublish } from "@/graphql"
 import { calculateTimeElapsed } from "@/lib/client"
-import Comments from "./Comments"
 
 type Props = {
   params: { id: string }
@@ -124,7 +124,7 @@ export default async function Watch({ params }: Props) {
 
           <div className="py-4 w-full overflow-x-auto scrollbar-hide">
             <div className="w-max flex items-center gap-x-2">
-              <Reactions />
+              <Reactions publish={publish} />
             </div>
           </div>
 
