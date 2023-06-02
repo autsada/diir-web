@@ -45,7 +45,7 @@ export default function ConfirmModal({
         </div>
         {error && (
           <div className="absolute left-0 right-0 bottom-2">
-            <p className="error">Error message</p>
+            <p className="error">{error}</p>
           </div>
         )}
       </div>

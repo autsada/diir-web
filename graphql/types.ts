@@ -46,3 +46,5 @@ export type DisplayedPlaylist = {
 export type DontRecommendInput = NexusGenInputs["DontRecommendInput"]
 export type FetchDontRecommendsInput =
   NexusGenInputs["FetchDontRecommendsInput"]
+export type ReportPublishInput = NexusGenInputs["ReportPublishInput"]
+export type ReportReason = NexusGenEnums["ReportReason"]

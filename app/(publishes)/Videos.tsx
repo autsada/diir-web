@@ -7,6 +7,8 @@ import PublishItem from "./PublishItem"
 import Mask from "@/components/Mask"
 import ActionsModal from "./ActionsModal"
 import AddToPlaylistModal from "./AddToPlaylistModal"
+import ShareModal from "./ShareModal"
+import ReportModal from "./ReportModal"
 import type { PublishCategory } from "@/graphql/types"
 import type {
   Publish,
@@ -17,7 +19,6 @@ import type {
   PlaylistEdge,
   PageInfo,
 } from "@/graphql/codegen/graphql"
-import ShareModal from "./ShareModal"
 
 interface Props {
   isAuthenticated: boolean
@@ -49,6 +50,8 @@ export default function Videos({
     useState<CheckPublishPlaylistsResponse>()
   const [loadingPublishPlaylistsData, setLoadingPublishPlaylistsData] =
     useState(false)
+
+  const [reportModalVisible, setReportModalVisible] = useState(false)
 
   const initialPlaylists = useMemo(
     () => playlistsResult?.edges || [],
@@ -140,6 +143,16 @@ export default function Videos({
     setTargetPublish(undefined)
   }, [])
 
+  const openReportModal = useCallback(() => {
+    setReportModalVisible(true)
+    setActionsModalVisible(false)
+  }, [])
+
+  const closeReportModal = useCallback(() => {
+    setReportModalVisible(false)
+    setTargetPublish(undefined)
+  }, [])
+
   return (
     <>
       <div className="fixed z-10 top-[70px] left-0 sm:left-[116px] right-0 h-[40px] bg-white">
@@ -191,6 +204,7 @@ export default function Videos({
                 setLoadingPlaylistData={setLoadingPublishPlaylistsData}
                 shareModalVisible={shareModalVisible}
                 openShareModal={openShareModal}
+                openReportModal={openReportModal}
               />
             )}
           </div>
@@ -216,6 +230,14 @@ export default function Videos({
           publishId={targetPublish.id}
           title={targetPublish.title!}
           closeModal={closeShareModal}
+        />
+      )}
+
+      {/* Report modal */}
+      {reportModalVisible && targetPublish && (
+        <ReportModal
+          closeModal={closeReportModal}
+          publishId={targetPublish.id}
         />
       )}
 

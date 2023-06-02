@@ -10,7 +10,8 @@ import {
   dontRecommend,
 } from "@/graphql"
 import { getAccount } from "@/lib/server"
-import type { DisplayedPlaylist } from "@/graphql/types"
+import { report } from "@/graphql/report"
+import type { DisplayedPlaylist, ReportReason } from "@/graphql/types"
 
 /**
  * Create a new playlist and add a publish to it
@@ -194,4 +195,30 @@ export async function dontRecommendStation(targetId: string) {
 
   // Revalidate watch later page
   revalidatePath(`/`)
+}
+
+/**
+ * @param publishId A publish id to be reported
+ */
+export async function reportPublish(publishId: string, reason: ReportReason) {
+  const data = await getAccount()
+  const account = data?.account
+  const idToken = data?.idToken
+  const signature = data?.signature
+  if (!account || !account?.defaultStation || !idToken)
+    throw new Error("Please sign in to proceed.")
+
+  if (!publishId) throw new Error("Bad input")
+
+  await report({
+    idToken,
+    signature,
+    data: {
+      accountId: account.id,
+      owner: account.owner,
+      stationId: account.defaultStation?.id,
+      publishId,
+      reason,
+    },
+  })
 }

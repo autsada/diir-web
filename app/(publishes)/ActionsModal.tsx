@@ -33,6 +33,7 @@ interface Props {
   setLoadingPlaylistData: (l: boolean) => void
   shareModalVisible: boolean
   openShareModal: () => void
+  openReportModal: () => void
 }
 
 export default function ActionsModal({
@@ -50,6 +51,7 @@ export default function ActionsModal({
   setLoadingPlaylistData,
   shareModalVisible,
   openShareModal,
+  openReportModal,
 }: Props) {
   const [informModalVisible, setInformModalVisible] = useState(false)
 
@@ -79,7 +81,7 @@ export default function ActionsModal({
     closeModal,
   ])
 
-  async function startAddToPlaylist() {
+  async function onStartAddToPlaylist() {
     if (!targetPublish) return
 
     if (isAuthenticated && !profile) {
@@ -140,6 +142,8 @@ export default function ActionsModal({
     }
   }
 
+  const onStartReport = useCallback(() => {}, [])
+
   return (
     <ModalWrapper visible>
       <div className="relative z-0 w-full h-full">
@@ -168,7 +172,7 @@ export default function ActionsModal({
               <Item
                 Icon={MdPlaylistAdd}
                 text="Add to Playlist"
-                onClick={startAddToPlaylist}
+                onClick={onStartAddToPlaylist}
               />
             </>
           )}
@@ -180,7 +184,7 @@ export default function ActionsModal({
               onClick={dontRecommendCreator}
             />
           )}
-          <Item Icon={AiOutlineFlag} text="Report" onClick={() => {}} />
+          <Item Icon={AiOutlineFlag} text="Report" onClick={openReportModal} />
         </div>
 
         {/* Inform modal */}

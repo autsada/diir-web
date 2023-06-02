@@ -251,11 +251,13 @@ export type FetchPlaylistsResponse = {
 export type FetchPublishesByCatInput = {
   category: Category;
   cursor?: InputMaybe<Scalars['String']['input']>;
+  requestorId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FetchPublishesInput = {
   cursor?: InputMaybe<Scalars['String']['input']>;
   prefer?: InputMaybe<Array<Category>>;
+  requestorId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FetchPublishesResponse = {
@@ -325,6 +327,7 @@ export type Mutation = {
   mintStationNFT?: Maybe<MintStationNftResult>;
   removeDontRecommend?: Maybe<WriteResult>;
   removeFromWatchLater?: Maybe<WriteResult>;
+  reportPublish?: Maybe<WriteResult>;
   sendTips?: Maybe<SendTipsResult>;
   updateBannerImage?: Maybe<WriteResult>;
   updateDisplayName?: Maybe<WriteResult>;
@@ -403,6 +406,11 @@ export type MutationRemoveDontRecommendArgs = {
 
 export type MutationRemoveFromWatchLaterArgs = {
   input: RemoveFromWatchLaterInput;
+};
+
+
+export type MutationReportPublishArgs = {
+  input: ReportPublishInput;
 };
 
 
@@ -661,6 +669,37 @@ export type RemoveFromWatchLaterInput = {
   publishId: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
 };
+
+export type Report = {
+  __typename?: 'Report';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  publish: Publish;
+  publishId: Scalars['String']['output'];
+  reason: ReportReason;
+  submittedBy: Station;
+  submittedById: Scalars['String']['output'];
+};
+
+export type ReportPublishInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  reason: ReportReason;
+  stationId: Scalars['String']['input'];
+};
+
+export enum ReportReason {
+  Abuse = 'abuse',
+  Adult = 'adult',
+  Harass = 'harass',
+  Harmful = 'harmful',
+  Hateful = 'hateful',
+  Mislead = 'mislead',
+  Spam = 'spam',
+  Terrorism = 'terrorism',
+  Violent = 'violent'
+}
 
 export type SendTipsInput = {
   publishId: Scalars['String']['input'];
