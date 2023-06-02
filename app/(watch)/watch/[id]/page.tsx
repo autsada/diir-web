@@ -1,6 +1,6 @@
 import React, { Suspense } from "react"
 import { redirect } from "next/navigation"
-import { Metadata, ResolvingMetadata } from "next"
+import type { Metadata, ResolvingMetadata } from "next"
 
 import VideoPlayer from "@/components/VideoPlayer"
 import ButtonLoader from "@/components/ButtonLoader"
@@ -10,6 +10,7 @@ import Avatar from "@/components/Avatar"
 import { getAccount } from "@/lib/server"
 import { getStationById, getWatchingPublish } from "@/graphql"
 import { calculateTimeElapsed } from "@/lib/client"
+import Comments from "./Comments"
 
 type Props = {
   params: { id: string }
@@ -93,7 +94,7 @@ export default async function Watch({ params }: Props) {
     targetId: params.id,
     requestorId: station ? station.id : null,
   })
-  const isOwner = station && publish && station.id === publish.creatorId
+  // const isOwner = station && publish && station.id === publish.creatorId
 
   if (!publish) {
     redirect("/")
@@ -117,36 +118,52 @@ export default async function Watch({ params }: Props) {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-5 gap-y-2 sm:gap-x-1 py-2 overflow-x-hidden bg-white">
+      <div className="pt-5 pb-10 w-full grid grid-cols-1 sm:grid-cols-5 gap-y-2 sm:gap-x-1 overflow-x-hidden bg-white">
         <div className="w-full col-span-3 px-2 sm:px-8">
           <h6 className="sm:text-2xl">{publish.title}</h6>
 
-          <Description
-            createdAt={publish.createdAt}
-            description={publish.description}
-          />
+          <div className="py-4 w-full overflow-x-auto scrollbar-hide">
+            <div className="w-max flex items-center gap-x-2">
+              <Reactions />
+            </div>
+          </div>
 
-          <div className="my-5 flex items-start justify-between h-[50px] gap-x-4">
+          <div className="mb-4 flex items-start justify-between h-[50px] gap-x-4">
             <Avatar profile={publish.creator} />
 
-            <div className="flex-grow h-full">
-              <h6 className="text-base">
-                {publish.creator?.displayName}{" "}
-                <span className="ml-2 font-thin text-sm">
-                  <span className="font-normal">
-                    {publish.creator?.followersCount || 0}
-                  </span>{" "}
-                  Followers
-                </span>
-              </h6>
-              <p className="text-sm text-textLight">@{publish.creator?.name}</p>
+            <div className="relative flex-grow h-full">
+              <div className="flex items-center gap-x-2">
+                <h6 className="text-lg">{publish.creator?.displayName}</h6>
+                <span className="text-thin text-xs">|</span>
+                <p className="font-light text-textLight">
+                  @{publish.creator?.name}
+                </p>
+              </div>
+              <p className="text-sm">
+                {publish.creator?.followersCount || 0}{" "}
+                <span className="text-textExtraLight">Followers</span>
+              </p>
             </div>
             <div className="h-full flex items-center justify-center">
-              {isOwner ? (
+              {publish?.creator?.isOwner ? (
                 <button className="btn-orange w-[120px] rounded-full">
                   Edit publish
                 </button>
-              ) : null}
+              ) : publish?.creator?.isFollowing ? (
+                <button
+                  type="button"
+                  className="btn-dark mx-0 px-5 rounded-full"
+                >
+                  Following
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn-dark mx-0 px-5 rounded-full"
+                >
+                  Follow
+                </button>
+              )}
             </div>
           </div>
 
@@ -155,14 +172,18 @@ export default async function Watch({ params }: Props) {
             <p>{calculateTimeElapsed(publish.createdAt)}</p>
           </div>
 
-          <div className="py-4 w-full overflow-x-auto scrollbar-hide">
-            <div className="w-max flex items-center gap-x-2">
-              <Reactions />
-            </div>
-          </div>
+          <Description
+            createdAt={publish.createdAt}
+            description={publish.description}
+          />
+
+          {/* Comments */}
+          <Comments publish={publish} profile={station} />
         </div>
 
-        <div className="w-full col-span-2 px-2 sm:px-8">Recommendations</div>
+        <div className="w-full col-span-2 px-2 sm:px-8 mt-5 sm:mt-0">
+          Recommendations
+        </div>
       </div>
     </div>
   )

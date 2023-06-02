@@ -278,6 +278,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
         followersCount
         isFollowing
         defaultColor
+        isOwner
       }
       playback {
         id
