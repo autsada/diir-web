@@ -15,15 +15,21 @@ import {
 import _ from "lodash"
 
 import Reaction from "./ReactTion"
-import { likePublish } from "./actions"
+import { likePublish, disLikePublish } from "./actions"
 
 interface Props {
   publishId: string
   liked: boolean
   likesCount: number
+  disLiked: boolean
 }
 
-export default function LikeReaction({ publishId, liked, likesCount }: Props) {
+export default function LikeReaction({
+  publishId,
+  liked,
+  likesCount,
+  disLiked,
+}: Props) {
   const [isPending, startTransition] = useTransition()
   // const [optimisticLiked, setOptimisticLiked] = useOptimistic(
   //   liked,
@@ -35,6 +41,7 @@ export default function LikeReaction({ publishId, liked, likesCount }: Props) {
   //   (state, likesCount: number) => likesCount
   // )
   const [optimisticLikesCount, setOptimisticLikesCount] = useState(likesCount)
+  const [optimisticDisLiked, setOptimisticDisLiked] = useState(!!disLiked)
 
   useEffect(() => {
     setOptimisticLiked(liked)
@@ -43,6 +50,10 @@ export default function LikeReaction({ publishId, liked, likesCount }: Props) {
   useEffect(() => {
     setOptimisticLikesCount(likesCount)
   }, [likesCount])
+
+  useEffect(() => {
+    setOptimisticDisLiked(disLiked)
+  }, [disLiked])
 
   const handleLikePublish = useCallback(() => {
     if (!publishId) return
@@ -64,6 +75,17 @@ export default function LikeReaction({ publishId, liked, likesCount }: Props) {
     [handleLikePublish]
   )
 
+  const handleDisLikePublish = useCallback(() => {
+    if (!publishId) return
+    setOptimisticDisLiked(!disLiked)
+    startTransition(() => disLikePublish(publishId))
+  }, [publishId, disLiked, setOptimisticDisLiked])
+
+  const disLikeDebounce = useMemo(
+    () => _.debounce(handleDisLikePublish, 200),
+    [handleDisLikePublish]
+  )
+
   return (
     <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x">
       <Reaction
@@ -78,8 +100,8 @@ export default function LikeReaction({ publishId, liked, likesCount }: Props) {
         width={60}
         IconOutline={AiOutlineDislike}
         IconFill={AiFillDislike}
-        isActive={false}
-        onClick={() => {}}
+        isActive={optimisticDisLiked}
+        onClick={disLikeDebounce}
       />
     </div>
   )

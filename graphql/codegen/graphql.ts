@@ -329,6 +329,7 @@ export type Mutation = {
   createDraftPublish?: Maybe<CreateDraftPublishResult>;
   createStation?: Maybe<Station>;
   createTip?: Maybe<Tip>;
+  disLikePublish?: Maybe<WriteResult>;
   dontRecommend?: Maybe<WriteResult>;
   likePublish?: Maybe<WriteResult>;
   mintFirstStationNFT?: Maybe<MintStationNftResult>;
@@ -389,6 +390,11 @@ export type MutationCreateStationArgs = {
 
 export type MutationCreateTipArgs = {
   input: CreateTipInput;
+};
+
+
+export type MutationDisLikePublishArgs = {
+  input: LikePublishInput;
 };
 
 

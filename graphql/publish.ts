@@ -446,3 +446,42 @@ export async function like({
     throw error
   }
 }
+
+/**
+ * DisLike / Undo disLike pubulish
+ */
+export const DISLIKE_PUBLISH_MUTATION = gql`
+  mutation DisLikePublish($input: LikePublishInput!) {
+    disLikePublish(input: $input) {
+      status
+    }
+  }
+`
+export async function disLike({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: LikePublishInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"disLikePublish">,
+        MutationArgsType<"disLikePublish">
+      >(DISLIKE_PUBLISH_MUTATION, {
+        input: data,
+      })
+
+    return result?.disLikePublish
+  } catch (error) {
+    throw error
+  }
+}

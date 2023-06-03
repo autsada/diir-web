@@ -41,6 +41,7 @@ export default function Reactions({ publish }: Props) {
         publishId={publish?.id}
         liked={!!publish.liked}
         likesCount={publish.likesCount}
+        disLiked={!!publish.disLiked}
       />
       <TipReaction />
       <ShareReaction />
