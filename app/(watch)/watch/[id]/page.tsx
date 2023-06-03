@@ -124,7 +124,11 @@ export default async function Watch({ params }: Props) {
 
           <div className="py-4 w-full overflow-x-auto scrollbar-hide">
             <div className="w-max flex items-center gap-x-2">
-              <Reactions publish={publish} />
+              <Reactions
+                publish={publish}
+                isAuthenticated={!!account}
+                profile={station}
+              />
             </div>
           </div>
 

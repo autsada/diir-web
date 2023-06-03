@@ -2,6 +2,7 @@ import "./globals.css"
 
 import AppLayoutServer from "@/components/nav/AppLayoutServer"
 import WalletClient from "./WalletClient"
+import AuthContextProvider from "@/context/AuthContext"
 
 const basicMetadata = {
   title: {
@@ -82,12 +83,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="text-textRegular">
-        <WalletClient>
-          {/* @ts-expect-error Async Server Component */}
-          <AppLayoutServer />
+        <AuthContextProvider>
+          <WalletClient>
+            {/* @ts-expect-error Async Server Component */}
+            <AppLayoutServer />
 
-          <div className="min-h-screen overflow-y-auto">{children}</div>
-        </WalletClient>
+            <div className="min-h-screen overflow-y-auto">{children}</div>
+          </WalletClient>
+        </AuthContextProvider>
       </body>
     </html>
   )

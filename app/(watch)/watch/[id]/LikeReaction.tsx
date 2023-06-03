@@ -15,9 +15,11 @@ import {
 import _ from "lodash"
 
 import Reaction from "./ReactTion"
+import { useAuthContext } from "@/context/AuthContext"
 import { likePublish, disLikePublish } from "./actions"
 
 interface Props {
+  isAuthenticated: boolean
   publishId: string
   liked: boolean
   likesCount: number
@@ -25,6 +27,7 @@ interface Props {
 }
 
 export default function LikeReaction({
+  isAuthenticated,
   publishId,
   liked,
   likesCount,
@@ -43,6 +46,8 @@ export default function LikeReaction({
   const [optimisticLikesCount, setOptimisticLikesCount] = useState(likesCount)
   const [optimisticDisLiked, setOptimisticDisLiked] = useState(!!disLiked)
 
+  const { onVisible: openAuthModal } = useAuthContext()
+
   useEffect(() => {
     setOptimisticLiked(liked)
   }, [liked])
@@ -57,12 +62,19 @@ export default function LikeReaction({
 
   const handleLikePublish = useCallback(() => {
     if (!publishId) return
-    setOptimisticLiked(!liked)
-    setOptimisticLikesCount(
-      liked ? (likesCount > 0 ? likesCount - 1 : likesCount) : likesCount + 1
-    )
-    startTransition(() => likePublish(publishId))
+
+    if (!isAuthenticated) {
+      openAuthModal()
+    } else {
+      setOptimisticLiked(!liked)
+      setOptimisticLikesCount(
+        liked ? (likesCount > 0 ? likesCount - 1 : likesCount) : likesCount + 1
+      )
+      startTransition(() => likePublish(publishId))
+    }
   }, [
+    isAuthenticated,
+    openAuthModal,
     publishId,
     liked,
     likesCount,
@@ -77,9 +89,20 @@ export default function LikeReaction({
 
   const handleDisLikePublish = useCallback(() => {
     if (!publishId) return
-    setOptimisticDisLiked(!disLiked)
-    startTransition(() => disLikePublish(publishId))
-  }, [publishId, disLiked, setOptimisticDisLiked])
+
+    if (!isAuthenticated) {
+      openAuthModal()
+    } else {
+      setOptimisticDisLiked(!disLiked)
+      startTransition(() => disLikePublish(publishId))
+    }
+  }, [
+    isAuthenticated,
+    openAuthModal,
+    publishId,
+    disLiked,
+    setOptimisticDisLiked,
+  ])
 
   const disLikeDebounce = useMemo(
     () => _.debounce(handleDisLikePublish, 200),

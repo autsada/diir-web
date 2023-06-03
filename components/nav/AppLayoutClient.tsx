@@ -9,9 +9,10 @@ import MainNav from "./MainNav"
 import AuthModal from "../auth/AuthModal"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
+import CreateStationModal from "@/app/(non-watch)/(protect-routes)/settings/CreateStationModal"
+import { useAuthContext } from "@/context/AuthContext"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
 import type { Account } from "@/graphql/codegen/graphql"
-import CreateStationModal from "@/app/(non-watch)/(protect-routes)/settings/CreateStationModal"
 
 interface Props {
   account: Account | null
@@ -24,11 +25,12 @@ export default function AppLayoutClient({
   isAuthenticated,
   isNoStation,
 }: Props) {
-  const [authModalVisible, setAuthModalVisible] = useState(false)
   const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
   const [rightDrawerVisible, setRightDrawerVisible] = useState(false)
   const [createStationModalVisible, setCreateStationModalVisible] =
     useState<boolean>()
+
+  const { visible: authModalVisible, onVisible, offVisible } = useAuthContext()
 
   const router = useRouter()
   const pathname = usePathname()
@@ -52,9 +54,9 @@ export default function AppLayoutClient({
   // Close auth modal when user is authenticated (account not null)
   useEffect(() => {
     if (isAuthenticated && authModalVisible) {
-      setAuthModalVisible(false)
+      offVisible()
     }
-  }, [isAuthenticated, authModalVisible])
+  }, [isAuthenticated, authModalVisible, offVisible])
 
   // Close drawers when navigate finished
   useEffect(() => {
@@ -73,14 +75,6 @@ export default function AppLayoutClient({
       setCreateStationModalVisible(true)
     }
   }, [isNoStation])
-
-  const openAuthModal = useCallback(() => {
-    setAuthModalVisible(true)
-  }, [])
-
-  const closeAuthModal = useCallback(() => {
-    setAuthModalVisible(false)
-  }, [])
 
   const openLeftDrawer = useCallback(() => {
     setLeftDrawerVisible(true)
@@ -107,7 +101,7 @@ export default function AppLayoutClient({
       <div className="fixed z-20 top-0 left-0 right-0">
         <MainNav
           account={account}
-          openAuthModal={openAuthModal}
+          openAuthModal={onVisible}
           openLeftDrawer={openLeftDrawer}
           openRightDrawer={openRightDrawer}
         />
@@ -115,7 +109,7 @@ export default function AppLayoutClient({
 
       <LeftDrawer
         isAuthenticated={!!account}
-        openAuthModal={openAuthModal}
+        openAuthModal={onVisible}
         isOpen={leftDrawerVisible}
         closeDrawer={closeLeftDrawer}
       />
@@ -126,7 +120,7 @@ export default function AppLayoutClient({
         closeDrawer={closeRightDrawer}
       />
 
-      <AuthModal visible={authModalVisible} closeModal={closeAuthModal} />
+      <AuthModal visible={authModalVisible} closeModal={offVisible} />
 
       {createStationModalVisible && account && (
         <CreateStationModal

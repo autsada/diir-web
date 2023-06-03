@@ -10,14 +10,16 @@ import ShareReaction from "./ShareReaction"
 import SaveReaction from "./SaveReaction"
 import ReportReaction from "./ReportReaction"
 
-import type { Publish } from "@/graphql/codegen/graphql"
+import type { Maybe, Publish, Station } from "@/graphql/codegen/graphql"
 import { db, publishesCollection } from "@/firebase/config"
 
 interface Props {
   publish: Publish
+  isAuthenticated: boolean
+  profile: Maybe<Station> | undefined
 }
 
-export default function Reactions({ publish }: Props) {
+export default function Reactions({ publish, isAuthenticated }: Props) {
   const router = useRouter()
 
   // Listen to upload finished update in Firestore
@@ -38,14 +40,15 @@ export default function Reactions({ publish }: Props) {
   return (
     <>
       <LikeReaction
+        isAuthenticated={isAuthenticated}
         publishId={publish?.id}
-        liked={!!publish.liked}
-        likesCount={publish.likesCount}
-        disLiked={!!publish.disLiked}
+        liked={!!publish?.liked}
+        likesCount={publish?.likesCount}
+        disLiked={!!publish?.disLiked}
       />
-      <TipReaction />
-      <ShareReaction />
-      <SaveReaction />
+      <TipReaction isAuthenticated={isAuthenticated} publishId={publish?.id} />
+      <ShareReaction publishId={publish.id} title={publish.title || ""} />
+      <SaveReaction isAuthenticated={isAuthenticated} publishId={publish?.id} />
       <ReportReaction />
     </>
   )
