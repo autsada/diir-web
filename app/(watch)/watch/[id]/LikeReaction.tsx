@@ -67,6 +67,9 @@ export default function LikeReaction({
       openAuthModal()
     } else {
       setOptimisticLiked(!liked)
+      if (!liked && disLiked) {
+        setOptimisticDisLiked(!disLiked)
+      }
       setOptimisticLikesCount(
         liked ? (likesCount > 0 ? likesCount - 1 : likesCount) : likesCount + 1
       )
@@ -78,8 +81,9 @@ export default function LikeReaction({
     publishId,
     liked,
     likesCount,
-    setOptimisticLiked,
-    setOptimisticLikesCount,
+    // setOptimisticLiked,
+    // setOptimisticLikesCount,
+    disLiked,
   ])
 
   const likeDebounce = useMemo(
@@ -94,15 +98,13 @@ export default function LikeReaction({
       openAuthModal()
     } else {
       setOptimisticDisLiked(!disLiked)
+      if (!disLiked && liked) {
+        setOptimisticLiked(!liked)
+        setOptimisticLikesCount(likesCount > 0 ? likesCount - 1 : likesCount)
+      }
       startTransition(() => disLikePublish(publishId))
     }
-  }, [
-    isAuthenticated,
-    openAuthModal,
-    publishId,
-    disLiked,
-    setOptimisticDisLiked,
-  ])
+  }, [isAuthenticated, openAuthModal, publishId, disLiked, liked, likesCount])
 
   const disLikeDebounce = useMemo(
     () => _.debounce(handleDisLikePublish, 200),
