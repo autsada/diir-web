@@ -135,6 +135,16 @@ export type CommentLike = {
   stationId: Scalars['String']['output'];
 };
 
+export type CommentPublishInput = {
+  accountId: Scalars['String']['input'];
+  commentId?: InputMaybe<Scalars['String']['input']>;
+  commentType: CommentType;
+  content: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
 export enum CommentType {
   Comment = 'COMMENT',
   Publish = 'PUBLISH'
@@ -325,6 +335,7 @@ export type Mutation = {
   addToWatchLater?: Maybe<WriteResult>;
   cacheSession: WriteResult;
   calculateTips?: Maybe<CalculateTipsResult>;
+  comment?: Maybe<WriteResult>;
   createAccount?: Maybe<Account>;
   createDraftPublish?: Maybe<CreateDraftPublishResult>;
   createStation?: Maybe<Station>;
@@ -370,6 +381,11 @@ export type MutationCacheSessionArgs = {
 
 export type MutationCalculateTipsArgs = {
   qty: Scalars['Int']['input'];
+};
+
+
+export type MutationCommentArgs = {
+  input: CommentPublishInput;
 };
 
 
