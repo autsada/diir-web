@@ -66,7 +66,7 @@ export default function Reactions({
         playlistsResult={playlistsResult}
         publishPlaylistsData={publishPlaylistsData}
       />
-      <ReportReaction />
+      <ReportReaction publishId={publish?.id} />
     </>
   )
 }
