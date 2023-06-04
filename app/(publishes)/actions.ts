@@ -164,6 +164,9 @@ export async function saveToPlaylist(formData: FormData) {
         })),
       },
     })
+
+    // Revalidate watch page
+    revalidatePath(`/watch/${publishId}`)
   }
 }
 

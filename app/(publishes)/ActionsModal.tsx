@@ -142,8 +142,6 @@ export default function ActionsModal({
     }
   }
 
-  const onStartReport = useCallback(() => {}, [])
-
   return (
     <ModalWrapper visible>
       <div className="relative z-0 w-full h-full">

@@ -107,7 +107,7 @@ export default function UpdatePlaylistsForm({
         {transformedPlaylists.length > 0 &&
           transformedPlaylists.map((playlist) => (
             <PlaylistItem
-              key={playlist.list?.id}
+              key={`${playlist.list?.id}-${playlist.isInPlaylist}`}
               name={playlist.list?.id || ""}
               title={playlist.list?.name || ""}
               defaultChecked={!!playlist.isInPlaylist}

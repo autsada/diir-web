@@ -23,7 +23,7 @@ export default function EmailAuth() {
     const url = process.env.NEXT_PUBLIC_DIIR_URL_TEST || "http://localhost:3000"
     // const url =
     //   process.env.NEXT_PUBLIC_DIIR_URL_TEST ||
-    //   "https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app"
+    //   "https://af7f-2405-9800-b961-39d-3018-b703-3789-8da9.ngrok-free.app"
 
     const actionCodeSettings = {
       url: `${url}/auth/email/verify`,

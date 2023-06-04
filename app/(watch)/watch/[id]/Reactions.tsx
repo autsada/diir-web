@@ -10,16 +10,28 @@ import ShareReaction from "./ShareReaction"
 import SaveReaction from "./SaveReaction"
 import ReportReaction from "./ReportReaction"
 
-import type { Maybe, Publish, Station } from "@/graphql/codegen/graphql"
 import { db, publishesCollection } from "@/firebase/config"
+import type {
+  CheckPublishPlaylistsResponse,
+  FetchPlaylistsResponse,
+  Maybe,
+  Publish,
+  Station,
+} from "@/graphql/codegen/graphql"
 
 interface Props {
   publish: Publish
   isAuthenticated: boolean
-  profile: Maybe<Station> | undefined
+  playlistsResult: FetchPlaylistsResponse | undefined
+  publishPlaylistsData: Maybe<CheckPublishPlaylistsResponse> | undefined
 }
 
-export default function Reactions({ publish, isAuthenticated }: Props) {
+export default function Reactions({
+  publish,
+  isAuthenticated,
+  playlistsResult,
+  publishPlaylistsData,
+}: Props) {
   const router = useRouter()
 
   // Listen to upload finished update in Firestore
@@ -48,7 +60,12 @@ export default function Reactions({ publish, isAuthenticated }: Props) {
       />
       <TipReaction isAuthenticated={isAuthenticated} publishId={publish?.id} />
       <ShareReaction publishId={publish.id} title={publish.title || ""} />
-      <SaveReaction isAuthenticated={isAuthenticated} publishId={publish?.id} />
+      <SaveReaction
+        publishId={publish?.id}
+        isAuthenticated={isAuthenticated}
+        playlistsResult={playlistsResult}
+        publishPlaylistsData={publishPlaylistsData}
+      />
       <ReportReaction />
     </>
   )

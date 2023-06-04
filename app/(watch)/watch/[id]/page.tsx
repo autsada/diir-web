@@ -9,7 +9,12 @@ import Avatar from "@/components/Avatar"
 import Comments from "./Comments"
 import Reactions from "./Reactions"
 import { getAccount } from "@/lib/server"
-import { getStationById, getWatchingPublish } from "@/graphql"
+import {
+  checkPublishPlaylists,
+  fetchMyPlaylists,
+  getStationById,
+  getWatchingPublish,
+} from "@/graphql"
 import { calculateTimeElapsed } from "@/lib/client"
 
 type Props = {
@@ -82,6 +87,8 @@ export async function generateMetadata(
 export default async function Watch({ params }: Props) {
   const data = await getAccount()
   const account = data?.account
+  const idToken = data?.idToken
+  const signature = data?.signature
 
   // Query station by id
   const station =
@@ -94,7 +101,35 @@ export default async function Watch({ params }: Props) {
     targetId: params.id,
     requestorId: station ? station.id : null,
   })
-  // const isOwner = station && publish && station.id === publish.creatorId
+
+  // Fetch user's playlists if user is authenticated
+  const playlistsResult = !station
+    ? undefined
+    : await fetchMyPlaylists({
+        idToken: idToken!,
+        signature,
+        data: {
+          accountId: account!.id,
+          stationId: station.id,
+          owner: account!.owner,
+          cursor: null,
+        },
+      })
+
+  // Check if the publish already add to any user's playlists
+  const publishPlaylistsData =
+    !idToken || !account || !account.defaultStation
+      ? undefined
+      : await checkPublishPlaylists({
+          idToken: idToken || "",
+          signature,
+          data: {
+            owner: account.owner,
+            accountId: account.id,
+            stationId: account.defaultStation.id,
+            publishId: params.id,
+          },
+        })
 
   if (!publish) {
     redirect("/")
@@ -127,7 +162,8 @@ export default async function Watch({ params }: Props) {
               <Reactions
                 publish={publish}
                 isAuthenticated={!!account}
-                profile={station}
+                playlistsResult={playlistsResult || undefined}
+                publishPlaylistsData={publishPlaylistsData}
               />
             </div>
           </div>
