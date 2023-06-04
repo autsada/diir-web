@@ -58,7 +58,7 @@ export default function Reactions({
         likesCount={publish?.likesCount}
         disLiked={!!publish?.disLiked}
       />
-      <TipReaction isAuthenticated={isAuthenticated} publishId={publish?.id} />
+      <TipReaction isAuthenticated={isAuthenticated} publish={publish} />
       <ShareReaction publishId={publish.id} title={publish.title || ""} />
       <SaveReaction
         publishId={publish?.id}

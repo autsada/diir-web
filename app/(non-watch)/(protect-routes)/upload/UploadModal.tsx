@@ -33,7 +33,7 @@ function upload({
     process.env.NEXT_PUBLIC_UPLOAD_URL || "http://localhost:4444"
   // const uploadURL =
   //   process.env.NEXT_PUBLIC_UPLOAD_URL ||
-  //   "https://c115-2405-9800-b961-39d-3018-b703-3789-8da9.ngrok-free.app"
+  //   "https://1d4f-2405-9800-b961-39d-3018-b703-3789-8da9.ngrok-free.app"
 
   const formData = new FormData()
   formData.append("file", file!)

@@ -121,3 +121,15 @@ export function transformPlaylists(
         }
       })
 }
+
+export function formatAmount(amount: number, withSign: boolean = false) {
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: withSign ? "currency" : undefined,
+    currency: "USD",
+    maximumFractionDigits: 0,
+  })
+
+  if (typeof amount === "boolean" || isNaN(amount)) return "$0.00"
+
+  return formatter.format(+amount)
+}
