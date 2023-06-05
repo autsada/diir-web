@@ -60,7 +60,6 @@ export default function Comments({ publish, profile, commentsResult }: Props) {
           <h6 className="text-base">{publish.commentsCount} Comments</h6>
           <CommentDetails
             profile={profile}
-            commentsCount={publish.commentsCount}
             publishId={publish?.id}
             commentsResult={commentsResult}
           />

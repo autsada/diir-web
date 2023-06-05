@@ -35,7 +35,6 @@ export default function CommentsModal({
         </div>
         <CommentDetails
           profile={profile}
-          commentsCount={commentsCount}
           publishId={publishId}
           commentsResult={commentsResult}
         />

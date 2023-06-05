@@ -1,31 +1,31 @@
 import React, { useTransition, useCallback, useState, useRef } from "react"
 
 import Avatar from "@/components/Avatar"
+import CommentItem from "./CommentItem"
+import ButtonLoader from "@/components/ButtonLoader"
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import { commentOnPublish } from "./actions"
 import type {
   FetchCommentsResponse,
   Maybe,
   Station,
 } from "@/graphql/codegen/graphql"
-import CommentItem from "./CommentItem"
 
 interface Props {
   profile: Maybe<Station> | undefined
-  commentsCount: number
   publishId: string
   commentsResult: Maybe<FetchCommentsResponse> | undefined
 }
 
 export default function CommentDetails({
   profile,
-  commentsCount,
   publishId,
   commentsResult,
 }: Props) {
-  const pageInfo = commentsResult?.pageInfo
-  const edges = commentsResult?.edges
-
   const [isStartComment, setIsStartComment] = useState(false)
+  const [commentsLoading, setCommentsLoading] = useState(false)
+  const [pageInfo, setPageInfo] = useState(commentsResult?.pageInfo)
+  const [edges, setEdges] = useState(commentsResult?.edges || [])
 
   const [isPending, startTransition] = useTransition()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -56,6 +56,30 @@ export default function CommentDetails({
     },
     [publishId]
   )
+
+  const fetchMoreComments = useCallback(async () => {
+    if (!publishId || !pageInfo?.endCursor || !pageInfo?.hasNextPage) return
+
+    try {
+      setCommentsLoading(true)
+      const res = await fetch(`/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cursor: pageInfo?.endCursor, publishId }),
+      })
+      const data = (await res.json()) as {
+        result: FetchCommentsResponse
+      }
+      setEdges((prev) => [...prev, ...data.result.edges])
+      setPageInfo(data?.result?.pageInfo)
+      setCommentsLoading(false)
+    } catch (error) {
+      setCommentsLoading(false)
+    }
+  }, [pageInfo?.endCursor, pageInfo?.hasNextPage, publishId])
+  const { observedRef } = useInfiniteScroll(0.5, fetchMoreComments)
 
   return (
     <div className="h-full px-4 overflow-y-auto sm:overflow-y-hidden">
@@ -97,6 +121,15 @@ export default function CommentDetails({
           edges.map((edge) => (
             <CommentItem key={edge.node?.id} comment={edge.node} />
           ))}
+
+        <div
+          ref={observedRef}
+          className="w-full h-4 flex items-center justify-center"
+        >
+          {commentsLoading && (
+            <ButtonLoader loading={commentsLoading} size={8} color="#d4d4d4" />
+          )}
+        </div>
       </div>
     </div>
   )

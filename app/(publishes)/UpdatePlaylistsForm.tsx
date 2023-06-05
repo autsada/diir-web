@@ -9,6 +9,7 @@ import type {
   PageInfo,
   PlaylistEdge,
 } from "@/graphql/codegen/graphql"
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 
 interface Props {
   publishId: string
@@ -39,8 +40,6 @@ export default function UpdatePlaylistsForm({
     [playlists, publishPlaylistsData]
   )
 
-  const observedRef = useRef<HTMLDivElement>(null)
-
   const fetchMorePlaylists = useCallback(async () => {
     if (
       !playlistsPageInfo ||
@@ -68,32 +67,7 @@ export default function UpdatePlaylistsForm({
       setLoading(false)
     }
   }, [playlistsPageInfo, setPlaylists, setPlaylistsPageInfo])
-
-  useEffect(() => {
-    if (typeof window === "undefined") return
-
-    if (!observedRef?.current) return
-    const ref = observedRef.current
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          if (entry.intersectionRatio >= 0.5) {
-            fetchMorePlaylists()
-          }
-        }
-      },
-      { root: null, threshold: 0.5 }
-    )
-
-    observer.observe(ref)
-
-    return () => {
-      if (ref) {
-        observer.unobserve(ref)
-      }
-    }
-  }, [fetchMorePlaylists])
+  const { observedRef } = useInfiniteScroll(0.5, fetchMorePlaylists)
 
   return (
     <form className="w-full mt-5" action={saveToPlaylist} onSubmit={onFinished}>
