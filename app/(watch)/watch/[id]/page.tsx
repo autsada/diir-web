@@ -228,6 +228,7 @@ export default async function Watch({ params }: Props) {
 
           {/* Comments */}
           <Comments
+            isAuthenticated={!!account}
             publish={publish}
             profile={station}
             commentsResult={commentsResult}

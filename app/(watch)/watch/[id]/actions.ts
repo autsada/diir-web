@@ -99,3 +99,39 @@ export async function commentOnPublish(content: string, publishId: string) {
     throw error
   }
 }
+
+export async function commentOnComment(
+  content: string,
+  publishId: string,
+  commentId: string
+) {
+  try {
+    const data = await getAccount()
+    const account = data?.account
+    const idToken = data?.idToken
+    const signature = data?.signature
+    if (!account || !account?.defaultStation || !idToken)
+      throw new Error("Please sign in to proceed.")
+
+    if (!content || !publishId || !commentId) throw new Error("Bad input")
+
+    await commentPublish({
+      idToken,
+      signature,
+      data: {
+        accountId: account.id,
+        owner: account.owner,
+        stationId: account.defaultStation?.id,
+        publishId,
+        content,
+        commentType: "COMMENT",
+        commentId,
+      },
+    })
+
+    // Revalidate the watch page
+    revalidatePath(`/watch/[id]`)
+  } catch (error) {
+    throw error
+  }
+}

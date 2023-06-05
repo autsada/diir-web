@@ -42,7 +42,7 @@ export default function AuthModal({ visible, closeModal }: Props) {
   if (!visible) return null
 
   return (
-    <ModalWrapper visible={visible}>
+    <ModalWrapper visible={visible} zIndex="z-[60]">
       <div
         className={`relative h-full w-full ${
           windowWidth && windowHeight && windowWidth > windowHeight

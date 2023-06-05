@@ -14,12 +14,18 @@ import type {
 } from "@/graphql/codegen/graphql"
 
 interface Props {
+  isAuthenticated: boolean
   publish: Publish
   profile: Maybe<Station> | undefined
   commentsResult: Maybe<FetchCommentsResponse> | undefined
 }
 
-export default function Comments({ publish, profile, commentsResult }: Props) {
+export default function Comments({
+  isAuthenticated,
+  publish,
+  profile,
+  commentsResult,
+}: Props) {
   const [commentsModalVisible, setCommentsModalVisible] = useState(false)
 
   const openCommentsModal = useCallback(() => {
@@ -47,6 +53,7 @@ export default function Comments({ publish, profile, commentsResult }: Props) {
           </div>
           {isMobile && commentsModalVisible && (
             <CommentsModal
+              isAuthenticated={isAuthenticated}
               profile={profile}
               commentsCount={publish.commentsCount}
               closeModal={closeCommentsModal}
@@ -59,6 +66,7 @@ export default function Comments({ publish, profile, commentsResult }: Props) {
         <>
           <h6 className="text-base">{publish.commentsCount} Comments</h6>
           <CommentDetails
+            isAuthenticated={isAuthenticated}
             profile={profile}
             publishId={publish?.id}
             commentsResult={commentsResult}

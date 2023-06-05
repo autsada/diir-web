@@ -1,8 +1,9 @@
-import React, { useTransition, useCallback, useState, useRef } from "react"
+import React, { useTransition, useCallback, useState } from "react"
 
-import Avatar from "@/components/Avatar"
 import CommentItem from "./CommentItem"
 import ButtonLoader from "@/components/ButtonLoader"
+import CommentBox from "./CommentBox"
+import { useAuthContext } from "@/context/AuthContext"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import { commentOnPublish } from "./actions"
 import type {
@@ -12,50 +13,48 @@ import type {
 } from "@/graphql/codegen/graphql"
 
 interface Props {
+  isAuthenticated: boolean
   profile: Maybe<Station> | undefined
   publishId: string
   commentsResult: Maybe<FetchCommentsResponse> | undefined
 }
 
 export default function CommentDetails({
+  isAuthenticated,
   profile,
   publishId,
   commentsResult,
 }: Props) {
-  const [isStartComment, setIsStartComment] = useState(false)
   const [commentsLoading, setCommentsLoading] = useState(false)
   const [pageInfo, setPageInfo] = useState(commentsResult?.pageInfo)
   const [edges, setEdges] = useState(commentsResult?.edges || [])
 
+  // If comments result is updated
+  if (commentsResult?.edges !== edges) {
+    setEdges(commentsResult?.edges || [])
+    setPageInfo(commentsResult?.pageInfo)
+  }
+
+  const { onVisible } = useAuthContext()
   const [isPending, startTransition] = useTransition()
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const startComment = useCallback(() => {
-    setIsStartComment(true)
-  }, [])
+  const confirmComment = useCallback(() => {
+    if (!publishId) return
+    const el = document.getElementById(publishId) as HTMLTextAreaElement
+    if (!el) return
 
-  const endComment = useCallback(() => {
-    const el = document.getElementById("content") as HTMLTextAreaElement
-    if (el) {
-      el.value = ""
-    }
-    setIsStartComment(false)
-  }, [])
+    const content = el.value
+    startTransition(() => commentOnPublish(content, publishId))
+    el.value = ""
+  }, [publishId])
 
-  const confirmComment = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      if (!publishId) return
-      const el = document.getElementById("content") as HTMLTextAreaElement
-      if (!el) return
+  const clearComment = useCallback(() => {
+    if (!publishId) return
+    const el = document.getElementById(publishId) as HTMLTextAreaElement
+    if (!el) return
 
-      const content = el.value
-      startTransition(() => commentOnPublish(content, publishId))
-      el.value = ""
-      setIsStartComment(false)
-    },
-    [publishId]
-  )
+    el.value = ""
+  }, [publishId])
 
   const fetchMoreComments = useCallback(async () => {
     if (!publishId || !pageInfo?.endCursor || !pageInfo?.hasNextPage) return
@@ -82,44 +81,34 @@ export default function CommentDetails({
   const { observedRef } = useInfiniteScroll(0.5, fetchMoreComments)
 
   return (
-    <div className="h-full px-4 overflow-y-auto sm:overflow-y-hidden">
-      <form className="w-full" onSubmit={confirmComment}>
-        <div className="mt-5 w-full flex gap-x-2">
-          <Avatar profile={profile} />
-          <textarea
-            ref={textareaRef}
-            id="content"
-            name="content"
-            placeholder="Add a comment..."
-            rows={isStartComment ? 2 : 1}
-            className="flex-grow border border-neutral-200 rounded-md px-4 py-1 text-textDark"
-            onClick={startComment}
-          />
-        </div>
-        {isStartComment && (
-          <div className="mt-2 flex items-center justify-end gap-x-6">
-            <button
-              type="button"
-              className="btn-cancel mx-0 px-4 rounded-full h-8"
-              onClick={endComment}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn-dark mx-0 px-4 rounded-full h-8"
-            >
-              Confirm
-            </button>
-          </div>
-        )}
-      </form>
+    <div className="h-full px-4 sm:px-0 overflow-y-auto sm:overflow-y-hidden">
+      {isAuthenticated ? (
+        <CommentBox
+          inputId={publishId}
+          profile={profile}
+          onSubmit={confirmComment}
+          clearComment={clearComment}
+        />
+      ) : (
+        <button
+          className="px-4 font-semibold text-blueBase"
+          onClick={onVisible}
+        >
+          Sign in to comment
+        </button>
+      )}
 
       <div className="w-full mt-6 pb-20 sm:pb-10">
         {edges &&
           edges.length > 0 &&
           edges.map((edge) => (
-            <CommentItem key={edge.node?.id} comment={edge.node} />
+            <CommentItem
+              isAuthenticated={isAuthenticated}
+              key={edge.node?.id}
+              profile={profile}
+              publishId={publishId}
+              comment={edge.node}
+            />
           ))}
 
         <div

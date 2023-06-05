@@ -5,12 +5,14 @@ interface Props {
   visible: boolean
   children: React.ReactNode
   withBackdrop?: boolean
+  zIndex?: string
 }
 
 export default function ModalWrapper({
   visible,
   children,
   withBackdrop = true,
+  zIndex = "z-50",
 }: Props) {
   // Disable body scroll when actions modal openned
   useEffect(() => {
@@ -37,7 +39,9 @@ export default function ModalWrapper({
 
   return (
     <>
-      <div className="fixed z-50 inset-0 flex flex-col justify-center items-center">
+      <div
+        className={`fixed inset-0 flex flex-col justify-center items-center ${zIndex}`}
+      >
         {children}
       </div>
       {withBackdrop && <Backdrop visible={visible} />}

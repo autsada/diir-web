@@ -10,6 +10,7 @@ import type {
 } from "@/graphql/codegen/graphql"
 
 interface Props {
+  isAuthenticated: boolean
   profile: Maybe<Station> | undefined
   commentsCount: number
   closeModal: () => void
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export default function CommentsModal({
+  isAuthenticated,
   profile,
   commentsCount,
   closeModal,
@@ -26,7 +28,7 @@ export default function CommentsModal({
 }: Props) {
   return (
     <ModalWrapper visible>
-      <div className="fixed z-20 bottom-0 w-[100%] h-[80%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden">
+      <div className="fixed bottom-0 w-[100%] h-[80%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden">
         <div className="p-4 flex items-center justify-between border-b border-neutral-100">
           <h6 className="text-base">{commentsCount} Comments</h6>
           <div>
@@ -34,6 +36,7 @@ export default function CommentsModal({
           </div>
         </div>
         <CommentDetails
+          isAuthenticated={isAuthenticated}
           profile={profile}
           publishId={publishId}
           commentsResult={commentsResult}
