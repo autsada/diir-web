@@ -31,7 +31,7 @@ export async function likePublish(publishId: string) {
     })
 
     // Revalidate the watch page
-    revalidatePath(`/watch/${publishId}`)
+    revalidatePath(`/watch/[id]`)
   } catch (error) {
     throw error
   }
@@ -63,7 +63,7 @@ export async function disLikePublish(publishId: string) {
     })
 
     // Revalidate the watch page
-    revalidatePath(`/watch/${publishId}`)
+    revalidatePath(`/watch/[id]`)
   } catch (error) {
     throw error
   }
@@ -94,7 +94,7 @@ export async function commentOnPublish(content: string, publishId: string) {
     })
 
     // Revalidate the watch page
-    revalidatePath(`/watch/${publishId}`)
+    revalidatePath(`/watch/[id]`)
   } catch (error) {
     throw error
   }

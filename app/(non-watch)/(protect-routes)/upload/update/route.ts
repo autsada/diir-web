@@ -55,7 +55,7 @@ export async function POST(req: Request) {
   })
 
   // Revalidate upload page
-  revalidatePath(`/upload/${publishId}`)
+  revalidatePath(`/upload/[id]`)
 
   return NextResponse.json(result)
 }
