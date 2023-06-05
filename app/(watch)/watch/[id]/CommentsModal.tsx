@@ -20,7 +20,7 @@ export default function CommentsModal({
 }: Props) {
   return (
     <ModalWrapper visible>
-      <div className="fixed z-20 bottom-0 py-6 w-[100%] h-[70%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden">
+      <div className="fixed z-20 bottom-0 py-6 w-[100%] h-[80%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden">
         <CloseButton onClick={closeModal} className="absolute right-6 top-3" />
         <CommentDetails
           profile={profile}

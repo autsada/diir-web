@@ -24,15 +24,19 @@ export default function CommentDetails({
     }
   }, [])
 
-  const onComment = useCallback(() => {
-    if (!publishId) return
-    const el = document.getElementById("content") as HTMLTextAreaElement
-    if (!el) return
+  const onComment = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      if (!publishId) return
+      const el = document.getElementById("content") as HTMLTextAreaElement
+      if (!el) return
 
-    const content = el.value
-    startTransition(() => commentOnPublish(content, publishId))
-    el.value = ""
-  }, [publishId])
+      const content = el.value
+      startTransition(() => commentOnPublish(content, publishId))
+      el.value = ""
+    },
+    [publishId]
+  )
 
   return (
     <div className="px-4">
