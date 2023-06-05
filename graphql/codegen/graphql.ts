@@ -127,6 +127,12 @@ export type CommentDisLike = {
   stationId: Scalars['String']['output'];
 };
 
+export type CommentEdge = {
+  __typename?: 'CommentEdge';
+  cursor?: Maybe<Scalars['String']['output']>;
+  node?: Maybe<Comment>;
+};
+
 export type CommentLike = {
   __typename?: 'CommentLike';
   comment: Comment;
@@ -222,6 +228,18 @@ export type DontRecommendInput = {
   owner: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
   targetId: Scalars['String']['input'];
+};
+
+export type FetchCommentsByPublishIdInput = {
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  publishId: Scalars['String']['input'];
+  requestorId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FetchCommentsResponse = {
+  __typename?: 'FetchCommentsResponse';
+  edges: Array<CommentEdge>;
+  pageInfo: PageInfo;
 };
 
 export type FetchDontRecommendsInput = {
@@ -595,6 +613,7 @@ export type Query = {
   __typename?: 'Query';
   checkPublishPlaylists?: Maybe<CheckPublishPlaylistsResponse>;
   fetchAllVideos?: Maybe<FetchPublishesResponse>;
+  fetchCommentsByPublishId?: Maybe<FetchCommentsResponse>;
   fetchDontRecommends?: Maybe<FetchDontRecommendsResponse>;
   fetchMyPlaylists?: Maybe<FetchPlaylistsResponse>;
   fetchMyPublishes?: Maybe<FetchPublishesResponse>;
@@ -605,8 +624,6 @@ export type Query = {
   getPublishById?: Maybe<Publish>;
   getStationById?: Maybe<Station>;
   getStationByName?: Maybe<Station>;
-  listCommentsByCommentId: Array<Maybe<Comment>>;
-  listCommentsByPublishId: Array<Maybe<Comment>>;
 };
 
 
@@ -617,6 +634,11 @@ export type QueryCheckPublishPlaylistsArgs = {
 
 export type QueryFetchAllVideosArgs = {
   input: FetchPublishesInput;
+};
+
+
+export type QueryFetchCommentsByPublishIdArgs = {
+  input: FetchCommentsByPublishIdInput;
 };
 
 
@@ -667,16 +689,6 @@ export type QueryGetStationByIdArgs = {
 
 export type QueryGetStationByNameArgs = {
   input: QueryByNameInput;
-};
-
-
-export type QueryListCommentsByCommentIdArgs = {
-  input: QueryByIdInput;
-};
-
-
-export type QueryListCommentsByPublishIdArgs = {
-  input: QueryByIdInput;
 };
 
 export type QueryByIdInput = {

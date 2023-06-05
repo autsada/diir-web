@@ -7,7 +7,77 @@ import type {
   MutationReturnType,
   MutationArgsType,
   CommentPublishInput,
+  FetchCommentsByPublishIdInput,
 } from "./types"
+
+/**
+ * Fetch comments by publish id
+ */
+export const FETCH_COMMENTS_BY_ID_QUERY = gql`
+  query FetchCommentsByPublishId($input: FetchCommentsByPublishIdInput!) {
+    fetchCommentsByPublishId(input: $input) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          content
+          createdAt
+          updatedAt
+          creator {
+            id
+            name
+            image
+            displayName
+            defaultColor
+          }
+          liked
+          likesCount
+          disLiked
+          commentType
+          commentsCount
+          comments {
+            id
+            createdAt
+            updatedAt
+            content
+            creator {
+              id
+              name
+              image
+              displayName
+              defaultColor
+            }
+            liked
+            disLiked
+            likesCount
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchComments(data: FetchCommentsByPublishIdInput) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+      })
+      .request<
+        QueryReturnType<"fetchCommentsByPublishId">,
+        QueryArgsType<"fetchCommentsByPublishId">
+      >(FETCH_COMMENTS_BY_ID_QUERY, {
+        input: data,
+      })
+
+    return result?.fetchCommentsByPublishId
+  } catch (error) {
+    throw error
+  }
+}
 
 /**
  * DisLike / Undo disLike pubulish

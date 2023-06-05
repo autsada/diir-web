@@ -43,13 +43,15 @@ export default function Avatar({
             className={`w-full h-full flex items-center justify-center text-white ${fontSize}`}
             style={{ backgroundColor: bgColor }}
           >
-            {profile.displayName.slice(0, 1).toUpperCase()}
+            {profile.displayName
+              ? profile.displayName.slice(0, 1).toUpperCase()
+              : "A"}
           </div>
         )
       ) : (
         <Image
           src={profile.image}
-          alt={profile.displayName}
+          alt={profile.displayName || ""}
           width={width}
           height={height}
           className="w-full h-full object-cover"

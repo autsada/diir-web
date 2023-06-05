@@ -52,4 +52,6 @@ export type FetchDontRecommendsInput =
 export type ReportPublishInput = NexusGenInputs["ReportPublishInput"]
 export type LikePublishInput = NexusGenInputs["LikePublishInput"]
 export type TipAmount = 1 | 2 | 5 | 10 | 25 | 50 | 100 | 1000 | 2000
+export type FetchCommentsByPublishIdInput =
+  NexusGenInputs["FetchCommentsByPublishIdInput"]
 export type CommentPublishInput = NexusGenInputs["CommentPublishInput"]

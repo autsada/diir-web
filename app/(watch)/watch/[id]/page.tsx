@@ -11,6 +11,7 @@ import Reactions from "./Reactions"
 import { getAccount } from "@/lib/server"
 import {
   checkPublishPlaylists,
+  fetchComments,
   fetchMyPlaylists,
   getStationById,
   getWatchingPublish,
@@ -116,7 +117,7 @@ export default async function Watch({ params }: Props) {
         },
       })
 
-  // Check if the publish already add to any user's playlists
+  // Check if the publish is already added to any user's playlists
   const publishPlaylistsData =
     !idToken || !account || !account.defaultStation
       ? undefined
@@ -130,6 +131,12 @@ export default async function Watch({ params }: Props) {
             publishId: params.id,
           },
         })
+
+  const commentsResult = await fetchComments({
+    requestorId: account?.defaultStation ? account.defaultStation.id : null,
+    publishId: params.id,
+    cursor: null,
+  })
 
   if (!publish) {
     redirect("/")
@@ -173,10 +180,12 @@ export default async function Watch({ params }: Props) {
 
             <div className="relative flex-grow h-full">
               <div className="flex items-center gap-x-2">
-                <h6 className="text-lg">{publish.creator?.displayName}</h6>
+                <h6 className="text-lg">
+                  {publish.creator?.displayName || ""}
+                </h6>
                 <span className="text-thin text-xs">|</span>
                 <p className="font-light text-textLight">
-                  @{publish.creator?.name}
+                  @{publish.creator?.name || ""}
                 </p>
               </div>
               <p className="text-sm">
@@ -218,7 +227,11 @@ export default async function Watch({ params }: Props) {
           />
 
           {/* Comments */}
-          <Comments publish={publish} profile={station} />
+          <Comments
+            publish={publish}
+            profile={station}
+            commentsResult={commentsResult}
+          />
         </div>
 
         <div className="w-full sm:col-span-2 px-2 sm:px-8 mt-5 sm:mt-0">

@@ -4,16 +4,22 @@ import React, { useState, useCallback } from "react"
 import { isMobile } from "react-device-detect"
 import { BsCaretDown } from "react-icons/bs"
 
-import type { Maybe, Publish, Station } from "@/graphql/codegen/graphql"
 import CommentDetails from "./CommentDetails"
 import CommentsModal from "./CommentsModal"
+import type {
+  Maybe,
+  Publish,
+  Station,
+  FetchCommentsResponse,
+} from "@/graphql/codegen/graphql"
 
 interface Props {
   publish: Publish
   profile: Maybe<Station> | undefined
+  commentsResult: Maybe<FetchCommentsResponse> | undefined
 }
 
-export default function Comments({ publish, profile }: Props) {
+export default function Comments({ publish, profile, commentsResult }: Props) {
   const [commentsModalVisible, setCommentsModalVisible] = useState(false)
 
   const openCommentsModal = useCallback(() => {
@@ -27,7 +33,7 @@ export default function Comments({ publish, profile }: Props) {
   }, [])
 
   return (
-    <div className="mt-5">
+    <div className="mt-8">
       {isMobile ? (
         <>
           <div
@@ -45,15 +51,20 @@ export default function Comments({ publish, profile }: Props) {
               commentsCount={publish.commentsCount}
               closeModal={closeCommentsModal}
               publishId={publish?.id}
+              commentsResult={commentsResult}
             />
           )}
         </>
       ) : (
-        <CommentDetails
-          profile={profile}
-          commentsCount={publish.commentsCount}
-          publishId={publish?.id}
-        />
+        <>
+          <h6 className="text-base">{publish.commentsCount} Comments</h6>
+          <CommentDetails
+            profile={profile}
+            commentsCount={publish.commentsCount}
+            publishId={publish?.id}
+            commentsResult={commentsResult}
+          />
+        </>
       )}
     </div>
   )

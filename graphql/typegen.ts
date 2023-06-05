@@ -104,6 +104,12 @@ export interface NexusGenInputs {
     stationId: string // String!
     targetId: string // String!
   }
+  FetchCommentsByPublishIdInput: {
+    // input type
+    cursor?: string | null // String
+    publishId: string // String!
+    requestorId?: string | null // String
+  }
   FetchDontRecommendsInput: {
     // input type
     accountId: string // String!
@@ -328,6 +334,11 @@ export interface NexusGenObjects {
     commentId: string // String!
     stationId: string // String!
   }
+  CommentEdge: {
+    // root type
+    cursor?: string | null // String
+    node?: NexusGenRootTypes["Comment"] | null // Comment
+  }
   CommentLike: {
     // root type
     commentId: string // String!
@@ -359,6 +370,11 @@ export interface NexusGenObjects {
     // root type
     cursor?: string | null // String
     node?: NexusGenRootTypes["DontRecommend"] | null // DontRecommend
+  }
+  FetchCommentsResponse: {
+    // root type
+    edges: NexusGenRootTypes["CommentEdge"][] // [CommentEdge!]!
+    pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
   }
   FetchDontRecommendsResponse: {
     // root type
@@ -584,6 +600,11 @@ export interface NexusGenFieldTypes {
     station: NexusGenRootTypes["Station"] // Station!
     stationId: string // String!
   }
+  CommentEdge: {
+    // field return type
+    cursor: string | null // String
+    node: NexusGenRootTypes["Comment"] | null // Comment
+  }
   CommentLike: {
     // field return type
     comment: NexusGenRootTypes["Comment"] // Comment!
@@ -620,6 +641,11 @@ export interface NexusGenFieldTypes {
     // field return type
     cursor: string | null // String
     node: NexusGenRootTypes["DontRecommend"] | null // DontRecommend
+  }
+  FetchCommentsResponse: {
+    // field return type
+    edges: NexusGenRootTypes["CommentEdge"][] // [CommentEdge!]!
+    pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
   }
   FetchDontRecommendsResponse: {
     // field return type
@@ -778,6 +804,7 @@ export interface NexusGenFieldTypes {
       | NexusGenRootTypes["CheckPublishPlaylistsResponse"]
       | null // CheckPublishPlaylistsResponse
     fetchAllVideos: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    fetchCommentsByPublishId: NexusGenRootTypes["FetchCommentsResponse"] | null // FetchCommentsResponse
     fetchDontRecommends: NexusGenRootTypes["FetchDontRecommendsResponse"] | null // FetchDontRecommendsResponse
     fetchMyPlaylists: NexusGenRootTypes["FetchPlaylistsResponse"] | null // FetchPlaylistsResponse
     fetchMyPublishes: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
@@ -788,8 +815,6 @@ export interface NexusGenFieldTypes {
     getPublishById: NexusGenRootTypes["Publish"] | null // Publish
     getStationById: NexusGenRootTypes["Station"] | null // Station
     getStationByName: NexusGenRootTypes["Station"] | null // Station
-    listCommentsByCommentId: Array<NexusGenRootTypes["Comment"] | null> // [Comment]!
-    listCommentsByPublishId: Array<NexusGenRootTypes["Comment"] | null> // [Comment]!
   }
   Report: {
     // field return type
@@ -918,6 +943,11 @@ export interface NexusGenFieldTypeNames {
     station: "Station"
     stationId: "String"
   }
+  CommentEdge: {
+    // field return type name
+    cursor: "String"
+    node: "Comment"
+  }
   CommentLike: {
     // field return type name
     comment: "Comment"
@@ -954,6 +984,11 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     cursor: "String"
     node: "DontRecommend"
+  }
+  FetchCommentsResponse: {
+    // field return type name
+    edges: "CommentEdge"
+    pageInfo: "PageInfo"
   }
   FetchDontRecommendsResponse: {
     // field return type name
@@ -1110,6 +1145,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     checkPublishPlaylists: "CheckPublishPlaylistsResponse"
     fetchAllVideos: "FetchPublishesResponse"
+    fetchCommentsByPublishId: "FetchCommentsResponse"
     fetchDontRecommends: "FetchDontRecommendsResponse"
     fetchMyPlaylists: "FetchPlaylistsResponse"
     fetchMyPublishes: "FetchPublishesResponse"
@@ -1120,8 +1156,6 @@ export interface NexusGenFieldTypeNames {
     getPublishById: "Publish"
     getStationById: "Station"
     getStationByName: "Station"
-    listCommentsByCommentId: "Comment"
-    listCommentsByPublishId: "Comment"
   }
   Report: {
     // field return type name
@@ -1315,6 +1349,10 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs["FetchPublishesInput"] // FetchPublishesInput!
     }
+    fetchCommentsByPublishId: {
+      // args
+      input: NexusGenInputs["FetchCommentsByPublishIdInput"] // FetchCommentsByPublishIdInput!
+    }
     fetchDontRecommends: {
       // args
       input: NexusGenInputs["FetchDontRecommendsInput"] // FetchDontRecommendsInput!
@@ -1354,14 +1392,6 @@ export interface NexusGenArgTypes {
     getStationByName: {
       // args
       input: NexusGenInputs["QueryByNameInput"] // QueryByNameInput!
-    }
-    listCommentsByCommentId: {
-      // args
-      input: NexusGenInputs["QueryByIdInput"] // QueryByIdInput!
-    }
-    listCommentsByPublishId: {
-      // args
-      input: NexusGenInputs["QueryByIdInput"] // QueryByIdInput!
     }
   }
 }
