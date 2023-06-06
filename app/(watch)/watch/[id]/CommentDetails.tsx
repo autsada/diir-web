@@ -33,17 +33,17 @@ export default function CommentDetails({
   activeComment,
 }: Props) {
   const [commentsLoading, setCommentsLoading] = useState(false)
+  const [prevCommentsResult, setPrevCommentResult] = useState(commentsResult)
   const [pageInfo, setPageInfo] = useState(commentsResult?.pageInfo)
   const [edges, setEdges] = useState(commentsResult?.edges || [])
 
   // If comments result is updated
-  if (
-    commentsResult?.edges !== edges &&
-    commentsResult?.edges &&
-    commentsResult?.edges.length > 0
-  ) {
-    setEdges(commentsResult?.edges || [])
-    setPageInfo(commentsResult?.pageInfo)
+  if (prevCommentsResult !== commentsResult) {
+    setPrevCommentResult(commentsResult)
+    if (commentsResult?.edges && commentsResult?.edges.length > 0) {
+      setEdges(commentsResult?.edges)
+      setPageInfo(commentsResult?.pageInfo)
+    }
   }
 
   const { onVisible } = useAuthContext()
