@@ -56,3 +56,4 @@ export type FetchCommentsByPublishIdInput =
   NexusGenInputs["FetchCommentsByPublishIdInput"]
 export type CommentPublishInput = NexusGenInputs["CommentPublishInput"]
 export type LikeCommentInput = NexusGenInputs["LikeCommentInput"]
+export type FollowInput = NexusGenInputs["FollowInput"]

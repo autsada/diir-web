@@ -1,10 +1,9 @@
 import React from "react"
 import { redirect } from "next/navigation"
 
+import StationTemplate from "./StationTemplate"
 import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
-import type { Station } from "@/graphql/codegen/graphql"
-import StationTemplate from "./StationTemplate"
 
 export default async function Station({
   params,
@@ -14,10 +13,7 @@ export default async function Station({
 }) {
   const data = await getAccount()
   const account = data?.account
-  const station = (await getStationById(
-    params.id,
-    account?.defaultStation?.id
-  )) as Station
+  const station = await getStationById(params.id, account?.defaultStation?.id)
 
   if (!station) {
     redirect("/settings")
@@ -25,7 +21,7 @@ export default async function Station({
 
   return (
     <>
-      <StationTemplate station={station} />
+      <StationTemplate isAuthenticated={!!account} station={station} />
 
       <div className="mt-2">
         {station?.publishes.length === 0 ? (

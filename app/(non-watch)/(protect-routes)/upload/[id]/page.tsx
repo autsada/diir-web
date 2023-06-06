@@ -1,20 +1,43 @@
 import React from "react"
-
-import { getStationById, getUploadedPublish } from "@/graphql"
 import { redirect } from "next/navigation"
+
 import ContentModal from "./ContentModal"
-import type { Publish } from "@/graphql/codegen/graphql"
+import { getStationById, getUploadedPublish } from "@/graphql"
+import { getAccount } from "@/lib/server"
 
 export default async function Page({ params }: { params: { id: string } }) {
-  // Get publish from the database
-  const publish = (await getUploadedPublish(params.id)) as Publish
+  const data = await getAccount()
+  const account = data?.account
+  const idToken = data?.idToken
+  const signature = data?.signature
 
-  if (!publish) {
-    redirect("/upload")
+  if (!idToken || !account?.defaultStation) {
+    redirect("/")
   }
 
-  // Get creator station from the database
-  const station = await getStationById(publish.creatorId)
+  // Query station by id
+  const station = !account?.defaultStation
+    ? null
+    : await getStationById(account?.defaultStation?.id)
+
+  if (!station) {
+    redirect("/settings")
+  }
+
+  // Get publish from the database
+  const publish = await getUploadedPublish({
+    idToken,
+    signature,
+    data: {
+      targetId: params.id,
+      requestorId: station.id,
+    },
+  })
+
+  // If no publish found, or user is not the owner of the publish
+  if (!publish || !publish.creator?.isOwner) {
+    redirect("/upload")
+  }
 
   return (
     <>

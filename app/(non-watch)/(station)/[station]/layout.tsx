@@ -1,10 +1,9 @@
 import React from "react"
 import { notFound } from "next/navigation"
 
+import StationTemplate from "../../(protect-routes)/station/[id]/StationTemplate"
 import { getAccount } from "@/lib/server"
 import { getStationByName } from "@/graphql"
-import type { Station } from "@/graphql/codegen/graphql"
-import StationTemplate from "../(protect-routes)/station/[id]/StationTemplate"
 
 export default async function Layout({
   children,
@@ -22,10 +21,7 @@ export default async function Layout({
   }
 
   // Query station by name
-  const station = (await getStationByName(
-    name,
-    account?.defaultStation?.id
-  )) as Station
+  const station = await getStationByName(name, account?.defaultStation?.id)
 
   if (!station) {
     notFound()
@@ -33,7 +29,7 @@ export default async function Layout({
 
   return (
     <div className="w-full px-4 py-2">
-      <StationTemplate station={station} />
+      <StationTemplate isAuthenticated={!!account} station={station} />
 
       {children}
     </div>

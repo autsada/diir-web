@@ -9,6 +9,7 @@ import Avatar from "@/components/Avatar"
 import Comments from "./Comments"
 import Reactions from "./Reactions"
 import StationName from "@/components/StationName"
+import ManageFollow from "./ManageFollow"
 import { getAccount } from "@/lib/server"
 import {
   checkPublishPlaylists,
@@ -186,25 +187,12 @@ export default async function Watch({ params }: Props) {
               </p>
             </div>
             <div className="h-full flex items-center justify-center">
-              {publish?.creator?.isOwner ? (
-                <button className="btn-orange w-[120px] rounded-full">
-                  Edit publish
-                </button>
-              ) : publish?.creator?.isFollowing ? (
-                <button
-                  type="button"
-                  className="btn-dark mx-0 px-5 rounded-full"
-                >
-                  Following
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn-dark mx-0 px-5 rounded-full"
-                >
-                  Follow
-                </button>
-              )}
+              <ManageFollow
+                isAuthenticated={!!account}
+                follow={publish.creator}
+                ownerHref={`/upload/${publish.id}`}
+                ownerLinkText="Edit publish"
+              />
             </div>
           </div>
 

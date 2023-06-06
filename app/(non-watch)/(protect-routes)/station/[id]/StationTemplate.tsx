@@ -1,14 +1,15 @@
 import React from "react"
 
 import ContentTabs from "./ContentTabs"
+import ManageFollow from "@/app/(watch)/watch/[id]/ManageFollow"
 import type { Station } from "@/graphql/codegen/graphql"
-import Link from "next/link"
 
 interface Props {
+  isAuthenticated: boolean
   station: Station
 }
 
-export default function StationTemplate({ station }: Props) {
+export default function StationTemplate({ isAuthenticated, station }: Props) {
   const profileColor = station?.defaultColor
   const bgColor = profileColor || "#f97316"
 
@@ -80,30 +81,12 @@ export default function StationTemplate({ station }: Props) {
             </div>
 
             <div className="absolute inset-0 pr-0 sm:pr-5 lg:pr-10 flex items-start sm:items-center justify-end">
-              {station?.isOwner ? (
-                <Link href={`/station/${station.id}/manage`}>
-                  <button
-                    type="button"
-                    className="btn-dark mx-0 px-5 rounded-full"
-                  >
-                    Manage station
-                  </button>
-                </Link>
-              ) : station?.isFollowing ? (
-                <button
-                  type="button"
-                  className="btn-dark mx-0 px-5 rounded-full"
-                >
-                  Following
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn-dark mx-0 px-5 rounded-full"
-                >
-                  Follow
-                </button>
-              )}
+              <ManageFollow
+                isAuthenticated={isAuthenticated}
+                follow={station}
+                ownerHref={`/station/${station.id}/manage`}
+                ownerLinkText="Manage station"
+              />
             </div>
           </div>
         </div>

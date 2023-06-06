@@ -315,6 +315,13 @@ export type Follow = {
   followingId: Scalars['String']['output'];
 };
 
+export type FollowInput = {
+  accountId: Scalars['String']['input'];
+  followerId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
 export type GetMyAccountInput = {
   accountType: AccountType;
 };
@@ -369,6 +376,7 @@ export type Mutation = {
   disLikeComment?: Maybe<WriteResult>;
   disLikePublish?: Maybe<WriteResult>;
   dontRecommend?: Maybe<WriteResult>;
+  follow?: Maybe<WriteResult>;
   likeComment?: Maybe<WriteResult>;
   likePublish?: Maybe<WriteResult>;
   mintFirstStationNFT?: Maybe<MintStationNftResult>;
@@ -449,6 +457,11 @@ export type MutationDisLikePublishArgs = {
 
 export type MutationDontRecommendArgs = {
   input: DontRecommendInput;
+};
+
+
+export type MutationFollowArgs = {
+  input: FollowInput;
 };
 
 

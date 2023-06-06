@@ -2,7 +2,6 @@ import React from "react"
 
 import { getAccount } from "@/lib/server"
 import { getStationByName } from "@/graphql"
-import type { Station } from "@/graphql/codegen/graphql"
 
 export default async function Page({
   params,
@@ -14,10 +13,7 @@ export default async function Page({
   const name = params.station.replace("%40", "")
 
   // Query station by name
-  const station = (await getStationByName(
-    name,
-    account?.defaultStation?.id
-  )) as Station
+  const station = await getStationByName(name, account?.defaultStation?.id)
 
   return (
     <>

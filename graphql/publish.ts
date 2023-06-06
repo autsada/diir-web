@@ -44,15 +44,26 @@ export const GET_UPLOADED_PUBLISH_QUERY = gql`
         dash
         hls
       }
+      creator {
+        isOwner
+      }
     }
   }
 `
-export async function getUploadedPublish(id: string) {
+export async function getUploadedPublish({
+  idToken,
+  signature,
+  data: { targetId, requestorId },
+}: {
+  idToken: string
+  signature?: string
+  data: QueryByIdInput
+}) {
   try {
     const data = await client.request<
       QueryReturnType<"getPublishById">,
       QueryArgsType<"getPublishById">
-    >(GET_UPLOADED_PUBLISH_QUERY, { input: { targetId: id } })
+    >(GET_UPLOADED_PUBLISH_QUERY, { input: { targetId, requestorId } })
 
     return data?.getPublishById
   } catch (error) {

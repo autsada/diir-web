@@ -6,6 +6,7 @@ import type {
   QueryArgsType,
   MutationReturnType,
   MutationArgsType,
+  FollowInput,
 } from "./types"
 
 /**
@@ -422,6 +423,45 @@ export async function updateStationBannerImage({
       })
 
     return data?.updateBannerImage
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Follow/unFollow station
+ */
+export const FOLLOW_MUTATION = gql`
+  mutation Follow($input: FollowInput!) {
+    follow(input: $input) {
+      status
+    }
+  }
+`
+export async function follow({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: FollowInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<MutationReturnType<"follow">, MutationArgsType<"follow">>(
+        FOLLOW_MUTATION,
+        {
+          input: data,
+        }
+      )
+
+    return result?.follow
   } catch (error) {
     throw error
   }
