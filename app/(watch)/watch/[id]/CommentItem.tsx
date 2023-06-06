@@ -4,8 +4,6 @@ import {
   AiFillDislike,
   AiFillLike,
   AiOutlineLike,
-  AiFillCaretDown,
-  AiFillCaretUp,
 } from "react-icons/ai"
 
 import Avatar from "@/components/Avatar"
@@ -20,6 +18,7 @@ interface Props {
   profile: Maybe<Station> | undefined
   publishId: string
   comment: Maybe<Comment> | undefined
+  openSubComments: (c: Comment) => void
 }
 
 export default function CommentItem({
@@ -27,12 +26,9 @@ export default function CommentItem({
   profile,
   publishId,
   comment,
+  openSubComments,
 }: Props) {
-  const [subCommentsVisible, setSubCommentsVisible] = useState(false)
-
-  const toggleSubComments = useCallback(() => {
-    setSubCommentsVisible((prev) => !prev)
-  }, [])
+  //   const [subCommentsVisible, setSubCommentsVisible] = useState(false)
 
   if (!comment) return null
 
@@ -49,22 +45,13 @@ export default function CommentItem({
       {comment.comments.length > 0 && (
         <div className="mt-2 pl-[40px]">
           <div
-            className="w-max py-2 px-4 rounded-full flex items-center gap-x-2 cursor-pointer hover:bg-neutral-100"
-            onClick={toggleSubComments}
+            className="w-max py-2 px-4 rounded-full flex items-center gap-x-1 font-semibold text-blueBase text-sm cursor-pointer hover:bg-neutral-100"
+            onClick={openSubComments.bind(undefined, comment)}
           >
-            <div className="flex items-center gap-x-1 font-semibold text-blueBase text-sm">
-              <p>{comment.commentsCount}</p>
-              <p>repl{comment.commentsCount === 1 ? "y" : "ies"}</p>
-            </div>
-            <div>
-              {!subCommentsVisible ? (
-                <AiFillCaretDown className="text-blueBase" />
-              ) : (
-                <AiFillCaretUp className="text-blueBase" />
-              )}
-            </div>
+            <p>{comment.commentsCount}</p>
+            <p>repl{comment.commentsCount === 1 ? "y" : "ies"}</p>
           </div>
-          {subCommentsVisible && (
+          {/* {subCommentsVisible && (
             <div className="mt-2 pl-2">
               {comment.comments?.map((comt) => (
                 <div key={comt.id} className="mb-4">
@@ -79,7 +66,7 @@ export default function CommentItem({
                 </div>
               ))}
             </div>
-          )}
+          )} */}
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from "react"
 import { isMobile } from "react-device-detect"
 import { BsCaretDown } from "react-icons/bs"
+import { MdArrowBack } from "react-icons/md"
 
 import CommentDetails from "./CommentDetails"
 import CommentsModal from "./CommentsModal"
@@ -11,6 +12,7 @@ import type {
   Publish,
   Station,
   FetchCommentsResponse,
+  Comment,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -27,6 +29,8 @@ export default function Comments({
   commentsResult,
 }: Props) {
   const [commentsModalVisible, setCommentsModalVisible] = useState(false)
+  const [subCommentsVisible, setSubCommentsVisible] = useState(false)
+  const [activeComment, setActiveComment] = useState<Comment>()
 
   const openCommentsModal = useCallback(() => {
     if (!isMobile) return
@@ -36,6 +40,18 @@ export default function Comments({
   const closeCommentsModal = useCallback(() => {
     if (!isMobile) return
     setCommentsModalVisible(false)
+    setSubCommentsVisible(false)
+    setActiveComment(undefined)
+  }, [])
+
+  const openSubComments = useCallback((c: Comment) => {
+    setSubCommentsVisible(true)
+    setActiveComment(c)
+  }, [])
+
+  const closeSubComments = useCallback(() => {
+    setSubCommentsVisible(false)
+    setActiveComment(undefined)
   }, [])
 
   return (
@@ -59,17 +75,44 @@ export default function Comments({
               closeModal={closeCommentsModal}
               publishId={publish?.id}
               commentsResult={commentsResult}
+              subCommentsVisible={subCommentsVisible}
+              openSubComments={openSubComments}
+              activeComment={activeComment}
+              closeSubComments={closeSubComments}
             />
           )}
         </>
       ) : (
         <>
-          <h6 className="text-base">{publish.commentsCount} Comments</h6>
+          <div
+            className={`flex items-center ${
+              subCommentsVisible ? "gap-x-4" : "gap-x-2"
+            }`}
+          >
+            {!subCommentsVisible ? (
+              <>
+                <h6>{publish.commentsCount}</h6>
+                <h6>Comments</h6>
+              </>
+            ) : (
+              <>
+                <MdArrowBack
+                  size={22}
+                  className="cursor-pointer"
+                  onClick={closeSubComments}
+                />
+                <h6>Replies</h6>
+              </>
+            )}
+          </div>
           <CommentDetails
             isAuthenticated={isAuthenticated}
             profile={profile}
             publishId={publish?.id}
             commentsResult={commentsResult}
+            subCommentsVisible={subCommentsVisible}
+            openSubComments={openSubComments}
+            activeComment={activeComment}
           />
         </>
       )}

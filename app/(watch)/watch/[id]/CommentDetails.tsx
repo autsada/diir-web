@@ -10,6 +10,7 @@ import type {
   FetchCommentsResponse,
   Maybe,
   Station,
+  Comment,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -17,6 +18,9 @@ interface Props {
   profile: Maybe<Station> | undefined
   publishId: string
   commentsResult: Maybe<FetchCommentsResponse> | undefined
+  subCommentsVisible: boolean
+  openSubComments: (c: Comment) => void
+  activeComment: Comment | undefined
 }
 
 export default function CommentDetails({
@@ -24,13 +28,20 @@ export default function CommentDetails({
   profile,
   publishId,
   commentsResult,
+  subCommentsVisible,
+  openSubComments,
+  activeComment,
 }: Props) {
   const [commentsLoading, setCommentsLoading] = useState(false)
   const [pageInfo, setPageInfo] = useState(commentsResult?.pageInfo)
   const [edges, setEdges] = useState(commentsResult?.edges || [])
 
   // If comments result is updated
-  if (commentsResult?.edges !== edges) {
+  if (
+    commentsResult?.edges !== edges &&
+    commentsResult?.edges &&
+    commentsResult?.edges.length > 0
+  ) {
     setEdges(commentsResult?.edges || [])
     setPageInfo(commentsResult?.pageInfo)
   }
@@ -82,44 +93,55 @@ export default function CommentDetails({
 
   return (
     <div className="h-full px-4 sm:px-0 overflow-y-auto sm:overflow-y-hidden">
-      {isAuthenticated ? (
-        <CommentBox
-          inputId={publishId}
-          profile={profile}
-          onSubmit={confirmComment}
-          clearComment={clearComment}
-        />
+      {subCommentsVisible && activeComment ? (
+        <div>Subcomments</div>
       ) : (
-        <button
-          className="px-4 font-semibold text-blueBase"
-          onClick={onVisible}
-        >
-          Sign in to comment
-        </button>
-      )}
-
-      <div className="w-full mt-6 pb-20 sm:pb-10">
-        {edges &&
-          edges.length > 0 &&
-          edges.map((edge) => (
-            <CommentItem
-              isAuthenticated={isAuthenticated}
-              key={edge.node?.id}
+        <>
+          {isAuthenticated ? (
+            <CommentBox
+              inputId={publishId}
               profile={profile}
-              publishId={publishId}
-              comment={edge.node}
+              onSubmit={confirmComment}
+              clearComment={clearComment}
             />
-          ))}
-
-        <div
-          ref={observedRef}
-          className="w-full h-4 flex items-center justify-center"
-        >
-          {commentsLoading && (
-            <ButtonLoader loading={commentsLoading} size={8} color="#d4d4d4" />
+          ) : (
+            <button
+              className="px-4 font-semibold text-blueBase"
+              onClick={onVisible}
+            >
+              Sign in to comment
+            </button>
           )}
-        </div>
-      </div>
+
+          <div className="w-full mt-6 pb-20 sm:pb-10">
+            {edges &&
+              edges.length > 0 &&
+              edges.map((edge) => (
+                <CommentItem
+                  isAuthenticated={isAuthenticated}
+                  key={edge.node?.id}
+                  profile={profile}
+                  publishId={publishId}
+                  comment={edge.node}
+                  openSubComments={openSubComments}
+                />
+              ))}
+
+            <div
+              ref={observedRef}
+              className="w-full h-4 flex items-center justify-center"
+            >
+              {commentsLoading && (
+                <ButtonLoader
+                  loading={commentsLoading}
+                  size={8}
+                  color="#d4d4d4"
+                />
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
