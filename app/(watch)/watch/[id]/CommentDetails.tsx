@@ -51,13 +51,17 @@ export default function CommentDetails({
   const [isPending, startTransition] = useTransition()
 
   const confirmComment = useCallback(() => {
-    if (!publishId) return
+    if (!publishId) return null
     const el = document.getElementById(publishId) as HTMLTextAreaElement
-    if (!el) return
+    if (!el) return null
 
     const content = el.value
+    if (!content) return null
+
     startTransition(() => commentOnPublish(content, publishId))
     el.value = ""
+
+    return "Ok"
   }, [publishId])
 
   const clearComment = useCallback(() => {

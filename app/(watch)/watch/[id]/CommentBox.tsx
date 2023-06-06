@@ -8,7 +8,7 @@ interface Props {
   profile: Maybe<Station> | undefined
   avatarSize?: number
   replyTo?: string
-  onSubmit: () => void
+  onSubmit: () => "Ok" | null
   fontSize?: "sm" | "base" | "lg"
   clearComment: () => void
 }
@@ -38,7 +38,8 @@ export default function CommentBox({
   const onConfirm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      onSubmit()
+      const result = onSubmit()
+      if (!result) return
       setIsActive(false)
     },
     [onSubmit]

@@ -62,11 +62,13 @@ export default function CommentItem({
   }, [])
 
   const confirmReply = useCallback(() => {
-    if (!publishId || !commentId) return
+    if (!publishId || !commentId) return null
     const el = document.getElementById(commentId) as HTMLTextAreaElement
-    if (!el) return
+    if (!el) return null
 
     const content = el.value
+    if (!content) return null
+
     if (parentCommentId) {
       // Commenting on a sub-comment, we need to pass the id of the parent of the sub-comment.
       startTransition(() =>
@@ -80,6 +82,8 @@ export default function CommentItem({
     setIsReplying(false)
     // Clear text input
     el.value = ""
+
+    return "Ok"
   }, [publishId, parentCommentId, commentId])
 
   const clearComment = useCallback(() => {
