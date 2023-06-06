@@ -1,6 +1,6 @@
 import React, { useTransition, useCallback, useState } from "react"
 
-import CommentItem from "./CommentItem"
+import CommentBaseItem from "./CommentBaseItem"
 import ButtonLoader from "@/components/ButtonLoader"
 import CommentBox from "./CommentBox"
 import { useAuthContext } from "@/context/AuthContext"
@@ -12,6 +12,7 @@ import type {
   Station,
   Comment,
 } from "@/graphql/codegen/graphql"
+import SubComments from "./SubComments"
 
 interface Props {
   isAuthenticated: boolean
@@ -94,7 +95,14 @@ export default function CommentDetails({
   return (
     <div className="h-full px-4 sm:px-0 overflow-y-auto sm:overflow-y-hidden">
       {subCommentsVisible && activeComment ? (
-        <div>Subcomments</div>
+        <div className="w-full mt-6 pb-20 sm:pb-10">
+          <SubComments
+            publishId={publishId}
+            comment={activeComment}
+            isAuthenticated={isAuthenticated}
+            profile={profile}
+          />
+        </div>
       ) : (
         <>
           {isAuthenticated ? (
@@ -117,7 +125,7 @@ export default function CommentDetails({
             {edges &&
               edges.length > 0 &&
               edges.map((edge) => (
-                <CommentItem
+                <CommentBaseItem
                   isAuthenticated={isAuthenticated}
                   key={edge.node?.id}
                   profile={profile}

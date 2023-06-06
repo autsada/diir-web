@@ -17,79 +17,20 @@ interface Props {
   isAuthenticated: boolean
   profile: Maybe<Station> | undefined
   publishId: string
-  comment: Maybe<Comment> | undefined
-  openSubComments: (c: Comment) => void
+  parentComment?: Comment
+  comment: Comment
+  avatarSize?: number
 }
 
 export default function CommentItem({
   isAuthenticated,
   profile,
-  publishId,
-  comment,
-  openSubComments,
-}: Props) {
-  //   const [subCommentsVisible, setSubCommentsVisible] = useState(false)
-
-  if (!comment) return null
-
-  return (
-    <div className="mb-6">
-      <Item
-        isAuthenticated={isAuthenticated}
-        profile={profile}
-        comment={comment}
-        publishId={publishId}
-      />
-
-      {/* Comments */}
-      {comment.comments.length > 0 && (
-        <div className="mt-2 pl-[40px]">
-          <div
-            className="w-max py-2 px-4 rounded-full flex items-center gap-x-1 font-semibold text-blueBase text-sm cursor-pointer hover:bg-neutral-100"
-            onClick={openSubComments.bind(undefined, comment)}
-          >
-            <p>{comment.commentsCount}</p>
-            <p>repl{comment.commentsCount === 1 ? "y" : "ies"}</p>
-          </div>
-          {/* {subCommentsVisible && (
-            <div className="mt-2 pl-2">
-              {comment.comments?.map((comt) => (
-                <div key={comt.id} className="mb-4">
-                  <Item
-                    isAuthenticated={isAuthenticated}
-                    profile={profile}
-                    parentCommentId={comment.id}
-                    comment={comt}
-                    publishId={publishId}
-                    avatarSize={30}
-                  />
-                </div>
-              ))}
-            </div>
-          )} */}
-        </div>
-      )}
-    </div>
-  )
-}
-
-interface ItemProps {
-  isAuthenticated: boolean
-  profile: Maybe<Station> | undefined
-  publishId: string
-  parentCommentId?: string
-  comment: Comment
-  avatarSize?: number
-}
-
-function Item({
-  isAuthenticated,
-  profile,
-  parentCommentId,
+  parentComment,
   comment,
   publishId,
   avatarSize = 40,
-}: ItemProps) {
+}: Props) {
+  const parentCommentId = parentComment?.id
   const commentId = comment?.id || ""
   const content = comment?.content || ""
   const initialDisplayed = 200
@@ -221,6 +162,7 @@ function Item({
             inputId={commentId}
             profile={profile}
             avatarSize={avatarSize}
+            replyTo={parentComment ? `@${comment.creator?.name}` : undefined}
             onSubmit={confirmReply}
             fontSize="sm"
             clearComment={clearComment}

@@ -13,7 +13,7 @@ import type {
 /**
  * Fetch comments by publish id
  */
-export const FETCH_COMMENTS_BY_ID_QUERY = gql`
+export const FETCH_COMMENTS_BY_PUBLISH_ID_QUERY = gql`
   query FetchCommentsByPublishId($input: FetchCommentsByPublishIdInput!) {
     fetchCommentsByPublishId(input: $input) {
       pageInfo {
@@ -69,7 +69,7 @@ export async function fetchComments(data: FetchCommentsByPublishIdInput) {
       .request<
         QueryReturnType<"fetchCommentsByPublishId">,
         QueryArgsType<"fetchCommentsByPublishId">
-      >(FETCH_COMMENTS_BY_ID_QUERY, {
+      >(FETCH_COMMENTS_BY_PUBLISH_ID_QUERY, {
         input: data,
       })
 

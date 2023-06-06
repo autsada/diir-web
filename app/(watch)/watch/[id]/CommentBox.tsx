@@ -7,6 +7,7 @@ interface Props {
   inputId: string
   profile: Maybe<Station> | undefined
   avatarSize?: number
+  replyTo?: string
   onSubmit: () => void
   fontSize?: "sm" | "base" | "lg"
   clearComment: () => void
@@ -16,6 +17,7 @@ export default function CommentBox({
   inputId,
   profile,
   avatarSize,
+  replyTo,
   onSubmit,
   fontSize = "base",
   clearComment,
@@ -59,6 +61,7 @@ export default function CommentBox({
               ? "text-lg"
               : "text-base"
           }`}
+          defaultValue={replyTo}
           onClick={startComment}
         />
       </div>
