@@ -14,7 +14,7 @@ import {
 } from "react-icons/ai"
 import _ from "lodash"
 
-import Reaction from "./ReactTion"
+import Reaction from "./Reaction"
 import { useAuthContext } from "@/context/AuthContext"
 import { likePublish, disLikePublish } from "./actions"
 

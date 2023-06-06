@@ -409,7 +409,7 @@ export async function updatePublish({
 }
 
 /**
- * Like / Undo like pubulish
+ * Like / Undo like publish
  */
 export const LIKE_PUBLISH_MUTATION = gql`
   mutation LikePublish($input: LikePublishInput!) {
@@ -448,7 +448,7 @@ export async function like({
 }
 
 /**
- * DisLike / Undo disLike pubulish
+ * DisLike / Undo disLike publish
  */
 export const DISLIKE_PUBLISH_MUTATION = gql`
   mutation DisLikePublish($input: LikePublishInput!) {

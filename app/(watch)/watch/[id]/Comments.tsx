@@ -1,12 +1,15 @@
 "use client"
 
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import { isMobile } from "react-device-detect"
 import { BsCaretDown } from "react-icons/bs"
 import { MdArrowBack } from "react-icons/md"
+import { useRouter } from "next/navigation"
+import { onSnapshot, doc } from "firebase/firestore"
 
 import CommentDetails from "./CommentDetails"
 import CommentsModal from "./CommentsModal"
+import { db, publishesCollection } from "@/firebase/config"
 import type {
   Maybe,
   Publish,
@@ -31,6 +34,23 @@ export default function Comments({
   const [commentsModalVisible, setCommentsModalVisible] = useState(false)
   const [subCommentsVisible, setSubCommentsVisible] = useState(false)
   const [activeComment, setActiveComment] = useState<Comment>()
+
+  const router = useRouter()
+
+  // Listen to update in Firestore
+  useEffect(() => {
+    if (!publish?.id) return
+
+    const unsubscribe = onSnapshot(
+      doc(db, publishesCollection, publish?.id),
+      (doc) => {
+        // Reload data to get the most updated publish
+        router.refresh()
+      }
+    )
+
+    return unsubscribe
+  }, [router, publish?.id])
 
   const openCommentsModal = useCallback(() => {
     if (!isMobile) return

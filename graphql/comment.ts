@@ -8,6 +8,7 @@ import type {
   MutationArgsType,
   CommentPublishInput,
   FetchCommentsByPublishIdInput,
+  LikeCommentInput,
 } from "./types"
 
 /**
@@ -80,7 +81,7 @@ export async function fetchComments(data: FetchCommentsByPublishIdInput) {
 }
 
 /**
- * DisLike / Undo disLike pubulish
+ * Comment on publish / comment
  */
 export const COMMENT_MUTATION = gql`
   mutation Comment($input: CommentPublishInput!) {
@@ -113,6 +114,45 @@ export async function commentPublish({
       )
 
     return result?.comment
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Like / Undo like comment
+ */
+export const LIKE_COMMENT_MUTATION = gql`
+  mutation LikeComment($input: LikeCommentInput!) {
+    likeComment(input: $input) {
+      status
+    }
+  }
+`
+export async function likeComment({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: LikeCommentInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"likeComment">,
+        MutationArgsType<"likeComment">
+      >(LIKE_COMMENT_MUTATION, {
+        input: data,
+      })
+
+    return result?.likeComment
   } catch (error) {
     throw error
   }

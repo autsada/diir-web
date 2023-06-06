@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react"
 import { AiOutlineFolderAdd, AiFillFolderAdd } from "react-icons/ai"
 
-import Reaction from "./ReactTion"
+import Reaction from "./Reaction"
 import AddToPlaylistModal from "@/app/(publishes)/AddToPlaylistModal"
 import { useAuthContext } from "@/context/AuthContext"
 import type {

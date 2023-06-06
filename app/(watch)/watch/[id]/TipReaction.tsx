@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react"
 import { AiOutlineDollarCircle, AiFillDollarCircle } from "react-icons/ai"
 
-import Reaction from "./ReactTion"
+import Reaction from "./Reaction"
 import TipModal from "./TipModal"
 import { useAuthContext } from "@/context/AuthContext"
 import type { Publish } from "@/graphql/codegen/graphql"

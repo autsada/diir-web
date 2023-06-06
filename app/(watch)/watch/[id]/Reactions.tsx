@@ -34,7 +34,7 @@ export default function Reactions({
 }: Props) {
   const router = useRouter()
 
-  // Listen to upload finished update in Firestore
+  // Listen to update in Firestore
   useEffect(() => {
     if (!publish?.id) return
 

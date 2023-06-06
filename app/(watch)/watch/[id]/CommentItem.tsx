@@ -1,16 +1,18 @@
-import React, { useState, useCallback, useTransition } from "react"
+import React, { useState, useCallback, useTransition, useMemo } from "react"
 import {
   AiOutlineDislike,
   AiFillDislike,
   AiFillLike,
   AiOutlineLike,
 } from "react-icons/ai"
+import _ from "lodash"
 
 import Avatar from "@/components/Avatar"
 import CommentBox from "./CommentBox"
 import { useExpandContent } from "@/hooks/useExpandContent"
+import { useAuthContext } from "@/context/AuthContext"
 import { calculateTimeElapsed } from "@/lib/client"
-import { commentOnComment } from "./actions"
+import { commentOnComment, likePublishComment } from "./actions"
 import type { Comment, Maybe, Station } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -44,8 +46,12 @@ export default function CommentItem({
   const disLiked = !!comment?.disLiked
 
   const [isReplying, setIsReplying] = useState(false)
+  const [optimisticLiked, setOptimisticLiked] = useState(liked)
+  const [optimisticLikesCount, setOptimisticLikesCount] = useState(likesCount)
+  const [optimisticDisLiked, setOptimisticDisLiked] = useState(disLiked)
 
   const [isPending, startTransition] = useTransition()
+  const { onVisible: openAuthModal } = useAuthContext()
 
   const toggleCommentBox = useCallback(() => {
     setIsReplying((prev) => !prev)
@@ -79,6 +85,36 @@ export default function CommentItem({
 
     el.value = ""
   }, [commentId])
+
+  const handleLikeComment = useCallback(() => {
+    if (!publishId || !commentId) return
+
+    if (!isAuthenticated) {
+      openAuthModal()
+    } else {
+      setOptimisticLiked(!liked)
+      if (!liked && disLiked) {
+        setOptimisticDisLiked(!disLiked)
+      }
+      setOptimisticLikesCount(
+        liked ? (likesCount > 0 ? likesCount - 1 : likesCount) : likesCount + 1
+      )
+      startTransition(() => likePublishComment(publishId, commentId))
+    }
+  }, [
+    isAuthenticated,
+    openAuthModal,
+    publishId,
+    commentId,
+    liked,
+    likesCount,
+    disLiked,
+  ])
+
+  const likeDebounce = useMemo(
+    () => _.debounce(handleLikeComment, 200),
+    [handleLikeComment]
+  )
 
   return (
     <div className="w-full flex items-start gap-x-4">
@@ -129,14 +165,21 @@ export default function CommentItem({
 
         {/* Like/Dislike */}
         <div className="flex items-center gap-x-8">
-          <div className="flex items-center gap-x-4">
-            <div className="flex items-center gap-x-1">
-              <div className="cursor-pointer p-1 flex items-center justify-center rounded-full hover:bg-neutral-100">
-                {liked ? <AiFillLike size={20} /> : <AiOutlineLike size={20} />}
+          <div className="w-[100px] flex items-center">
+            <div className="w-[60px] flex items-center gap-x-1">
+              <div
+                className="cursor-pointer p-1 flex items-center justify-center rounded-full hover:bg-neutral-100"
+                onClick={likeDebounce}
+              >
+                {optimisticLiked ? (
+                  <AiFillLike size={20} />
+                ) : (
+                  <AiOutlineLike size={20} />
+                )}
               </div>
-              <p className="text-sm text-textLight">{likesCount}</p>
+              <p className="text-sm text-textLight">{optimisticLikesCount}</p>
             </div>
-            <div>
+            <div className="w-[40px]">
               <div className="cursor-pointer p-1 flex items-center justify-center rounded-full hover:bg-neutral-100">
                 {disLiked ? (
                   <AiFillDislike size={20} />

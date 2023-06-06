@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react"
 import { AiOutlineShareAlt } from "react-icons/ai"
 
-import Reaction from "./ReactTion"
+import Reaction from "./Reaction"
 import ShareModal from "@/app/(publishes)/ShareModal"
 
 interface Props {

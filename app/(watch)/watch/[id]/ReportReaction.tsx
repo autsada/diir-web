@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react"
 import { AiOutlineFlag, AiFillFlag } from "react-icons/ai"
 
-import Reaction from "./ReactTion"
+import Reaction from "./Reaction"
 import ReportModal from "@/app/(publishes)/ReportModal"
 
 interface Props {
