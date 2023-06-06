@@ -18,6 +18,7 @@ import {
   likePublishComment,
 } from "./actions"
 import type { Comment, Maybe, Station } from "@/graphql/codegen/graphql"
+import StationName from "@/components/StationName"
 
 interface Props {
   isAuthenticated: boolean
@@ -165,13 +166,7 @@ export default function CommentItem({
       <div className="flex-grow">
         {/* Comment owner */}
         <div className="flex items-center gap-x-4">
-          <div className="flex items-center gap-x-2">
-            <h6 className="text-sm">{comment.creator?.displayName || ""}</h6>
-            <span className="text-thin text-xs">|</span>
-            <p className="font-light text-sm text-textLight">
-              @{comment.creator?.name || ""}
-            </p>
-          </div>
+          <StationName profile={comment.creator} fontSize="sm" />
           <p className="italic text-xs text-textExtraLight">
             {calculateTimeElapsed(comment.createdAt)}
           </p>
@@ -191,7 +186,7 @@ export default function CommentItem({
           {content.length > initialDisplayed &&
             content.length === displayedContent.length && (
               <p
-                className="mt-2 font-semibold cursor-pointer"
+                className="mt-2 font-semibold cursor-pointer text-sm"
                 onClick={shrinkContent}
               >
                 Show less
@@ -200,7 +195,7 @@ export default function CommentItem({
         </div>
 
         {/* Like/Dislike */}
-        <div className="flex items-center gap-x-8">
+        <div className="mt-2 flex items-center gap-x-8">
           <div className="w-[100px] flex items-center">
             <div className="w-[60px] flex items-center gap-x-1">
               <div

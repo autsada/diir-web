@@ -1,5 +1,6 @@
 import React from "react"
 import Image from "next/image"
+import Link from "next/link"
 
 import type { Station } from "@/graphql/codegen/graphql"
 
@@ -26,37 +27,39 @@ export default function Avatar({
   const bgColor = profileColor || "#f97316"
 
   return (
-    <div
-      className={`flex items-center justify-center rounded-full overflow-hidden cursor-pointer`}
-      style={{
-        width,
-        height,
-      }}
-    >
-      {!profile || !profile.image ? (
-        !profile ? (
-          <div className="w-full h-full flex items-center justify-center bg-blueBase text-white text-xs">
-            DiiR
-          </div>
+    <Link href={`/@${profile?.name}`}>
+      <div
+        className={`flex items-center justify-center rounded-full overflow-hidden cursor-pointer`}
+        style={{
+          width,
+          height,
+        }}
+      >
+        {!profile || !profile.image ? (
+          !profile ? (
+            <div className="w-full h-full flex items-center justify-center bg-blueBase text-white text-xs">
+              DiiR
+            </div>
+          ) : (
+            <div
+              className={`w-full h-full flex items-center justify-center text-white ${fontSize}`}
+              style={{ backgroundColor: bgColor }}
+            >
+              {profile.displayName
+                ? profile.displayName.slice(0, 1).toUpperCase()
+                : "A"}
+            </div>
+          )
         ) : (
-          <div
-            className={`w-full h-full flex items-center justify-center text-white ${fontSize}`}
-            style={{ backgroundColor: bgColor }}
-          >
-            {profile.displayName
-              ? profile.displayName.slice(0, 1).toUpperCase()
-              : "A"}
-          </div>
-        )
-      ) : (
-        <Image
-          src={profile.image}
-          alt={profile.displayName || ""}
-          width={width}
-          height={height}
-          className="w-full h-full object-cover"
-        />
-      )}
-    </div>
+          <Image
+            src={profile.image}
+            alt={profile.displayName || ""}
+            width={width}
+            height={height}
+            className="w-full h-full object-cover"
+          />
+        )}
+      </div>
+    </Link>
   )
 }

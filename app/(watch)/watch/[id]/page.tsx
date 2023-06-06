@@ -8,6 +8,7 @@ import Description from "./Description"
 import Avatar from "@/components/Avatar"
 import Comments from "./Comments"
 import Reactions from "./Reactions"
+import StationName from "@/components/StationName"
 import { getAccount } from "@/lib/server"
 import {
   checkPublishPlaylists,
@@ -177,17 +178,8 @@ export default async function Watch({ params }: Props) {
 
           <div className="mb-4 flex items-start justify-between h-[50px] gap-x-4">
             <Avatar profile={publish.creator} />
-
             <div className="relative flex-grow h-full">
-              <div className="flex items-center gap-x-2">
-                <h6 className="text-lg">
-                  {publish.creator?.displayName || ""}
-                </h6>
-                <span className="text-thin text-xs">|</span>
-                <p className="font-light text-textLight">
-                  @{publish.creator?.name || ""}
-                </p>
-              </div>
+              <StationName profile={publish.creator} />
               <p className="text-sm">
                 {publish.creator?.followersCount || 0}{" "}
                 <span className="text-textExtraLight">Followers</span>

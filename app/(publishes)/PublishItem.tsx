@@ -4,6 +4,7 @@ import { HiDotsVertical } from "react-icons/hi"
 
 import VideoPlayer from "@/components/VideoPlayer"
 import Avatar from "@/components/Avatar"
+import StationName from "@/components/StationName"
 import {
   calculateTimeElapsed,
   getPostExcerpt,
@@ -68,21 +69,12 @@ export default function PublishItem({ publish, onAction, setPOS }: Props) {
         </Link>
 
         <div className="flex items-start py-4 px-2 gap-x-5">
-          <Link href={`/@${publish.creator?.name}`}>
-            <Avatar profile={publish.creator} />
-          </Link>
+          <Avatar profile={publish.creator} />
           <div className="w-full text-left mr-8">
             <Link href={`/watch/${publish.id}`}>
               <h6>{getPostExcerpt(publish.title || "", 60)}</h6>
             </Link>
-            <Link href={`/@${publish.creator?.name}`}>
-              <p className="text-textLight">
-                {publish.creator?.displayName}{" "}
-                <span className="italic font-light text-textExtraLight">
-                  @{publish.creator?.name}
-                </span>
-              </p>
-            </Link>
+            <StationName profile={publish.creator} />
             <Link href={`/watch/${publish.id}`}>
               <div className="flex items-center gap-x-4 text-textLight">
                 <p>{publish.views || 0} views</p>
