@@ -12,7 +12,11 @@ import CommentBox from "./CommentBox"
 import { useExpandContent } from "@/hooks/useExpandContent"
 import { useAuthContext } from "@/context/AuthContext"
 import { calculateTimeElapsed } from "@/lib/client"
-import { commentOnComment, likePublishComment } from "./actions"
+import {
+  commentOnComment,
+  disLikePublishComment,
+  likePublishComment,
+} from "./actions"
 import type { Comment, Maybe, Station } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -116,6 +120,34 @@ export default function CommentItem({
     [handleLikeComment]
   )
 
+  const handleDisLikeComment = useCallback(() => {
+    if (!publishId || !commentId) return
+
+    if (!isAuthenticated) {
+      openAuthModal()
+    } else {
+      setOptimisticDisLiked(!disLiked)
+      if (!disLiked && liked) {
+        setOptimisticLiked(!liked)
+        setOptimisticLikesCount(likesCount > 0 ? likesCount - 1 : likesCount)
+      }
+      startTransition(() => disLikePublishComment(publishId, commentId))
+    }
+  }, [
+    isAuthenticated,
+    openAuthModal,
+    publishId,
+    commentId,
+    disLiked,
+    liked,
+    likesCount,
+  ])
+
+  const disLikeDebounce = useMemo(
+    () => _.debounce(handleDisLikeComment, 200),
+    [handleDisLikeComment]
+  )
+
   return (
     <div className="w-full flex items-start gap-x-4">
       <div>
@@ -180,8 +212,11 @@ export default function CommentItem({
               <p className="text-sm text-textLight">{optimisticLikesCount}</p>
             </div>
             <div className="w-[40px]">
-              <div className="cursor-pointer p-1 flex items-center justify-center rounded-full hover:bg-neutral-100">
-                {disLiked ? (
+              <div
+                className="cursor-pointer p-1 flex items-center justify-center rounded-full hover:bg-neutral-100"
+                onClick={disLikeDebounce}
+              >
+                {optimisticDisLiked ? (
                   <AiFillDislike size={20} />
                 ) : (
                   <AiOutlineDislike size={20} />

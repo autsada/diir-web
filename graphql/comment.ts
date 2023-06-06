@@ -157,3 +157,42 @@ export async function likeComment({
     throw error
   }
 }
+
+/**
+ * Dislike / Undo dislike comment
+ */
+export const DISLIKE_COMMENT_MUTATION = gql`
+  mutation DisLikeComment($input: LikeCommentInput!) {
+    disLikeComment(input: $input) {
+      status
+    }
+  }
+`
+export async function disLikeComment({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: LikeCommentInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"disLikeComment">,
+        MutationArgsType<"disLikeComment">
+      >(DISLIKE_COMMENT_MUTATION, {
+        input: data,
+      })
+
+    return result?.disLikeComment
+  } catch (error) {
+    throw error
+  }
+}

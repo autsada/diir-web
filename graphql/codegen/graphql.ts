@@ -366,6 +366,7 @@ export type Mutation = {
   createDraftPublish?: Maybe<CreateDraftPublishResult>;
   createStation?: Maybe<Station>;
   createTip?: Maybe<Tip>;
+  disLikeComment?: Maybe<WriteResult>;
   disLikePublish?: Maybe<WriteResult>;
   dontRecommend?: Maybe<WriteResult>;
   likeComment?: Maybe<WriteResult>;
@@ -433,6 +434,11 @@ export type MutationCreateStationArgs = {
 
 export type MutationCreateTipArgs = {
   input: CreateTipInput;
+};
+
+
+export type MutationDisLikeCommentArgs = {
+  input: LikeCommentInput;
 };
 
 
