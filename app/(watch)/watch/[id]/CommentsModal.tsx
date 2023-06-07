@@ -1,8 +1,8 @@
-import React from "react"
-import { MdArrowBack } from "react-icons/md"
+import React, { useState } from "react"
 
 import ModalWrapper from "@/components/ModalWrapper"
 import CommentDetails from "./CommentDetails"
+import CommentsHeader from "./CommentsHeader"
 import CloseButton from "@/components/CloseButton"
 import type {
   FetchCommentsResponse,
@@ -10,6 +10,7 @@ import type {
   Station,
   Comment,
 } from "@/graphql/codegen/graphql"
+import type { OrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -36,31 +37,22 @@ export default function CommentsModal({
   activeComment,
   closeSubComments,
 }: Props) {
+  const [sortBy, setSortBy] = useState<OrderBy>("counts")
+  const [commentsResponse, setCommentsResponse] = useState(commentsResult)
+
   return (
     <ModalWrapper visible>
       <div className="fixed bottom-0 w-[100%] h-[80%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden">
         <div className="p-4 flex items-center justify-between border-b border-neutral-100">
-          <div
-            className={`flex items-center ${
-              subCommentsVisible ? "gap-x-4" : "gap-x-2"
-            }`}
-          >
-            {!subCommentsVisible ? (
-              <>
-                <h6>{commentsCount}</h6>
-                <h6>Comments</h6>
-              </>
-            ) : (
-              <>
-                <MdArrowBack
-                  size={22}
-                  className="cursor-pointer"
-                  onClick={closeSubComments}
-                />
-                <h6>Replies</h6>
-              </>
-            )}
-          </div>
+          <CommentsHeader
+            subCommentsVisible={subCommentsVisible}
+            commentsCount={commentsCount}
+            publishId={publishId}
+            closeSubComments={closeSubComments}
+            setCommentsResponse={setCommentsResponse}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
           <div>
             <CloseButton onClick={closeModal} />
           </div>
@@ -69,10 +61,11 @@ export default function CommentsModal({
           isAuthenticated={isAuthenticated}
           profile={profile}
           publishId={publishId}
-          commentsResult={commentsResult}
+          commentsResult={commentsResponse}
           subCommentsVisible={subCommentsVisible}
           openSubComments={openSubComments}
           activeComment={activeComment}
+          fetchCommentsSortBy={sortBy}
         />
       </div>
     </ModalWrapper>

@@ -232,6 +232,7 @@ export type DontRecommendInput = {
 
 export type FetchCommentsByPublishIdInput = {
   cursor?: InputMaybe<Scalars['String']['input']>;
+  orderBy?: InputMaybe<OrderBy>;
   publishId: Scalars['String']['input'];
   requestorId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -538,6 +539,11 @@ export type MutationValidateDisplayNameArgs = {
 export type MutationValidateNameArgs = {
   name: Scalars['String']['input'];
 };
+
+export enum OrderBy {
+  Counts = 'counts',
+  Newest = 'newest'
+}
 
 export type PageInfo = {
   __typename?: 'PageInfo';

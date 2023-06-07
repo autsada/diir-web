@@ -25,6 +25,7 @@ export type PublishKind = NexusGenEnums["PublishKind"]
 export type QueryPublishKind = NexusGenEnums["QueryPublishKind"]
 export type ReportReason = NexusGenEnums["ReportReason"]
 export type CommentType = NexusGenEnums["CommentType"]
+export type OrderBy = NexusGenEnums["OrderBy"]
 
 export type QueryByIdInput = NexusGenInputs["QueryByIdInput"]
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]

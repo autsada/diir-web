@@ -3,6 +3,7 @@ import React, { useTransition, useCallback, useState } from "react"
 import CommentBaseItem from "./CommentBaseItem"
 import ButtonLoader from "@/components/ButtonLoader"
 import CommentBox from "./CommentBox"
+import SubComments from "./SubComments"
 import { useAuthContext } from "@/context/AuthContext"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import { commentOnPublish } from "./actions"
@@ -12,7 +13,7 @@ import type {
   Station,
   Comment,
 } from "@/graphql/codegen/graphql"
-import SubComments from "./SubComments"
+import type { OrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -22,6 +23,7 @@ interface Props {
   subCommentsVisible: boolean
   openSubComments: (c: Comment) => void
   activeComment: Comment | undefined
+  fetchCommentsSortBy?: OrderBy
 }
 
 export default function CommentDetails({
@@ -32,6 +34,7 @@ export default function CommentDetails({
   subCommentsVisible,
   openSubComments,
   activeComment,
+  fetchCommentsSortBy,
 }: Props) {
   const [commentsLoading, setCommentsLoading] = useState(false)
   const [prevCommentsResult, setPrevCommentResult] = useState(commentsResult)
@@ -82,7 +85,11 @@ export default function CommentDetails({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cursor: pageInfo?.endCursor, publishId }),
+        body: JSON.stringify({
+          cursor: pageInfo?.endCursor,
+          publishId,
+          sortBy: fetchCommentsSortBy,
+        }),
       })
       const data = (await res.json()) as {
         result: FetchCommentsResponse
@@ -93,7 +100,12 @@ export default function CommentDetails({
     } catch (error) {
       setCommentsLoading(false)
     }
-  }, [pageInfo?.endCursor, pageInfo?.hasNextPage, publishId])
+  }, [
+    pageInfo?.endCursor,
+    pageInfo?.hasNextPage,
+    publishId,
+    fetchCommentsSortBy,
+  ])
   const { observedRef } = useInfiniteScroll(0.5, fetchMoreComments)
 
   return (

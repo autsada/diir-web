@@ -107,6 +107,7 @@ export interface NexusGenInputs {
   FetchCommentsByPublishIdInput: {
     // input type
     cursor?: string | null // String
+    orderBy?: NexusGenEnums["OrderBy"] | null // OrderBy
     publishId: string // String!
     requestorId?: string | null // String
   }
@@ -287,6 +288,7 @@ export interface NexusGenEnums {
     | "Vehicles"
     | "Women"
   CommentType: "COMMENT" | "PUBLISH"
+  OrderBy: "counts" | "newest"
   PublishKind: "Adds" | "Blog" | "Podcast" | "Short" | "Video"
   QueryPublishKind: "adds" | "all" | "blogs" | "podcasts" | "videos"
   ReportReason:

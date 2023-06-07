@@ -3,12 +3,12 @@
 import React, { useState, useCallback, useEffect } from "react"
 import { isMobile } from "react-device-detect"
 import { BsCaretDown } from "react-icons/bs"
-import { MdArrowBack } from "react-icons/md"
 import { useRouter } from "next/navigation"
 import { onSnapshot, doc } from "firebase/firestore"
 
 import CommentDetails from "./CommentDetails"
 import CommentsModal from "./CommentsModal"
+import CommentsHeader from "./CommentsHeader"
 import { db, publishesCollection } from "@/firebase/config"
 import type {
   Maybe,
@@ -17,6 +17,7 @@ import type {
   FetchCommentsResponse,
   Comment,
 } from "@/graphql/codegen/graphql"
+import type { OrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -34,6 +35,8 @@ export default function Comments({
   const [commentsModalVisible, setCommentsModalVisible] = useState(false)
   const [subCommentsVisible, setSubCommentsVisible] = useState(false)
   const [activeComment, setActiveComment] = useState<Comment>()
+  const [sortBy, setSortBy] = useState<OrderBy>("counts")
+  const [commentsResponse, setCommentsResponse] = useState(commentsResult)
 
   const router = useRouter()
 
@@ -104,35 +107,24 @@ export default function Comments({
         </>
       ) : (
         <>
-          <div
-            className={`flex items-center ${
-              subCommentsVisible ? "gap-x-4" : "gap-x-2"
-            }`}
-          >
-            {!subCommentsVisible ? (
-              <>
-                <h6>{publish.commentsCount}</h6>
-                <h6>Comments</h6>
-              </>
-            ) : (
-              <>
-                <MdArrowBack
-                  size={22}
-                  className="cursor-pointer"
-                  onClick={closeSubComments}
-                />
-                <h6>Replies</h6>
-              </>
-            )}
-          </div>
+          <CommentsHeader
+            subCommentsVisible={subCommentsVisible}
+            commentsCount={publish.commentsCount}
+            publishId={publish.id}
+            closeSubComments={closeSubComments}
+            setCommentsResponse={setCommentsResponse}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
           <CommentDetails
             isAuthenticated={isAuthenticated}
             profile={profile}
             publishId={publish?.id}
-            commentsResult={commentsResult}
+            commentsResult={commentsResponse}
             subCommentsVisible={subCommentsVisible}
             openSubComments={openSubComments}
             activeComment={activeComment}
+            fetchCommentsSortBy={sortBy}
           />
         </>
       )}
