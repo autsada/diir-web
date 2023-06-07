@@ -7,7 +7,7 @@ import _ from "lodash"
 import ConfirmModal from "@/components/ConfirmModal"
 import { useAuthContext } from "@/context/AuthContext"
 import { followStation } from "@/app/(non-watch)/(station)/[station]/actions"
-import type { Publish, Station } from "@/graphql/codegen/graphql"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   isAuthenticated: boolean
@@ -26,7 +26,16 @@ export default function ManageFollow({
   const followerId = follow?.id
   const followerName = follow?.name
   const isFollowing = !!follow?.isFollowing
+  const [prevFollowingStatus, setPrevFollowingStatus] = useState(isFollowing)
   const [optimisticFollowing, setOptimisticFollowing] = useState(isFollowing)
+
+  // When following status changed
+  if (isFollowing !== prevFollowingStatus) {
+    // Update the displayed following status (optimisticFollowing)
+    setOptimisticFollowing(isFollowing)
+    setPrevFollowingStatus(isFollowing)
+  }
+
   const { onVisible: openAuthModal } = useAuthContext()
   const [isPending, startTransition] = useTransition()
 

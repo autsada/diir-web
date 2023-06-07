@@ -117,10 +117,7 @@ export default function CommentDetails({
               clearComment={clearComment}
             />
           ) : (
-            <button
-              className="px-4 font-semibold text-blueBase"
-              onClick={onVisible}
-            >
+            <button className="mt-2 px-4 font-semibold" onClick={onVisible}>
               Sign in to comment
             </button>
           )}

@@ -81,7 +81,7 @@ export default function MainNav({
       <div className="h-full w-[80px] flex items-center justify-end pr-2">
         {account ? (
           <div onClick={openRightDrawer}>
-            <Avatar profile={account?.defaultStation} />
+            <Avatar profile={account?.defaultStation} withLink={false} />
           </div>
         ) : (
           <button
