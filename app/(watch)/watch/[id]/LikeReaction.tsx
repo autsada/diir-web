@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useTransition,
-  useMemo,
-  experimental_useOptimistic as useOptimistic,
-  useState,
-  useEffect,
-} from "react"
+import React, { useCallback, useTransition, useMemo, useState } from "react"
 import {
   AiOutlineDislike,
   AiFillDislike,
@@ -34,31 +27,32 @@ export default function LikeReaction({
   disLiked,
 }: Props) {
   const [isPending, startTransition] = useTransition()
-  // const [optimisticLiked, setOptimisticLiked] = useOptimistic(
-  //   liked,
-  //   (state, newLiked: boolean) => newLiked
-  // )
+
+  const [prevLiked, setPrevLiked] = useState(!!liked)
   const [optimisticLiked, setOptimisticLiked] = useState(!!liked)
-  // const [optimisticLikesCount, setOptimisticLikesCount] = useOptimistic(
-  //   likesCount,
-  //   (state, likesCount: number) => likesCount
-  // )
+  // When liked changed
+  if (!!liked !== prevLiked) {
+    setOptimisticLiked(!!liked)
+    setPrevLiked(!!liked)
+  }
+
+  const [prevLikesCount, setPrevLikesCount] = useState(likesCount)
   const [optimisticLikesCount, setOptimisticLikesCount] = useState(likesCount)
+  // When likes count changed
+  if (likesCount !== prevLikesCount) {
+    setOptimisticLikesCount(likesCount)
+    setPrevLikesCount(likesCount)
+  }
+
+  const [prevDisLiked, setPrevDisLiked] = useState(!!disLiked)
   const [optimisticDisLiked, setOptimisticDisLiked] = useState(!!disLiked)
+  // When disLiked changed
+  if (!!disLiked !== prevDisLiked) {
+    setOptimisticDisLiked(!!disLiked)
+    setPrevDisLiked(!!disLiked)
+  }
 
   const { onVisible: openAuthModal } = useAuthContext()
-
-  useEffect(() => {
-    setOptimisticLiked(liked)
-  }, [liked])
-
-  useEffect(() => {
-    setOptimisticLikesCount(likesCount)
-  }, [likesCount])
-
-  useEffect(() => {
-    setOptimisticDisLiked(disLiked)
-  }, [disLiked])
 
   const handleLikePublish = useCallback(() => {
     if (!publishId) return
@@ -75,16 +69,7 @@ export default function LikeReaction({
       )
       startTransition(() => likePublish(publishId))
     }
-  }, [
-    isAuthenticated,
-    openAuthModal,
-    publishId,
-    liked,
-    likesCount,
-    // setOptimisticLiked,
-    // setOptimisticLikesCount,
-    disLiked,
-  ])
+  }, [isAuthenticated, openAuthModal, publishId, liked, likesCount, disLiked])
 
   const likeDebounce = useMemo(
     () => _.debounce(handleLikePublish, 200),
