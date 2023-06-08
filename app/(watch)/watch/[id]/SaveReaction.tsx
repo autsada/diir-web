@@ -1,15 +1,13 @@
-import React, { useCallback, useState, useMemo, useEffect } from "react"
+import React, { useCallback, useState } from "react"
 import { AiOutlineFolderAdd, AiFillFolderAdd } from "react-icons/ai"
 
 import Reaction from "./Reaction"
-import AddToPlaylistModal from "@/app/(publishes)/AddToPlaylistModal"
+import AddToPlaylistsModal from "./AddToPlaylistsModal"
 import { useAuthContext } from "@/context/AuthContext"
 import type {
   CheckPublishPlaylistsResponse,
   FetchPlaylistsResponse,
   Maybe,
-  PageInfo,
-  PlaylistEdge,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -27,26 +25,27 @@ export default function SaveReaction({
 }: Props) {
   const [addToPlaylistsModalVisible, setAddToPlaylistsModalVisible] =
     useState(false)
+  const [prevPlaylists, setPrevPlaylists] = useState(playlistsResult?.edges)
+  const [playlists, setPlaylists] = useState(playlistsResult?.edges || [])
+  // When playlists result changed
+  if (playlistsResult?.edges !== prevPlaylists) {
+    setPrevPlaylists(playlistsResult?.edges)
+    setPlaylists(playlistsResult?.edges || [])
+  }
+
+  const [prevPlaylistsPageInfo, setPrevPlaylistsPageInfo] = useState(
+    playlistsResult?.pageInfo
+  )
+  const [playlistsPageInfo, setPlaylistsPageInfo] = useState(
+    playlistsResult?.pageInfo
+  )
+  // When playlists page info changed
+  if (playlistsResult?.pageInfo !== prevPlaylistsPageInfo) {
+    setPrevPlaylistsPageInfo(playlistsResult?.pageInfo)
+    setPlaylistsPageInfo(playlistsResult?.pageInfo)
+  }
+
   const { onVisible: openAuthModal } = useAuthContext()
-
-  const initialPlaylists = useMemo(
-    () => playlistsResult?.edges || [],
-    [playlistsResult]
-  )
-  const initialPageInfo = useMemo(
-    () => playlistsResult?.pageInfo,
-    [playlistsResult]
-  )
-  const [playlists, setPlaylists] = useState<PlaylistEdge[]>([])
-  const [playlistsPageInfo, setPlaylistsPageInfo] = useState<
-    PageInfo | undefined
-  >()
-
-  // Set playlists and playlists page info based on initial values
-  useEffect(() => {
-    setPlaylists(initialPlaylists)
-    setPlaylistsPageInfo(initialPageInfo)
-  }, [initialPlaylists, initialPageInfo])
 
   const handleSavePublish = useCallback(async () => {
     if (!publishId) return
@@ -77,7 +76,7 @@ export default function SaveReaction({
 
       {/* Add to playlist modal */}
       {addToPlaylistsModalVisible && publishPlaylistsData && publishId && (
-        <AddToPlaylistModal
+        <AddToPlaylistsModal
           closeModal={closeAddToPlaylistsModal}
           publishId={publishId}
           playlists={playlists}

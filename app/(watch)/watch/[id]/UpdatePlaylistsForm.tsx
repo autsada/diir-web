@@ -17,7 +17,6 @@ interface Props {
   onFinished: () => void
   playlists: PlaylistEdge[]
   setPlaylists: React.Dispatch<React.SetStateAction<PlaylistEdge[]>>
-  loadingPlaylists: boolean
   playlistsPageInfo: PageInfo | undefined
   setPlaylistsPageInfo: React.Dispatch<
     React.SetStateAction<PageInfo | undefined>
@@ -30,7 +29,6 @@ export default function UpdatePlaylistsForm({
   onFinished,
   playlists,
   setPlaylists,
-  loadingPlaylists,
   playlistsPageInfo,
   setPlaylistsPageInfo,
   publishPlaylistsData,
@@ -124,10 +122,9 @@ export default function UpdatePlaylistsForm({
             ref={observedRef}
             className="w-full h-4 flex items-center justify-center"
           >
-            {loadingPlaylists ||
-              (loading && (
-                <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
-              ))}
+            {loading && (
+              <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
+            )}
           </div>
         </div>
 

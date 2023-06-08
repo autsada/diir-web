@@ -67,7 +67,6 @@ export default function Recommendations({
     useState(false)
   const [prevPlaylists, setPrevPlaylists] = useState(playlistsResult?.edges)
   const [playlists, setPlaylists] = useState(playlistsResult?.edges || [])
-  const [loadingPlaylists, setLoadingPlaylists] = useState(false)
   // When playlists result changed
   if (playlistsResult?.edges !== prevPlaylists) {
     setPrevPlaylists(playlistsResult?.edges)
@@ -86,6 +85,8 @@ export default function Recommendations({
     setPlaylistsPageInfo(playlistsResult?.pageInfo)
   }
 
+  const [loadingPublishPlaylistsData, setLoadingPublishPlaylistsData] =
+    useState(false)
   const [publishPlaylistsData, setPublishPlaylistsData] = useState<
     CheckPublishPlaylistsResponse | undefined
   >()
@@ -100,6 +101,11 @@ export default function Recommendations({
     setActionsModalVisible(true)
   }, [])
 
+  const oncloseActions = useCallback(() => {
+    setTargetPublish(undefined)
+    setActionsModalVisible(false)
+  }, [])
+
   const setPOS = useCallback(
     (posX: number, posY: number, screenHeight: number) => {
       setPositionX(posX)
@@ -109,11 +115,6 @@ export default function Recommendations({
     []
   )
 
-  const oncloseActions = useCallback(() => {
-    setTargetPublish(undefined)
-    setActionsModalVisible(false)
-  }, [])
-
   const openAddToPlaylistsModal = useCallback(() => {
     if (!isAuthenticated) {
       openAuthModal()
@@ -122,6 +123,31 @@ export default function Recommendations({
       setActionsModalVisible(false)
     }
   }, [isAuthenticated, openAuthModal])
+
+  const closeAddToPlaylistsModal = useCallback(() => {
+    setAddToPlaylistsModalVisible(false)
+    setTargetPublish(undefined)
+  }, [])
+
+  const openShareModal = useCallback(() => {
+    setShareModalVisible(true)
+    setActionsModalVisible(false)
+  }, [])
+
+  const closeShareModal = useCallback(() => {
+    setShareModalVisible(false)
+    setTargetPublish(undefined)
+  }, [])
+
+  const openReportModal = useCallback(() => {
+    setReportModalVisible(true)
+    setActionsModalVisible(false)
+  }, [])
+
+  const closeReportModal = useCallback(() => {
+    setReportModalVisible(false)
+    setTargetPublish(undefined)
+  }, [])
 
   const fetchMoreSuggestions = useCallback(async () => {
     if (
@@ -155,29 +181,6 @@ export default function Recommendations({
     }
   }, [suggestedItemsPageInfo, publishId])
   const { observedRef } = useInfiniteScroll(0.5, fetchMoreSuggestions)
-
-  const closeAddToPlaylistsModal = useCallback(() => {
-    setAddToPlaylistsModalVisible(false)
-    setTargetPublish(undefined)
-  }, [])
-
-  const openShareModal = useCallback(() => {
-    setShareModalVisible(true)
-    setActionsModalVisible(false)
-  }, [])
-
-  const closeShareModal = useCallback(() => {
-    setShareModalVisible(false)
-  }, [])
-
-  const openReportModal = useCallback(() => {
-    setReportModalVisible(true)
-    setActionsModalVisible(false)
-  }, [])
-
-  const closeReportModal = useCallback(() => {
-    setReportModalVisible(false)
-  }, [])
 
   if (suggestedItems.length === 0) return null
 
@@ -216,8 +219,8 @@ export default function Recommendations({
           top={screenHeight - positionY < 280 ? positionY - 280 : positionY} // 280 is modal height
           left={positionX - 300} // 300 is modal width
           openAddToPlaylistsModal={openAddToPlaylistsModal}
-          loadingPlaylists={loadingPlaylists}
-          setLoadingPlaylists={setLoadingPlaylists}
+          loadingPublishPlaylistsData={loadingPublishPlaylistsData}
+          setLoadingPublishPlaylistsData={setLoadingPublishPlaylistsData}
           setPublishPlaylistsData={setPublishPlaylistsData}
           openShareModal={openShareModal}
           openReportModal={openReportModal}
@@ -231,7 +234,6 @@ export default function Recommendations({
           publishId={targetPublish.id}
           playlists={playlists}
           setPlaylists={setPlaylists}
-          loadingPlaylists={loadingPlaylists}
           playlistsPageInfo={playlistsPageInfo}
           setPlaylistsPageInfo={setPlaylistsPageInfo}
           publishPlaylistsData={publishPlaylistsData}

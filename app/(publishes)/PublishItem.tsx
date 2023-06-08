@@ -14,16 +14,16 @@ import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
   publish: Publish | null | undefined
-  onAction: (p: Publish) => void
+  onOpenActions: (p: Publish) => void
   setPOS: (posX: number, posY: number, screenHeight: number) => void
 }
 
-export default function PublishItem({ publish, onAction, setPOS }: Props) {
+export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
   const [playing, setPlaying] = useState(false)
 
   function onClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (!publish) return
-    onAction(publish)
+    onOpenActions(publish)
     setPOS(e.clientX, e.clientY, window?.innerHeight)
   }
 

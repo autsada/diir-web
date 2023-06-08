@@ -16,7 +16,6 @@ interface Props {
   publishId: string
   playlists: PlaylistEdge[]
   setPlaylists: React.Dispatch<React.SetStateAction<PlaylistEdge[]>>
-  loadingPlaylists: boolean
   playlistsPageInfo: PageInfo | undefined
   setPlaylistsPageInfo: React.Dispatch<
     React.SetStateAction<PageInfo | undefined>
@@ -29,7 +28,6 @@ export default function AddToPlaylistsModal({
   publishId,
   playlists,
   setPlaylists,
-  loadingPlaylists,
   playlistsPageInfo,
   setPlaylistsPageInfo,
   publishPlaylistsData,
@@ -75,7 +73,6 @@ export default function AddToPlaylistsModal({
             onFinished={closeModal}
             playlists={playlists}
             setPlaylists={setPlaylists}
-            loadingPlaylists={loadingPlaylists}
             playlistsPageInfo={playlistsPageInfo}
             setPlaylistsPageInfo={setPlaylistsPageInfo}
             publishPlaylistsData={publishPlaylistsData}

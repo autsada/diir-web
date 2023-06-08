@@ -29,9 +29,9 @@ interface Props {
   left: number
   publish?: Publish
   openAddToPlaylistsModal: () => void
-  loadingPlaylists: boolean
-  setLoadingPlaylists: React.Dispatch<React.SetStateAction<boolean>>
   setPublishPlaylistsData: (p: CheckPublishPlaylistsResponse) => void
+  loadingPublishPlaylistsData: boolean
+  setLoadingPublishPlaylistsData: React.Dispatch<React.SetStateAction<boolean>>
   openShareModal: () => void
   openReportModal: () => void
 }
@@ -44,8 +44,8 @@ export default function ActionsModal({
   top,
   left,
   openAddToPlaylistsModal,
-  loadingPlaylists,
-  setLoadingPlaylists,
+  loadingPublishPlaylistsData,
+  setLoadingPublishPlaylistsData,
   setPublishPlaylistsData,
   openShareModal,
   openReportModal,
@@ -65,8 +65,8 @@ export default function ActionsModal({
     } else {
       startTransition(() => saveToWatchLater(publish.id))
       toast.success("Added to Watch later", { theme: "dark" })
-      closeModal()
     }
+    closeModal()
   }, [publish, isAuthenticated, openAuthModal, profile, closeModal])
 
   const onStartAddToPlaylist = useCallback(async () => {
@@ -75,11 +75,13 @@ export default function ActionsModal({
 
       if (!isAuthenticated) {
         openAuthModal()
+        closeModal()
       } else if (!profile) {
         setInformModalVisible(true)
+        closeModal()
       } else {
         // Call the api route to check if the publish already add to any user's playlists
-        setLoadingPlaylists(true)
+        setLoadingPublishPlaylistsData(true)
         const res = await fetch(`/library/playlists/publish`, {
           method: "POST",
           headers: {
@@ -92,18 +94,19 @@ export default function ActionsModal({
         }
         openAddToPlaylistsModal()
         setPublishPlaylistsData(data.result)
-        setLoadingPlaylists(false)
+        setLoadingPublishPlaylistsData(false)
       }
     } catch (error) {
-      setLoadingPlaylists(false)
+      setLoadingPublishPlaylistsData(false)
     }
   }, [
     publish,
     isAuthenticated,
+    closeModal,
     profile,
     openAddToPlaylistsModal,
     openAuthModal,
-    setLoadingPlaylists,
+    setLoadingPublishPlaylistsData,
     setPublishPlaylistsData,
   ])
 
@@ -139,8 +142,8 @@ export default function ActionsModal({
       toast.success("This station will not be recommended again", {
         theme: "dark",
       })
-      closeModal()
     }
+    closeModal()
   }, [publish, isAuthenticated, profile, openAuthModal, closeModal])
 
   return (
@@ -179,7 +182,7 @@ export default function ActionsModal({
       </div>
 
       {/* Prevent interaction while loading */}
-      {loadingPlaylists && <Mask />}
+      {loadingPublishPlaylistsData && <Mask />}
     </ModalWrapper>
   )
 }

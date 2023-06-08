@@ -1,14 +1,15 @@
 "use client"
 
-import React, { useState, useCallback, useEffect, useMemo } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 
 import ContentTabs from "./ContentTabs"
 import PublishItem from "./PublishItem"
 import Mask from "@/components/Mask"
-import ActionsModal from "./ActionsModal"
-import AddToPlaylistModal from "./AddToPlaylistModal"
+import ActionsModal from "../(watch)/watch/[id]/ActionsModal"
+import AddToPlaylistsModal from "../(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "./ShareModal"
 import ReportModal from "./ReportModal"
+import { useAuthContext } from "@/context/AuthContext"
 import type { PublishCategory } from "@/graphql/types"
 import type {
   Publish,
@@ -16,8 +17,6 @@ import type {
   FetchPublishesResponse,
   FetchPlaylistsResponse,
   CheckPublishPlaylistsResponse,
-  PlaylistEdge,
-  PageInfo,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -35,38 +34,46 @@ export default function Videos({
 }: Props) {
   const [selectedCat, setSelectedCat] = useState<PublishCategory | "All">("All")
   const [resultByCat, setResultByCat] = useState<FetchPublishesResponse>()
+  const displayedResult = selectedCat === "All" ? videosResult : resultByCat
   const [loading, setLoading] = useState(false)
+
   const [targetPublish, setTargetPublish] = useState<Publish>()
   const [actionsModalVisible, setActionsModalVisible] = useState(false)
   const [positionX, setPositionX] = useState(0)
   const [positionY, setPositionY] = useState(0)
   const [screenHeight, setScreenHeight] = useState(0)
 
-  const displayedResult = selectedCat === "All" ? videosResult : resultByCat
-
-  const [addToPlaylistModalVisible, setAddToPlaylistModalVisible] =
+  const [addToPlaylistsModalVisible, setAddToPlaylistsModalVisible] =
     useState(false)
+  const [prevPlaylists, setPrevPlaylists] = useState(playlistsResult?.edges)
+  const [playlists, setPlaylists] = useState(playlistsResult?.edges || [])
+  // When playlists result changed
+  if (playlistsResult?.edges !== prevPlaylists) {
+    setPrevPlaylists(playlistsResult?.edges)
+    setPlaylists(playlistsResult?.edges || [])
+  }
+
+  const [prevPlaylistsPageInfo, setPrevPlaylistsPageInfo] = useState(
+    playlistsResult?.pageInfo
+  )
+  const [playlistsPageInfo, setPlaylistsPageInfo] = useState(
+    playlistsResult?.pageInfo
+  )
+  // When playlists page info changed
+  if (playlistsResult?.pageInfo !== prevPlaylistsPageInfo) {
+    setPrevPlaylistsPageInfo(playlistsResult?.pageInfo)
+    setPlaylistsPageInfo(playlistsResult?.pageInfo)
+  }
+
   const [publishPlaylistsData, setPublishPlaylistsData] =
     useState<CheckPublishPlaylistsResponse>()
   const [loadingPublishPlaylistsData, setLoadingPublishPlaylistsData] =
     useState(false)
 
+  const [shareModalVisible, setShareModalVisible] = useState(false)
   const [reportModalVisible, setReportModalVisible] = useState(false)
 
-  const initialPlaylists = useMemo(
-    () => playlistsResult?.edges || [],
-    [playlistsResult]
-  )
-  const initialPageInfo = useMemo(
-    () => playlistsResult?.pageInfo,
-    [playlistsResult]
-  )
-  const [playlists, setPlaylists] = useState<PlaylistEdge[]>([])
-  const [playlistsPageInfo, setPlaylistsPageInfo] = useState<
-    PageInfo | undefined
-  >()
-
-  const [shareModalVisible, setShareModalVisible] = useState(false)
+  const { onVisible: openAuthModal } = useAuthContext()
 
   // Query videos when use clicks category
   useEffect(() => {
@@ -95,9 +102,14 @@ export default function Videos({
     queryVideosByCat(selectedCat)
   }, [selectedCat, profile?.id])
 
-  const onReactToPublish = useCallback((p: Publish) => {
+  const onOpenActions = useCallback((p: Publish) => {
     setTargetPublish(p)
     setActionsModalVisible(true)
+  }, [])
+
+  const oncloseActions = useCallback(() => {
+    setTargetPublish(undefined)
+    setActionsModalVisible(false)
   }, [])
 
   const setPOS = useCallback(
@@ -109,33 +121,23 @@ export default function Videos({
     []
   )
 
-  const closeModalAndResetState = useCallback(() => {
-    setTargetPublish(undefined)
-    setActionsModalVisible(false)
-  }, [])
+  const openAddToPlaylistsModal = useCallback(() => {
+    if (!isAuthenticated) {
+      openAuthModal()
+    } else {
+      setAddToPlaylistsModalVisible(true)
+      setActionsModalVisible(false)
+    }
+  }, [isAuthenticated, openAuthModal])
 
-  const closeModal = useCallback(() => {
-    setActionsModalVisible(false)
-  }, [])
-
-  const openAddToPlaylistModal = useCallback(() => {
-    setAddToPlaylistModalVisible(true)
-  }, [])
-
-  const closeAddToPlaylistModal = useCallback(() => {
-    setAddToPlaylistModalVisible(false)
-    setPublishPlaylistsData(undefined)
+  const closeAddToPlaylistsModal = useCallback(() => {
+    setAddToPlaylistsModalVisible(false)
     setTargetPublish(undefined)
   }, [])
-
-  // Set playlists and playlists page info based on initial values
-  useEffect(() => {
-    setPlaylists(initialPlaylists)
-    setPlaylistsPageInfo(initialPageInfo)
-  }, [initialPlaylists, initialPageInfo])
 
   const openShareModal = useCallback(() => {
     setShareModalVisible(true)
+    setActionsModalVisible(false)
   }, [])
 
   const closeShareModal = useCallback(() => {
@@ -178,43 +180,36 @@ export default function Videos({
               <PublishItem
                 key={edge?.node?.id}
                 publish={edge?.node}
-                onAction={onReactToPublish}
+                onOpenActions={onOpenActions}
                 setPOS={setPOS}
               />
             ))}
-
-            {/* Actions modal */}
-            {actionsModalVisible && (
-              <ActionsModal
-                isAuthenticated={isAuthenticated}
-                profile={profile}
-                closeModalAndReset={closeModalAndResetState}
-                closeModal={closeModal}
-                top={
-                  screenHeight - positionY < (isAuthenticated ? 300 : 200)
-                    ? positionY - (isAuthenticated ? 300 : 200)
-                    : positionY
-                } // 200 is modal height
-                left={positionX - 300} // 300 is modal width
-                targetPublish={targetPublish}
-                setTargetPublish={setTargetPublish}
-                addToPlaylistModalVisible={addToPlaylistModalVisible}
-                openAddToPlaylistModal={openAddToPlaylistModal}
-                setPlaylistData={setPublishPlaylistsData}
-                setLoadingPlaylistData={setLoadingPublishPlaylistsData}
-                shareModalVisible={shareModalVisible}
-                openShareModal={openShareModal}
-                openReportModal={openReportModal}
-              />
-            )}
           </div>
         )}
       </div>
 
-      {/* Add to playlist modal */}
-      {addToPlaylistModalVisible && publishPlaylistsData && targetPublish && (
-        <AddToPlaylistModal
-          closeModal={closeAddToPlaylistModal}
+      {/* Actions modal */}
+      {actionsModalVisible && (
+        <ActionsModal
+          isAuthenticated={isAuthenticated}
+          profile={profile}
+          publish={targetPublish}
+          closeModal={oncloseActions}
+          top={screenHeight - positionY < 280 ? positionY - 280 : positionY} // 280 is modal height
+          left={positionX - 300} // 300 is modal width
+          openAddToPlaylistsModal={openAddToPlaylistsModal}
+          loadingPublishPlaylistsData={loadingPublishPlaylistsData}
+          setLoadingPublishPlaylistsData={setLoadingPublishPlaylistsData}
+          setPublishPlaylistsData={setPublishPlaylistsData}
+          openShareModal={openShareModal}
+          openReportModal={openReportModal}
+        />
+      )}
+
+      {/* Add to playlists modal */}
+      {addToPlaylistsModalVisible && targetPublish && publishPlaylistsData && (
+        <AddToPlaylistsModal
+          closeModal={closeAddToPlaylistsModal}
           publishId={targetPublish.id}
           playlists={playlists}
           setPlaylists={setPlaylists}
