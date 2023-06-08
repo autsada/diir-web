@@ -37,6 +37,7 @@ export default function SubComments({
                 comment={comt}
                 publishId={publishId}
                 avatarSize={30}
+                isSub={true}
               />
             </div>
           ))}

@@ -12,7 +12,7 @@ export default function Tab({
 }) {
   return (
     <div
-      className={`px-1 sm:px-2 text-base cursor-pointer ${
+      className={`px-1 sm:px-2 text-sm sm:text-base cursor-pointer ${
         isActive
           ? "font-semibold border-b-[2px] border-gray-600"
           : "text-textLight border-none"

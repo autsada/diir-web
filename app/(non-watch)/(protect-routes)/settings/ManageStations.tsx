@@ -76,7 +76,7 @@ export default function ManageStations({
     <>
       <div className="mt-5 sm:flex sm:items-start">
         <div className="sm:w-[40%]">
-          <h6>Manage stations</h6>
+          <h6 className="text-base sm:text-lg lg:text-xl">Manage stations</h6>
           <button
             className="btn-blue px-6 my-5 sm:mx-0 rounded-full"
             onClick={openModal}

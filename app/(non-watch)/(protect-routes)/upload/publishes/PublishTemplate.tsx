@@ -10,7 +10,7 @@ interface Props {
 export default function PublishTemplate({ station }: Props) {
   return (
     <div className="px-4">
-      <h5>Publishes dashboard</h5>
+      <h5 className="text-xl sm:text-2xl lg:text-3xl">Publishes dashboard</h5>
 
       <div className="mt-4 py-2">
         <PublishTabs station={station} />

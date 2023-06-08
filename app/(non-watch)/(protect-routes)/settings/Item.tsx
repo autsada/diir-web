@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation"
 
 import Avatar from "@/components/Avatar"
 import Online from "@/components/Online"
+import StationName from "@/components/StationName"
 import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -32,18 +33,17 @@ export default function StationItem({
         {defaultId === item?.id && <Online />}
       </div>
       <div className="ml-5 flex-grow">
-        <p>{item?.displayName}</p>
-        <p className="text-textExtraLight">@{item?.name}</p>
+        <StationName profile={item} />
         <div className="flex items-center gap-x-2 mt-1">
-          <p className="font-light text-textExtraLight">
+          <p className="font-light text-sm sm:text-base text-textExtraLight">
             <span className="text-textRegular">{item.followersCount}</span>{" "}
             Followers
           </p>
-          <p className="font-light text-textExtraLight">
+          <p className="font-light text-sm sm:text-base text-textExtraLight">
             <span className="text-textRegular">{item.followingCount}</span>{" "}
             Following
           </p>
-          <p className="font-light text-textExtraLight">
+          <p className="font-light text-sm sm:text-base text-textExtraLight">
             <span className="text-textRegular">{item.publishesCount}</span>{" "}
             Publishes
           </p>

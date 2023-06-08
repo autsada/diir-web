@@ -9,6 +9,7 @@ import _ from "lodash"
 
 import Avatar from "@/components/Avatar"
 import CommentBox from "./CommentBox"
+import StationName from "@/components/StationName"
 import { useExpandContent } from "@/hooks/useExpandContent"
 import { useAuthContext } from "@/context/AuthContext"
 import { calculateTimeElapsed } from "@/lib/client"
@@ -18,7 +19,6 @@ import {
   likePublishComment,
 } from "./actions"
 import type { Comment, Maybe, Station } from "@/graphql/codegen/graphql"
-import StationName from "@/components/StationName"
 
 interface Props {
   isAuthenticated: boolean
@@ -27,6 +27,7 @@ interface Props {
   parentComment?: Comment
   comment: Comment
   avatarSize?: number
+  isSub?: boolean
 }
 
 export default function CommentItem({
@@ -36,6 +37,7 @@ export default function CommentItem({
   comment,
   publishId,
   avatarSize = 40,
+  isSub = false,
 }: Props) {
   const parentCommentId = parentComment?.id
   const commentId = comment?.id || ""
@@ -166,14 +168,21 @@ export default function CommentItem({
       <div className="flex-grow">
         {/* Comment owner */}
         <div className="flex items-center gap-x-4">
-          <StationName profile={comment.creator} fontSize="sm" />
+          <StationName
+            profile={comment.creator}
+            fontSize={isSub ? "sm" : "base"}
+          />
           <p className="italic text-xs text-textExtraLight">
             {calculateTimeElapsed(comment.createdAt)}
           </p>
         </div>
 
         {/* Content */}
-        <div className="mt-1 text-sm">
+        <div
+          className={`mt-1 ${
+            isSub ? "text-xs sm:text-sm" : "text-sm sm:text-base"
+          }`}
+        >
           {displayedContent}{" "}
           {comment?.content.length > displayedContent.length && (
             <span
@@ -225,7 +234,9 @@ export default function CommentItem({
           </div>
           {isAuthenticated && (
             <button
-              className="mx-0 font-semibold text-sm hover:bg-neutral-200 px-3 h-8 rounded-full"
+              className={`mx-0 font-semibold ${
+                isSub ? "text-xs" : "text-sm"
+              } hover:bg-neutral-200 px-3 h-8 rounded-full`}
               onClick={toggleCommentBox}
             >
               Reply

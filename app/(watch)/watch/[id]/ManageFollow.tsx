@@ -90,14 +90,14 @@ export default function ManageFollow({
     <>
       {isOwner ? (
         <Link href={ownerHref}>
-          <button className="btn-orange w-[120px] rounded-full">
+          <button className="btn-orange text-sm sm:text-base px-5 rounded-full">
             {ownerLinkText}
           </button>
         </Link>
       ) : optimisticFollowing ? (
         <button
           type="button"
-          className={`btn-blue mx-0 w-[110px] rounded-full ${
+          className={`btn-blue text-sm sm:text-base mx-0 w-[100px] sm:w-[110px] rounded-full ${
             followingText === "Following"
               ? "text-white bg-blueBase"
               : "text-red-500 bg-blueLighter hover:bg-blueLighter"
@@ -111,7 +111,7 @@ export default function ManageFollow({
       ) : (
         <button
           type="button"
-          className="btn-dark mx-0 w-[100px] rounded-full"
+          className="btn-dark mx-0 text-sm sm:text-base w-[100px] sm:w-[110px] rounded-full"
           onClick={followDebounce}
         >
           Follow

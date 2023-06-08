@@ -28,7 +28,7 @@ export default function StationTemplate({ isAuthenticated, station }: Props) {
 
       <div className="mt-2">
         <div className="relative flex mt-5">
-          <div className="flex items-center justify-center w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] rounded-full overflow-hidden cursor-pointer">
+          <div className="flex items-center justify-center w-[70px] h-[70px] sm:w-[100px] sm:h-[100px] rounded-full overflow-hidden cursor-pointer">
             {!station || !station.image ? (
               !station ? (
                 <div className="w-full h-full flex items-center justify-center bg-blue-500 text-white text-xs">
@@ -53,26 +53,26 @@ export default function StationTemplate({ isAuthenticated, station }: Props) {
           </div>
 
           <div className="relative ml-2 sm:ml-6 flex-grow">
-            <h4 className="font-semibold text-2xl sm:text-3xl">
+            <h4 className="font-semibold text-lg sm:text-xl">
               {station?.displayName}
             </h4>
-            <h6 className="font-normal text-textLight">@{station?.name}</h6>
+            <p className="text-textLight">@{station?.name}</p>
             <div className="mt-2 flex gap-x-2 sm:gap-x-4">
-              <p className="font-light text-textExtraLight">
+              <p className="text-sm sm:text-base font-light text-textExtraLight">
                 <span className="text-textRegular">
                   {station?.followersCount}
                 </span>{" "}
                 Followers
               </p>
               {station?.isOwner && (
-                <p className="font-light text-textExtraLight">
+                <p className="text-sm sm:text-base font-light text-textExtraLight">
                   <span className="text-textRegular">
                     {station?.followingCount}
                   </span>{" "}
                   Following
                 </p>
               )}
-              <p className="font-light text-textExtraLight">
+              <p className="text-sm sm:text-base font-light text-textExtraLight">
                 <span className="text-textRegular">
                   {station?.publishesCount}
                 </span>{" "}

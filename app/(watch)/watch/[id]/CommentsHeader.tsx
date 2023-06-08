@@ -88,15 +88,15 @@ export default function CommentsHeader({
 
   return (
     <>
-      <div className="flex items-center gap-x-4">
+      <div className="h-[30px] flex items-center gap-x-4">
         {!subCommentsVisible ? (
           <>
-            <div className="flex items-center gap-x-2">
-              <h6>{commentsCount}</h6>
-              <h6>Comments</h6>
+            <div className="h-full flex items-center gap-x-2">
+              <h6 className="text-lg sm:text-xl">{commentsCount}</h6>
+              <h6 className="text-lg sm:text-xl">Comments</h6>
             </div>
             <div
-              className="relative z-10 flex items-end gap-x-1 cursor-pointer"
+              className="h-full relative z-10 flex items-center gap-x-1 cursor-pointer"
               onClick={toggleSortBy}
             >
               <MdOutlineSort className="text-textExtraLight" size={24} />

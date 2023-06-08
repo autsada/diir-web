@@ -17,10 +17,10 @@ export default function StationName({ profile, fontSize = "base" }: Props) {
         <h6
           className={
             fontSize === "sm"
-              ? "text-sm"
+              ? "text-xs sm:text-sm"
               : fontSize === "base"
-              ? "text-lg"
-              : "text-xl"
+              ? "text-sm sm:text-base"
+              : "text-base sm:text-lg"
           }
         >
           {profile?.displayName || ""}

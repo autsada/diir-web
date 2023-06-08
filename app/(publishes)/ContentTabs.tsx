@@ -45,7 +45,7 @@ function Tab({
   return (
     <button
       type="button"
-      className={`${
+      className={`text-sm sm:text-base ${
         selected === text ? "btn-orange" : "btn-light"
       } px-5 h-8 rounded-full`}
       disabled={loading}

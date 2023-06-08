@@ -15,11 +15,11 @@ import NameInput from "@/app/(non-watch)/(protect-routes)/settings/NameInput"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
 import ModalWrapper from "@/components/ModalWrapper"
-import type { Account } from "@/graphql/codegen/graphql"
 import {
   usePrepareStationContractWrite,
   useStationMintedEvent,
 } from "@/hooks/contracts/useStation"
+import type { Account } from "@/graphql/codegen/graphql"
 
 interface Props {
   account: Account
@@ -162,7 +162,7 @@ export default function CreateStationModal({
             <CloseButton onClick={closeModal} className="text-base" />
           </div>
         )}
-        <h4>{title}</h4>
+        <h4 className="text-2xl sm:text-3xl">{title}</h4>
         {additionalInfo && (
           <p className="pt-2 text-textLight">{additionalInfo}</p>
         )}
