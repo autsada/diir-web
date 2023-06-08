@@ -122,13 +122,14 @@ export default function ActionsModal({
     if (navigator.share && navigator.canShare(shareData)) {
       try {
         await navigator.share(shareData)
+        closeModal()
       } catch (error) {
         console.error(error)
       }
     } else {
       openShareModal()
     }
-  }, [publish, openShareModal])
+  }, [publish, openShareModal, closeModal])
 
   const dontRecommendCreator = useCallback(() => {
     if (!publish) return
