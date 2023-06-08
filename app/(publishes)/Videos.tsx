@@ -1,14 +1,15 @@
 "use client"
 
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback } from "react"
 
 import ContentTabs from "./ContentTabs"
-import PublishItem from "./PublishItem"
 import Mask from "@/components/Mask"
 import ActionsModal from "../(watch)/watch/[id]/ActionsModal"
 import AddToPlaylistsModal from "../(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "./ShareModal"
 import ReportModal from "./ReportModal"
+import VideosByCat from "./VideosByCat"
+import { contentCategories } from "@/lib/helpers"
 import { useAuthContext } from "@/context/AuthContext"
 import type { PublishCategory } from "@/graphql/types"
 import type {
@@ -32,10 +33,8 @@ export default function Videos({
   videosResult,
   playlistsResult,
 }: Props) {
-  const [selectedCat, setSelectedCat] = useState<PublishCategory | "All">("All")
-  const [resultByCat, setResultByCat] = useState<FetchPublishesResponse>()
-  const displayedResult = selectedCat === "All" ? videosResult : resultByCat
   const [loading, setLoading] = useState(false)
+  const [selectedCat, setSelectedCat] = useState<PublishCategory | "All">("All")
 
   const [targetPublish, setTargetPublish] = useState<Publish>()
   const [actionsModalVisible, setActionsModalVisible] = useState(false)
@@ -75,32 +74,9 @@ export default function Videos({
 
   const { onVisible: openAuthModal } = useAuthContext()
 
-  // Query videos when use clicks category
-  useEffect(() => {
-    async function queryVideosByCat(cat: PublishCategory | "All") {
-      try {
-        // Call api route to query videos
-        setLoading(true)
-        const res = await fetch(`/videos/query`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            requestorId: profile?.id || "",
-            category: cat,
-          }),
-        })
-        const data = (await res.json()) as { result: FetchPublishesResponse }
-        setResultByCat(data?.result)
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-      }
-    }
-
-    queryVideosByCat(selectedCat)
-  }, [selectedCat, profile?.id])
+  const onSelectTab = useCallback(async (t: PublishCategory | "All") => {
+    setSelectedCat(t)
+  }, [])
 
   const onOpenActions = useCallback((p: Publish) => {
     setTargetPublish(p)
@@ -162,31 +138,37 @@ export default function Videos({
           <div className="h-full w-max flex items-center gap-x-2 sm:gap-x-4">
             <ContentTabs
               category={selectedCat}
-              setCategory={setSelectedCat}
+              onSelectTab={onSelectTab}
               loading={loading}
             />
           </div>
         </div>
       </div>
 
-      <div className="mt-[40px] py-2 sm:px-4 sm:ml-[100px]">
-        {!displayedResult || displayedResult?.edges?.length === 0 ? (
-          <div className="w-full py-10 text-center">
-            <h6>No videos found</h6>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2 sm:gap-y-6 sm:gap-x-4 py-1 pb-20 sm:p-5 bg-white divide-y-[4px] sm:divide-y-0 divide-neutral-200">
-            {displayedResult.edges.map((edge) => (
-              <PublishItem
-                key={edge?.node?.id}
-                publish={edge?.node}
-                onOpenActions={onOpenActions}
-                setPOS={setPOS}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Render videos by category */}
+      <>
+        <VideosByCat
+          tab="All"
+          selectedTab={selectedCat}
+          fetchResult={videosResult}
+          loading={loading}
+          setLoading={setLoading}
+          onOpenActions={onOpenActions}
+          setPOS={setPOS}
+        />
+
+        {contentCategories.map((cat) => (
+          <VideosByCat
+            key={cat}
+            tab={cat}
+            selectedTab={selectedCat}
+            loading={loading}
+            setLoading={setLoading}
+            onOpenActions={onOpenActions}
+            setPOS={setPOS}
+          />
+        ))}
+      </>
 
       {/* Actions modal */}
       {actionsModalVisible && (
@@ -235,8 +217,6 @@ export default function Videos({
           publishId={targetPublish.id}
         />
       )}
-
-      {loading && <Mask backgroundColor="#fff" opacity={0.4} />}
 
       {loadingPublishPlaylistsData && (
         <Mask backgroundColor="#fff" opacity={0.2} />
