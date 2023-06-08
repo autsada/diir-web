@@ -1,0 +1,259 @@
+"use client"
+
+import React, { useState, useCallback } from "react"
+
+import RecommendationItem from "./RecommendationItem"
+import ActionsModal from "./ActionsModal"
+import AddToPlaylistsModal from "./AddToPlaylistsModal"
+import ShareModal from "@/app/(publishes)/ShareModal"
+import ReportModal from "@/app/(publishes)/ReportModal"
+import ButtonLoader from "@/components/ButtonLoader"
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
+import { useAuthContext } from "@/context/AuthContext"
+import type {
+  FetchPlaylistsResponse,
+  FetchPublishesResponse,
+  Maybe,
+  Station,
+  Publish,
+  CheckPublishPlaylistsResponse,
+} from "@/graphql/codegen/graphql"
+
+interface Props {
+  publishId: string
+  isAuthenticated: boolean
+  profile: Maybe<Station> | undefined
+  suggestedResult: Maybe<FetchPublishesResponse> | undefined
+  playlistsResult: FetchPlaylistsResponse | undefined
+}
+
+export default function Recommendations({
+  publishId,
+  isAuthenticated,
+  profile,
+  suggestedResult,
+  playlistsResult,
+}: Props) {
+  const pageInfo = suggestedResult?.pageInfo
+  const [loading, setLoading] = useState(false)
+  const [prevSuggestedItems, setPrevSuggestedItems] = useState(
+    suggestedResult?.edges
+  )
+  const [suggestedItems, setSuggestedItems] = useState(
+    suggestedResult?.edges || []
+  )
+  // If suggested list changed
+  if (suggestedResult?.edges !== prevSuggestedItems) {
+    setPrevSuggestedItems(suggestedResult?.edges)
+    setSuggestedItems(suggestedResult?.edges || [])
+  }
+
+  const [prevSuggestedItemsPageInfo, setPrevSuggestedItemsPageInfo] =
+    useState(pageInfo)
+  const [suggestedItemsPageInfo, setSuggestedItemsPageInfo] = useState(pageInfo)
+  // When page info changed
+  if (pageInfo !== prevSuggestedItemsPageInfo) {
+    setPrevSuggestedItemsPageInfo(pageInfo)
+    setSuggestedItemsPageInfo(pageInfo)
+  }
+
+  const [targetPublish, setTargetPublish] = useState<Publish>()
+  const [actionsModalVisible, setActionsModalVisible] = useState(false)
+  const [positionX, setPositionX] = useState(0)
+  const [positionY, setPositionY] = useState(0)
+  const [screenHeight, setScreenHeight] = useState(0)
+
+  const [addToPlaylistsModalVisible, setAddToPlaylistsModalVisible] =
+    useState(false)
+  const [prevPlaylists, setPrevPlaylists] = useState(playlistsResult?.edges)
+  const [playlists, setPlaylists] = useState(playlistsResult?.edges || [])
+  const [loadingPlaylists, setLoadingPlaylists] = useState(false)
+  // When playlists result changed
+  if (playlistsResult?.edges !== prevPlaylists) {
+    setPrevPlaylists(playlistsResult?.edges)
+    setPlaylists(playlistsResult?.edges || [])
+  }
+
+  const [prevPlaylistsPageInfo, setPrevPlaylistsPageInfo] = useState(
+    playlistsResult?.pageInfo
+  )
+  const [playlistsPageInfo, setPlaylistsPageInfo] = useState(
+    playlistsResult?.pageInfo
+  )
+  // When playlists page info changed
+  if (playlistsResult?.pageInfo !== prevPlaylistsPageInfo) {
+    setPrevPlaylistsPageInfo(playlistsResult?.pageInfo)
+    setPlaylistsPageInfo(playlistsResult?.pageInfo)
+  }
+
+  const [publishPlaylistsData, setPublishPlaylistsData] = useState<
+    CheckPublishPlaylistsResponse | undefined
+  >()
+
+  const [shareModalVisible, setShareModalVisible] = useState(false)
+  const [reportModalVisible, setReportModalVisible] = useState(false)
+
+  const { onVisible: openAuthModal } = useAuthContext()
+
+  const onOpenActions = useCallback((p: Publish) => {
+    setTargetPublish(p)
+    setActionsModalVisible(true)
+  }, [])
+
+  const setPOS = useCallback(
+    (posX: number, posY: number, screenHeight: number) => {
+      setPositionX(posX)
+      setPositionY(posY)
+      setScreenHeight(screenHeight)
+    },
+    []
+  )
+
+  const oncloseActions = useCallback(() => {
+    setTargetPublish(undefined)
+    setActionsModalVisible(false)
+  }, [])
+
+  const openAddToPlaylistsModal = useCallback(() => {
+    if (!isAuthenticated) {
+      openAuthModal()
+    } else {
+      setAddToPlaylistsModalVisible(true)
+      setActionsModalVisible(false)
+    }
+  }, [isAuthenticated, openAuthModal])
+
+  const fetchMoreSuggestions = useCallback(async () => {
+    if (
+      !publishId ||
+      !suggestedItemsPageInfo ||
+      !suggestedItemsPageInfo.endCursor ||
+      !suggestedItemsPageInfo.hasNextPage
+    )
+      return
+
+    try {
+      setLoading(true)
+      const res = await fetch(`/suggestions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cursor: suggestedItemsPageInfo?.endCursor,
+          publishId,
+        }),
+      })
+      const data = (await res.json()) as {
+        result: FetchPublishesResponse
+      }
+      setSuggestedItems((prev) => [...prev, ...data.result?.edges])
+      setSuggestedItemsPageInfo(data.result?.pageInfo)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }, [suggestedItemsPageInfo, publishId])
+  const { observedRef } = useInfiniteScroll(0.5, fetchMoreSuggestions)
+
+  const closeAddToPlaylistsModal = useCallback(() => {
+    setAddToPlaylistsModalVisible(false)
+    setTargetPublish(undefined)
+  }, [])
+
+  const openShareModal = useCallback(() => {
+    setShareModalVisible(true)
+    setActionsModalVisible(false)
+  }, [])
+
+  const closeShareModal = useCallback(() => {
+    setShareModalVisible(false)
+  }, [])
+
+  const openReportModal = useCallback(() => {
+    setReportModalVisible(true)
+    setActionsModalVisible(false)
+  }, [])
+
+  const closeReportModal = useCallback(() => {
+    setReportModalVisible(false)
+  }, [])
+
+  if (suggestedItems.length === 0) return null
+
+  return (
+    <>
+      <div className="bg-white">
+        {suggestedItems.map((edge, index) =>
+          !edge.node ? null : (
+            <RecommendationItem
+              key={`${edge.node?.id}-${index}`}
+              publish={edge.node}
+              setPOS={setPOS}
+              onOpenActions={onOpenActions}
+              onCloseActions={oncloseActions}
+            />
+          )
+        )}
+
+        <div
+          ref={observedRef}
+          className="w-full h-4 flex items-center justify-center"
+        >
+          {loading && (
+            <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
+          )}
+        </div>
+      </div>
+
+      {/* Actions modal */}
+      {actionsModalVisible && (
+        <ActionsModal
+          isAuthenticated={isAuthenticated}
+          profile={profile}
+          publish={targetPublish}
+          closeModal={oncloseActions}
+          top={screenHeight - positionY < 280 ? positionY - 280 : positionY} // 280 is modal height
+          left={positionX - 300} // 300 is modal width
+          openAddToPlaylistsModal={openAddToPlaylistsModal}
+          loadingPlaylists={loadingPlaylists}
+          setLoadingPlaylists={setLoadingPlaylists}
+          setPublishPlaylistsData={setPublishPlaylistsData}
+          openShareModal={openShareModal}
+          openReportModal={openReportModal}
+        />
+      )}
+
+      {/* Add to playlists modal */}
+      {addToPlaylistsModalVisible && targetPublish && publishPlaylistsData && (
+        <AddToPlaylistsModal
+          closeModal={closeAddToPlaylistsModal}
+          publishId={targetPublish.id}
+          playlists={playlists}
+          setPlaylists={setPlaylists}
+          loadingPlaylists={loadingPlaylists}
+          playlistsPageInfo={playlistsPageInfo}
+          setPlaylistsPageInfo={setPlaylistsPageInfo}
+          publishPlaylistsData={publishPlaylistsData}
+        />
+      )}
+
+      {/* Share modal */}
+      {shareModalVisible && targetPublish && (
+        <ShareModal
+          publishId={targetPublish.id}
+          title={targetPublish.title!}
+          closeModal={closeShareModal}
+        />
+      )}
+
+      {/* Report modal */}
+      {reportModalVisible && targetPublish && (
+        <ReportModal
+          closeModal={closeReportModal}
+          publishId={targetPublish.id}
+        />
+      )}
+    </>
+  )
+}

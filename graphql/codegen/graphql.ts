@@ -285,7 +285,6 @@ export type FetchPublishesByCatInput = {
 
 export type FetchPublishesInput = {
   cursor?: InputMaybe<Scalars['String']['input']>;
-  prefer?: InputMaybe<Array<Category>>;
   requestorId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -293,6 +292,12 @@ export type FetchPublishesResponse = {
   __typename?: 'FetchPublishesResponse';
   edges: Array<PublishEdge>;
   pageInfo: PageInfo;
+};
+
+export type FetchSuggestedPublishesInput = {
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  publishId: Scalars['String']['input'];
+  requestorId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FetchWatchLaterInput = {
@@ -656,6 +661,7 @@ export type Query = {
   fetchDontRecommends?: Maybe<FetchDontRecommendsResponse>;
   fetchMyPlaylists?: Maybe<FetchPlaylistsResponse>;
   fetchMyPublishes?: Maybe<FetchPublishesResponse>;
+  fetchSuggestedVideos?: Maybe<FetchPublishesResponse>;
   fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
   fetchWatchLater?: Maybe<FetchWatchLaterResponse>;
   getBalance: Scalars['String']['output'];
@@ -693,6 +699,11 @@ export type QueryFetchMyPlaylistsArgs = {
 
 export type QueryFetchMyPublishesArgs = {
   input: FetchMyPublishesInput;
+};
+
+
+export type QueryFetchSuggestedVideosArgs = {
+  input: FetchSuggestedPublishesInput;
 };
 
 
@@ -820,6 +831,7 @@ export type Station = {
   isOwner?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
   owner: Scalars['String']['output'];
+  preferences: Array<Category>;
   publishes: Array<Publish>;
   publishesCount: Scalars['Int']['output'];
   tokenId?: Maybe<Scalars['Int']['output']>;

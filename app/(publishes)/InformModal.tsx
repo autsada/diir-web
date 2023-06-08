@@ -4,7 +4,7 @@ import React from "react"
 import ModalWrapper from "@/components/ModalWrapper"
 
 interface Props {
-  closeModal: () => void
+  closeModal: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 export default function InformModal({ closeModal }: Props) {

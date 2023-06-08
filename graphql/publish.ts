@@ -13,6 +13,7 @@ import type {
   FetchPublishesByCatInput,
   LikePublishInput,
 } from "./types"
+import { FetchSuggestedPublishesInput } from "./codegen/graphql"
 
 /**
  * Get an uploaded publish for use in the upload action
@@ -189,14 +190,13 @@ export const FETCH_ALL_VIDEOS_QUERY = gql`
 export async function fetchAllVideos({
   requestorId,
   cursor,
-  prefer,
 }: FetchPublishesInput) {
   try {
     const result = await client.request<
       QueryReturnType<"fetchAllVideos">,
       QueryArgsType<"fetchAllVideos">
     >(FETCH_ALL_VIDEOS_QUERY, {
-      input: { cursor, prefer, requestorId },
+      input: { cursor, requestorId },
     })
 
     return result?.fetchAllVideos
@@ -330,6 +330,69 @@ export async function getWatchingPublish(data: QueryByIdInput) {
     })
 
     return result?.getPublishById
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Fetch suggested videos
+ */
+export const FETCH_SUGGESTED_VIDEOS_QUERY = gql`
+  query FetchSuggestedVideos($input: FetchSuggestedPublishesInput!) {
+    fetchSuggestedVideos(input: $input) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          title
+          createdAt
+          views
+          visibility
+          thumbSource
+          thumbnail
+          primaryCategory
+          secondaryCategory
+          kind
+          creator {
+            id
+            name
+            displayName
+            image
+            defaultColor
+          }
+          playback {
+            id
+            videoId
+            duration
+            hls
+            dash
+            thumbnail
+          }
+        }
+      }
+    }
+  }
+`
+
+export async function fetchSuggestedVideos({
+  publishId,
+  requestorId,
+  cursor,
+}: FetchSuggestedPublishesInput) {
+  try {
+    const result = await client.request<
+      QueryReturnType<"fetchSuggestedVideos">,
+      QueryArgsType<"fetchSuggestedVideos">
+    >(FETCH_SUGGESTED_VIDEOS_QUERY, {
+      input: { cursor, requestorId, publishId },
+    })
+
+    return result?.fetchSuggestedVideos
   } catch (error) {
     throw error
   }

@@ -10,7 +10,6 @@ import type {
   Maybe,
   PageInfo,
   PlaylistEdge,
-  Station,
 } from "@/graphql/codegen/graphql"
 
 interface Props {

@@ -10,11 +10,13 @@ import Comments from "./Comments"
 import Reactions from "./Reactions"
 import StationName from "@/components/StationName"
 import ManageFollow from "./ManageFollow"
+import Recommendations from "./Recommendations"
 import { getAccount } from "@/lib/server"
 import {
   checkPublishPlaylists,
   fetchComments,
   fetchMyPlaylists,
+  fetchSuggestedVideos,
   getStationById,
   getWatchingPublish,
 } from "@/graphql"
@@ -140,6 +142,13 @@ export default async function Watch({ params }: Props) {
     cursor: null,
   })
 
+  // Fetch suggested videos
+  const suggestedResult = await fetchSuggestedVideos({
+    requestorId: account?.defaultStation ? account.defaultStation.id : null,
+    cursor: null,
+    publishId: params.id,
+  })
+
   if (!publish) {
     redirect("/")
   }
@@ -215,8 +224,14 @@ export default async function Watch({ params }: Props) {
           />
         </div>
 
-        <div className="w-full sm:col-span-2 px-2 sm:px-8 mt-5 sm:mt-0">
-          Recommendations
+        <div className="w-full sm:col-span-2 px-0 sm:px-8 mt-5 sm:mt-0">
+          <Recommendations
+            publishId={publish.id}
+            isAuthenticated={!!account}
+            profile={account?.defaultStation}
+            suggestedResult={suggestedResult}
+            playlistsResult={playlistsResult || undefined}
+          />
         </div>
       </div>
     </div>

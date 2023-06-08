@@ -32,7 +32,7 @@ interface Props {
 }
 
 export default function ShareModal({ publishId, title, closeModal }: Props) {
-  const shareUrl = `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/watch/${publishId}`
+  const shareUrl = `https://cd48-2405-9800-b961-39d-5016-4959-8f5c-eab7.ngrok-free.app/watch/${publishId}`
 
   const [copiedVisible, setCopiedVisible] = useState(false)
   const [copyError, setCopyError] = useState("")

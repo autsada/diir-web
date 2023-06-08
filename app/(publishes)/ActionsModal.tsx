@@ -112,7 +112,7 @@ export default function ActionsModal({
     const shareData = {
       title: targetPublish.title || "",
       text: targetPublish.title || "",
-      url: `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/watch/${targetPublish.id}`,
+      url: `https://cd48-2405-9800-b961-39d-5016-4959-8f5c-eab7.ngrok-free.app/watch/${targetPublish.id}`,
     }
 
     if (navigator.share && navigator.canShare(shareData)) {
