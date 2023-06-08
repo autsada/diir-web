@@ -42,7 +42,8 @@ export default function CommentsModal({
 
   return (
     <ModalWrapper visible>
-      <div className="fixed bottom-0 w-[100%] h-[80%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden">
+      {/* 310px is from 270 for video player height plus 70 for navbar height */}
+      <div className="fixed top-[310px] bottom-0 w-[100%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden">
         <div className="p-4 flex items-center justify-between border-b border-neutral-100">
           <CommentsHeader
             subCommentsVisible={subCommentsVisible}
