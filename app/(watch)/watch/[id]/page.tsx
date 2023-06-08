@@ -171,8 +171,8 @@ export default async function Watch({ params }: Props) {
         </div>
       </div>
 
-      <div className="pt-5 pb-10 w-full grid grid-cols-1 sm:grid-cols-5 gap-y-2 sm:gap-x-1 overflow-x-hidden bg-white">
-        <div className="w-full sm:col-span-3 px-2 sm:px-8">
+      <div className="pt-5 pb-10 w-full grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-10 gap-y-2 sm:gap-x-1 overflow-x-hidden bg-white">
+        <div className="w-full sm:col-span-3 lg:col-span-6 px-2 sm:px-8">
           <h6 className="sm:text-2xl">{publish.title}</h6>
 
           <div className="py-4 w-full overflow-x-auto scrollbar-hide">
@@ -224,7 +224,7 @@ export default async function Watch({ params }: Props) {
           />
         </div>
 
-        <div className="w-full sm:col-span-2 px-0 sm:px-8 mt-5 sm:mt-0">
+        <div className="w-full sm:col-span-3 lg:col-span-4 px-0 sm:px-8 mt-5 sm:mt-0">
           <Recommendations
             publishId={publish.id}
             isAuthenticated={!!account}
