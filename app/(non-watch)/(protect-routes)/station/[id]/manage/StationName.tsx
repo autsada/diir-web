@@ -105,11 +105,10 @@ export default function StationName({ station }: Props) {
 
   return (
     <>
-      <p className="text-lg">{station?.displayName}</p>
+      <p className="text-base sm:text-lg lg:text-xl">{station?.displayName}</p>
       <MdModeEditOutline
-        size={22}
         color="black"
-        className="cursor-pointer ml-5"
+        className="text-lg cursor-pointer ml-5"
         onClick={startEditing}
       />
 
@@ -124,7 +123,7 @@ export default function StationName({ station }: Props) {
           }
         >
           <div className="bg-white">
-            <h6 className="mb-4">Edit name</h6>
+            <h6 className="mb-4 sm:text-2xl">Edit name</h6>
 
             <NameInput
               name="Name"

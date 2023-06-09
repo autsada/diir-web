@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from "react"
 import Dropzone from "react-dropzone"
+import { isMobile } from "react-device-detect"
 
 import Avatar from "@/components/Avatar"
 import ImageModal from "./ImageModal"
@@ -40,7 +41,7 @@ export default function StationImage({ station }: Props) {
   return (
     <>
       <div
-        className={`relative z-10 mx-auto w-[150px] h-[150px] cursor-pointer rounded ${
+        className={`relative z-10 mx-auto w-[130px] h-[130px] cursor-pointer rounded ${
           !!imageError
             ? "border-[2px] border-red-500"
             : "border border-gray-200"
@@ -63,9 +64,10 @@ export default function StationImage({ station }: Props) {
                     ) : (
                       <Avatar
                         profile={station}
-                        width={150}
-                        height={150}
-                        fontSize="text-6xl"
+                        width={130}
+                        height={130}
+                        fontSize="text-4xl"
+                        withLink={false}
                       />
                     )}
                   </div>
