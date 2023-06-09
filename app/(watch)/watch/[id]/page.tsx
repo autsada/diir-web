@@ -162,7 +162,7 @@ export default async function Watch({ params }: Props) {
               <ButtonLoader loading />
             </div>
           ) : (
-            <div className="w-full h-full">
+            <div id="player" className="w-full h-full">
               <Suspense fallback={<ButtonLoader loading />}>
                 <VideoPlayer playback={publish.playback} playing={true} />
               </Suspense>
@@ -224,7 +224,7 @@ export default async function Watch({ params }: Props) {
           />
         </div>
 
-        <div className="w-full sm:col-span-3 lg:col-span-4 px-0 sm:px-8 mt-5 sm:mt-0">
+        <div className="w-full sm:col-span-3 lg:col-span-4 px-0 sm:px-8 mt-4 sm:mt-0">
           <Recommendations
             publishId={publish.id}
             isAuthenticated={!!account}

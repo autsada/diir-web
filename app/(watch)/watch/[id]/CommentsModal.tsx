@@ -23,6 +23,7 @@ interface Props {
   openSubComments: (c: Comment) => void
   activeComment: Comment | undefined
   closeSubComments: () => void
+  modalTop: number
 }
 
 export default function CommentsModal({
@@ -36,6 +37,7 @@ export default function CommentsModal({
   openSubComments,
   activeComment,
   closeSubComments,
+  modalTop,
 }: Props) {
   const [sortBy, setSortBy] = useState<OrderBy>("counts")
   const [commentsResponse, setCommentsResponse] = useState(commentsResult)
@@ -43,7 +45,10 @@ export default function CommentsModal({
   return (
     <ModalWrapper visible>
       {/* 310px is from 270 for video player height plus 70 for navbar height */}
-      <div className="fixed top-[310px] bottom-0 w-[100%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden">
+      <div
+        className={`fixed bottom-0 w-[100%] text-left bg-white rounded-tl-xl rounded-tr-xl overflow-hidden`}
+        style={{ top: modalTop }}
+      >
         <div className="p-4 flex items-center justify-between border-b border-neutral-100">
           <CommentsHeader
             subCommentsVisible={subCommentsVisible}

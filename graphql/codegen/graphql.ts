@@ -604,7 +604,7 @@ export type PlaylistItemStatus = {
 
 export type Publish = {
   __typename?: 'Publish';
-  comments: Array<Maybe<Comment>>;
+  comments: Array<Comment>;
   commentsCount: Scalars['Int']['output'];
   contentRef?: Maybe<Scalars['String']['output']>;
   contentURI?: Maybe<Scalars['String']['output']>;

@@ -50,7 +50,7 @@ export default function CommentDetails({
     }
   }
 
-  const { onVisible } = useAuthContext()
+  const { onVisible: openAuthModal } = useAuthContext()
   const [isPending, startTransition] = useTransition()
 
   const confirmComment = useCallback(() => {
@@ -129,7 +129,13 @@ export default function CommentDetails({
               clearComment={clearComment}
             />
           ) : (
-            <button className="mt-2 px-4 font-semibold" onClick={onVisible}>
+            <button
+              className="mt-2 px-4 font-semibold"
+              onClick={openAuthModal.bind(
+                undefined,
+                "Sign in to leave comments."
+              )}
+            >
               Sign in to comment
             </button>
           )}

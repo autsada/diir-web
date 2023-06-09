@@ -9,7 +9,9 @@ import { onSnapshot, doc } from "firebase/firestore"
 import CommentDetails from "./CommentDetails"
 import CommentsModal from "./CommentsModal"
 import CommentsHeader from "./CommentsHeader"
+import Avatar from "@/components/Avatar"
 import { db, publishesCollection } from "@/firebase/config"
+import { getPostExcerpt } from "@/lib/client"
 import type {
   Maybe,
   Publish,
@@ -37,6 +39,8 @@ export default function Comments({
   const [activeComment, setActiveComment] = useState<Comment>()
   const [sortBy, setSortBy] = useState<OrderBy>("counts")
   const [commentsResponse, setCommentsResponse] = useState(commentsResult)
+  // 310px is from 270 for video player height plus 70 for navbar height
+  const [modalPOS, setModalPOS] = useState(310)
 
   const router = useRouter()
 
@@ -57,6 +61,14 @@ export default function Comments({
 
   const openCommentsModal = useCallback(() => {
     if (!isMobile) return
+    // Get the player element to get its position for use to set comment modal position
+    const el = document?.getElementById("player")
+    if (el) {
+      const { bottom } = el?.getBoundingClientRect()
+      if (bottom >= 70) {
+        setModalPOS(bottom)
+      }
+    }
     setCommentsModalVisible(true)
   }, [])
 
@@ -78,15 +90,29 @@ export default function Comments({
   }, [])
 
   return (
-    <div className="mt-8">
+    <div className="mt-4">
       {isMobile ? (
         <>
           <div
-            className="flex items-center justify-between border-t border-b border-neutral-200 py-5"
+            className="flex items-center justify-between bg-neutral-100 px-4 rounded-md"
             onClick={openCommentsModal}
           >
-            <p>{publish.commentsCount} Comments</p>
-            <div className="px-4 py-2">
+            <div className="h-full flex-grow py-2 flex flex-col items-start justify-center gap-y-2">
+              <h6 className="text-base">{publish.commentsCount} Comments</h6>
+              <div className="w-full flex items-center gap-x-2">
+                <div>
+                  <Avatar
+                    profile={publish.lastComment?.creator}
+                    width={25}
+                    height={25}
+                  />
+                </div>
+                <div className="h-full w-full text-sm">
+                  {getPostExcerpt(publish.lastComment?.content || "", 45)}
+                </div>
+              </div>
+            </div>
+            <div className="w-[30px] py-2 text-right flex items-center justify-end">
               <BsCaretDown size={22} />
             </div>
           </div>
@@ -102,6 +128,7 @@ export default function Comments({
               openSubComments={openSubComments}
               activeComment={activeComment}
               closeSubComments={closeSubComments}
+              modalTop={modalPOS}
             />
           )}
         </>

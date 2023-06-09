@@ -785,7 +785,7 @@ export interface NexusGenFieldTypes {
   }
   Publish: {
     // field return type
-    comments: Array<NexusGenRootTypes["Comment"] | null> // [Comment]!
+    comments: NexusGenRootTypes["Comment"][] // [Comment!]!
     commentsCount: number // Int!
     contentRef: string | null // String
     contentURI: string | null // String

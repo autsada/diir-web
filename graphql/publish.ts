@@ -303,7 +303,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
       disLiked
       likesCount
       commentsCount
-      comments {
+      lastComment {
         id
         creator {
           id
@@ -317,6 +317,20 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
         likesCount
         commentType
       }
+      # comments {
+      #   id
+      #   creator {
+      #     id
+      #     name
+      #     displayName
+      #     image
+      #   }
+      #   content
+      #   liked
+      #   disLiked
+      #   likesCount
+      #   commentType
+      # }
     }
   }
 `
