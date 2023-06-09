@@ -1,15 +1,13 @@
-"use client"
-
 import React from "react"
+import { AiFillRead, AiOutlineRead } from "react-icons/ai"
+import { IoRadio, IoRadioOutline } from "react-icons/io5"
 import {
   RiHome4Fill,
   RiHome4Line,
   RiVideoFill,
   RiVideoLine,
 } from "react-icons/ri"
-import { IoRadioOutline, IoRadio } from "react-icons/io5"
-import { AiOutlineRead, AiFillRead } from "react-icons/ai"
-import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
+import { MdVideoLibrary, MdOutlineVideoLibrary } from "react-icons/md"
 
 import ActiveLink from "./ActiveLink"
 
@@ -17,10 +15,10 @@ interface Props {
   isAuthenticated: boolean
 }
 
-export default function SideBar({ isAuthenticated }: Props) {
+export default function BottomTabs({ isAuthenticated }: Props) {
   return (
-    <>
-      <div className="mb-3">
+    <div className="w-full grid grid-cols-5 bg-white shadow-xl border-t border-neutral-100">
+      <div className="">
         <ActiveLink
           name="Home"
           href="/"
@@ -29,7 +27,7 @@ export default function SideBar({ isAuthenticated }: Props) {
           isVertical={true}
         />
       </div>
-      <div className="mb-3">
+      <div className="">
         <ActiveLink
           name="Shorts"
           href="/shorts"
@@ -38,7 +36,7 @@ export default function SideBar({ isAuthenticated }: Props) {
           isVertical={true}
         />
       </div>
-      <div className="mb-3">
+      <div className="">
         <ActiveLink
           name="Podcasts"
           href="/podcasts"
@@ -47,7 +45,7 @@ export default function SideBar({ isAuthenticated }: Props) {
           isVertical={true}
         />
       </div>
-      <div className="mb-3">
+      <div className="">
         <ActiveLink
           name="Blogs"
           href="/blogs"
@@ -56,7 +54,7 @@ export default function SideBar({ isAuthenticated }: Props) {
           isVertical={true}
         />
       </div>
-      <div className="mb-3">
+      <div className="">
         <ActiveLink
           name="Library"
           href="/library"
@@ -67,6 +65,6 @@ export default function SideBar({ isAuthenticated }: Props) {
           requiredAuthText="Sign in to view/create your library."
         />
       </div>
-    </>
+    </div>
   )
 }

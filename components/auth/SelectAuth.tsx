@@ -19,7 +19,7 @@ export default function SelectAuth({ selectMethod, headerText }: Props) {
 
       <div className="w-full px-8 sm:px-12">
         <h5 className="text-center font-bold leading-10">
-          {headerText || "Please sign in to proceed."}
+          {headerText || "Sign in to proceed."}
         </h5>
       </div>
 

@@ -7,12 +7,12 @@ import "react-toastify/dist/ReactToastify.css"
 
 import MainNav from "./MainNav"
 import AuthModal from "../auth/AuthModal"
-import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
 import CreateStationModal from "@/app/(non-watch)/(protect-routes)/settings/CreateStationModal"
 import { useAuthContext } from "@/context/AuthContext"
 import { useIdTokenChanged } from "@/hooks/useIdTokenChanged"
 import type { Account } from "@/graphql/codegen/graphql"
+import BottomTabs from "./BottomTabs"
 
 interface Props {
   account: Account | null
@@ -25,7 +25,6 @@ export default function AppLayoutClient({
   isAuthenticated,
   isNoStation,
 }: Props) {
-  const [leftDrawerVisible, setLeftDrawerVisible] = useState(false)
   const [rightDrawerVisible, setRightDrawerVisible] = useState(false)
   const [createStationModalVisible, setCreateStationModalVisible] =
     useState<boolean>()
@@ -64,7 +63,6 @@ export default function AppLayoutClient({
 
     // You can now use the current URL
     if (url) {
-      setLeftDrawerVisible(false)
       setRightDrawerVisible(false)
     }
   }, [pathname, searchParams])
@@ -75,14 +73,6 @@ export default function AppLayoutClient({
       setCreateStationModalVisible(true)
     }
   }, [isNoStation])
-
-  const openLeftDrawer = useCallback(() => {
-    setLeftDrawerVisible(true)
-  }, [])
-
-  const closeLeftDrawer = useCallback(() => {
-    setLeftDrawerVisible(false)
-  }, [])
 
   const openRightDrawer = useCallback(() => {
     setRightDrawerVisible(true)
@@ -99,18 +89,9 @@ export default function AppLayoutClient({
   return (
     <>
       <div className="fixed z-20 top-0 left-0 right-0">
-        <MainNav
-          account={account}
-          openLeftDrawer={openLeftDrawer}
-          openRightDrawer={openRightDrawer}
-        />
+        <MainNav account={account} openRightDrawer={openRightDrawer} />
       </div>
 
-      <LeftDrawer
-        isAuthenticated={!!account}
-        isOpen={leftDrawerVisible}
-        closeDrawer={closeLeftDrawer}
-      />
       <RightDrawer
         profile={account?.defaultStation}
         stations={account?.stations || []}
@@ -148,6 +129,10 @@ export default function AppLayoutClient({
         pauseOnHover={false}
         icon={false}
       />
+
+      <div className="sm:hidden fixed z-20 bottom-0 left-0 right-0">
+        <BottomTabs isAuthenticated={isAuthenticated} />
+      </div>
     </>
   )
 }

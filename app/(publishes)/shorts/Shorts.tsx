@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useCallback } from "react"
 
 import ContentTabs from "../ContentTabs"
 import type { PublishCategory } from "@/graphql/types"
@@ -13,7 +13,7 @@ export default function Shorts() {
       <div className="fixed z-10 top-[70px] left-0 sm:left-[116px] right-0 h-[40px] bg-white">
         <div className="h-full py-4 px-2 w-full overflow-x-auto scrollbar-hide">
           <div className="h-full w-max flex items-center gap-x-2 sm:gap-x-4">
-            <ContentTabs setCategory={setSelectedCat} loading={false} />
+            <ContentTabs onSelectTab={setSelectedCat} loading={false} />
           </div>
         </div>
       </div>
