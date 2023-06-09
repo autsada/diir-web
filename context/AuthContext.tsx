@@ -4,8 +4,9 @@ import React, { createContext, useContext, useState, useCallback } from "react"
 
 interface AuthContextState {
   visible: boolean
-  onVisible: () => void
+  onVisible: (header?: string) => void
   offVisible: () => void
+  headerText: string
 }
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined)
@@ -16,9 +17,11 @@ export default function AuthContextProvider({
   children: React.ReactNode
 }) {
   const [authModalVisible, setAuthModalVisible] = useState(false)
+  const [headerText, setHeaderText] = useState("")
 
-  const onVisible = useCallback(() => {
+  const onVisible = useCallback((header?: string) => {
     setAuthModalVisible(true)
+    setHeaderText(header || "")
   }, [])
 
   const offVisible = useCallback(() => {
@@ -27,7 +30,7 @@ export default function AuthContextProvider({
 
   return (
     <AuthContext.Provider
-      value={{ visible: authModalVisible, onVisible, offVisible }}
+      value={{ visible: authModalVisible, onVisible, offVisible, headerText }}
     >
       {children}
     </AuthContext.Provider>

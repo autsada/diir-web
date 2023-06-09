@@ -7,9 +7,10 @@ export type AuthMethod = "phone" | "email" | "wallet"
 
 interface Props {
   selectMethod: (m: AuthMethod) => void
+  headerText?: string
 }
 
-export default function SelectAuth({ selectMethod }: Props) {
+export default function SelectAuth({ selectMethod, headerText }: Props) {
   return (
     <>
       <div className="w-[120px] max-h-max mx-auto">
@@ -18,7 +19,7 @@ export default function SelectAuth({ selectMethod }: Props) {
 
       <div className="w-full px-8 sm:px-12">
         <h5 className="text-center font-bold leading-10">
-          Creators/audience centric content sharing platform.
+          {headerText || "Please sign in to proceed."}
         </h5>
       </div>
 

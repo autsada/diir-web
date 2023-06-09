@@ -30,7 +30,7 @@ export default function AppLayoutClient({
   const [createStationModalVisible, setCreateStationModalVisible] =
     useState<boolean>()
 
-  const { visible: authModalVisible, onVisible, offVisible } = useAuthContext()
+  const { visible: authModalVisible, offVisible, headerText } = useAuthContext()
 
   const router = useRouter()
   const pathname = usePathname()
@@ -101,7 +101,6 @@ export default function AppLayoutClient({
       <div className="fixed z-20 top-0 left-0 right-0">
         <MainNav
           account={account}
-          openAuthModal={onVisible}
           openLeftDrawer={openLeftDrawer}
           openRightDrawer={openRightDrawer}
         />
@@ -109,7 +108,6 @@ export default function AppLayoutClient({
 
       <LeftDrawer
         isAuthenticated={!!account}
-        openAuthModal={onVisible}
         isOpen={leftDrawerVisible}
         closeDrawer={closeLeftDrawer}
       />
@@ -120,7 +118,11 @@ export default function AppLayoutClient({
         closeDrawer={closeRightDrawer}
       />
 
-      <AuthModal visible={authModalVisible} closeModal={offVisible} />
+      <AuthModal
+        visible={authModalVisible}
+        closeModal={offVisible}
+        headerText={headerText}
+      />
 
       {createStationModalVisible && account && (
         <CreateStationModal

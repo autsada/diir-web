@@ -5,25 +5,26 @@ import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
 
 import Logo from "./Logo"
-import type { Account } from "@/graphql/codegen/graphql"
 import Avatar from "../Avatar"
 import UploadBtn from "../UploadBtn"
+import { useAuthContext } from "@/context/AuthContext"
+import { SIGN_IN_HEADER } from "@/lib/constants"
+import type { Account } from "@/graphql/codegen/graphql"
 
 interface Props {
   account: Account | null
-  openAuthModal: () => void
   openLeftDrawer: () => void
   openRightDrawer: () => void
 }
 
 export default function MainNav({
-  openAuthModal,
   account,
   openLeftDrawer,
   openRightDrawer,
 }: Props) {
   const pathname = usePathname()
   const isWatchPage = pathname.startsWith("/watch")
+  const { onVisible: openAuthModal } = useAuthContext()
 
   return (
     <div
@@ -85,8 +86,9 @@ export default function MainNav({
           </div>
         ) : (
           <button
+            type="button"
             className="btn-orange mx-0 h-8 w-[80px] rounded-full"
-            onClick={openAuthModal}
+            onClick={openAuthModal.bind(undefined, SIGN_IN_HEADER)}
           >
             Sign in
           </button>

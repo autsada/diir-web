@@ -13,20 +13,22 @@ import Logo from "./Logo"
 import ActiveLink from "./ActiveLink"
 import Backdrop from "../Backdrop"
 import UploadBtn from "@/components/UploadBtn"
+import { useAuthContext } from "@/context/AuthContext"
+import { SIGN_IN_HEADER } from "@/lib/constants"
 
 interface Props {
   isOpen: boolean
   closeDrawer: () => void
   isAuthenticated: boolean
-  openAuthModal: () => void
 }
 
 export default function LeftDrawer({
   isOpen = false,
   closeDrawer,
   isAuthenticated,
-  openAuthModal,
 }: Props) {
+  const { onVisible: openAuthModal } = useAuthContext()
+
   // Disable body scroll when modal openned
   useEffect(() => {
     const els = document?.getElementsByTagName("body")
@@ -42,7 +44,7 @@ export default function LeftDrawer({
   }, [isOpen])
 
   const onClickUpload = useCallback(() => {
-    openAuthModal()
+    openAuthModal(SIGN_IN_HEADER)
     closeDrawer()
   }, [openAuthModal, closeDrawer])
 

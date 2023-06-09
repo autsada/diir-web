@@ -13,9 +13,10 @@ import type { AuthMethod } from "./SelectAuth"
 interface Props {
   visible: boolean
   closeModal: () => void
+  headerText?: string
 }
 
-export default function AuthModal({ visible, closeModal }: Props) {
+export default function AuthModal({ visible, closeModal, headerText }: Props) {
   const [authMethod, setAuthMethod] = useState<AuthMethod>()
 
   const { windowWidth, windowHeight } = useWindowDimension()
@@ -67,7 +68,7 @@ export default function AuthModal({ visible, closeModal }: Props) {
             {authMethod === "wallet" && <WalletAuth closeModal={closeModal} />}
           </>
         ) : (
-          <SelectAuth selectMethod={selectMethod} />
+          <SelectAuth selectMethod={selectMethod} headerText={headerText} />
         )}
       </div>
     </ModalWrapper>
