@@ -1,6 +1,7 @@
 import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { RxHamburgerMenu } from "react-icons/rx"
 import { IoSearchOutline } from "react-icons/io5"
 
 import Logo from "./Logo"
@@ -12,10 +13,15 @@ import type { Account } from "@/graphql/codegen/graphql"
 
 interface Props {
   account: Account | null
+  openLeftDrawer: () => void
   openRightDrawer: () => void
 }
 
-export default function MainNav({ account, openRightDrawer }: Props) {
+export default function MainNav({
+  account,
+  openLeftDrawer,
+  openRightDrawer,
+}: Props) {
   const pathname = usePathname()
   const isWatchPage = pathname.startsWith("/watch")
   const { onVisible: openAuthModal } = useAuthContext()
@@ -26,6 +32,21 @@ export default function MainNav({ account, openRightDrawer }: Props) {
         isWatchPage ? "bg-neutral-900" : "bg-white"
       }`}
     >
+      {isWatchPage && (
+        <div className="hidden sm:flex h-full w-[50px] items-center">
+          <div
+            className={`cursor-pointer p-2 rounded-full ${
+              isWatchPage ? "hover:bg-gray-600" : "hover:bg-gray-100"
+            }`}
+          >
+            <RxHamburgerMenu
+              size={28}
+              className="text-white"
+              onClick={openLeftDrawer}
+            />
+          </div>
+        </div>
+      )}
       <div className="h-full w-[100px] ml-2 flex items-center justify-start">
         <Link href="/">
           <Logo theme={isWatchPage ? "dark" : "light"} />
@@ -50,7 +71,7 @@ export default function MainNav({ account, openRightDrawer }: Props) {
           </div>
         </div>
       </div>
-      <div className="mr-0 sm:mr-6">
+      <div className="mr-0 sm:mr-4">
         <UploadBtn
           isAuthenticated={!!account}
           onClick={openAuthModal.bind(undefined, "Sign in to upload content.")}
