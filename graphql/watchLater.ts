@@ -10,15 +10,17 @@ import type {
   MutationReturnType,
   RemoveFromWatchLaterInput,
 } from "./types"
+
 /**
- * Fetch watch later videos of a station
+ * Fetch watch later videos for preview
  */
-export const FETCH_WATCH_LATER_QUERY = gql`
-  query FetchWatchLater($input: FetchWatchLaterInput!) {
-    fetchWatchLater(input: $input) {
+export const FETCH_PREVIEW_WATCH_LATER_QUERY = gql`
+  query FetchPreviewWatchLater($input: FetchWatchLaterInput!) {
+    fetchPreviewWatchLater(input: $input) {
       pageInfo {
         endCursor
         hasNextPage
+        count
       }
       edges {
         cursor
@@ -52,6 +54,87 @@ export const FETCH_WATCH_LATER_QUERY = gql`
               hls
               dash
               thumbnail
+              preview
+            }
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchPreviewWatchLater({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: FetchWatchLaterInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        QueryReturnType<"fetchPreviewWatchLater">,
+        QueryArgsType<"fetchPreviewWatchLater">
+      >(FETCH_PREVIEW_WATCH_LATER_QUERY, {
+        input: data,
+      })
+
+    return result?.fetchPreviewWatchLater
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Fetch watch later videos of a station
+ */
+export const FETCH_WATCH_LATER_QUERY = gql`
+  query FetchWatchLater($input: FetchWatchLaterInput!) {
+    fetchWatchLater(input: $input) {
+      pageInfo {
+        endCursor
+        hasNextPage
+        count
+      }
+      edges {
+        cursor
+        node {
+          id
+          createdAt
+          stationId
+          publishId
+          publish {
+            id
+            title
+            createdAt
+            views
+            visibility
+            thumbSource
+            thumbnail
+            primaryCategory
+            secondaryCategory
+            kind
+            creator {
+              id
+              name
+              displayName
+              image
+              defaultColor
+            }
+            playback {
+              id
+              videoId
+              duration
+              hls
+              dash
+              thumbnail
+              preview
             }
           }
         }

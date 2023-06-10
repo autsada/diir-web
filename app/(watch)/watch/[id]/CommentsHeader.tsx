@@ -3,7 +3,7 @@ import { MdOutlineSort, MdArrowBack } from "react-icons/md"
 
 import Mask from "@/components/Mask"
 import SortByModal from "./SortByModal"
-import type { OrderBy } from "@/graphql/types"
+import type { CommentsOrderBy } from "@/graphql/types"
 import type { FetchCommentsResponse } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -14,8 +14,8 @@ interface Props {
     React.SetStateAction<FetchCommentsResponse | null | undefined>
   >
   closeSubComments: () => void
-  sortBy: OrderBy
-  setSortBy: React.Dispatch<React.SetStateAction<OrderBy>>
+  sortBy: CommentsOrderBy
+  setSortBy: React.Dispatch<React.SetStateAction<CommentsOrderBy>>
 }
 
 export default function CommentsHeader({
@@ -50,7 +50,7 @@ export default function CommentsHeader({
 
   // Fetch comments when user selects sort by
   const fetchComments = useCallback(
-    async (ob: OrderBy) => {
+    async (ob: CommentsOrderBy) => {
       if (!publishId) return
       try {
         setCommentsLoading(true)
@@ -77,7 +77,7 @@ export default function CommentsHeader({
   )
 
   const selectSortBy = useCallback(
-    (s: OrderBy) => {
+    (s: CommentsOrderBy) => {
       setSortBy(s)
       if (s !== sortBy) {
         fetchComments(s)

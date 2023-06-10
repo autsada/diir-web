@@ -1,7 +1,7 @@
 import React from "react"
 import { toast } from "react-toastify"
 
-import { createNewPlaylist } from "./actions"
+import { createNewPlaylist } from "../(watch)/watch/[id]/actions"
 
 interface Props {
   publishId: string

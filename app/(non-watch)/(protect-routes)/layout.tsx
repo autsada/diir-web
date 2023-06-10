@@ -10,10 +10,11 @@ export default async function Layout({
 }) {
   const data = await getAccount()
   const account = data?.account
+  const idToken = data?.idToken
 
-  if (!data || !account) {
+  if (!data || !account || !idToken) {
     redirect("/")
   }
 
-  return <div className="w-full py-2">{children}</div>
+  return <div className="w-full">{children}</div>
 }

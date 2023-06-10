@@ -4,7 +4,7 @@ import React from "react"
 export default function ManageStationsTemplate() {
   return (
     <div className="mt-5">
-      <h6>Manage stations</h6>
+      <h6 className="text-lg sm:text-xl">Manage stations</h6>
       <button className="btn-blue px-6 mx-0 my-5 rounded-full">
         Create new station
       </button>

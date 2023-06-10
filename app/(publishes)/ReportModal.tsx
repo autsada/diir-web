@@ -5,7 +5,7 @@ import { toast } from "react-toastify"
 import ModalWrapper from "@/components/ModalWrapper"
 import CloseButton from "@/components/CloseButton"
 import ConfirmModal from "@/components/ConfirmModal"
-import { reportPublish } from "./actions"
+import { reportPublish } from "../(watch)/watch/[id]/actions"
 import type { ReportReason } from "@/graphql/types"
 
 interface Props {

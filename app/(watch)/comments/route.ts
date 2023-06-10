@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 
 import { fetchComments } from "@/graphql"
 import { getAccount } from "@/lib/server"
-import type { OrderBy } from "@/graphql/types"
+import type { CommentsOrderBy } from "@/graphql/types"
 
 export async function POST(req: Request) {
   const data = await getAccount()
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   const { cursor, publishId, sortBy } = (await req.json()) as {
     cursor: string
     publishId: string
-    sortBy?: OrderBy
+    sortBy?: CommentsOrderBy
   }
 
   if (!publishId) return NextResponse.json({ result: null })

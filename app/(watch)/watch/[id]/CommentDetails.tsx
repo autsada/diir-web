@@ -13,7 +13,7 @@ import type {
   Station,
   Comment,
 } from "@/graphql/codegen/graphql"
-import type { OrderBy } from "@/graphql/types"
+import type { CommentsOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -23,7 +23,7 @@ interface Props {
   subCommentsVisible: boolean
   openSubComments: (c: Comment) => void
   activeComment: Comment | undefined
-  fetchCommentsSortBy?: OrderBy
+  fetchCommentsSortBy?: CommentsOrderBy
 }
 
 export default function CommentDetails({

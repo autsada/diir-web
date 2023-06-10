@@ -1,11 +1,11 @@
 import React from "react"
 
-import type { OrderBy } from "@/graphql/types"
+import type { CommentsOrderBy } from "@/graphql/types"
 
 interface Props {
-  sortBy: OrderBy
+  sortBy: CommentsOrderBy
   pos: "top" | "bottom"
-  select: (s: OrderBy) => void
+  select: (s: CommentsOrderBy) => void
 }
 
 export default function SortByModal({ sortBy, pos, select }: Props) {

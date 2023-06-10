@@ -19,7 +19,7 @@ import type {
   FetchCommentsResponse,
   Comment,
 } from "@/graphql/codegen/graphql"
-import type { OrderBy } from "@/graphql/types"
+import type { CommentsOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -37,7 +37,7 @@ export default function Comments({
   const [commentsModalVisible, setCommentsModalVisible] = useState(false)
   const [subCommentsVisible, setSubCommentsVisible] = useState(false)
   const [activeComment, setActiveComment] = useState<Comment>()
-  const [sortBy, setSortBy] = useState<OrderBy>("counts")
+  const [sortBy, setSortBy] = useState<CommentsOrderBy>("counts")
   const [commentsResponse, setCommentsResponse] = useState(commentsResult)
   // 310px is from 270 for video player height plus 70 for navbar height
   const [modalPOS, setModalPOS] = useState(310)

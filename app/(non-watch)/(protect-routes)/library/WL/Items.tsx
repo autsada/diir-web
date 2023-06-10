@@ -1,60 +1,51 @@
 "use client"
 
-import React, { useState, useCallback } from "react"
+import React, { useCallback, useState } from "react"
 
-import RecommendationItem from "./RecommendationItem"
-import ActionsModal from "./ActionsModal"
-import AddToPlaylistsModal from "./AddToPlaylistsModal"
+import WLActionsModal from "./WLActionsModal"
+import WLIItem from "./WLItem"
+import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "@/app/(publishes)/ShareModal"
-import ReportModal from "@/app/(publishes)/ReportModal"
 import ButtonLoader from "@/components/ButtonLoader"
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import { useAuthContext } from "@/context/AuthContext"
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import type {
-  FetchPlaylistsResponse,
-  FetchPublishesResponse,
-  Maybe,
-  Station,
-  Publish,
   CheckPublishPlaylistsResponse,
+  FetchPlaylistsResponse,
+  FetchWatchLaterResponse,
+  Maybe,
+  Publish,
+  Station,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
-  publishId: string
   isAuthenticated: boolean
-  profile: Maybe<Station> | undefined
-  suggestedResult: Maybe<FetchPublishesResponse> | undefined
-  playlistsResult: FetchPlaylistsResponse | undefined
+  profile: Station | undefined
+  itemsResult: FetchWatchLaterResponse
+  playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
 }
 
-export default function Recommendations({
-  publishId,
+export default function Items({
   isAuthenticated,
   profile,
-  suggestedResult,
+  itemsResult,
   playlistsResult,
 }: Props) {
-  const pageInfo = suggestedResult?.pageInfo
+  const [prevItems, setPrevItems] = useState(itemsResult?.edges)
+  const [items, setItems] = useState(itemsResult?.edges || [])
+  const [prevPageInfo, setPrevPageInfo] = useState(itemsResult?.pageInfo)
   const [loading, setLoading] = useState(false)
-  const [prevSuggestedItems, setPrevSuggestedItems] = useState(
-    suggestedResult?.edges
-  )
-  const [suggestedItems, setSuggestedItems] = useState(
-    suggestedResult?.edges || []
-  )
-  // If suggested list changed
-  if (suggestedResult?.edges !== prevSuggestedItems) {
-    setPrevSuggestedItems(suggestedResult?.edges)
-    setSuggestedItems(suggestedResult?.edges || [])
-  }
-
-  const [prevSuggestedItemsPageInfo, setPrevSuggestedItemsPageInfo] =
-    useState(pageInfo)
-  const [suggestedItemsPageInfo, setSuggestedItemsPageInfo] = useState(pageInfo)
-  // When page info changed
-  if (pageInfo !== prevSuggestedItemsPageInfo) {
-    setPrevSuggestedItemsPageInfo(pageInfo)
-    setSuggestedItemsPageInfo(pageInfo)
+  const [pageInfo, setPageInfo] = useState(itemsResult?.pageInfo)
+  // When props fetch result changed
+  if (itemsResult) {
+    if (itemsResult.edges !== prevItems) {
+      setPrevItems(itemsResult?.edges)
+      setItems(itemsResult?.edges || [])
+    }
+    if (itemsResult.pageInfo !== prevPageInfo) {
+      setPrevPageInfo(itemsResult.pageInfo)
+      setPageInfo(itemsResult.pageInfo)
+    }
   }
 
   const [targetPublish, setTargetPublish] = useState<Publish>()
@@ -65,6 +56,7 @@ export default function Recommendations({
 
   const [addToPlaylistsModalVisible, setAddToPlaylistsModalVisible] =
     useState(false)
+
   const [prevPlaylists, setPrevPlaylists] = useState(playlistsResult?.edges)
   const [playlists, setPlaylists] = useState(playlistsResult?.edges || [])
   // When playlists result changed
@@ -85,14 +77,12 @@ export default function Recommendations({
     setPlaylistsPageInfo(playlistsResult?.pageInfo)
   }
 
+  const [publishPlaylistsData, setPublishPlaylistsData] =
+    useState<CheckPublishPlaylistsResponse>()
   const [loadingPublishPlaylistsData, setLoadingPublishPlaylistsData] =
     useState(false)
-  const [publishPlaylistsData, setPublishPlaylistsData] = useState<
-    CheckPublishPlaylistsResponse | undefined
-  >()
 
   const [shareModalVisible, setShareModalVisible] = useState(false)
-  const [reportModalVisible, setReportModalVisible] = useState(false)
 
   const { onVisible: openAuthModal } = useAuthContext()
 
@@ -139,59 +129,42 @@ export default function Recommendations({
     setTargetPublish(undefined)
   }, [])
 
-  const openReportModal = useCallback(() => {
-    setReportModalVisible(true)
-    setActionsModalVisible(false)
-  }, [])
-
-  const closeReportModal = useCallback(() => {
-    setReportModalVisible(false)
-    setTargetPublish(undefined)
-  }, [])
-
-  const fetchMoreSuggestions = useCallback(async () => {
-    if (
-      !publishId ||
-      !suggestedItemsPageInfo ||
-      !suggestedItemsPageInfo.endCursor ||
-      !suggestedItemsPageInfo.hasNextPage
-    )
-      return
+  const fetchMoreItems = useCallback(async () => {
+    if (!pageInfo || !pageInfo.endCursor || !pageInfo.hasNextPage) return
 
     try {
       setLoading(true)
-      const res = await fetch(`/suggestions`, {
+      const res = await fetch(`/library/WL/query`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cursor: suggestedItemsPageInfo?.endCursor,
-          publishId,
+          cursor: pageInfo.endCursor,
         }),
       })
       const data = (await res.json()) as {
-        result: FetchPublishesResponse
+        result: FetchWatchLaterResponse
       }
-      setSuggestedItems((prev) => [...prev, ...data.result?.edges])
-      setSuggestedItemsPageInfo(data.result?.pageInfo)
+      setItems((prev) => [...prev, ...data.result.edges])
+      setPageInfo(data?.result?.pageInfo)
       setLoading(false)
     } catch (error) {
       setLoading(false)
     }
-  }, [suggestedItemsPageInfo, publishId])
-  const { observedRef } = useInfiniteScroll(0.5, fetchMoreSuggestions)
+  }, [pageInfo, setLoading])
+  const { observedRef } = useInfiniteScroll(0.5, fetchMoreItems)
 
-  if (suggestedItems.length === 0) return null
+  if (items.length === 0) return null
 
   return (
     <>
-      <div className="bg-white">
-        {suggestedItems.map((edge, index) =>
-          !edge.node ? null : (
-            <RecommendationItem
-              key={`${edge.node?.id}-${index}`}
-              publish={edge.node}
+      <div className="px-2 grid grid-cols-1 gap-y-5">
+        {items.map((edge, i) =>
+          !edge.node?.publish ? null : (
+            <WLIItem
+              key={`${edge.node?.id}-${i}`}
+              publish={edge.node?.publish}
               setPOS={setPOS}
               onOpenActions={onOpenActions}
             />
@@ -210,19 +183,18 @@ export default function Recommendations({
 
       {/* Actions modal */}
       {actionsModalVisible && (
-        <ActionsModal
+        <WLActionsModal
           isAuthenticated={isAuthenticated}
           profile={profile}
           publish={targetPublish}
           closeModal={oncloseActions}
-          top={screenHeight - positionY < 280 ? positionY - 280 : positionY} // 280 is modal height
+          top={screenHeight - positionY < 180 ? positionY - 180 : positionY} // 180 is modal height
           left={positionX - 300} // 300 is modal width
           openAddToPlaylistsModal={openAddToPlaylistsModal}
           loadingPublishPlaylistsData={loadingPublishPlaylistsData}
           setLoadingPublishPlaylistsData={setLoadingPublishPlaylistsData}
           setPublishPlaylistsData={setPublishPlaylistsData}
           openShareModal={openShareModal}
-          openReportModal={openReportModal}
         />
       )}
 
@@ -245,14 +217,6 @@ export default function Recommendations({
           publishId={targetPublish.id}
           title={targetPublish.title!}
           closeModal={closeShareModal}
-        />
-      )}
-
-      {/* Report modal */}
-      {reportModalVisible && targetPublish && (
-        <ReportModal
-          closeModal={closeReportModal}
-          publishId={targetPublish.id}
         />
       )}
     </>

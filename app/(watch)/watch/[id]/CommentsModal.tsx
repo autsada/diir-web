@@ -10,7 +10,7 @@ import type {
   Station,
   Comment,
 } from "@/graphql/codegen/graphql"
-import type { OrderBy } from "@/graphql/types"
+import type { CommentsOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -39,7 +39,7 @@ export default function CommentsModal({
   closeSubComments,
   modalTop,
 }: Props) {
-  const [sortBy, setSortBy] = useState<OrderBy>("counts")
+  const [sortBy, setSortBy] = useState<CommentsOrderBy>("counts")
   const [commentsResponse, setCommentsResponse] = useState(commentsResult)
 
   return (

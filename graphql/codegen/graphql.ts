@@ -156,6 +156,11 @@ export enum CommentType {
   Publish = 'PUBLISH'
 }
 
+export enum CommentsOrderBy {
+  Counts = 'counts',
+  Newest = 'newest'
+}
+
 export type CreateDraftPublishInput = {
   accountId: Scalars['String']['input'];
   creatorId: Scalars['String']['input'];
@@ -232,7 +237,7 @@ export type DontRecommendInput = {
 
 export type FetchCommentsByPublishIdInput = {
   cursor?: InputMaybe<Scalars['String']['input']>;
-  orderBy?: InputMaybe<OrderBy>;
+  orderBy?: InputMaybe<CommentsOrderBy>;
   publishId: Scalars['String']['input'];
   requestorId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -303,6 +308,7 @@ export type FetchSuggestedPublishesInput = {
 export type FetchWatchLaterInput = {
   accountId: Scalars['String']['input'];
   cursor?: InputMaybe<Scalars['String']['input']>;
+  orderBy?: InputMaybe<WatchLaterOrderBy>;
   owner: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
 };
@@ -545,13 +551,9 @@ export type MutationValidateNameArgs = {
   name: Scalars['String']['input'];
 };
 
-export enum OrderBy {
-  Counts = 'counts',
-  Newest = 'newest'
-}
-
 export type PageInfo = {
   __typename?: 'PageInfo';
+  count?: Maybe<Scalars['Int']['output']>;
   endCursor?: Maybe<Scalars['String']['output']>;
   hasNextPage?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -661,6 +663,7 @@ export type Query = {
   fetchDontRecommends?: Maybe<FetchDontRecommendsResponse>;
   fetchMyPlaylists?: Maybe<FetchPlaylistsResponse>;
   fetchMyPublishes?: Maybe<FetchPublishesResponse>;
+  fetchPreviewWatchLater?: Maybe<FetchWatchLaterResponse>;
   fetchSuggestedVideos?: Maybe<FetchPublishesResponse>;
   fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
   fetchWatchLater?: Maybe<FetchWatchLaterResponse>;
@@ -699,6 +702,11 @@ export type QueryFetchMyPlaylistsArgs = {
 
 export type QueryFetchMyPublishesArgs = {
   input: FetchMyPublishesInput;
+};
+
+
+export type QueryFetchPreviewWatchLaterArgs = {
+  input: FetchWatchLaterInput;
 };
 
 
@@ -927,6 +935,11 @@ export type WatchLaterEdge = {
   cursor?: Maybe<Scalars['String']['output']>;
   node?: Maybe<WatchLater>;
 };
+
+export enum WatchLaterOrderBy {
+  Newest = 'newest',
+  Oldest = 'oldest'
+}
 
 export type WriteResult = {
   __typename?: 'WriteResult';

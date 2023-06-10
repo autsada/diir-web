@@ -1,5 +1,5 @@
 import React from "react"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <div className="px-4">{children}</div>
+  return <div className="px-4 py-2">{children}</div>
 }

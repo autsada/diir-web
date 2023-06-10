@@ -1,6 +1,6 @@
-import React, { useRef, useCallback, useState, useEffect, useMemo } from "react"
+import React, { useRef, useCallback, useState, useMemo } from "react"
 
-import { saveToPlaylist } from "./actions"
+import { saveToPlaylist } from "../(watch)/watch/[id]/actions"
 import ButtonLoader from "@/components/ButtonLoader"
 import { transformPlaylists } from "@/lib/client"
 import type {

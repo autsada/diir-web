@@ -18,11 +18,7 @@ interface Props {
   onOpenActions: (p: Publish) => void
 }
 
-export default function RecommendationItem({
-  publish,
-  setPOS,
-  onOpenActions,
-}: Props) {
+export default function WLIItem({ publish, setPOS, onOpenActions }: Props) {
   const [playing, setPlaying] = useState(false)
 
   const onMouseOn = useCallback(() => {
@@ -49,7 +45,7 @@ export default function RecommendationItem({
         <div className="w-full sm:w-1/2 sm:max-w-[240px]">
           <Link href={`/watch/${publish.id}`}>
             <div
-              className="relative w-full h-[200px] sm:h-[130px] bg-neutral-600 rounded-none sm:rounded-xl overflow-hidden"
+              className="relative w-full h-[200px] sm:h-[130px] bg-neutral-600 rounded-xl overflow-hidden"
               onMouseOver={onMouseOn}
               onMouseLeave={onMouseLeave}
             >
@@ -83,7 +79,7 @@ export default function RecommendationItem({
           <div className="pr-4">
             <Link href={`/watch/${publish.id}`}>
               <h6 className="text-base">
-                {getPostExcerpt(publish.title || "", 60)}
+                {getPostExcerpt(publish.title || "", 100)}
               </h6>
             </Link>
             <div className="mt-1">

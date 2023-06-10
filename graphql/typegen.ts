@@ -107,7 +107,7 @@ export interface NexusGenInputs {
   FetchCommentsByPublishIdInput: {
     // input type
     cursor?: string | null // String
-    orderBy?: NexusGenEnums["OrderBy"] | null // OrderBy
+    orderBy?: NexusGenEnums["CommentsOrderBy"] | null // CommentsOrderBy
     publishId: string // String!
     requestorId?: string | null // String
   }
@@ -154,6 +154,7 @@ export interface NexusGenInputs {
     // input type
     accountId: string // String!
     cursor?: string | null // String
+    orderBy?: NexusGenEnums["WatchLaterOrderBy"] | null // WatchLaterOrderBy
     owner: string // String!
     stationId: string // String!
   }
@@ -293,7 +294,7 @@ export interface NexusGenEnums {
     | "Vehicles"
     | "Women"
   CommentType: "COMMENT" | "PUBLISH"
-  OrderBy: "counts" | "newest"
+  CommentsOrderBy: "counts" | "newest"
   PublishKind: "Adds" | "Blog" | "Podcast" | "Short" | "Video"
   QueryPublishKind: "adds" | "all" | "blogs" | "podcasts" | "videos"
   ReportReason:
@@ -309,6 +310,7 @@ export interface NexusGenEnums {
   ThumbSource: "custom" | "generated"
   ThumbnailSource: "custom" | "generated"
   Visibility: "draft" | "private" | "public"
+  WatchLaterOrderBy: "newest" | "oldest"
 }
 
 export interface NexusGenScalars {
@@ -436,6 +438,7 @@ export interface NexusGenObjects {
   Mutation: {}
   PageInfo: {
     // root type
+    count?: number | null // Int
     endCursor?: string | null // String
     hasNextPage?: boolean | null // Boolean
   }
@@ -743,6 +746,7 @@ export interface NexusGenFieldTypes {
   }
   PageInfo: {
     // field return type
+    count: number | null // Int
     endCursor: string | null // String
     hasNextPage: boolean | null // Boolean
   }
@@ -834,6 +838,7 @@ export interface NexusGenFieldTypes {
     fetchDontRecommends: NexusGenRootTypes["FetchDontRecommendsResponse"] | null // FetchDontRecommendsResponse
     fetchMyPlaylists: NexusGenRootTypes["FetchPlaylistsResponse"] | null // FetchPlaylistsResponse
     fetchMyPublishes: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    fetchPreviewWatchLater: NexusGenRootTypes["FetchWatchLaterResponse"] | null // FetchWatchLaterResponse
     fetchSuggestedVideos: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchVideosByCategory: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchWatchLater: NexusGenRootTypes["FetchWatchLaterResponse"] | null // FetchWatchLaterResponse
@@ -1091,6 +1096,7 @@ export interface NexusGenFieldTypeNames {
   }
   PageInfo: {
     // field return type name
+    count: "Int"
     endCursor: "String"
     hasNextPage: "Boolean"
   }
@@ -1180,6 +1186,7 @@ export interface NexusGenFieldTypeNames {
     fetchDontRecommends: "FetchDontRecommendsResponse"
     fetchMyPlaylists: "FetchPlaylistsResponse"
     fetchMyPublishes: "FetchPublishesResponse"
+    fetchPreviewWatchLater: "FetchWatchLaterResponse"
     fetchSuggestedVideos: "FetchPublishesResponse"
     fetchVideosByCategory: "FetchPublishesResponse"
     fetchWatchLater: "FetchWatchLaterResponse"
@@ -1409,6 +1416,10 @@ export interface NexusGenArgTypes {
     fetchMyPublishes: {
       // args
       input: NexusGenInputs["FetchMyPublishesInput"] // FetchMyPublishesInput!
+    }
+    fetchPreviewWatchLater: {
+      // args
+      input: NexusGenInputs["FetchWatchLaterInput"] // FetchWatchLaterInput!
     }
     fetchSuggestedVideos: {
       // args

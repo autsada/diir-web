@@ -1,70 +1,49 @@
 "use client"
 
 import React, { useState, useCallback } from "react"
+import Link from "next/link"
+import { AiOutlineClockCircle } from "react-icons/ai"
 
-import RecommendationItem from "./RecommendationItem"
-import ActionsModal from "./ActionsModal"
-import AddToPlaylistsModal from "./AddToPlaylistsModal"
-import ShareModal from "@/app/(publishes)/ShareModal"
+import Item from "./Item"
+import ActionsModal from "@/app/(watch)/watch/[id]/ActionsModal"
+import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ReportModal from "@/app/(publishes)/ReportModal"
-import ButtonLoader from "@/components/ButtonLoader"
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
+import ShareModal from "@/app/(publishes)/ShareModal"
+import Mask from "@/components/Mask"
 import { useAuthContext } from "@/context/AuthContext"
 import type {
-  FetchPlaylistsResponse,
-  FetchPublishesResponse,
   Maybe,
-  Station,
   Publish,
+  Station,
+  FetchPlaylistsResponse,
   CheckPublishPlaylistsResponse,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
-  publishId: string
   isAuthenticated: boolean
-  profile: Maybe<Station> | undefined
-  suggestedResult: Maybe<FetchPublishesResponse> | undefined
-  playlistsResult: FetchPlaylistsResponse | undefined
+  profile: Station | undefined
+  items: Publish[]
+  itemsCount: number
+  playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
 }
 
-export default function Recommendations({
-  publishId,
+export default function WatchLaterList({
   isAuthenticated,
   profile,
-  suggestedResult,
+  items,
+  itemsCount,
   playlistsResult,
 }: Props) {
-  const pageInfo = suggestedResult?.pageInfo
-  const [loading, setLoading] = useState(false)
-  const [prevSuggestedItems, setPrevSuggestedItems] = useState(
-    suggestedResult?.edges
-  )
-  const [suggestedItems, setSuggestedItems] = useState(
-    suggestedResult?.edges || []
-  )
-  // If suggested list changed
-  if (suggestedResult?.edges !== prevSuggestedItems) {
-    setPrevSuggestedItems(suggestedResult?.edges)
-    setSuggestedItems(suggestedResult?.edges || [])
-  }
-
-  const [prevSuggestedItemsPageInfo, setPrevSuggestedItemsPageInfo] =
-    useState(pageInfo)
-  const [suggestedItemsPageInfo, setSuggestedItemsPageInfo] = useState(pageInfo)
-  // When page info changed
-  if (pageInfo !== prevSuggestedItemsPageInfo) {
-    setPrevSuggestedItemsPageInfo(pageInfo)
-    setSuggestedItemsPageInfo(pageInfo)
-  }
-
   const [targetPublish, setTargetPublish] = useState<Publish>()
   const [actionsModalVisible, setActionsModalVisible] = useState(false)
   const [positionX, setPositionX] = useState(0)
   const [positionY, setPositionY] = useState(0)
   const [screenHeight, setScreenHeight] = useState(0)
+  const [screenWidth, setScreenWidth] = useState(0)
 
   const [addToPlaylistsModalVisible, setAddToPlaylistsModalVisible] =
     useState(false)
+
   const [prevPlaylists, setPrevPlaylists] = useState(playlistsResult?.edges)
   const [playlists, setPlaylists] = useState(playlistsResult?.edges || [])
   // When playlists result changed
@@ -85,11 +64,10 @@ export default function Recommendations({
     setPlaylistsPageInfo(playlistsResult?.pageInfo)
   }
 
+  const [publishPlaylistsData, setPublishPlaylistsData] =
+    useState<CheckPublishPlaylistsResponse>()
   const [loadingPublishPlaylistsData, setLoadingPublishPlaylistsData] =
     useState(false)
-  const [publishPlaylistsData, setPublishPlaylistsData] = useState<
-    CheckPublishPlaylistsResponse | undefined
-  >()
 
   const [shareModalVisible, setShareModalVisible] = useState(false)
   const [reportModalVisible, setReportModalVisible] = useState(false)
@@ -107,10 +85,11 @@ export default function Recommendations({
   }, [])
 
   const setPOS = useCallback(
-    (posX: number, posY: number, screenHeight: number) => {
+    (posX: number, posY: number, screenHeight: number, screenWidth: number) => {
       setPositionX(posX)
       setPositionY(posY)
       setScreenHeight(screenHeight)
+      setScreenWidth(screenWidth)
     },
     []
   )
@@ -149,74 +128,58 @@ export default function Recommendations({
     setTargetPublish(undefined)
   }, [])
 
-  const fetchMoreSuggestions = useCallback(async () => {
-    if (
-      !publishId ||
-      !suggestedItemsPageInfo ||
-      !suggestedItemsPageInfo.endCursor ||
-      !suggestedItemsPageInfo.hasNextPage
-    )
-      return
-
-    try {
-      setLoading(true)
-      const res = await fetch(`/suggestions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cursor: suggestedItemsPageInfo?.endCursor,
-          publishId,
-        }),
-      })
-      const data = (await res.json()) as {
-        result: FetchPublishesResponse
-      }
-      setSuggestedItems((prev) => [...prev, ...data.result?.edges])
-      setSuggestedItemsPageInfo(data.result?.pageInfo)
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-    }
-  }, [suggestedItemsPageInfo, publishId])
-  const { observedRef } = useInfiniteScroll(0.5, fetchMoreSuggestions)
-
-  if (suggestedItems.length === 0) return null
+  if (items.length === 0) return null
 
   return (
     <>
-      <div className="bg-white">
-        {suggestedItems.map((edge, index) =>
-          !edge.node ? null : (
-            <RecommendationItem
-              key={`${edge.node?.id}-${index}`}
-              publish={edge.node}
-              setPOS={setPOS}
-              onOpenActions={onOpenActions}
-            />
-          )
-        )}
+      <div className="w-full pb-5">
+        <div className="sm:w-[90%] flex items-center justify-between">
+          <Link href="/library/WL">
+            <div className="flex items-start gap-x-4 cursor-pointer">
+              <AiOutlineClockCircle size={22} />
+              <div className="flex items-center gap-x-2">
+                <h6 className="text-lg sm:text-xl">Watch later</h6>
+                <p className="sm:text-lg text-textLight">{itemsCount}</p>
+              </div>
+            </div>
+          </Link>
 
-        <div
-          ref={observedRef}
-          className="w-full h-4 flex items-center justify-center"
-        >
-          {loading && (
-            <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
-          )}
+          <Link href="/library/WL">
+            <p className="text-blueBase rounded-full cursor-pointer sm:text-lg">
+              See all
+            </p>
+          </Link>
+        </div>
+
+        <div className="mt-5 w-full overflow-x-auto scrollbar-hide">
+          <div className="w-max flex gap-x-2 sm:gap-x-4">
+            {items.map((item) => (
+              <Item
+                key={item.id}
+                publish={item}
+                onOpenActions={onOpenActions}
+                setPOS={setPOS}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Actions modal */}
-      {actionsModalVisible && (
+      {actionsModalVisible && targetPublish && (
         <ActionsModal
           isAuthenticated={isAuthenticated}
           profile={profile}
           publish={targetPublish}
           closeModal={oncloseActions}
           top={screenHeight - positionY < 280 ? positionY - 280 : positionY} // 280 is modal height
-          left={positionX - 300} // 300 is modal width
+          left={
+            positionX > 300
+              ? positionX - 300
+              : screenWidth - positionX > 300
+              ? positionX
+              : positionX / 2
+          } // 300 is modal width
           openAddToPlaylistsModal={openAddToPlaylistsModal}
           loadingPublishPlaylistsData={loadingPublishPlaylistsData}
           setLoadingPublishPlaylistsData={setLoadingPublishPlaylistsData}
@@ -254,6 +217,10 @@ export default function Recommendations({
           closeModal={closeReportModal}
           publishId={targetPublish.id}
         />
+      )}
+
+      {loadingPublishPlaylistsData && (
+        <Mask backgroundColor="#fff" opacity={0.2} />
       )}
     </>
   )

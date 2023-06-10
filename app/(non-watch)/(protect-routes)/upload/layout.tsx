@@ -12,7 +12,7 @@ export default async function Layout({
   const account = data?.account
 
   return (
-    <div className="px-4">
+    <div className="px-4 py-2">
       {children}
       {account && !account.defaultStation && (
         <Suspense>
