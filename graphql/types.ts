@@ -37,6 +37,8 @@ export type FetchPublishesByCatInput =
 export type AddToWatchLaterInput = NexusGenInputs["AddToWatchLaterInput"]
 export type RemoveFromWatchLaterInput =
   NexusGenInputs["RemoveFromWatchLaterInput"]
+export type RemoveAllWatchLaterInput =
+  NexusGenInputs["RemoveAllWatchLaterInput"]
 export type FetchWatchLaterInput = NexusGenInputs["FetchWatchLaterInput"]
 export type FetchMyPlaylistsInput = NexusGenInputs["FetchMyPlaylistsInput"]
 export type CheckPublishPlaylistsInput =

@@ -7,7 +7,7 @@ import { getAccount } from "@/lib/server"
 import { fetchMyPlaylists, fetchPreviewWatchLater } from "@/graphql"
 import type { Publish } from "@/graphql/codegen/graphql"
 
-// export const revalidate = 60 // revalidate this page every 60 seconds
+export const revalidate = 60 // revalidate this page every 60 seconds
 
 export default async function Library() {
   const data = await getAccount()

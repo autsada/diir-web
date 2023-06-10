@@ -128,8 +128,6 @@ export default function WatchLaterList({
     setTargetPublish(undefined)
   }, [])
 
-  if (items.length === 0) return null
-
   return (
     <>
       <div className="w-full pb-5">
@@ -139,16 +137,25 @@ export default function WatchLaterList({
               <AiOutlineClockCircle size={22} />
               <div className="flex items-center gap-x-2">
                 <h6 className="text-lg sm:text-xl">Watch later</h6>
-                <p className="sm:text-lg text-textLight">{itemsCount}</p>
+                {itemsCount > 0 && (
+                  <p className="sm:text-lg text-textLight">{itemsCount}</p>
+                )}
               </div>
             </div>
+            {itemsCount === 0 && (
+              <p className="mt-1 text-textLight">
+                No publishes in watch later yet.
+              </p>
+            )}
           </Link>
 
-          <Link href="/library/WL">
-            <p className="text-blueBase rounded-full cursor-pointer sm:text-lg">
-              See all
-            </p>
-          </Link>
+          {itemsCount > 0 && (
+            <Link href="/library/WL">
+              <p className="text-blueBase rounded-full cursor-pointer sm:text-lg">
+                See all
+              </p>
+            </Link>
+          )}
         </div>
 
         <div className="mt-5 w-full overflow-x-auto scrollbar-hide">

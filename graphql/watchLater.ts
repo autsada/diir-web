@@ -9,6 +9,7 @@ import type {
   MutationArgsType,
   MutationReturnType,
   RemoveFromWatchLaterInput,
+  RemoveAllWatchLaterInput,
 } from "./types"
 
 /**
@@ -244,6 +245,45 @@ export async function removeWatchLater({
       })
 
     return result?.removeFromWatchLater
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Remove all items from watch later
+ */
+export const REMOVE_ALL_WATCH_LATER_MUTATION = gql`
+  mutation RemoveAllWatchLater($input: RemoveAllWatchLaterInput!) {
+    removeAllWatchLater(input: $input) {
+      status
+    }
+  }
+`
+export async function removeAllWatchLater({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: RemoveAllWatchLaterInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"removeAllWatchLater">,
+        MutationArgsType<"removeAllWatchLater">
+      >(REMOVE_ALL_WATCH_LATER_MUTATION, {
+        input: data,
+      })
+
+    return result?.removeAllWatchLater
   } catch (error) {
     throw error
   }

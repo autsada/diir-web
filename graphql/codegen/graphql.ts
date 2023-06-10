@@ -393,6 +393,7 @@ export type Mutation = {
   likePublish?: Maybe<WriteResult>;
   mintFirstStationNFT?: Maybe<MintStationNftResult>;
   mintStationNFT?: Maybe<MintStationNftResult>;
+  removeAllWatchLater?: Maybe<WriteResult>;
   removeDontRecommend?: Maybe<WriteResult>;
   removeFromWatchLater?: Maybe<WriteResult>;
   reportPublish?: Maybe<WriteResult>;
@@ -494,6 +495,11 @@ export type MutationMintFirstStationNftArgs = {
 
 export type MutationMintStationNftArgs = {
   input: MintStationNftInput;
+};
+
+
+export type MutationRemoveAllWatchLaterArgs = {
+  input: RemoveAllWatchLaterInput;
 };
 
 
@@ -766,6 +772,12 @@ export enum QueryPublishKind {
   Podcasts = 'podcasts',
   Videos = 'videos'
 }
+
+export type RemoveAllWatchLaterInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
 
 export type RemoveFromWatchLaterInput = {
   accountId: Scalars['String']['input'];
