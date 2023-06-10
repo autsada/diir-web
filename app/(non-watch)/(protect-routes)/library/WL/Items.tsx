@@ -166,6 +166,7 @@ export default function Items({
       <div className="px-2 grid grid-cols-1 gap-y-5">
         <WatchLaterHeader
           setItems={setItems}
+          pageInfo={pageInfo}
           setPageInfo={setPageInfo}
           sortBy={sortBy}
           setSortBy={setSortBy}

@@ -4,15 +4,19 @@ import { MdOutlineSort, MdArrowBack } from "react-icons/md"
 import Mask from "@/components/Mask"
 import SortByModal from "./SortByModal"
 import type { CommentsOrderBy } from "@/graphql/types"
-import type { FetchCommentsResponse } from "@/graphql/codegen/graphql"
+import type {
+  FetchCommentsResponse,
+  PageInfo,
+  CommentEdge,
+} from "@/graphql/codegen/graphql"
 
 interface Props {
   publishId: string
   subCommentsVisible: boolean
   commentsCount: number
-  setCommentsResponse: React.Dispatch<
-    React.SetStateAction<FetchCommentsResponse | null | undefined>
-  >
+  pageInfo: PageInfo | undefined
+  setPageInfo: React.Dispatch<React.SetStateAction<PageInfo | undefined>>
+  setEdges: React.Dispatch<React.SetStateAction<CommentEdge[]>>
   closeSubComments: () => void
   sortBy: CommentsOrderBy
   setSortBy: React.Dispatch<React.SetStateAction<CommentsOrderBy>>
@@ -22,7 +26,9 @@ export default function CommentsHeader({
   publishId,
   subCommentsVisible,
   commentsCount,
-  setCommentsResponse,
+  pageInfo,
+  setPageInfo,
+  setEdges,
   closeSubComments,
   sortBy,
   setSortBy,
@@ -67,23 +73,47 @@ export default function CommentsHeader({
         const data = (await res.json()) as {
           result: FetchCommentsResponse
         }
-        setCommentsResponse(data.result)
+        // setCommentsResponse(data.result)
+        setPageInfo(data.result?.pageInfo)
+        setEdges(data.result?.edges)
         setCommentsLoading(false)
       } catch (error) {
         setCommentsLoading(false)
       }
     },
-    [publishId, setCommentsResponse]
+    [publishId, setPageInfo, setEdges]
   )
 
   const selectSortBy = useCallback(
     (s: CommentsOrderBy) => {
       setSortBy(s)
       if (s !== sortBy) {
-        fetchComments(s)
+        // Check if all items already fetched
+        if (!pageInfo?.hasNextPage) {
+          // A. Already fetched all, just sort the items.
+          if (s === "newest") {
+            setEdges((prev) =>
+              prev.sort(
+                (a, b) =>
+                  (new Date(b.node?.createdAt) as any) -
+                  (new Date(a.node?.createdAt) as any)
+              )
+            )
+          } else {
+            setEdges((prev) =>
+              prev.sort(
+                (a, b) =>
+                  (b.node?.commentsCount || 0) - (a.node?.commentsCount || 0)
+              )
+            )
+          }
+        } else {
+          // B. Has more items, start fetch from the beginning.
+          fetchComments(s)
+        }
       }
     },
-    [sortBy, fetchComments, setSortBy]
+    [sortBy, fetchComments, setSortBy, pageInfo, setEdges]
   )
 
   return (

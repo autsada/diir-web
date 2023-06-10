@@ -34,11 +34,24 @@ export default function Comments({
   profile,
   commentsResult,
 }: Props) {
+  const [prevCommentsResult, setPrevCommentResult] = useState(commentsResult)
+  const [pageInfo, setPageInfo] = useState(commentsResult?.pageInfo)
+  const [edges, setEdges] = useState(commentsResult?.edges || [])
+
+  // If comments result is updated
+  if (prevCommentsResult !== commentsResult) {
+    setPrevCommentResult(commentsResult)
+    if (commentsResult?.edges && commentsResult?.edges.length > 0) {
+      setEdges(commentsResult?.edges)
+      setPageInfo(commentsResult?.pageInfo)
+    }
+  }
+
   const [commentsModalVisible, setCommentsModalVisible] = useState(false)
   const [subCommentsVisible, setSubCommentsVisible] = useState(false)
   const [activeComment, setActiveComment] = useState<Comment>()
   const [sortBy, setSortBy] = useState<CommentsOrderBy>("counts")
-  const [commentsResponse, setCommentsResponse] = useState(commentsResult)
+
   // 310px is from 270 for video player height plus 70 for navbar height
   const [modalPOS, setModalPOS] = useState(310)
 
@@ -123,7 +136,10 @@ export default function Comments({
               commentsCount={publish.commentsCount}
               closeModal={closeCommentsModal}
               publishId={publish?.id}
-              commentsResult={commentsResult}
+              pageInfo={pageInfo}
+              setPageInfo={setPageInfo}
+              edges={edges}
+              setEdges={setEdges}
               subCommentsVisible={subCommentsVisible}
               openSubComments={openSubComments}
               activeComment={activeComment}
@@ -139,7 +155,9 @@ export default function Comments({
             commentsCount={publish.commentsCount}
             publishId={publish.id}
             closeSubComments={closeSubComments}
-            setCommentsResponse={setCommentsResponse}
+            pageInfo={pageInfo}
+            setPageInfo={setPageInfo}
+            setEdges={setEdges}
             sortBy={sortBy}
             setSortBy={setSortBy}
           />
@@ -147,7 +165,10 @@ export default function Comments({
             isAuthenticated={isAuthenticated}
             profile={profile}
             publishId={publish?.id}
-            commentsResult={commentsResponse}
+            pageInfo={pageInfo}
+            setPageInfo={setPageInfo}
+            edges={edges}
+            setEdges={setEdges}
             subCommentsVisible={subCommentsVisible}
             openSubComments={openSubComments}
             activeComment={activeComment}

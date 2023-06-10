@@ -12,6 +12,8 @@ import type {
   Maybe,
   Station,
   Comment,
+  PageInfo,
+  CommentEdge,
 } from "@/graphql/codegen/graphql"
 import type { CommentsOrderBy } from "@/graphql/types"
 
@@ -19,7 +21,10 @@ interface Props {
   isAuthenticated: boolean
   profile: Maybe<Station> | undefined
   publishId: string
-  commentsResult: Maybe<FetchCommentsResponse> | undefined
+  pageInfo: PageInfo | undefined
+  setPageInfo: React.Dispatch<React.SetStateAction<PageInfo | undefined>>
+  edges: CommentEdge[]
+  setEdges: React.Dispatch<React.SetStateAction<CommentEdge[]>>
   subCommentsVisible: boolean
   openSubComments: (c: Comment) => void
   activeComment: Comment | undefined
@@ -30,25 +35,16 @@ export default function CommentDetails({
   isAuthenticated,
   profile,
   publishId,
-  commentsResult,
+  pageInfo,
+  setPageInfo,
+  edges,
+  setEdges,
   subCommentsVisible,
   openSubComments,
   activeComment,
   fetchCommentsSortBy,
 }: Props) {
   const [commentsLoading, setCommentsLoading] = useState(false)
-  const [prevCommentsResult, setPrevCommentResult] = useState(commentsResult)
-  const [pageInfo, setPageInfo] = useState(commentsResult?.pageInfo)
-  const [edges, setEdges] = useState(commentsResult?.edges || [])
-
-  // If comments result is updated
-  if (prevCommentsResult !== commentsResult) {
-    setPrevCommentResult(commentsResult)
-    if (commentsResult?.edges && commentsResult?.edges.length > 0) {
-      setEdges(commentsResult?.edges)
-      setPageInfo(commentsResult?.pageInfo)
-    }
-  }
 
   const { onVisible: openAuthModal } = useAuthContext()
   const [isPending, startTransition] = useTransition()
@@ -105,6 +101,8 @@ export default function CommentDetails({
     pageInfo?.hasNextPage,
     publishId,
     fetchCommentsSortBy,
+    setEdges,
+    setPageInfo,
   ])
   const { observedRef } = useInfiniteScroll(0.5, fetchMoreComments)
 

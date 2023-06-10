@@ -5,10 +5,11 @@ import CommentDetails from "./CommentDetails"
 import CommentsHeader from "./CommentsHeader"
 import CloseButton from "@/components/CloseButton"
 import type {
-  FetchCommentsResponse,
   Maybe,
   Station,
   Comment,
+  PageInfo,
+  CommentEdge,
 } from "@/graphql/codegen/graphql"
 import type { CommentsOrderBy } from "@/graphql/types"
 
@@ -18,7 +19,10 @@ interface Props {
   commentsCount: number
   closeModal: () => void
   publishId: string
-  commentsResult: Maybe<FetchCommentsResponse> | undefined
+  pageInfo: PageInfo | undefined
+  setPageInfo: React.Dispatch<React.SetStateAction<PageInfo | undefined>>
+  edges: CommentEdge[]
+  setEdges: React.Dispatch<React.SetStateAction<CommentEdge[]>>
   subCommentsVisible: boolean
   openSubComments: (c: Comment) => void
   activeComment: Comment | undefined
@@ -32,7 +36,10 @@ export default function CommentsModal({
   commentsCount,
   closeModal,
   publishId,
-  commentsResult,
+  pageInfo,
+  setPageInfo,
+  edges,
+  setEdges,
   subCommentsVisible,
   openSubComments,
   activeComment,
@@ -40,7 +47,6 @@ export default function CommentsModal({
   modalTop,
 }: Props) {
   const [sortBy, setSortBy] = useState<CommentsOrderBy>("counts")
-  const [commentsResponse, setCommentsResponse] = useState(commentsResult)
 
   return (
     <ModalWrapper visible>
@@ -55,7 +61,9 @@ export default function CommentsModal({
             commentsCount={commentsCount}
             publishId={publishId}
             closeSubComments={closeSubComments}
-            setCommentsResponse={setCommentsResponse}
+            pageInfo={pageInfo}
+            setPageInfo={setPageInfo}
+            setEdges={setEdges}
             sortBy={sortBy}
             setSortBy={setSortBy}
           />
@@ -67,7 +75,10 @@ export default function CommentsModal({
           isAuthenticated={isAuthenticated}
           profile={profile}
           publishId={publishId}
-          commentsResult={commentsResponse}
+          pageInfo={pageInfo}
+          setPageInfo={setPageInfo}
+          edges={edges}
+          setEdges={setEdges}
           subCommentsVisible={subCommentsVisible}
           openSubComments={openSubComments}
           activeComment={activeComment}

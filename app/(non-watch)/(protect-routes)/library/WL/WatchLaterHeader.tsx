@@ -12,6 +12,7 @@ import type {
 
 interface Props {
   setItems: React.Dispatch<React.SetStateAction<WatchLaterEdge[]>>
+  pageInfo: PageInfo
   setPageInfo: React.Dispatch<React.SetStateAction<PageInfo>>
   sortBy: WatchLaterOrderBy
   setSortBy: React.Dispatch<React.SetStateAction<WatchLaterOrderBy>>
@@ -19,6 +20,7 @@ interface Props {
 
 export default function WatchLaterHeader({
   setItems,
+  pageInfo,
   setPageInfo,
   sortBy,
   setSortBy,
@@ -75,10 +77,33 @@ export default function WatchLaterHeader({
     (s: WatchLaterOrderBy) => {
       setSortBy(s)
       if (s !== sortBy) {
-        fetchWatchLater(s)
+        // Check if all items already fetched
+        if (!pageInfo?.hasNextPage) {
+          // A. Already fetched all, just sort the items.
+          if (s === "newest") {
+            setItems((prev) =>
+              prev.sort(
+                (a, b) =>
+                  (new Date(b.node?.createdAt) as any) -
+                  (new Date(a.node?.createdAt) as any)
+              )
+            )
+          } else {
+            setItems((prev) =>
+              prev.sort(
+                (a, b) =>
+                  (new Date(a.node?.createdAt) as any) -
+                  (new Date(b.node?.createdAt) as any)
+              )
+            )
+          }
+        } else {
+          // B. Has more items, start fetch from the beginning.
+          fetchWatchLater(s)
+        }
       }
     },
-    [sortBy, fetchWatchLater, setSortBy]
+    [sortBy, fetchWatchLater, setSortBy, pageInfo, setItems]
   )
 
   return (
