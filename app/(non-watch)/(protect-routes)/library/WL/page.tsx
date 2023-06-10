@@ -56,7 +56,7 @@ export default async function WatchLater() {
   return (
     <div className="px-0 sm:px-4">
       <div className="md:fixed md:left-[100px] md:top-[70px] md:bottom-0 sm:py-5">
-        <div className="h-full w-full md:w-[300px] lg:w-[400px] px-8 py-6 bg-neutral-200 rounded-lg">
+        <div className="h-full w-full md:w-[300px] lg:w-[400px] px-2 sm:px-4 md:px-8 py-6 bg-neutral-200 rounded-lg">
           {firstItem && (
             <Poster
               publish={firstItem.publish}

@@ -3,7 +3,6 @@ import Link from "next/link"
 import { HiDotsVertical } from "react-icons/hi"
 
 import VideoPlayer from "@/components/VideoPlayer"
-import Avatar from "@/components/Avatar"
 import StationName from "@/components/StationName"
 import {
   calculateTimeElapsed,
@@ -40,12 +39,12 @@ export default function WLIItem({ publish, setPOS, onOpenActions }: Props) {
   if (!publish) return null
 
   return (
-    <div className="relative w-full mb-4 sm:mb-2 bg-white">
-      <div className="relative z-0 flex flex-col sm:flex-row gap-y-2 sm:gap-x-2 sm:gap-y-0">
-        <div className="w-full sm:w-1/2 sm:max-w-[240px]">
+    <div className="relative w-full bg-white">
+      <div className="relative z-0 flex gap-x-2 sm:gap-x-4">
+        <div className="w-1/2 max-w-[240px]">
           <Link href={`/watch/${publish.id}`}>
             <div
-              className="relative w-full h-[200px] sm:h-[130px] bg-neutral-600 rounded-xl overflow-hidden"
+              className="relative w-full h-[110px] sm:h-[130px] bg-neutral-600 rounded-xl overflow-hidden"
               onMouseOver={onMouseOn}
               onMouseLeave={onMouseLeave}
             >
@@ -72,14 +71,11 @@ export default function WLIItem({ publish, setPOS, onOpenActions }: Props) {
           </Link>
         </div>
 
-        <div className="w-full sm:w-1/2 flex sm:flex-col gap-x-2 sm:gap-x-0 px-4 sm:px-0 py-2 sm:py-0">
-          <div className="sm:hidden">
-            <Avatar profile={publish.creator} />
-          </div>
+        <div className="w-1/2">
           <div className="pr-4">
             <Link href={`/watch/${publish.id}`}>
               <h6 className="text-base">
-                {getPostExcerpt(publish.title || "", 100)}
+                {getPostExcerpt(publish.title || "", 50)}
               </h6>
             </Link>
             <div className="mt-1">
@@ -98,7 +94,7 @@ export default function WLIItem({ publish, setPOS, onOpenActions }: Props) {
       </div>
 
       <div
-        className="absolute top-[205px] sm:-top-1 right-3 sm:right-0 cursor-pointer py-2 px-1"
+        className="absolute -top-1 right-0 cursor-pointer py-2 px-1"
         onClick={openActionsModal}
       >
         <HiDotsVertical />

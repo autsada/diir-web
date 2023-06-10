@@ -163,7 +163,7 @@ export default function Items({
 
   return (
     <>
-      <div className="px-2 grid grid-cols-1 gap-y-5">
+      <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
         <WatchLaterHeader
           setItems={setItems}
           pageInfo={pageInfo}
