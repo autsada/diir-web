@@ -1,10 +1,10 @@
 import React, { Suspense } from "react"
 import { redirect } from "next/navigation"
 
-import { getAccount } from "@/lib/server"
-import { getStationById, fetchWatchLater, fetchMyPlaylists } from "@/graphql"
 import Poster from "./Poster"
 import Items from "./Items"
+import { getAccount } from "@/lib/server"
+import { getStationById, fetchWatchLater, fetchMyPlaylists } from "@/graphql"
 
 export default async function WatchLater() {
   const data = await getAccount()
@@ -56,7 +56,7 @@ export default async function WatchLater() {
   return (
     <div className="px-0 sm:px-4">
       <div className="md:fixed md:left-[100px] md:top-[70px] md:bottom-0 sm:py-5">
-        <div className="h-full w-full md:w-[400px] px-8 py-6 bg-neutral-200 rounded-lg">
+        <div className="h-full w-full md:w-[300px] lg:w-[400px] px-8 py-6 bg-neutral-200 rounded-lg">
           {firstItem && (
             <Poster
               publish={firstItem.publish}
@@ -65,8 +65,8 @@ export default async function WatchLater() {
           )}
         </div>
       </div>
-      <div className="ml-0 md:ml-[400px] mt-5 md:mt-0 sm:py-5 pb-20 sm:pb-0">
-        <Suspense fallback={<p>Loading...</p>}>
+      <div className="ml-0 md:ml-[300px] lg:ml-[400px] mt-5 md:mt-0 sm:py-5 pb-20 sm:pb-0">
+        <Suspense fallback={<p className="px-2">Loading...</p>}>
           <Items
             isAuthenticated={!!account}
             profile={station}

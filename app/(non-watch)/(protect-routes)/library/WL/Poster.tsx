@@ -26,7 +26,7 @@ export default function Poster({ publish, totalItems }: Props) {
         {totalItems} publish{totalItems > 1 ? "es" : ""}
       </p>
       <div className="mt-4">
-        <button className="btn-cancel px-5 rounded-full">
+        <button className="btn-cancel px-5 rounded-full text-sm">
           Remove all from watch later
         </button>
       </div>

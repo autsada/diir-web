@@ -17,7 +17,7 @@ export default function SortByModal({ sortBy, pos, select }: Props) {
     >
       <button
         type="button"
-        className={`w-full h-[50px] text-sm ${
+        className={`w-full h-[50px] text-sm justify-start pl-6 ${
           sortBy === "counts" ? "bg-neutral-300" : "bg-neutral-100"
         } hover:bg-neutral-200`}
         onClick={select.bind(undefined, "counts")}
@@ -26,7 +26,7 @@ export default function SortByModal({ sortBy, pos, select }: Props) {
       </button>
       <button
         type="button"
-        className={`w-full h-[50px] text-sm ${
+        className={`w-full h-[50px] text-sm justify-start pl-6 ${
           sortBy === "newest" ? "bg-neutral-300" : "bg-neutral-100"
         } hover:bg-neutral-200`}
         onClick={select.bind(undefined, "newest")}

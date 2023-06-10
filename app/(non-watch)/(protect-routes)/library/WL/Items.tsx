@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from "react"
 
 import WLActionsModal from "./WLActionsModal"
+import WatchLaterHeader from "./WatchLaterHeader"
 import WLIItem from "./WLItem"
 import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "@/app/(publishes)/ShareModal"
@@ -17,6 +18,7 @@ import type {
   Publish,
   Station,
 } from "@/graphql/codegen/graphql"
+import type { WatchLaterOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -35,6 +37,7 @@ export default function Items({
   const [items, setItems] = useState(itemsResult?.edges || [])
   const [prevPageInfo, setPrevPageInfo] = useState(itemsResult?.pageInfo)
   const [loading, setLoading] = useState(false)
+  const [sortBy, setSortBy] = useState<WatchLaterOrderBy>("newest")
   const [pageInfo, setPageInfo] = useState(itemsResult?.pageInfo)
   // When props fetch result changed
   if (itemsResult) {
@@ -141,6 +144,7 @@ export default function Items({
         },
         body: JSON.stringify({
           cursor: pageInfo.endCursor,
+          sortBy,
         }),
       })
       const data = (await res.json()) as {
@@ -152,7 +156,7 @@ export default function Items({
     } catch (error) {
       setLoading(false)
     }
-  }, [pageInfo, setLoading])
+  }, [pageInfo, setLoading, sortBy])
   const { observedRef } = useInfiniteScroll(0.5, fetchMoreItems)
 
   if (items.length === 0) return null
@@ -160,6 +164,13 @@ export default function Items({
   return (
     <>
       <div className="px-2 grid grid-cols-1 gap-y-5">
+        <WatchLaterHeader
+          setItems={setItems}
+          setPageInfo={setPageInfo}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+
         {items.map((edge, i) =>
           !edge.node?.publish ? null : (
             <WLIItem
