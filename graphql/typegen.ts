@@ -97,6 +97,13 @@ export interface NexusGenInputs {
     senderId: string // String!
     to: string // String!
   }
+  DeletePlaylistInput: {
+    // input type
+    accountId: string // String!
+    owner: string // String!
+    playlistId: string // String!
+    stationId: string // String!
+  }
   DontRecommendInput: {
     // input type
     accountId: string // String!
@@ -247,6 +254,14 @@ export interface NexusGenInputs {
     image: string // String!
     imageRef: string // String!
     owner: string // String!
+    stationId: string // String!
+  }
+  UpdatePlaylistNameInput: {
+    // input type
+    accountId: string // String!
+    name: string // String!
+    owner: string // String!
+    playlistId: string // String!
     stationId: string // String!
   }
   UpdatePlaylistsInput: {
@@ -416,6 +431,11 @@ export interface NexusGenObjects {
     edges: NexusGenRootTypes["PlaylistEdge"][] // [PlaylistEdge!]!
     pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
   }
+  FetchPreviewPlaylistsResponse: {
+    // root type
+    edges: NexusGenRootTypes["PreviewPlaylistEdge"][] // [PreviewPlaylistEdge!]!
+    pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
+  }
   FetchPublishesResponse: {
     // root type
     edges: NexusGenRootTypes["PublishEdge"][] // [PublishEdge!]!
@@ -479,6 +499,18 @@ export interface NexusGenObjects {
     id: string // ID!
     playlistId: string // String!
     publishId: string // String!
+  }
+  PreviewPlaylist: {
+    // root type
+    count: number // Int!
+    id: string // String!
+    lastItem?: NexusGenRootTypes["Publish"] | null // Publish
+    name: string // String!
+  }
+  PreviewPlaylistEdge: {
+    // root type
+    cursor?: string | null // String
+    node?: NexusGenRootTypes["PreviewPlaylist"] | null // PreviewPlaylist
   }
   Publish: {
     // root type
@@ -689,6 +721,11 @@ export interface NexusGenFieldTypes {
     edges: NexusGenRootTypes["PlaylistEdge"][] // [PlaylistEdge!]!
     pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
   }
+  FetchPreviewPlaylistsResponse: {
+    // field return type
+    edges: NexusGenRootTypes["PreviewPlaylistEdge"][] // [PreviewPlaylistEdge!]!
+    pageInfo: NexusGenRootTypes["PageInfo"] // PageInfo!
+  }
   FetchPublishesResponse: {
     // field return type
     edges: NexusGenRootTypes["PublishEdge"][] // [PublishEdge!]!
@@ -730,6 +767,7 @@ export interface NexusGenFieldTypes {
     createDraftPublish: NexusGenRootTypes["CreateDraftPublishResult"] | null // CreateDraftPublishResult
     createStation: NexusGenRootTypes["Station"] | null // Station
     createTip: NexusGenRootTypes["Tip"] | null // Tip
+    deletePlaylist: NexusGenRootTypes["WriteResult"] | null // WriteResult
     disLikeComment: NexusGenRootTypes["WriteResult"] | null // WriteResult
     disLikePublish: NexusGenRootTypes["WriteResult"] | null // WriteResult
     dontRecommend: NexusGenRootTypes["WriteResult"] | null // WriteResult
@@ -745,6 +783,7 @@ export interface NexusGenFieldTypes {
     sendTips: NexusGenRootTypes["SendTipsResult"] | null // SendTipsResult
     updateBannerImage: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updateDisplayName: NexusGenRootTypes["WriteResult"] | null // WriteResult
+    updatePlaylistName: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updatePlaylists: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updateProfileImage: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updatePublish: NexusGenRootTypes["Publish"] | null // Publish
@@ -793,6 +832,18 @@ export interface NexusGenFieldTypes {
     playlistId: string // String!
     publish: NexusGenRootTypes["Publish"] // Publish!
     publishId: string // String!
+  }
+  PreviewPlaylist: {
+    // field return type
+    count: number // Int!
+    id: string // String!
+    lastItem: NexusGenRootTypes["Publish"] | null // Publish
+    name: string // String!
+  }
+  PreviewPlaylistEdge: {
+    // field return type
+    cursor: string | null // String
+    node: NexusGenRootTypes["PreviewPlaylist"] | null // PreviewPlaylist
   }
   Publish: {
     // field return type
@@ -845,6 +896,9 @@ export interface NexusGenFieldTypes {
     fetchDontRecommends: NexusGenRootTypes["FetchDontRecommendsResponse"] | null // FetchDontRecommendsResponse
     fetchMyPlaylists: NexusGenRootTypes["FetchPlaylistsResponse"] | null // FetchPlaylistsResponse
     fetchMyPublishes: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    fetchPreviewPlaylists:
+      | NexusGenRootTypes["FetchPreviewPlaylistsResponse"]
+      | null // FetchPreviewPlaylistsResponse
     fetchPreviewWatchLater: NexusGenRootTypes["FetchWatchLaterResponse"] | null // FetchWatchLaterResponse
     fetchSuggestedVideos: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchVideosByCategory: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
@@ -1040,6 +1094,11 @@ export interface NexusGenFieldTypeNames {
     edges: "PlaylistEdge"
     pageInfo: "PageInfo"
   }
+  FetchPreviewPlaylistsResponse: {
+    // field return type name
+    edges: "PreviewPlaylistEdge"
+    pageInfo: "PageInfo"
+  }
   FetchPublishesResponse: {
     // field return type name
     edges: "PublishEdge"
@@ -1081,6 +1140,7 @@ export interface NexusGenFieldTypeNames {
     createDraftPublish: "CreateDraftPublishResult"
     createStation: "Station"
     createTip: "Tip"
+    deletePlaylist: "WriteResult"
     disLikeComment: "WriteResult"
     disLikePublish: "WriteResult"
     dontRecommend: "WriteResult"
@@ -1096,6 +1156,7 @@ export interface NexusGenFieldTypeNames {
     sendTips: "SendTipsResult"
     updateBannerImage: "WriteResult"
     updateDisplayName: "WriteResult"
+    updatePlaylistName: "WriteResult"
     updatePlaylists: "WriteResult"
     updateProfileImage: "WriteResult"
     updatePublish: "Publish"
@@ -1144,6 +1205,18 @@ export interface NexusGenFieldTypeNames {
     playlistId: "String"
     publish: "Publish"
     publishId: "String"
+  }
+  PreviewPlaylist: {
+    // field return type name
+    count: "Int"
+    id: "String"
+    lastItem: "Publish"
+    name: "String"
+  }
+  PreviewPlaylistEdge: {
+    // field return type name
+    cursor: "String"
+    node: "PreviewPlaylist"
   }
   Publish: {
     // field return type name
@@ -1194,6 +1267,7 @@ export interface NexusGenFieldTypeNames {
     fetchDontRecommends: "FetchDontRecommendsResponse"
     fetchMyPlaylists: "FetchPlaylistsResponse"
     fetchMyPublishes: "FetchPublishesResponse"
+    fetchPreviewPlaylists: "FetchPreviewPlaylistsResponse"
     fetchPreviewWatchLater: "FetchWatchLaterResponse"
     fetchSuggestedVideos: "FetchPublishesResponse"
     fetchVideosByCategory: "FetchPublishesResponse"
@@ -1323,6 +1397,10 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs["CreateTipInput"] // CreateTipInput!
     }
+    deletePlaylist: {
+      // args
+      input: NexusGenInputs["DeletePlaylistInput"] // DeletePlaylistInput!
+    }
     disLikeComment: {
       // args
       input: NexusGenInputs["LikeCommentInput"] // LikeCommentInput!
@@ -1383,6 +1461,10 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs["UpdateDisplayNameInput"] // UpdateDisplayNameInput!
     }
+    updatePlaylistName: {
+      // args
+      input: NexusGenInputs["UpdatePlaylistNameInput"] // UpdatePlaylistNameInput!
+    }
     updatePlaylists: {
       // args
       input: NexusGenInputs["UpdatePlaylistsInput"] // UpdatePlaylistsInput!
@@ -1428,6 +1510,10 @@ export interface NexusGenArgTypes {
     fetchMyPublishes: {
       // args
       input: NexusGenInputs["FetchMyPublishesInput"] // FetchMyPublishesInput!
+    }
+    fetchPreviewPlaylists: {
+      // args
+      input: NexusGenInputs["FetchMyPlaylistsInput"] // FetchMyPlaylistsInput!
     }
     fetchPreviewWatchLater: {
       // args

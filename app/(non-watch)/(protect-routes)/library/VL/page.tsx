@@ -57,7 +57,7 @@ export default async function WatchLater() {
     <div className="px-0 sm:px-4">
       {!watchLaterResult || watchLaterResult.edges.length === 0 ? (
         <div className="py-6 px-4">
-          <h6 className="text-lg sm:text-xl">Watch later</h6>
+          <h6 className="text-lg sm:text-xl">View later</h6>
           <p className="mt-1 text-textLight">
             No publishes in this playlist yet.
           </p>

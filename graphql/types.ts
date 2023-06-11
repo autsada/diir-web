@@ -63,3 +63,5 @@ export type LikeCommentInput = NexusGenInputs["LikeCommentInput"]
 export type FollowInput = NexusGenInputs["FollowInput"]
 export type FetchSuggestedPublishesInput =
   NexusGenInputs["FetchSuggestedPublishesInput"]
+export type UpdatePlaylistNameInput = NexusGenInputs["UpdatePlaylistNameInput"]
+export type DeletePlaylistInput = NexusGenInputs["DeletePlaylistInput"]

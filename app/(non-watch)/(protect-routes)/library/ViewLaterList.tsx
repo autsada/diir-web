@@ -5,11 +5,10 @@ import Link from "next/link"
 import { AiOutlineClockCircle } from "react-icons/ai"
 
 import Item from "./Item"
-import ActionsModal from "@/app/(watch)/watch/[id]/ActionsModal"
 import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
-import ReportModal from "@/app/(publishes)/ReportModal"
 import ShareModal from "@/app/(publishes)/ShareModal"
 import Mask from "@/components/Mask"
+import VLActionsModal from "./VL/VLActionsModal"
 import { useAuthContext } from "@/context/AuthContext"
 import type {
   Maybe,
@@ -27,7 +26,7 @@ interface Props {
   playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
 }
 
-export default function WatchLaterList({
+export default function ViewLaterList({
   isAuthenticated,
   profile,
   items,
@@ -70,7 +69,6 @@ export default function WatchLaterList({
     useState(false)
 
   const [shareModalVisible, setShareModalVisible] = useState(false)
-  const [reportModalVisible, setReportModalVisible] = useState(false)
 
   const { onVisible: openAuthModal } = useAuthContext()
 
@@ -118,25 +116,15 @@ export default function WatchLaterList({
     setTargetPublish(undefined)
   }, [])
 
-  const openReportModal = useCallback(() => {
-    setReportModalVisible(true)
-    setActionsModalVisible(false)
-  }, [])
-
-  const closeReportModal = useCallback(() => {
-    setReportModalVisible(false)
-    setTargetPublish(undefined)
-  }, [])
-
   return (
     <>
       <div className="w-full pb-5">
-        <div className="sm:w-[90%] flex items-center justify-between">
-          <Link href="/library/WL">
+        <div className="flex items-center gap-x-8">
+          <Link href="/library/VL">
             <div className="flex items-start gap-x-4 cursor-pointer">
               <AiOutlineClockCircle size={22} />
               <div className="flex items-center gap-x-2">
-                <h6 className="text-lg sm:text-xl">Watch later</h6>
+                <h6 className="text-lg sm:text-xl">View later</h6>
                 {itemsCount > 0 && (
                   <p className="sm:text-lg text-textLight">{itemsCount}</p>
                 )}
@@ -144,13 +132,13 @@ export default function WatchLaterList({
             </div>
             {itemsCount === 0 && (
               <p className="mt-1 text-textLight">
-                No publishes in watch later yet.
+                No publishes in view later yet.
               </p>
             )}
           </Link>
 
           {itemsCount > 0 && (
-            <Link href="/library/WL">
+            <Link href="/library/VL">
               <p className="text-blueBase rounded-full cursor-pointer sm:text-lg">
                 See all
               </p>
@@ -174,7 +162,7 @@ export default function WatchLaterList({
 
       {/* Actions modal */}
       {actionsModalVisible && targetPublish && (
-        <ActionsModal
+        <VLActionsModal
           isAuthenticated={isAuthenticated}
           profile={profile}
           publish={targetPublish}
@@ -192,7 +180,6 @@ export default function WatchLaterList({
           setLoadingPublishPlaylistsData={setLoadingPublishPlaylistsData}
           setPublishPlaylistsData={setPublishPlaylistsData}
           openShareModal={openShareModal}
-          openReportModal={openReportModal}
         />
       )}
 
@@ -215,14 +202,6 @@ export default function WatchLaterList({
           publishId={targetPublish.id}
           title={targetPublish.title!}
           closeModal={closeShareModal}
-        />
-      )}
-
-      {/* Report modal */}
-      {reportModalVisible && targetPublish && (
-        <ReportModal
-          closeModal={closeReportModal}
-          publishId={targetPublish.id}
         />
       )}
 

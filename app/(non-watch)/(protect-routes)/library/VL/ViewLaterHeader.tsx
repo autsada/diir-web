@@ -18,7 +18,7 @@ interface Props {
   setSortBy: React.Dispatch<React.SetStateAction<WatchLaterOrderBy>>
 }
 
-export default function WatchLaterHeader({
+export default function ViewLaterHeader({
   setItems,
   pageInfo,
   setPageInfo,
@@ -51,7 +51,7 @@ export default function WatchLaterHeader({
     async (ob: WatchLaterOrderBy) => {
       try {
         setLoading(true)
-        const res = await fetch(`/library/WL/query`, {
+        const res = await fetch(`/library/VL/query`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

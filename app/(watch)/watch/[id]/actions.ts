@@ -281,7 +281,7 @@ export async function saveToWatchLater(publishId: string) {
   })
 
   // Revalidate watch later page
-  revalidatePath(`/library/WL`)
+  revalidatePath(`/library/VL`)
 }
 
 export async function saveToPlaylist(formData: FormData) {
@@ -329,7 +329,7 @@ export async function saveToPlaylist(formData: FormData) {
     }
 
     // Revalidate watch later page
-    revalidatePath(`/library/WL`)
+    revalidatePath(`/library/VL`)
   }
 
   // Get playlists values (old, new)

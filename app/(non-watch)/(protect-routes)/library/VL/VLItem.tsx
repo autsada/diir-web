@@ -17,7 +17,7 @@ interface Props {
   onOpenActions: (p: Publish) => void
 }
 
-export default function WLIItem({ publish, setPOS, onOpenActions }: Props) {
+export default function VLIItem({ publish, setPOS, onOpenActions }: Props) {
   const [playing, setPlaying] = useState(false)
 
   const onMouseOn = useCallback(() => {

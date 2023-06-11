@@ -31,13 +31,13 @@ export default function RemoveAllBtn() {
         className="btn-cancel px-5 rounded-full text-sm"
         onClick={startRemove}
       >
-        Remove all from watch later
+        Remove all from view later
       </button>
 
       {confirmModalVisible && (
         <ConfirmModal onCancel={endRemove} onConfirm={confirmRemove}>
           <p className="text-xl">
-            This will remove all publishes in your watch later.
+            This will remove all publishes in your view later.
           </p>
         </ConfirmModal>
       )}

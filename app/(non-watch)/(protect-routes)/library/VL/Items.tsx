@@ -2,9 +2,9 @@
 
 import React, { useCallback, useState } from "react"
 
-import WLActionsModal from "./WLActionsModal"
-import WatchLaterHeader from "./WatchLaterHeader"
-import WLIItem from "./WLItem"
+import VLActionsModal from "./VLActionsModal"
+import ViewLaterHeader from "./ViewLaterHeader"
+import VLIItem from "./VLItem"
 import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "@/app/(publishes)/ShareModal"
 import ButtonLoader from "@/components/ButtonLoader"
@@ -137,7 +137,7 @@ export default function Items({
 
     try {
       setLoading(true)
-      const res = await fetch(`/library/WL/query`, {
+      const res = await fetch(`/library/VL/query`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -164,7 +164,7 @@ export default function Items({
   return (
     <>
       <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
-        <WatchLaterHeader
+        <ViewLaterHeader
           setItems={setItems}
           pageInfo={pageInfo}
           setPageInfo={setPageInfo}
@@ -174,7 +174,7 @@ export default function Items({
 
         {items.map((edge, i) =>
           !edge.node?.publish ? null : (
-            <WLIItem
+            <VLIItem
               key={`${edge.node?.id}-${i}`}
               publish={edge.node?.publish}
               setPOS={setPOS}
@@ -195,7 +195,7 @@ export default function Items({
 
       {/* Actions modal */}
       {actionsModalVisible && (
-        <WLActionsModal
+        <VLActionsModal
           isAuthenticated={isAuthenticated}
           profile={profile}
           publish={targetPublish}

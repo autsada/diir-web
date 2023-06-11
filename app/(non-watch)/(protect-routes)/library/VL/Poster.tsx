@@ -11,7 +11,7 @@ interface Props {
 export default function Poster({ publish, totalItems }: Props) {
   return (
     <div className="h-full w-full md:w-[300px] lg:w-[400px] px-2 sm:px-4 md:px-8 py-6 bg-neutral-200 rounded-lg">
-      <h6 className="text-lg sm:text-xl">Watch later</h6>
+      <h6 className="text-lg sm:text-xl">View later</h6>
       {publish && totalItems > 0 && (
         <>
           <div className="my-2 rounded-lg overflow-hidden">

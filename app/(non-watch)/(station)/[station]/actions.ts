@@ -34,7 +34,6 @@ export async function followStation(followerId: string) {
     revalidatePath(`/[station]`)
     revalidatePath(`/watch/[id]`)
   } catch (error) {
-    console.log("error -->", error)
     throw error
   }
 }

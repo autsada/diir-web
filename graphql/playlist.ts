@@ -11,7 +11,70 @@ import type {
   CreatePlayListInput,
   AddToPlaylistInput,
   UpdatePlaylistsInput,
+  UpdatePlaylistNameInput,
+  DeletePlaylistInput,
 } from "./types"
+
+/**
+ * Fetch user's playlists
+ */
+export const FETCH_PREVIEW_PLAYLISTS_QUERY = gql`
+  query FetchPreviewPlaylists($input: FetchMyPlaylistsInput!) {
+    fetchPreviewPlaylists(input: $input) {
+      pageInfo {
+        count
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          name
+          count
+          lastItem {
+            id
+            title
+            thumbSource
+            thumbnail
+            kind
+            playback {
+              thumbnail
+            }
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchPreviewPlaylists({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: FetchMyPlaylistsInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        QueryReturnType<"fetchPreviewPlaylists">,
+        QueryArgsType<"fetchPreviewPlaylists">
+      >(FETCH_PREVIEW_PLAYLISTS_QUERY, {
+        input: data,
+      })
+
+    return result?.fetchPreviewPlaylists
+  } catch (error) {
+    throw error
+  }
+}
 
 /**
  * Fetch user's playlists
@@ -22,6 +85,7 @@ export const FETCH_MY_PLAYLISTS_QUERY = gql`
       pageInfo {
         endCursor
         hasNextPage
+        count
       }
       edges {
         cursor
@@ -223,6 +287,84 @@ export async function updatePlaylists({
       })
 
     return result?.updatePlaylists
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Update playlist's name
+ */
+export const UPDATE_PLAYLIST_NAME_MUTATION = gql`
+  mutation UpdatePlaylistName($input: UpdatePlaylistNameInput!) {
+    updatePlaylistName(input: $input) {
+      status
+    }
+  }
+`
+export async function updatePlaylistName({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: UpdatePlaylistNameInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updatePlaylistName">,
+        MutationArgsType<"updatePlaylistName">
+      >(UPDATE_PLAYLIST_NAME_MUTATION, {
+        input: data,
+      })
+
+    return result?.updatePlaylistName
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Delete playlist
+ */
+export const DELETE_PLAYLIST_MUTATION = gql`
+  mutation DeletePlaylist($input: DeletePlaylistInput!) {
+    deletePlaylist(input: $input) {
+      status
+    }
+  }
+`
+export async function deletePlaylist({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: DeletePlaylistInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"deletePlaylist">,
+        MutationArgsType<"deletePlaylist">
+      >(DELETE_PLAYLIST_MUTATION, {
+        input: data,
+      })
+
+    return result?.deletePlaylist
   } catch (error) {
     throw error
   }
