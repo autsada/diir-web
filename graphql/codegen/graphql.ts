@@ -283,6 +283,23 @@ export type FetchMyPublishesInput = {
   owner: Scalars['String']['input'];
 };
 
+export type FetchPlaylistItemsInput = {
+  accountId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  orderBy?: InputMaybe<PlaylistOrderBy>;
+  owner: Scalars['String']['input'];
+  playlistId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
+export type FetchPlaylistItemsResponse = {
+  __typename?: 'FetchPlaylistItemsResponse';
+  edges: Array<PlaylistItemEdge>;
+  pageInfo: PageInfo;
+  playlistDescription?: Maybe<Scalars['String']['output']>;
+  playlistName: Scalars['String']['output'];
+};
+
 export type FetchPlaylistsResponse = {
   __typename?: 'FetchPlaylistsResponse';
   edges: Array<PlaylistEdge>;
@@ -321,7 +338,7 @@ export type FetchSuggestedPublishesInput = {
 export type FetchWatchLaterInput = {
   accountId: Scalars['String']['input'];
   cursor?: InputMaybe<Scalars['String']['input']>;
-  orderBy?: InputMaybe<WatchLaterOrderBy>;
+  orderBy?: InputMaybe<PlaylistOrderBy>;
   owner: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
 };
@@ -409,11 +426,13 @@ export type Mutation = {
   mintStationNFT?: Maybe<MintStationNftResult>;
   removeAllWatchLater?: Maybe<WriteResult>;
   removeDontRecommend?: Maybe<WriteResult>;
+  removeFromPlaylist?: Maybe<WriteResult>;
   removeFromWatchLater?: Maybe<WriteResult>;
   reportPublish?: Maybe<WriteResult>;
   sendTips?: Maybe<SendTipsResult>;
   updateBannerImage?: Maybe<WriteResult>;
   updateDisplayName?: Maybe<WriteResult>;
+  updatePlaylistDescription?: Maybe<WriteResult>;
   updatePlaylistName?: Maybe<WriteResult>;
   updatePlaylists?: Maybe<WriteResult>;
   updateProfileImage?: Maybe<WriteResult>;
@@ -528,6 +547,11 @@ export type MutationRemoveDontRecommendArgs = {
 };
 
 
+export type MutationRemoveFromPlaylistArgs = {
+  input: RemoveFromPlaylistInput;
+};
+
+
 export type MutationRemoveFromWatchLaterArgs = {
   input: RemoveFromWatchLaterInput;
 };
@@ -550,6 +574,11 @@ export type MutationUpdateBannerImageArgs = {
 
 export type MutationUpdateDisplayNameArgs = {
   input: UpdateDisplayNameInput;
+};
+
+
+export type MutationUpdatePlaylistDescriptionArgs = {
+  input: UpdatePlaylistDescriptionInput;
 };
 
 
@@ -607,6 +636,7 @@ export type PlaybackLink = {
 export type Playlist = {
   __typename?: 'Playlist';
   createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   items: Array<PlaylistItem>;
   name: Scalars['String']['output'];
@@ -630,10 +660,21 @@ export type PlaylistItem = {
   publishId: Scalars['String']['output'];
 };
 
+export type PlaylistItemEdge = {
+  __typename?: 'PlaylistItemEdge';
+  cursor?: Maybe<Scalars['String']['output']>;
+  node?: Maybe<PlaylistItem>;
+};
+
 export type PlaylistItemStatus = {
   isInPlaylist: Scalars['Boolean']['input'];
   playlistId: Scalars['String']['input'];
 };
+
+export enum PlaylistOrderBy {
+  Newest = 'newest',
+  Oldest = 'oldest'
+}
 
 export type PreviewPlaylist = {
   __typename?: 'PreviewPlaylist';
@@ -708,6 +749,7 @@ export type Query = {
   fetchDontRecommends?: Maybe<FetchDontRecommendsResponse>;
   fetchMyPlaylists?: Maybe<FetchPlaylistsResponse>;
   fetchMyPublishes?: Maybe<FetchPublishesResponse>;
+  fetchPlaylistItems?: Maybe<FetchPlaylistItemsResponse>;
   fetchPreviewPlaylists?: Maybe<FetchPreviewPlaylistsResponse>;
   fetchPreviewWatchLater?: Maybe<FetchWatchLaterResponse>;
   fetchSuggestedVideos?: Maybe<FetchPublishesResponse>;
@@ -748,6 +790,11 @@ export type QueryFetchMyPlaylistsArgs = {
 
 export type QueryFetchMyPublishesArgs = {
   input: FetchMyPublishesInput;
+};
+
+
+export type QueryFetchPlaylistItemsArgs = {
+  input: FetchPlaylistItemsInput;
 };
 
 
@@ -821,6 +868,14 @@ export enum QueryPublishKind {
 export type RemoveAllWatchLaterInput = {
   accountId: Scalars['String']['input'];
   owner: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
+export type RemoveFromPlaylistInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  playlistId: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
 };
 
@@ -945,6 +1000,14 @@ export type UpdateImageInput = {
   stationId: Scalars['String']['input'];
 };
 
+export type UpdatePlaylistDescriptionInput = {
+  accountId: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  playlistId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
 export type UpdatePlaylistNameInput = {
   accountId: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -1000,11 +1063,6 @@ export type WatchLaterEdge = {
   cursor?: Maybe<Scalars['String']['output']>;
   node?: Maybe<WatchLater>;
 };
-
-export enum WatchLaterOrderBy {
-  Newest = 'newest',
-  Oldest = 'oldest'
-}
 
 export type WriteResult = {
   __typename?: 'WriteResult';

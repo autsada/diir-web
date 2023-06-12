@@ -2,7 +2,7 @@ import React, { Suspense } from "react"
 import { redirect } from "next/navigation"
 
 import Poster from "./Poster"
-import Items from "./Items"
+import ContentItems from "./ContentItems"
 import { getAccount } from "@/lib/server"
 import { getStationById, fetchWatchLater, fetchMyPlaylists } from "@/graphql"
 
@@ -24,7 +24,7 @@ export default async function WatchLater() {
   const station = await getStationById(account?.defaultStation?.id)
 
   if (!station) {
-    redirect("/")
+    redirect("/station")
   }
 
   // Get watch later videos from the database for the first render
@@ -67,6 +67,8 @@ export default async function WatchLater() {
           <div className="md:fixed md:z-20 md:left-[100px] md:top-[70px] md:bottom-0 sm:py-5">
             {firstItem && (
               <Poster
+                playlistId="VL"
+                isAuthenticated={!!account}
                 publish={firstItem.publish}
                 totalItems={watchLaterResult.pageInfo?.count || 0}
               />
@@ -74,7 +76,7 @@ export default async function WatchLater() {
           </div>
           <div className="ml-0 md:ml-[300px] lg:ml-[400px] mt-5 md:mt-0 sm:py-5 pb-20 sm:pb-0">
             <Suspense fallback={<p className="px-2">Loading...</p>}>
-              <Items
+              <ContentItems
                 isAuthenticated={!!account}
                 profile={station}
                 itemsResult={watchLaterResult}

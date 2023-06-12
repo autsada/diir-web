@@ -13,6 +13,9 @@ import type {
   UpdatePlaylistsInput,
   UpdatePlaylistNameInput,
   DeletePlaylistInput,
+  FetchPlaylistItemsInput,
+  UpdatePlaylistDescriptionInput,
+  RemoveFromPlaylistInput,
 } from "./types"
 
 /**
@@ -72,7 +75,7 @@ export async function fetchPreviewPlaylists({
 
     return result?.fetchPreviewPlaylists
   } catch (error) {
-    throw error
+    return null
   }
 }
 
@@ -124,7 +127,7 @@ export async function fetchMyPlaylists({
 
     return result?.fetchMyPlaylists
   } catch (error) {
-    throw error
+    return null
   }
 }
 
@@ -171,7 +174,91 @@ export async function checkPublishPlaylists({
 
     return result?.checkPublishPlaylists
   } catch (error) {
-    throw error
+    return null
+  }
+}
+
+/**
+ * Fetch content of a playlist
+ */
+export const FETCH_PLAYLIST_ITEMS_QUERY = gql`
+  query FetchPlaylistItems($input: FetchPlaylistItemsInput!) {
+    fetchPlaylistItems(input: $input) {
+      playlistName
+      playlistDescription
+      pageInfo {
+        count
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          createdAt
+          playlist {
+            name
+          }
+          publishId
+          publish {
+            id
+            title
+            createdAt
+            views
+            visibility
+            thumbSource
+            thumbnail
+            primaryCategory
+            secondaryCategory
+            kind
+            creator {
+              id
+              name
+              displayName
+              image
+              defaultColor
+            }
+            playback {
+              id
+              videoId
+              duration
+              hls
+              dash
+              thumbnail
+              preview
+            }
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchPlaylistItems({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: FetchPlaylistItemsInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        QueryReturnType<"fetchPlaylistItems">,
+        QueryArgsType<"fetchPlaylistItems">
+      >(FETCH_PLAYLIST_ITEMS_QUERY, {
+        input: data,
+      })
+
+    return result?.fetchPlaylistItems
+  } catch (error) {
+    return null
   }
 }
 
@@ -210,7 +297,7 @@ export async function addToNewPlaylist({
 
     return result?.addToNewPlaylist
   } catch (error) {
-    throw error
+    console.error(error)
   }
 }
 
@@ -249,7 +336,7 @@ export async function addToPlaylist({
 
     return result?.addToPlaylist
   } catch (error) {
-    throw error
+    console.error(error)
   }
 }
 
@@ -288,7 +375,7 @@ export async function updatePlaylists({
 
     return result?.updatePlaylists
   } catch (error) {
-    throw error
+    console.error(error)
   }
 }
 
@@ -327,7 +414,46 @@ export async function updatePlaylistName({
 
     return result?.updatePlaylistName
   } catch (error) {
-    throw error
+    console.error(error)
+  }
+}
+
+/**
+ * Update playlist's description
+ */
+export const UPDATE_PLAYLIST_DESCRIPTION_MUTATION = gql`
+  mutation UpdatePlaylistDescription($input: UpdatePlaylistDescriptionInput!) {
+    updatePlaylistDescription(input: $input) {
+      status
+    }
+  }
+`
+export async function updatePlaylistDescription({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: UpdatePlaylistDescriptionInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updatePlaylistDescription">,
+        MutationArgsType<"updatePlaylistDescription">
+      >(UPDATE_PLAYLIST_DESCRIPTION_MUTATION, {
+        input: data,
+      })
+
+    return result?.updatePlaylistDescription
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -366,6 +492,45 @@ export async function deletePlaylist({
 
     return result?.deletePlaylist
   } catch (error) {
-    throw error
+    console.error(error)
+  }
+}
+
+/**
+ * Remove item from playlist
+ */
+export const REMOVE_FROM_PLAYLIST_MUTATION = gql`
+  mutation RemoveFromPlaylist($input: RemoveFromPlaylistInput!) {
+    removeFromPlaylist(input: $input) {
+      status
+    }
+  }
+`
+export async function removeFromPlaylist({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: RemoveFromPlaylistInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"removeFromPlaylist">,
+        MutationArgsType<"removeFromPlaylist">
+      >(REMOVE_FROM_PLAYLIST_MUTATION, {
+        input: data,
+      })
+
+    return result?.removeFromPlaylist
+  } catch (error) {
+    console.error(error)
   }
 }

@@ -2,10 +2,14 @@
 
 import { revalidatePath } from "next/cache"
 
-import { updatePlaylistName, deletePlaylist } from "@/graphql"
+import {
+  updatePlaylistName,
+  deletePlaylist,
+  updatePlaylistDescription,
+} from "@/graphql"
 import { getAccount } from "@/lib/server"
 
-export async function updatePlaylist(playlistId: string, name: string) {
+export async function updatePLName(playlistId: string, name: string) {
   try {
     const data = await getAccount()
     const account = data?.account
@@ -30,6 +34,41 @@ export async function updatePlaylist(playlistId: string, name: string) {
 
     // Revalidate page
     revalidatePath(`/library`)
+    revalidatePath(`/library/[id]`)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function updatePLDescription(
+  playlistId: string,
+  description: string
+) {
+  try {
+    const data = await getAccount()
+    const account = data?.account
+    const idToken = data?.idToken
+    const signature = data?.signature
+    if (!account || !account?.defaultStation || !idToken)
+      throw new Error("Please sign in to proceed.")
+
+    if (!playlistId || !description) throw new Error("Bad input")
+
+    await updatePlaylistDescription({
+      idToken,
+      signature,
+      data: {
+        accountId: account.id,
+        owner: account.owner,
+        stationId: account.defaultStation?.id,
+        playlistId,
+        description,
+      },
+    })
+
+    // Revalidate page
+    revalidatePath(`/library`)
+    revalidatePath(`/library/[id]`)
   } catch (error) {
     console.error(error)
   }
@@ -46,7 +85,6 @@ export async function deletePL(playlistId: string) {
 
     if (!playlistId) throw new Error("Bad input")
 
-    // Remove from watch later
     await deletePlaylist({
       idToken,
       signature,

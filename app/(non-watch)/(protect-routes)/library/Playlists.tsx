@@ -12,7 +12,7 @@ import UpdatePlaylistNameModal from "./UpdatePlaylistNameModal"
 import Mask from "@/components/Mask"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import { useAuthContext } from "@/context/AuthContext"
-import { deletePL, updatePlaylist } from "./actions"
+import { deletePL, updatePLName } from "./actions"
 import type {
   FetchPreviewPlaylistsResponse,
   Maybe,
@@ -137,7 +137,7 @@ export default function Playlists({
       toast.success(`Deleted ${targetPlaylist.name}`, { theme: "dark" })
     }
     setConfirmDeleteModalVisible(false)
-  }, [targetPlaylist, profile, isAuthenticated])
+  }, [targetPlaylist, isAuthenticated])
 
   const startUpdatePlaylist = useCallback(() => {
     setUpdatePlaylistModalVisible(true)
@@ -163,11 +163,11 @@ export default function Playlists({
       const name = el.value
       if (name === targetPlaylist.name) return
 
-      startTransition(() => updatePlaylist(targetPlaylist.id, name))
+      startTransition(() => updatePLName(targetPlaylist.id, name))
       toast.success("Updated playlist name", { theme: "dark" })
     }
     setUpdatePlaylistModalVisible(false)
-  }, [targetPlaylist, profile, isAuthenticated])
+  }, [targetPlaylist, isAuthenticated])
 
   return (
     <>

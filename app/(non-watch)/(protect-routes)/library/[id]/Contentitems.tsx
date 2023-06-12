@@ -1,44 +1,65 @@
 "use client"
 
-import React, { useState, useCallback } from "react"
-import Link from "next/link"
-import { AiOutlineClockCircle } from "react-icons/ai"
+import React, { useCallback, useState } from "react"
 
-import VLItem from "./VLItem"
+import PlaylistActionModal from "./PlaylistActionModal"
+import ItemsHeader from "../VL/ItemsHeader"
+import ContentItem from "../VL/ContentItem"
 import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "@/app/(publishes)/ShareModal"
-import Mask from "@/components/Mask"
-import VLActionsModal from "./VL/VLActionsModal"
+import ButtonLoader from "@/components/ButtonLoader"
 import { useAuthContext } from "@/context/AuthContext"
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import type {
+  CheckPublishPlaylistsResponse,
+  FetchPlaylistItemsResponse,
+  FetchPlaylistsResponse,
   Maybe,
   Publish,
   Station,
-  FetchPlaylistsResponse,
-  CheckPublishPlaylistsResponse,
 } from "@/graphql/codegen/graphql"
+import type { PlaylistOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
   profile: Station | undefined
-  items: Publish[]
-  itemsCount: number
+  playlistId: string
+  playlistName: string
+  itemsResult: FetchPlaylistItemsResponse
   playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
 }
 
-export default function ViewLaterList({
+export default function ContentItems({
   isAuthenticated,
   profile,
-  items,
-  itemsCount,
+  playlistId,
+  playlistName,
+  itemsResult,
   playlistsResult,
 }: Props) {
+  const [prevItems, setPrevItems] = useState(itemsResult?.edges)
+  const [items, setItems] = useState(itemsResult?.edges || [])
+  const [prevPageInfo, setPrevPageInfo] = useState(itemsResult?.pageInfo)
+  const [loading, setLoading] = useState(false)
+  const [sortBy, setSortBy] = useState<PlaylistOrderBy>("newest")
+  const [pageInfo, setPageInfo] = useState(itemsResult?.pageInfo)
+  // When props fetch result changed
+  if (itemsResult) {
+    if (itemsResult.edges !== prevItems) {
+      setPrevItems(itemsResult?.edges)
+      setItems(itemsResult?.edges || [])
+    }
+    if (itemsResult.pageInfo !== prevPageInfo) {
+      setPrevPageInfo(itemsResult.pageInfo)
+      setPageInfo(itemsResult.pageInfo)
+    }
+  }
+
   const [targetPublish, setTargetPublish] = useState<Publish>()
   const [actionsModalVisible, setActionsModalVisible] = useState(false)
   const [positionX, setPositionX] = useState(0)
   const [positionY, setPositionY] = useState(0)
   const [screenHeight, setScreenHeight] = useState(0)
-  const [screenWidth, setScreenWidth] = useState(0)
 
   const [addToPlaylistsModalVisible, setAddToPlaylistsModalVisible] =
     useState(false)
@@ -83,11 +104,10 @@ export default function ViewLaterList({
   }, [])
 
   const setPOS = useCallback(
-    (posX: number, posY: number, screenHeight: number, screenWidth: number) => {
+    (posX: number, posY: number, screenHeight: number) => {
       setPositionX(posX)
       setPositionY(posY)
       setScreenHeight(screenHeight)
-      setScreenWidth(screenWidth)
     },
     []
   )
@@ -116,70 +136,84 @@ export default function ViewLaterList({
     setTargetPublish(undefined)
   }, [])
 
+  const fetchMoreItems = useCallback(async () => {
+    if (
+      !playlistId ||
+      !pageInfo ||
+      !pageInfo.endCursor ||
+      !pageInfo.hasNextPage
+    )
+      return
+
+    try {
+      setLoading(true)
+      const res = await fetch(`/library/playlists/${playlistId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cursor: pageInfo.endCursor,
+          sortBy,
+        }),
+      })
+      const data = (await res.json()) as {
+        result: FetchPlaylistItemsResponse
+      }
+      setItems((prev) => [...prev, ...data.result.edges])
+      setPageInfo(data?.result?.pageInfo)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
+  }, [pageInfo, setLoading, sortBy, playlistId])
+  const { observedRef } = useInfiniteScroll(0.5, fetchMoreItems)
+
+  if (items.length === 0) return null
+
   return (
     <>
-      <div className="w-full pb-5">
-        <div className="flex items-center gap-x-8">
-          <Link href="/library/VL">
-            <div className="flex items-start gap-x-4 cursor-pointer">
-              <AiOutlineClockCircle size={22} />
-              <div className="flex items-center gap-x-2">
-                <h6 className="text-lg sm:text-xl">View later</h6>
-                {itemsCount > 0 && (
-                  <p className="sm:text-lg text-textLight">{itemsCount}</p>
-                )}
-              </div>
-            </div>
-            {itemsCount === 0 && (
-              <p className="mt-1 text-textLight">
-                No publishes in view later yet.
-              </p>
-            )}
-          </Link>
+      <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
+        <ItemsHeader sortBy={sortBy} onSelectSortBy={() => {}} />
 
-          {itemsCount > 0 && (
-            <Link href="/library/VL">
-              <p className="text-blueBase rounded-full cursor-pointer sm:text-lg">
-                See all
-              </p>
-            </Link>
+        {items.map((edge, i) =>
+          !edge.node?.publish ? null : (
+            <ContentItem
+              key={`${edge.node?.id}-${i}`}
+              publish={edge.node?.publish}
+              setPOS={setPOS}
+              onOpenActions={onOpenActions}
+            />
+          )
+        )}
+
+        <div
+          ref={observedRef}
+          className="w-full h-4 flex items-center justify-center"
+        >
+          {loading && (
+            <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
           )}
-        </div>
-
-        <div className="mt-5 w-full overflow-x-auto scrollbar-hide">
-          <div className="w-max flex gap-x-2 sm:gap-x-4">
-            {items.map((item) => (
-              <VLItem
-                key={item.id}
-                publish={item}
-                onOpenActions={onOpenActions}
-                setPOS={setPOS}
-              />
-            ))}
-          </div>
         </div>
       </div>
 
       {/* Actions modal */}
-      {actionsModalVisible && targetPublish && (
-        <VLActionsModal
+      {actionsModalVisible && (
+        <PlaylistActionModal
           isAuthenticated={isAuthenticated}
           profile={profile}
           publish={targetPublish}
+          playlistId={playlistId}
+          playlistName={playlistName}
           closeModal={oncloseActions}
-          top={screenHeight - positionY < 280 ? positionY - 280 : positionY} // 280 is modal height
-          left={
-            positionX > 300
-              ? positionX - 300
-              : screenWidth - positionX > 300
-              ? positionX
-              : positionX / 2
-          } // 300 is modal width
+          top={screenHeight - positionY < 230 ? positionY - 230 : positionY} // 230 is modal height
+          left={positionX - 300} // 300 is modal width
           openAddToPlaylistsModal={openAddToPlaylistsModal}
           loadingPublishPlaylistsData={loadingPublishPlaylistsData}
           setLoadingPublishPlaylistsData={setLoadingPublishPlaylistsData}
           setPublishPlaylistsData={setPublishPlaylistsData}
           openShareModal={openShareModal}
+          setItems={setItems}
         />
       )}
 
@@ -203,10 +237,6 @@ export default function ViewLaterList({
           title={targetPublish.title!}
           closeModal={closeShareModal}
         />
-      )}
-
-      {loadingPublishPlaylistsData && (
-        <Mask backgroundColor="#fff" opacity={0.2} />
       )}
     </>
   )

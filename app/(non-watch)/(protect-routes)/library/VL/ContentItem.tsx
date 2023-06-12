@@ -17,7 +17,7 @@ interface Props {
   onOpenActions: (p: Publish) => void
 }
 
-export default function VLIItem({ publish, setPOS, onOpenActions }: Props) {
+export default function ContentItem({ publish, setPOS, onOpenActions }: Props) {
   const [playing, setPlaying] = useState(false)
 
   const onMouseOn = useCallback(() => {
@@ -41,7 +41,7 @@ export default function VLIItem({ publish, setPOS, onOpenActions }: Props) {
   return (
     <div className="relative w-full bg-white">
       <div className="relative z-0 flex gap-x-2 sm:gap-x-4">
-        <div className="w-1/2 max-w-[240px]">
+        <div className="w-1/2 sm:w-[200] md:w-[220px] lg:w-[240px]">
           <Link href={`/watch/${publish.id}`}>
             <div
               className="relative w-full h-[110px] sm:h-[130px] bg-neutral-600 rounded-xl overflow-hidden"
@@ -71,8 +71,8 @@ export default function VLIItem({ publish, setPOS, onOpenActions }: Props) {
           </Link>
         </div>
 
-        <div className="w-1/2">
-          <div className="pr-4">
+        <div className="w-1/2 mr-4">
+          <div>
             <Link href={`/watch/${publish.id}`}>
               <h6 className="text-base">
                 {getPostExcerpt(publish.title || "", 50)}

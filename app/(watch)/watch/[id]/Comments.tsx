@@ -112,18 +112,20 @@ export default function Comments({
           >
             <div className="h-full flex-grow py-2 flex flex-col items-start justify-center gap-y-2">
               <h6 className="text-base">{publish.commentsCount} Comments</h6>
-              <div className="w-full flex items-center gap-x-2">
-                <div>
-                  <Avatar
-                    profile={publish.lastComment?.creator}
-                    width={25}
-                    height={25}
-                  />
+              {publish.lastComment && (
+                <div className="w-full flex items-center gap-x-2">
+                  <div>
+                    <Avatar
+                      profile={publish.lastComment?.creator}
+                      width={25}
+                      height={25}
+                    />
+                  </div>
+                  <div className="h-full w-full text-sm">
+                    {getPostExcerpt(publish.lastComment?.content || "", 45)}
+                  </div>
                 </div>
-                <div className="h-full w-full text-sm">
-                  {getPostExcerpt(publish.lastComment?.content || "", 45)}
-                </div>
-              </div>
+              )}
             </div>
             <div className="w-[30px] py-2 text-right flex items-center justify-end">
               <BsCaretDown size={22} />

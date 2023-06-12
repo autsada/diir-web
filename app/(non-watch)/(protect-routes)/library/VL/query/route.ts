@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 
 import { fetchWatchLater } from "@/graphql"
 import { getAccount } from "@/lib/server"
-import type { WatchLaterOrderBy } from "@/graphql/types"
+import type { PlaylistOrderBy } from "@/graphql/types"
 
 export async function POST(req: Request) {
   const data = await getAccount()
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
   const { cursor, sortBy } = (await req.json()) as {
     cursor?: string
-    sortBy?: WatchLaterOrderBy
+    sortBy?: PlaylistOrderBy
   }
 
   // Fetch items from user's watch later list

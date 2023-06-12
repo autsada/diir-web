@@ -5,8 +5,14 @@ import React, { useTransition, useCallback, useState } from "react"
 import ConfirmModal from "@/components/ConfirmModal"
 import Mask from "@/components/Mask"
 import { removeAllWL } from "./actions"
+import { deletePL } from "../actions"
 
-export default function RemoveAllBtn() {
+interface Props {
+  playlistId: string
+  playlistName: string
+}
+
+export default function RemoveAllBtn({ playlistId, playlistName }: Props) {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false)
 
   const [isPending, startTransition] = useTransition()
@@ -20,9 +26,13 @@ export default function RemoveAllBtn() {
   }, [])
 
   const confirmRemove = useCallback(() => {
-    startTransition(() => removeAllWL())
+    if (playlistId === "VL") {
+      startTransition(() => removeAllWL())
+    } else {
+      startTransition(() => deletePL(playlistId))
+    }
     endRemove()
-  }, [endRemove])
+  }, [endRemove, playlistId])
 
   return (
     <>
@@ -31,14 +41,16 @@ export default function RemoveAllBtn() {
         className="btn-cancel px-5 rounded-full text-sm"
         onClick={startRemove}
       >
-        Remove all from view later
+        Remove all from {playlistName}
       </button>
 
       {confirmModalVisible && (
         <ConfirmModal onCancel={endRemove} onConfirm={confirmRemove}>
-          <p className="text-xl">
-            This will remove all publishes in your view later.
-          </p>
+          <div className="text-base sm:text-lg">
+            This will remove{" "}
+            <span className="font-semibold">{playlistName}</span> playlist and
+            all its content.
+          </div>
         </ConfirmModal>
       )}
 

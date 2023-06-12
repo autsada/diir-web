@@ -1,20 +1,31 @@
 import React from "react"
 
+import PlaylistName from "./PlaylistName"
 import RemoveAllBtn from "./RemoveAllBtn"
 import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
+  playlistId: string
+  isAuthenticated: boolean
   publish: Publish
   totalItems: number
+  playlistName?: string
+  playlistDescription?: string
 }
 
-export default function Poster({ publish, totalItems }: Props) {
+export default function Poster({
+  playlistId,
+  isAuthenticated,
+  publish,
+  totalItems,
+  playlistName = "View later",
+  playlistDescription,
+}: Props) {
   return (
     <div className="h-full w-full md:w-[300px] lg:w-[400px] px-2 sm:px-4 md:px-8 py-6 bg-neutral-200 rounded-lg">
-      <h6 className="text-lg sm:text-xl">View later</h6>
       {publish && totalItems > 0 && (
         <>
-          <div className="my-2 rounded-lg overflow-hidden">
+          <div className="rounded-lg overflow-hidden flex items-center justify-center bg-black max-h-[50%]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={
@@ -25,11 +36,20 @@ export default function Poster({ publish, totalItems }: Props) {
               alt={publish.title || ""}
             />
           </div>
-          <p className="text-sm sm:text-base text-textLight">
+          <div className="mt-4 mb-1 px-1">
+            <PlaylistName
+              playlistId={playlistId}
+              isAuthenticated={isAuthenticated}
+              name={playlistName}
+              description={playlistDescription}
+              itemsCount={totalItems}
+            />
+          </div>
+          <p className="mt-2 px-1 text-sm sm:text-base text-textLight">
             {totalItems} publish{totalItems > 1 ? "es" : ""}
           </p>
           <div className="mt-4">
-            <RemoveAllBtn />
+            <RemoveAllBtn playlistId={playlistId} playlistName={playlistName} />
           </div>
         </>
       )}

@@ -3,11 +3,12 @@
 import React, { useCallback, useState } from "react"
 
 import VLActionsModal from "./VLActionsModal"
-import ViewLaterHeader from "./ViewLaterHeader"
-import VLIItem from "./VLItem"
+import ItemsHeader from "./ItemsHeader"
+import ContentItem from "./ContentItem"
 import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "@/app/(publishes)/ShareModal"
 import ButtonLoader from "@/components/ButtonLoader"
+import Mask from "@/components/Mask"
 import { useAuthContext } from "@/context/AuthContext"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import type {
@@ -18,7 +19,7 @@ import type {
   Publish,
   Station,
 } from "@/graphql/codegen/graphql"
-import type { WatchLaterOrderBy } from "@/graphql/types"
+import type { PlaylistOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -27,7 +28,7 @@ interface Props {
   playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
 }
 
-export default function Items({
+export default function ContentItems({
   isAuthenticated,
   profile,
   itemsResult,
@@ -37,7 +38,7 @@ export default function Items({
   const [items, setItems] = useState(itemsResult?.edges || [])
   const [prevPageInfo, setPrevPageInfo] = useState(itemsResult?.pageInfo)
   const [loading, setLoading] = useState(false)
-  const [sortBy, setSortBy] = useState<WatchLaterOrderBy>("newest")
+  const [sortBy, setSortBy] = useState<PlaylistOrderBy>("newest")
   const [pageInfo, setPageInfo] = useState(itemsResult?.pageInfo)
   // When props fetch result changed
   if (itemsResult) {
@@ -159,22 +160,76 @@ export default function Items({
   }, [pageInfo, setLoading, sortBy])
   const { observedRef } = useInfiniteScroll(0.5, fetchMoreItems)
 
+  // Fetch watch later when user selects sort by
+  const fetchWithSortBy = useCallback(
+    async (ob: PlaylistOrderBy) => {
+      try {
+        setLoading(true)
+        const res = await fetch(`/library/VL/query`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sortBy: ob,
+          }),
+        })
+        const data = (await res.json()) as {
+          result: FetchWatchLaterResponse
+        }
+        setItems(data.result?.edges)
+        setPageInfo(data.result?.pageInfo)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
+    },
+    [setItems, setPageInfo]
+  )
+
+  const onSelectSortBy = useCallback(
+    (s: PlaylistOrderBy) => {
+      setSortBy(s)
+      if (s !== sortBy) {
+        // Check if all items already fetched
+        if (!pageInfo?.hasNextPage) {
+          // A. Already fetched all, just sort the items.
+          if (s === "newest") {
+            setItems((prev) =>
+              prev.sort(
+                (a, b) =>
+                  (new Date(b.node?.createdAt) as any) -
+                  (new Date(a.node?.createdAt) as any)
+              )
+            )
+          } else {
+            setItems((prev) =>
+              prev.sort(
+                (a, b) =>
+                  (new Date(a.node?.createdAt) as any) -
+                  (new Date(b.node?.createdAt) as any)
+              )
+            )
+          }
+        } else {
+          // B. Has more items, start fetch from the beginning.
+          fetchWithSortBy(s)
+        }
+      }
+    },
+    [sortBy, fetchWithSortBy, setSortBy, pageInfo, setItems]
+  )
+
   if (items.length === 0) return null
 
   return (
     <>
       <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
-        <ViewLaterHeader
-          setItems={setItems}
-          pageInfo={pageInfo}
-          setPageInfo={setPageInfo}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-        />
+        <ItemsHeader sortBy={sortBy} onSelectSortBy={onSelectSortBy} />
 
         {items.map((edge, i) =>
           !edge.node?.publish ? null : (
-            <VLIItem
+            <ContentItem
               key={`${edge.node?.id}-${i}`}
               publish={edge.node?.publish}
               setPOS={setPOS}
@@ -231,6 +286,9 @@ export default function Items({
           closeModal={closeShareModal}
         />
       )}
+
+      {/* Prevent user interaciton while loading */}
+      {loading && <Mask backgroundColor="white" opacity={0.2} />}
     </>
   )
 }

@@ -1,11 +1,11 @@
 import React from "react"
 
-import type { WatchLaterOrderBy } from "@/graphql/types"
+import type { PlaylistOrderBy } from "@/graphql/types"
 
 interface Props {
-  sortBy: WatchLaterOrderBy
+  sortBy: PlaylistOrderBy
   pos: "top" | "bottom"
-  select: (s: WatchLaterOrderBy) => void
+  select: (s: PlaylistOrderBy) => void
 }
 
 export default function SortByModal({ sortBy, pos, select }: Props) {

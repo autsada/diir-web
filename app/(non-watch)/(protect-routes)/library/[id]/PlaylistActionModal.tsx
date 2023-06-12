@@ -1,11 +1,7 @@
 import React, { useTransition, useState, useCallback } from "react"
-import {
-  AiOutlineClockCircle,
-  AiOutlineFlag,
-  AiOutlineShareAlt,
-  AiOutlineMinusCircle,
-} from "react-icons/ai"
+import { AiOutlineClockCircle, AiOutlineShareAlt } from "react-icons/ai"
 import { MdPlaylistAdd } from "react-icons/md"
+import { IoTrashOutline } from "react-icons/io5"
 import type { IconType } from "react-icons"
 import { toast } from "react-toastify"
 
@@ -13,12 +9,14 @@ import ModalWrapper from "@/components/ModalWrapper"
 import Mask from "@/components/Mask"
 import InformModal from "@/app/(publishes)/InformModal"
 import { useAuthContext } from "@/context/AuthContext"
-import { saveToWatchLater, dontRecommendStation } from "./actions"
+import { saveToWatchLater } from "@/app/(watch)/watch/[id]/actions"
+import { removeItemFromPlaylist } from "./actions"
 import type {
   Maybe,
   CheckPublishPlaylistsResponse,
   Publish,
   Station,
+  PlaylistItemEdge,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -28,19 +26,23 @@ interface Props {
   top: number
   left: number
   publish?: Publish
+  playlistId: string
+  playlistName: string
   openAddToPlaylistsModal: () => void
   setPublishPlaylistsData: (p: CheckPublishPlaylistsResponse) => void
   loadingPublishPlaylistsData: boolean
   setLoadingPublishPlaylistsData: React.Dispatch<React.SetStateAction<boolean>>
   openShareModal: () => void
-  openReportModal: () => void
+  setItems: React.Dispatch<React.SetStateAction<PlaylistItemEdge[]>>
 }
 
-export default function ActionsModal({
+export default function PlaylistActionModal({
   isAuthenticated,
   profile,
   closeModal,
   publish,
+  playlistId,
+  playlistName,
   top,
   left,
   openAddToPlaylistsModal,
@@ -48,7 +50,7 @@ export default function ActionsModal({
   setLoadingPublishPlaylistsData,
   setPublishPlaylistsData,
   openShareModal,
-  openReportModal,
+  setItems,
 }: Props) {
   const [informModalVisible, setInformModalVisible] = useState(false)
 
@@ -131,21 +133,29 @@ export default function ActionsModal({
     }
   }, [publish, openShareModal, closeModal])
 
-  const dontRecommendCreator = useCallback(() => {
-    if (!publish) return
+  const removeFromPlaylist = useCallback(() => {
+    if (!publish || !playlistId) return
 
     if (!isAuthenticated) {
       openAuthModal()
     } else if (!profile) {
       setInformModalVisible(true)
     } else {
-      startTransition(() => dontRecommendStation(publish.creator?.id))
-      toast.success("This station will not be recommended again", {
-        theme: "dark",
-      })
+      setItems((prev) => prev.filter((it) => it.node?.publishId !== publish.id))
+      startTransition(() => removeItemFromPlaylist(publish.id, playlistId))
+      toast.success(`Removed from ${playlistName}`, { theme: "dark" })
     }
     closeModal()
-  }, [publish, isAuthenticated, profile, openAuthModal, closeModal])
+  }, [
+    publish,
+    playlistId,
+    playlistName,
+    isAuthenticated,
+    openAuthModal,
+    profile,
+    closeModal,
+    setItems,
+  ])
 
   return (
     <ModalWrapper visible>
@@ -153,7 +163,7 @@ export default function ActionsModal({
         <div className="relative z-0 w-full h-full" onClick={closeModal}></div>
 
         <div
-          className={`absolute z-10 flex flex-col items-center justify-center bg-white rounded-xl w-[300px] h-[280px]`}
+          className={`absolute z-10 flex flex-col items-center justify-center bg-white rounded-xl w-[300px] h-[230px]`}
           style={{
             top,
             left,
@@ -169,13 +179,12 @@ export default function ActionsModal({
             text="Add to Playlist"
             onClick={onStartAddToPlaylist}
           />
-          <Item Icon={AiOutlineShareAlt} text="Share" onClick={onStartShare} />
           <Item
-            Icon={AiOutlineMinusCircle}
-            text="Don't recommend"
-            onClick={dontRecommendCreator}
+            Icon={IoTrashOutline}
+            text={`Remove from ${playlistName}`}
+            onClick={removeFromPlaylist}
           />
-          <Item Icon={AiOutlineFlag} text="Report" onClick={openReportModal} />
+          <Item Icon={AiOutlineShareAlt} text="Share" onClick={onStartShare} />
         </div>
 
         {/* Inform modal */}
