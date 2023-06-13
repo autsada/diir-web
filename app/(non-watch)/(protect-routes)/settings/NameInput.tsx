@@ -29,7 +29,7 @@ export default function NameInput({
           name="name"
           maxLength={64}
           placeholder={placeholder}
-          className={`block w-full h-12 pl-5 text-lg rounded-lg border border-orange-400 focus:outline-none focus:border-[2px] focus:border-orange-500`}
+          className={`block w-full h-12 pl-5 text-lg rounded-lg border border-orangeBase focus:outline-none focus:border-[2px] focus:border-orangeDark`}
           value={value}
           onChange={onChange}
         />

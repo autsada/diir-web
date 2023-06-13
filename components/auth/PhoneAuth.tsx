@@ -211,10 +211,10 @@ export default function PhoneAuth() {
       <div className="mt-5 px-10 sm:px-14">
         {/* Step 1 Request Code */}
         <div className="relative">
-          <div className="border border-orange-400 rounded-lg">
+          <div className="border border-orangeBase rounded-lg">
             <div
               className={`relative px-4 h-12 flex items-center ${
-                country ? "border-b border-orange-400" : ""
+                country ? "border-b border-orangeBase" : ""
               }`}
             >
               <select
@@ -238,7 +238,7 @@ export default function PhoneAuth() {
             </div>
             {country && (
               <div className="h-12 px-2 flex items-center">
-                <div className="h-full w-20 border-r border-orange-400 flex justify-center items-center">
+                <div className="h-full w-20 border-r border-orangeBase flex justify-center items-center">
                   <h6 className="text-lg text-textDark">
                     {country && `+${getCountryCallingCode(country)}`}
                   </h6>

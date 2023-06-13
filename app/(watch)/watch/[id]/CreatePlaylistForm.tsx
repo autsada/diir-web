@@ -26,7 +26,7 @@ export default function CreatePlaylistForm({ publishId, onFinished }: Props) {
           maxLength={120}
           required
           placeholder="Playlist name (max 120)"
-          className="block w-full border border-neutral-200 focus:border-orange-500 rounded-md h-[40px] px-2"
+          className="block w-full border border-neutral-200 focus:border-orangeDark rounded-md h-[40px] px-2"
         />
       </label>
       {/* Hidden input to send publish id to server action */}

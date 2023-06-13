@@ -61,7 +61,7 @@ export default function SelectAuth({ selectMethod, headerText }: Props) {
         </div>
 
         <div
-          className="btn-orange flex justify-between items-center w-72 h-14 rounded-full mx-auto px-3 mb-8 hover:bg-orange-600"
+          className="btn-orange flex justify-between items-center w-72 h-14 rounded-full mx-auto px-3 mb-8 hover:bg-orangeDark"
           onClick={selectMethod.bind(undefined, "wallet")}
         >
           <button

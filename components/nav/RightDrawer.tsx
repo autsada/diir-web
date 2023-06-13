@@ -193,12 +193,12 @@ export default function RightDrawer({
             <div className="mt-20">
               <button
                 type="button"
-                className="text-lg text-orange-500"
+                className="text-lg text-orangeDark"
                 disabled={loading}
                 onClick={signOut}
               >
                 {loading ? (
-                  <ButtonLoader loading color="#f97316" />
+                  <ButtonLoader loading color="#ff8138" />
                 ) : (
                   "Sign out"
                 )}

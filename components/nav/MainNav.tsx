@@ -75,7 +75,7 @@ export default function MainNav({
         <UploadBtn
           isAuthenticated={!!account}
           onClick={openAuthModal.bind(undefined, "Sign in to upload content.")}
-          color="#2096F3"
+          color={isWatchPage ? "#FF904D" : "#2096F3"}
           size={40}
         />
       </div>
@@ -87,7 +87,7 @@ export default function MainNav({
         ) : (
           <button
             type="button"
-            className="btn-orange mx-0 h-8 w-[80px] rounded-full"
+            className="btn-dark mx-0 h-8 w-[80px] rounded-full text-sm"
             onClick={openAuthModal.bind(undefined, SIGN_IN_HEADER)}
           >
             Sign in

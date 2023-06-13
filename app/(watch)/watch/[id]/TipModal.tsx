@@ -109,7 +109,7 @@ function TipItem({
     <div
       className={`w-[100px] h-[60px] flex items-end justify-center gap-x-1 border-[2px] ${
         selected
-          ? "bg-orange-500 border-orange-600 hover:bg-orange-600 text-white"
+          ? "bg-orangeBase border-orangeDark hover:bg-orangeDark text-white"
           : "bg-neutral-100 border-none text-textRegular hover:bg-neutral-200"
       } cursor-pointer rounded-md`}
       onClick={onClick ? onClick.bind(undefined, amount) : undefined}

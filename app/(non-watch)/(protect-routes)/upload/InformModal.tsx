@@ -31,7 +31,7 @@ export default function InformModal() {
           </button>
           <button
             type="button"
-            className="mt-10 text-orange-500 hover:text-orange-400"
+            className="mt-10 text-orangeBase hover:text-orangeDark"
             onClick={onCancel}
           >
             Maybe later

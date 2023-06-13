@@ -27,7 +27,7 @@ export default function EmailInput({
       ref={inputRef}
       type="email"
       name="email"
-      className="h-14 md:h-12 w-full border border-orange-400 rounded-lg px-5 outline-none placeholder:font-extralight font-normal text-textRegular text-lg placeholder:text-textExtraLight focus:outline-none focus:border-[2px] focus:border-orange-500"
+      className="h-14 md:h-12 w-full border border-orangeBase rounded-lg px-5 outline-none placeholder:font-extralight font-normal text-textRegular text-lg placeholder:text-textExtraLight focus:outline-none focus:border-[2px] focus:border-orangeDark"
       placeholder={placeholder}
       onChange={handleChange}
       value={value}

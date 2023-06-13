@@ -11,7 +11,7 @@ export default function ManageStationsTemplate() {
 
       <p>All stations</p>
       <div className="py-2 px-2 sm:px-4 flex items-center cursor-pointer rounded-lg bg-gray-100">
-        <div className="flex items-center justify-center rounded-full overflow-hidden cursor-pointer w-[50px] min-w-[50px] h-[50px] min-h-[50px] bg-orange-500 opacity-30"></div>
+        <div className="flex items-center justify-center rounded-full overflow-hidden cursor-pointer w-[50px] min-w-[50px] h-[50px] min-h-[50px] bg-orangeDark opacity-30"></div>
         <div className="ml-5 flex-grow">
           <p className="opacity-10">DiiR</p>
           <p className="text-textExtraLight opacity-10">@diir</p>

@@ -46,7 +46,7 @@ function Tab({
     <button
       type="button"
       className={`text-sm sm:text-base ${
-        selected === text ? "btn-orange" : "btn-light"
+        selected === text ? "btn-dark" : "btn-light"
       } px-5 h-8 rounded-full`}
       disabled={loading}
       onClick={onSelectTab.bind(undefined, text)}

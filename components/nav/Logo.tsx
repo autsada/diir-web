@@ -1,8 +1,8 @@
 import React from "react"
 import Image from "next/image"
 
-import DiiRLight from "../../public/diir.png"
-import DiiRDark from "../../public/diir-dark.png"
+import VwLight from "../../public/vw.png"
+import VwDark from "../../public/vw-dark.png"
 
 export default function Logo({
   size = "h-[70px]",
@@ -13,8 +13,8 @@ export default function Logo({
 }) {
   return (
     <Image
-      src={theme === "light" ? DiiRLight : DiiRDark}
-      alt="DiiR"
+      src={theme === "light" ? VwLight : VwDark}
+      alt="VW"
       className={`${size} cursor-pointer`}
     />
   )

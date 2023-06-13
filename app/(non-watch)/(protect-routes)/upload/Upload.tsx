@@ -59,7 +59,7 @@ function UploadType({
   Icon,
   buttonText,
   onClick,
-  iconBgColor = "bg-orange-500",
+  iconBgColor = "bg-orangeDark",
 }: {
   title: string
   Icon: IconType

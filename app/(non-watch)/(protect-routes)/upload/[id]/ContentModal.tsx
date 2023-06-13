@@ -244,7 +244,7 @@ export default function ContentModal({ publish, stationName }: Props) {
                       type="text"
                       defaultValue={publish.title || publish.filename || ""}
                       placeholder="Publish title"
-                      className={`block w-full h-12 px-2 font-normal text-base sm:px-4 rounded-sm focus:outline-none focus:border-orange-500 border ${
+                      className={`block w-full h-12 px-2 font-normal text-base sm:px-4 rounded-sm focus:outline-none focus:border-orangeDark border ${
                         errors.title ? "border-red-500" : "border-gray-200"
                       }`}
                       {...register("title", {
@@ -275,7 +275,7 @@ export default function ContentModal({ publish, stationName }: Props) {
                       defaultValue={publish.description || ""}
                       placeholder="Tell viewers about your content"
                       rows={6}
-                      className={`block w-full py-1 px-2 font-normal text-base  sm:px-4 rounded-sm border border-gray-200 focus:outline-none focus:border-orange-500`}
+                      className={`block w-full py-1 px-2 font-normal text-base  sm:px-4 rounded-sm border border-gray-200 focus:outline-none focus:border-orangeDark`}
                       {...register("description", {
                         maxLength: {
                           value: 5000,
@@ -308,7 +308,7 @@ export default function ContentModal({ publish, stationName }: Props) {
                         thumbSource === "generated" &&
                         publish &&
                         publish.playback
-                          ? "border-orange-500"
+                          ? "border-orangeDark"
                           : "border-transparent"
                       }`}
                       onClick={
@@ -341,7 +341,7 @@ export default function ContentModal({ publish, stationName }: Props) {
                         <div
                           className={`relative z-0 w-full h-full flex items-center justify-center border-[2px]  ${
                             thumbSource === "custom"
-                              ? "border-orange-500"
+                              ? "border-orangeDark"
                               : "border-transparent"
                           }`}
                         >

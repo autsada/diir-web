@@ -195,7 +195,7 @@
   }
 
   .btn-orange {
-    @apply bg-orange-500 text-white font-semibold rounded-md shadow-sm hover:bg-orange-600 focus:outline-none;
+    @apply bg-orangeBase text-white font-semibold rounded-md shadow-sm hover:bg-orangeDark focus:outline-none;
   }
 
   .btn-cancel {

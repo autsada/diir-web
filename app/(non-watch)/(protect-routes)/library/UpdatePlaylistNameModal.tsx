@@ -34,7 +34,7 @@ export default function UpdatePlaylistNameModal({
               defaultValue={playlist.name}
               required
               placeholder="Playlist name (3-120 char)"
-              className="block w-full border border-neutral-200 focus:border-orange-500 rounded-md h-[40px] px-2"
+              className="block w-full border border-neutral-200 focus:border-orangeDark rounded-md h-[40px] px-2"
             />
           </label>
 

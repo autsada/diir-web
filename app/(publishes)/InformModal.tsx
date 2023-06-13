@@ -23,7 +23,7 @@ export default function InformModal({ closeModal }: Props) {
 
         <button
           type="button"
-          className="mt-6 text-orange-500"
+          className="mt-6 text-orangeDark"
           onClick={closeModal}
         >
           Maybe later
