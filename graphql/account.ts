@@ -65,7 +65,7 @@ export async function getMyAccount(idToken: string, signature?: string) {
       )
     return data?.getMyAccount
   } catch (error) {
-    throw error
+    return null
   }
 }
 
@@ -88,7 +88,7 @@ export async function getBalance(address: string) {
 
     return data?.getBalance
   } catch (error) {
-    throw error
+    return null
   }
 }
 
