@@ -18,7 +18,7 @@ export default function Poster({
   setItems,
 }: Props) {
   return (
-    <div className="h-full w-full md:w-[300px] lg:w-[400px] px-2 sm:px-4 md:px-8 py-6 bg-neutral-200 rounded-lg">
+    <div className="h-full w-full md:w-[300px] lg:w-[400px] px-2 sm:px-4 md:px-8 py-6 bg-neutral-200 sm:rounded-lg">
       {publish && totalItems > 0 && (
         <>
           <div className="rounded-lg overflow-hidden flex items-center justify-center bg-black max-h-[50%]">

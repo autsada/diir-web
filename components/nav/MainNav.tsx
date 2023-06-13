@@ -71,7 +71,7 @@ export default function MainNav({
           </div>
         </div>
       </div>
-      <div className="mr-0 sm:mr-4">
+      <div className={`${!account ? "mr-2" : "mr-0"} sm:mr-4`}>
         <UploadBtn
           isAuthenticated={!!account}
           onClick={openAuthModal.bind(undefined, "Sign in to upload content.")}

@@ -108,7 +108,9 @@ export default function PlaylistName({
           <div
             className={`${
               isFullWidth ? "w-full" : "sm:w-[40%] md:w-[30%]"
-            } flex items-start justify-between`}
+            } flex items-start justify-between ${
+              !itemsCount ? "px-2 sm:px-0" : ""
+            }`}
           >
             <h6 className="text-lg sm:text-xl">{optimisticName}</h6>
             {name !== "View later" && (
@@ -190,7 +192,7 @@ export default function PlaylistName({
         </div>
       )}
       {!itemsCount && (
-        <p className="mt-1 text-textLight">
+        <p className="mt-1 px-2 sm:px-0 text-textLight">
           No publishes in this playlist yet.
         </p>
       )}
