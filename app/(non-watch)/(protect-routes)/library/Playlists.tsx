@@ -17,19 +17,16 @@ import type {
   FetchPreviewPlaylistsResponse,
   Maybe,
   PreviewPlaylist,
-  Station,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
   isAuthenticated: boolean
-  profile: Station | undefined
   itemsCount: number
   playlistsResult: Maybe<FetchPreviewPlaylistsResponse> | undefined
 }
 
 export default function Playlists({
   isAuthenticated,
-  profile,
   itemsCount,
   playlistsResult,
 }: Props) {
@@ -137,7 +134,7 @@ export default function Playlists({
       toast.success(`Deleted ${targetPlaylist.name}`, { theme: "dark" })
     }
     setConfirmDeleteModalVisible(false)
-  }, [targetPlaylist, isAuthenticated])
+  }, [targetPlaylist, isAuthenticated, openAuthModal])
 
   const startUpdatePlaylist = useCallback(() => {
     setUpdatePlaylistModalVisible(true)
@@ -167,7 +164,7 @@ export default function Playlists({
       toast.success("Updated playlist name", { theme: "dark" })
     }
     setUpdatePlaylistModalVisible(false)
-  }, [targetPlaylist, isAuthenticated])
+  }, [targetPlaylist, isAuthenticated, openAuthModal])
 
   return (
     <>
@@ -181,7 +178,7 @@ export default function Playlists({
             )}
           </div>
           {itemsCount === 0 && (
-            <p className="mt-1 text-textLight">You don't have any playlists.</p>
+            <p className="mt-1 text-textLight">{`You don't have any playlists.`}</p>
           )}
         </div>
 

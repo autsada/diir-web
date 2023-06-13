@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useCallback, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { MdModeEditOutline } from "react-icons/md"
 import { toast } from "react-toastify"
 
@@ -34,6 +35,7 @@ export default function PlaylistName({
 
   const { onVisible: openAuthModal } = useAuthContext()
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   const startEditingName = useCallback(() => {
     setIsEditingName(true)
@@ -68,8 +70,9 @@ export default function PlaylistName({
       startTransition(() => updatePLName(playlistId, newName))
       toast.success("Updated playlist name", { theme: "dark" })
       endEditingName()
+      router.refresh()
     }
-  }, [name, playlistId])
+  }, [name, playlistId, isAuthenticated, openAuthModal, endEditingName, router])
 
   const confirmEditDescription = useCallback(() => {
     if (!playlistId) return
@@ -83,14 +86,20 @@ export default function PlaylistName({
       if (!el || el.value?.length > 2000) return
 
       const newDescription = el.value
-      if (newDescription === name) return
+      if (newDescription === description) return
 
       setOptimisticDescription(newDescription)
       startTransition(() => updatePLDescription(playlistId, newDescription))
       toast.success("Updated playlist description", { theme: "dark" })
       endEditingDescription()
     }
-  }, [description, playlistId])
+  }, [
+    description,
+    playlistId,
+    isAuthenticated,
+    openAuthModal,
+    endEditingDescription,
+  ])
 
   return (
     <>

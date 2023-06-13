@@ -84,7 +84,6 @@ export default async function Library() {
         />
         <Playlists
           isAuthenticated={!!account}
-          profile={station}
           itemsCount={playlistsResult?.pageInfo?.count || 0}
           playlistsResult={previewPlaylists}
         />

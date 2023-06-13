@@ -20,7 +20,7 @@ export async function updatePLName(playlistId: string, name: string) {
 
     if (!playlistId || !name) throw new Error("Bad input")
 
-    await updatePlaylistName({
+    const result = await updatePlaylistName({
       idToken,
       signature,
       data: {
