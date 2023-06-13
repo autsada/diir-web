@@ -11,7 +11,7 @@ interface Props {
 
 export default function StationTemplate({ isAuthenticated, station }: Props) {
   const profileColor = station?.defaultColor
-  const bgColor = profileColor || "#f97316"
+  const bgColor = profileColor || "#ff8138"
 
   return (
     <>
@@ -84,8 +84,8 @@ export default function StationTemplate({ isAuthenticated, station }: Props) {
               <ManageFollow
                 isAuthenticated={isAuthenticated}
                 follow={station}
-                ownerHref={`/station/${station.id}/manage`}
-                ownerLinkText="Manage station"
+                ownerHref="/settings"
+                ownerLinkText="Edit"
               />
             </div>
           </div>

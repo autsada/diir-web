@@ -1,7 +1,12 @@
 import React, { useCallback, useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { IoSettingsOutline, IoSettings } from "react-icons/io5"
+import {
+  IoSettingsOutline,
+  IoSettings,
+  IoCaretDownSharp,
+  IoCaretUpSharp,
+} from "react-icons/io5"
 import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
 import { BsCollectionPlay, BsCollectionPlayFill } from "react-icons/bs"
 import { useDisconnect } from "wagmi"
@@ -29,8 +34,9 @@ export default function RightDrawer({
   closeDrawer,
 }: Props) {
   const [loading, setLoading] = useState(false)
-  const [stationsExpanded, setStationExpanded] = useState(false)
+  const [isStationsExpanded, setIsStationExpanded] = useState(false)
   const [switchLoading, setSwitchLoading] = useState(false)
+  const [isSettingsExpanded, setIsSettingsExpanded] = useState(false)
 
   const router = useRouter()
   const { disconnect } = useDisconnect()
@@ -52,7 +58,7 @@ export default function RightDrawer({
   // Reset stations expanded state when the modal is close
   useEffect(() => {
     if (!isOpen) {
-      setStationExpanded(false)
+      setIsStationExpanded(false)
     }
   }, [isOpen])
 
@@ -70,11 +76,15 @@ export default function RightDrawer({
   }, [disconnect, router])
 
   const viewStations = useCallback(() => {
-    setStationExpanded(true)
+    setIsStationExpanded(true)
   }, [])
 
   const unViewStations = useCallback(() => {
-    setStationExpanded(false)
+    setIsStationExpanded(false)
+  }, [])
+
+  const toggleSettings = useCallback(() => {
+    setIsSettingsExpanded((prev) => !prev)
   }, [])
 
   async function switchStation(address: string, stationId: string) {
@@ -103,27 +113,27 @@ export default function RightDrawer({
   return (
     <>
       <div
-        className={`fixed z-50 ${
+        className={`fixed z-50 pb-20 ${
           isOpen ? "top-0 bottom-0 right-0" : "top-0 bottom-0 -right-[100%]"
-        } w-[300px] bg-white transition-all duration-300`}
+        } w-[300px] bg-white transition-all duration-300 overflow-y-auto`}
       >
         <div className="relative w-full px-2 sm:px-5 flex items-center justify-center">
           <div
             className={`absolute ${
-              !stationsExpanded ? "right-2" : "left-2"
+              !isStationsExpanded ? "right-2" : "left-2"
             } top-1 px-2`}
           >
             <button
               type="button"
               className="text-xl text-textExtraLight"
-              onClick={!stationsExpanded ? closeDrawer : unViewStations}
+              onClick={!isStationsExpanded ? closeDrawer : unViewStations}
             >
-              {!stationsExpanded ? <>&#10005;</> : <>&#10094;</>}
+              {!isStationsExpanded ? <>&#10005;</> : <>&#10094;</>}
             </button>
           </div>
 
           <div className="w-full py-8 px-5 flex items-center">
-            {!stationsExpanded && (
+            {!isStationsExpanded && (
               <>
                 <div className="w-[60px]">
                   <Avatar profile={profile} width={60} height={60} />
@@ -136,13 +146,13 @@ export default function RightDrawer({
                     </>
                   ) : (
                     <div className="font-thin px-2 text-textLight">
-                      To start upload content, you will need to{" "}
+                      Please{" "}
                       <Link href="/station">
                         <span className="font-semibold text-textRegular cursor-pointer">
                           create
                         </span>
                       </Link>{" "}
-                      a station.
+                      a station to get started.
                     </div>
                   )}
                 </div>
@@ -151,20 +161,41 @@ export default function RightDrawer({
           </div>
         </div>
 
-        {stations.length > 1 && !stationsExpanded && (
-          <div className="relative px-5">
-            <div
-              className="px-5 flex items-center justify-between cursor-pointer py-2 hover:bg-gray-100 rounded-md"
-              onClick={viewStations}
-            >
-              <p className="font-light text-textExtraLight">Switch station</p>
-              <p className="font-light text-textExtraLight">&#10095;</p>
+        {isStationsExpanded ? (
+          <div className="px-5 flex flex-col gap-y-2 overflow-y-auto">
+            {stations.map((st) => (
+              <StationItem
+                key={st.id}
+                item={st}
+                defaultId={profile?.id || ""}
+                switchStation={switchStation}
+              />
+            ))}
+
+            <div className="mt-2">
+              <Link href="/settings/stations">
+                <p className="font-light text-textLight hover:text-textExtraLight cursor-pointer">
+                  View all stations
+                </p>
+              </Link>
             </div>
           </div>
-        )}
-
-        {!stationsExpanded ? (
+        ) : (
           <>
+            {stations.length > 1 && (
+              <div className="relative px-5">
+                <div
+                  className="px-5 flex items-center justify-between cursor-pointer py-2 hover:bg-gray-100 rounded-md"
+                  onClick={viewStations}
+                >
+                  <p className="font-light text-textExtraLight">
+                    Switch station
+                  </p>
+                  <p className="font-light text-textExtraLight">&#10095;</p>
+                </div>
+              </div>
+            )}
+
             <div className="w-full px-5 mt-5">
               <ActiveLink
                 name="Your Station"
@@ -181,16 +212,48 @@ export default function RightDrawer({
                 InActiveIcon={BsCollectionPlay}
               />
             </div>
-            <div className="w-full px-5 mt-5">
+            <div className="relative w-full px-5 mt-5" onClick={toggleSettings}>
               <ActiveLink
                 name="Settings"
-                href="/settings"
+                href=""
                 ActiveIcon={IoSettings}
                 InActiveIcon={IoSettingsOutline}
+                withLink={false}
               />
+              <div className="absolute top-0 right-[30px] bottom-0 flex items-center justify-center cursor-pointer">
+                {!isSettingsExpanded ? (
+                  <IoCaretDownSharp />
+                ) : (
+                  <IoCaretUpSharp />
+                )}
+              </div>
             </div>
+            {isSettingsExpanded && (
+              <div className="px-12">
+                <div className="w-full px-10 mt-1">
+                  <ActiveLink name="General" href="/settings" isSubLink />
+                </div>
+                <div className="w-full px-10 mt-1">
+                  <ActiveLink name="Wallet" href="/settings/wallet" isSubLink />
+                </div>
+                <div className="w-full px-10 mt-1">
+                  <ActiveLink
+                    name="Preferences"
+                    href="/settings/preferences"
+                    isSubLink
+                  />
+                </div>
+                <div className="w-full px-10 mt-1">
+                  <ActiveLink
+                    name="Stations"
+                    href="/settings/stations"
+                    isSubLink
+                  />
+                </div>
+              </div>
+            )}
 
-            <div className="mt-20">
+            <div className="mt-10">
               <button
                 type="button"
                 className="text-lg text-orangeDark"
@@ -205,25 +268,6 @@ export default function RightDrawer({
               </button>
             </div>
           </>
-        ) : (
-          <div className="px-5 flex flex-col gap-y-2 overflow-y-auto">
-            {stations.map((st) => (
-              <StationItem
-                key={st.id}
-                item={st}
-                defaultId={profile?.id || ""}
-                switchStation={switchStation}
-              />
-            ))}
-
-            <div className="mt-2">
-              <Link href="/settings">
-                <p className="font-light text-textLight hover:text-textExtraLight cursor-pointer">
-                  View all stations
-                </p>
-              </Link>
-            </div>
-          </div>
         )}
       </div>
       <Backdrop visible={isOpen} onClick={closeDrawer} />

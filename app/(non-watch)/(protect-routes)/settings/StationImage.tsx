@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback } from "react"
 import Dropzone from "react-dropzone"
-import { isMobile } from "react-device-detect"
 
 import Avatar from "@/components/Avatar"
 import ImageModal from "./ImageModal"

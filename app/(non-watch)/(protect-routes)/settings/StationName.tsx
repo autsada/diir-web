@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation"
 import { MdModeEditOutline } from "react-icons/md"
 
 import ConfirmModal from "@/components/ConfirmModal"
-import NameInput from "@/app/(non-watch)/(protect-routes)/settings/NameInput"
+import NameInput from "./stations/NameInput"
 import Mask from "@/components/Mask"
 import type { Station } from "@/graphql/codegen/graphql"
 
