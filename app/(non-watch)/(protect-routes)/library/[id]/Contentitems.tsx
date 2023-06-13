@@ -36,11 +36,14 @@ export default function ContentItems({
   itemsResult,
   playlistsResult,
 }: Props) {
-  const firstItem = itemsResult?.edges[0]?.node
   const itemsCount = itemsResult?.pageInfo?.count || 0
   const playlistName = itemsResult?.playlistName
   const playlistDescription = itemsResult?.playlistDescription
 
+  const [prevFirstItem, setPrevFirstItem] = useState(
+    itemsResult?.edges[0]?.node
+  )
+  const [firstItem, setFirstItem] = useState(itemsResult?.edges[0]?.node)
   const [prevItems, setPrevItems] = useState(itemsResult?.edges)
   const [items, setItems] = useState(itemsResult?.edges || [])
   const [prevPageInfo, setPrevPageInfo] = useState(itemsResult?.pageInfo)
@@ -49,6 +52,10 @@ export default function ContentItems({
   const [pageInfo, setPageInfo] = useState(itemsResult?.pageInfo)
   // When props fetch result changed
   if (itemsResult) {
+    if (itemsResult.edges[0]?.node !== prevFirstItem) {
+      setPrevFirstItem(itemsResult.edges[0]?.node)
+      setFirstItem(itemsResult.edges[0]?.node)
+    }
     if (itemsResult.edges !== prevItems) {
       setPrevItems(itemsResult?.edges)
       setItems(itemsResult?.edges || [])
