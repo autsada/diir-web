@@ -8,6 +8,7 @@ import ContentItem from "./ContentItem"
 import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "@/app/(publishes)/ShareModal"
 import ButtonLoader from "@/components/ButtonLoader"
+import Poster from "./Poster"
 import Mask from "@/components/Mask"
 import { useAuthContext } from "@/context/AuthContext"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
@@ -34,6 +35,9 @@ export default function ContentItems({
   itemsResult,
   playlistsResult,
 }: Props) {
+  const firstItem = itemsResult?.edges[0]?.node
+  const itemsCount = itemsResult?.pageInfo?.count || 0
+
   const [prevItems, setPrevItems] = useState(itemsResult?.edges)
   const [items, setItems] = useState(itemsResult?.edges || [])
   const [prevPageInfo, setPrevPageInfo] = useState(itemsResult?.pageInfo)
@@ -220,33 +224,55 @@ export default function ContentItems({
     [sortBy, fetchWithSortBy, setSortBy, pageInfo, setItems]
   )
 
-  if (items.length === 0) return null
-
   return (
     <>
-      <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
-        <ItemsHeader sortBy={sortBy} onSelectSortBy={onSelectSortBy} />
-
-        {items.map((edge, i) =>
-          !edge.node?.publish ? null : (
-            <ContentItem
-              key={`${edge.node?.id}-${i}`}
-              publish={edge.node?.publish}
-              setPOS={setPOS}
-              onOpenActions={onOpenActions}
-            />
-          )
-        )}
-
-        <div
-          ref={observedRef}
-          className="w-full h-4 flex items-center justify-center"
-        >
-          {loading && (
-            <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
-          )}
+      {items.length === 0 ? (
+        <div className="py-6 px-4">
+          <h6 className="text-lg sm:text-xl">View later</h6>
+          <p className="mt-1 text-textLight">
+            No publishes in this playlist yet.
+          </p>
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="md:fixed md:z-20 md:left-[100px] md:top-[70px] md:bottom-0 sm:py-5">
+            {firstItem && (
+              <Poster
+                isAuthenticated={isAuthenticated}
+                publish={firstItem.publish}
+                totalItems={itemsCount}
+                setItems={setItems}
+              />
+            )}
+          </div>
+
+          <div className="ml-0 md:ml-[300px] lg:ml-[400px] mt-5 md:mt-0 sm:py-5 pb-20 sm:pb-0">
+            <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
+              <ItemsHeader sortBy={sortBy} onSelectSortBy={onSelectSortBy} />
+              <>
+                {items.map((edge, i) =>
+                  !edge.node?.publish ? null : (
+                    <ContentItem
+                      key={`${edge.node?.id}-${i}`}
+                      publish={edge.node?.publish}
+                      setPOS={setPOS}
+                      onOpenActions={onOpenActions}
+                    />
+                  )
+                )}
+              </>
+              <div
+                ref={observedRef}
+                className="w-full h-4 flex items-center justify-center"
+              >
+                {loading && (
+                  <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Actions modal */}
       {actionsModalVisible && (

@@ -8,6 +8,7 @@ import ContentItem from "../VL/ContentItem"
 import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ShareModal from "@/app/(publishes)/ShareModal"
 import ButtonLoader from "@/components/ButtonLoader"
+import Poster from "./Poster"
 import { useAuthContext } from "@/context/AuthContext"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import type {
@@ -24,7 +25,6 @@ interface Props {
   isAuthenticated: boolean
   profile: Station | undefined
   playlistId: string
-  playlistName: string
   itemsResult: FetchPlaylistItemsResponse
   playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
 }
@@ -33,10 +33,14 @@ export default function ContentItems({
   isAuthenticated,
   profile,
   playlistId,
-  playlistName,
   itemsResult,
   playlistsResult,
 }: Props) {
+  const firstItem = itemsResult?.edges[0]?.node
+  const itemsCount = itemsResult?.pageInfo?.count || 0
+  const playlistName = itemsResult?.playlistName
+  const playlistDescription = itemsResult?.playlistDescription
+
   const [prevItems, setPrevItems] = useState(itemsResult?.edges)
   const [items, setItems] = useState(itemsResult?.edges || [])
   const [prevPageInfo, setPrevPageInfo] = useState(itemsResult?.pageInfo)
@@ -169,31 +173,109 @@ export default function ContentItems({
   }, [pageInfo, setLoading, sortBy, playlistId])
   const { observedRef } = useInfiniteScroll(0.5, fetchMoreItems)
 
+  // Fetch watch later when user selects sort by
+  const fetchWithSortBy = useCallback(
+    async (ob: PlaylistOrderBy) => {
+      if (!playlistId) return
+
+      try {
+        setLoading(true)
+        const res = await fetch(`/library/playlists/${playlistId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sortBy: ob,
+          }),
+        })
+        const data = (await res.json()) as {
+          result: FetchPlaylistItemsResponse
+        }
+        setItems(data.result?.edges)
+        setPageInfo(data.result?.pageInfo)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
+    },
+    [setItems, setPageInfo, playlistId]
+  )
+
+  const onSelectSortBy = useCallback(
+    (s: PlaylistOrderBy) => {
+      setSortBy(s)
+      if (s !== sortBy) {
+        // Check if all items already fetched
+        if (!pageInfo?.hasNextPage) {
+          // A. Already fetched all, just sort the items.
+          if (s === "newest") {
+            setItems((prev) =>
+              prev.sort(
+                (a, b) =>
+                  (new Date(b.node?.createdAt) as any) -
+                  (new Date(a.node?.createdAt) as any)
+              )
+            )
+          } else {
+            setItems((prev) =>
+              prev.sort(
+                (a, b) =>
+                  (new Date(a.node?.createdAt) as any) -
+                  (new Date(b.node?.createdAt) as any)
+              )
+            )
+          }
+        } else {
+          // B. Has more items, start fetch from the beginning.
+          fetchWithSortBy(s)
+        }
+      }
+    },
+    [sortBy, fetchWithSortBy, setSortBy, pageInfo, setItems]
+  )
+
   if (items.length === 0) return null
 
   return (
     <>
-      <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
-        <ItemsHeader sortBy={sortBy} onSelectSortBy={() => {}} />
-
-        {items.map((edge, i) =>
-          !edge.node?.publish ? null : (
-            <ContentItem
-              key={`${edge.node?.id}-${i}`}
-              publish={edge.node?.publish}
-              setPOS={setPOS}
-              onOpenActions={onOpenActions}
-            />
-          )
+      <div className="md:fixed md:z-20 md:left-[100px] md:top-[70px] md:bottom-0 sm:py-5">
+        {firstItem && (
+          <Poster
+            playlistId={playlistId}
+            isAuthenticated={isAuthenticated}
+            publish={firstItem.publish}
+            totalItems={itemsCount}
+            setItems={setItems}
+            playlistName={playlistName}
+            playlistDescription={playlistDescription || ""}
+          />
         )}
+      </div>
 
-        <div
-          ref={observedRef}
-          className="w-full h-4 flex items-center justify-center"
-        >
-          {loading && (
-            <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
-          )}
+      <div className="ml-0 md:ml-[300px] lg:ml-[400px] mt-5 md:mt-0 sm:py-5 pb-20 sm:pb-0">
+        <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
+          <ItemsHeader sortBy={sortBy} onSelectSortBy={onSelectSortBy} />
+          <>
+            {items.map((edge, i) =>
+              !edge.node?.publish ? null : (
+                <ContentItem
+                  key={`${edge.node?.id}-${i}`}
+                  publish={edge.node?.publish}
+                  setPOS={setPOS}
+                  onOpenActions={onOpenActions}
+                />
+              )
+            )}
+          </>
+          <div
+            ref={observedRef}
+            className="w-full h-4 flex items-center justify-center"
+          >
+            {loading && (
+              <ButtonLoader loading={loading} size={8} color="#d4d4d4" />
+            )}
+          </div>
         </div>
       </div>
 

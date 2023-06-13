@@ -2,14 +2,20 @@ import React, { useTransition, useCallback, useState } from "react"
 
 import ConfirmModal from "@/components/ConfirmModal"
 import Mask from "@/components/Mask"
-import { removeAllWL } from "./actions"
-import type { WatchLaterEdge } from "@/graphql/codegen/graphql"
+import { removeAllItemsInPlaylist } from "./actions"
+import type { PlaylistItemEdge } from "@/graphql/codegen/graphql"
 
 interface Props {
-  setItems: React.Dispatch<React.SetStateAction<WatchLaterEdge[]>>
+  playlistId: string
+  playlistName: string
+  setItems: React.Dispatch<React.SetStateAction<PlaylistItemEdge[]>>
 }
 
-export default function RemoveAllBtn({ setItems }: Props) {
+export default function RemoveAllBtn({
+  playlistId,
+  playlistName,
+  setItems,
+}: Props) {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false)
 
   const [isPending, startTransition] = useTransition()
@@ -24,9 +30,9 @@ export default function RemoveAllBtn({ setItems }: Props) {
 
   const confirmRemove = useCallback(() => {
     setItems([])
-    startTransition(() => removeAllWL())
+    startTransition(() => removeAllItemsInPlaylist(playlistId))
     endRemove()
-  }, [endRemove, setItems])
+  }, [endRemove, playlistId, setItems])
 
   return (
     <>
@@ -35,14 +41,14 @@ export default function RemoveAllBtn({ setItems }: Props) {
         className="btn-cancel px-5 rounded-full text-sm"
         onClick={startRemove}
       >
-        Remove all from View later
+        Remove all from {playlistName}
       </button>
 
       {confirmModalVisible && (
         <ConfirmModal onCancel={endRemove} onConfirm={confirmRemove}>
           <div className="text-base sm:text-lg">
             This will remove all publishes from{" "}
-            <span className="font-semibold">View later</span>.
+            <span className="font-semibold">{playlistName}</span>.
           </div>
         </ConfirmModal>
       )}

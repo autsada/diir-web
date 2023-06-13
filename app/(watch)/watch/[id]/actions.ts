@@ -282,6 +282,7 @@ export async function saveToWatchLater(publishId: string) {
 
   // Revalidate watch later page
   revalidatePath(`/library/VL`)
+  revalidatePath(`/library`)
 }
 
 export async function saveToPlaylist(formData: FormData) {

@@ -458,7 +458,7 @@ export async function updatePlaylistDescription({
 }
 
 /**
- * Delete playlist
+ * Delete a playlist
  */
 export const DELETE_PLAYLIST_MUTATION = gql`
   mutation DeletePlaylist($input: DeletePlaylistInput!) {
@@ -497,7 +497,7 @@ export async function deletePlaylist({
 }
 
 /**
- * Remove item from playlist
+ * Remove an item from a playlist
  */
 export const REMOVE_FROM_PLAYLIST_MUTATION = gql`
   mutation RemoveFromPlaylist($input: RemoveFromPlaylistInput!) {
@@ -530,6 +530,45 @@ export async function removeFromPlaylist({
       })
 
     return result?.removeFromPlaylist
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+/**
+ * Delete all items in a playlist
+ */
+export const DELETE_ALL_PLAYLIST_ITEMS_MUTATION = gql`
+  mutation DeleteAllPlaylistItems($input: DeletePlaylistInput!) {
+    deleteAllPlaylistItems(input: $input) {
+      status
+    }
+  }
+`
+export async function deleteAllInPlaylist({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: DeletePlaylistInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"deleteAllPlaylistItems">,
+        MutationArgsType<"deleteAllPlaylistItems">
+      >(DELETE_ALL_PLAYLIST_ITEMS_MUTATION, {
+        input: data,
+      })
+
+    return result?.deleteAllPlaylistItems
   } catch (error) {
     console.error(error)
   }

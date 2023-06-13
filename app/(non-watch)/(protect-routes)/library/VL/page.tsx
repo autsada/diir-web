@@ -1,7 +1,6 @@
 import React, { Suspense } from "react"
 import { redirect } from "next/navigation"
 
-import Poster from "./Poster"
 import ContentItems from "./ContentItems"
 import { getAccount } from "@/lib/server"
 import { getStationById, fetchWatchLater, fetchMyPlaylists } from "@/graphql"
@@ -39,8 +38,6 @@ export default async function WatchLater() {
     },
   })
 
-  const firstItem = watchLaterResult?.edges[0]?.node
-
   // Fetch user's playlists if user is authenticated
   const playlistsResult = await fetchMyPlaylists({
     idToken: idToken!,
@@ -53,38 +50,21 @@ export default async function WatchLater() {
     },
   })
 
+  console.log("result -->", watchLaterResult)
+
   return (
     <div className="px-0 sm:px-4">
-      {!watchLaterResult || watchLaterResult.edges.length === 0 ? (
-        <div className="py-6 px-4">
-          <h6 className="text-lg sm:text-xl">View later</h6>
-          <p className="mt-1 text-textLight">
-            No publishes in this playlist yet.
-          </p>
-        </div>
+      {!watchLaterResult ? (
+        <p className="px-4">Loading...</p>
       ) : (
-        <>
-          <div className="md:fixed md:z-20 md:left-[100px] md:top-[70px] md:bottom-0 sm:py-5">
-            {firstItem && (
-              <Poster
-                playlistId="VL"
-                isAuthenticated={!!account}
-                publish={firstItem.publish}
-                totalItems={watchLaterResult.pageInfo?.count || 0}
-              />
-            )}
-          </div>
-          <div className="ml-0 md:ml-[300px] lg:ml-[400px] mt-5 md:mt-0 sm:py-5 pb-20 sm:pb-0">
-            <Suspense fallback={<p className="px-2">Loading...</p>}>
-              <ContentItems
-                isAuthenticated={!!account}
-                profile={station}
-                itemsResult={watchLaterResult}
-                playlistsResult={playlistsResult}
-              />
-            </Suspense>
-          </div>
-        </>
+        <Suspense fallback={<p className="px-2">Loading...</p>}>
+          <ContentItems
+            isAuthenticated={!!account}
+            profile={station}
+            itemsResult={watchLaterResult}
+            playlistsResult={playlistsResult}
+          />
+        </Suspense>
       )}
     </div>
   )

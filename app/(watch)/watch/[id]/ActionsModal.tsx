@@ -1,4 +1,5 @@
 import React, { useTransition, useState, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import {
   AiOutlineClockCircle,
   AiOutlineFlag,
@@ -54,6 +55,7 @@ export default function ActionsModal({
 
   const { onVisible: openAuthModal } = useAuthContext()
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   const addToWatchLater = useCallback(() => {
     if (!publish) return
@@ -65,9 +67,10 @@ export default function ActionsModal({
     } else {
       startTransition(() => saveToWatchLater(publish.id))
       toast.success("Added to Watch later", { theme: "dark" })
+      router.refresh()
     }
     closeModal()
-  }, [publish, isAuthenticated, openAuthModal, profile, closeModal])
+  }, [publish, isAuthenticated, openAuthModal, profile, closeModal, router])
 
   const onStartAddToPlaylist = useCallback(async () => {
     try {
@@ -183,7 +186,7 @@ export default function ActionsModal({
       </div>
 
       {/* Prevent interaction while loading */}
-      {loadingPublishPlaylistsData && <Mask />}
+      {(loadingPublishPlaylistsData || isPending) && <Mask />}
     </ModalWrapper>
   )
 }

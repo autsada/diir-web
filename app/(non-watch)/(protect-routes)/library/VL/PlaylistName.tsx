@@ -10,7 +10,7 @@ import { useAuthContext } from "@/context/AuthContext"
 import { updatePLDescription, updatePLName } from "../actions"
 
 interface Props {
-  playlistId: string
+  playlistId?: string
   isAuthenticated: boolean
   name: string
   description?: string
@@ -107,7 +107,7 @@ export default function PlaylistName({
         {!isEditingName ? (
           <div
             className={`${
-              isFullWidth ? "w-full" : "sm:w-[50%]"
+              isFullWidth ? "w-full" : "sm:w-[40%] md:w-[30%]"
             } flex items-start justify-between`}
           >
             <h6 className="text-lg sm:text-xl">{optimisticName}</h6>
@@ -120,7 +120,7 @@ export default function PlaylistName({
             )}
           </div>
         ) : (
-          <div className={isFullWidth ? "w-full" : "sm:w-[50%]"}>
+          <div className={isFullWidth ? "w-full" : "sm:w-[40%] md:w-[30%]"}>
             <input
               id="playlist-name"
               type="text"

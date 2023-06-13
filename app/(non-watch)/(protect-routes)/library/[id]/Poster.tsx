@@ -1,21 +1,27 @@
 import React from "react"
 
-import PlaylistName from "./PlaylistName"
+import PlaylistName from "../VL/PlaylistName"
 import RemoveAllBtn from "./RemoveAllBtn"
-import type { Publish, WatchLaterEdge } from "@/graphql/codegen/graphql"
+import type { PlaylistItemEdge, Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
+  playlistId: string
   isAuthenticated: boolean
   publish: Publish
   totalItems: number
-  setItems: React.Dispatch<React.SetStateAction<WatchLaterEdge[]>>
+  setItems: React.Dispatch<React.SetStateAction<PlaylistItemEdge[]>>
+  playlistName: string
+  playlistDescription?: string
 }
 
 export default function Poster({
+  playlistId,
   isAuthenticated,
   publish,
   totalItems,
   setItems,
+  playlistName,
+  playlistDescription,
 }: Props) {
   return (
     <div className="h-full w-full md:w-[300px] lg:w-[400px] px-2 sm:px-4 md:px-8 py-6 bg-neutral-200 rounded-lg">
@@ -34,8 +40,10 @@ export default function Poster({
           </div>
           <div className="mt-4 mb-1 px-1">
             <PlaylistName
+              playlistId={playlistId}
               isAuthenticated={isAuthenticated}
-              name="View later"
+              name={playlistName}
+              description={playlistDescription}
               itemsCount={totalItems}
             />
           </div>
@@ -43,7 +51,11 @@ export default function Poster({
             {totalItems} publish{totalItems > 1 ? "es" : ""}
           </p>
           <div className="mt-4">
-            <RemoveAllBtn setItems={setItems} />
+            <RemoveAllBtn
+              playlistId={playlistId}
+              playlistName={playlistName}
+              setItems={setItems}
+            />
           </div>
         </>
       )}

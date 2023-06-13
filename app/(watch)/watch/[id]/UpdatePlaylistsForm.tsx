@@ -1,4 +1,5 @@
 import React, { useRef, useCallback, useState, useMemo } from "react"
+import { useRouter } from "next/navigation"
 
 import { saveToPlaylist } from "./actions"
 import ButtonLoader from "@/components/ButtonLoader"
@@ -35,6 +36,8 @@ export default function UpdatePlaylistsForm({
 }: Props) {
   const [loading, setLoading] = useState(false)
 
+  const router = useRouter()
+
   // Transform playlist objects for displaying
   const transformedPlaylists = useMemo(
     () => transformPlaylists(playlists, publishPlaylistsData),
@@ -70,12 +73,17 @@ export default function UpdatePlaylistsForm({
   }, [playlistsPageInfo, setPlaylists, setPlaylistsPageInfo])
   const { observedRef } = useInfiniteScroll(0.5, fetchMorePlaylists)
 
+  const onFinishSubmit = useCallback(() => {
+    onFinished()
+    router.refresh()
+  }, [router, onFinished])
+
   return (
     <>
       <form
         className="w-full mt-5"
         action={saveToPlaylist}
-        onSubmit={onFinished}
+        onSubmit={onFinishSubmit}
       >
         <div className="px-10 min-h-[40vh] max-h-[60vh] overflow-y-auto">
           <PlaylistItem

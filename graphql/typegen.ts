@@ -812,6 +812,7 @@ export interface NexusGenFieldTypes {
     createDraftPublish: NexusGenRootTypes["CreateDraftPublishResult"] | null // CreateDraftPublishResult
     createStation: NexusGenRootTypes["Station"] | null // Station
     createTip: NexusGenRootTypes["Tip"] | null // Tip
+    deleteAllPlaylistItems: NexusGenRootTypes["WriteResult"] | null // WriteResult
     deletePlaylist: NexusGenRootTypes["WriteResult"] | null // WriteResult
     disLikeComment: NexusGenRootTypes["WriteResult"] | null // WriteResult
     disLikePublish: NexusGenRootTypes["WriteResult"] | null // WriteResult
@@ -1201,6 +1202,7 @@ export interface NexusGenFieldTypeNames {
     createDraftPublish: "CreateDraftPublishResult"
     createStation: "Station"
     createTip: "Tip"
+    deleteAllPlaylistItems: "WriteResult"
     deletePlaylist: "WriteResult"
     disLikeComment: "WriteResult"
     disLikePublish: "WriteResult"
@@ -1466,6 +1468,10 @@ export interface NexusGenArgTypes {
     createTip: {
       // args
       input: NexusGenInputs["CreateTipInput"] // CreateTipInput!
+    }
+    deleteAllPlaylistItems: {
+      // args
+      input: NexusGenInputs["DeletePlaylistInput"] // DeletePlaylistInput!
     }
     deletePlaylist: {
       // args
