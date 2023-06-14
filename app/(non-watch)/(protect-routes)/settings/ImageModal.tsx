@@ -1,11 +1,11 @@
-import React, { useState } from "react"
-import { useRouter } from "next/navigation"
+import React, { useState, useTransition } from "react"
 
 import ConfirmModal from "@/components/ConfirmModal"
 import ProgressBar from "@/components/ProgressBar"
 import Mask from "@/components/Mask"
 import { uploadFile } from "@/firebase/helpers"
 import { stationsFolder } from "@/firebase/config"
+import { updateProfileImage } from "./actions"
 import type { FileWithPrview } from "@/types"
 import type { Station } from "@/graphql/codegen/graphql"
 
@@ -20,7 +20,7 @@ export default function ImageModal({ station, image, cancelUpload }: Props) {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState("")
 
-  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
 
   async function updateImage() {
     try {
@@ -33,21 +33,8 @@ export default function ImageModal({ station, image, cancelUpload }: Props) {
         file: image,
         setProgress: setUploadProgress,
       })
-      const result = await fetch(`/station/image/profile`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          image: url,
-          imageRef: fileRef,
-          stationId: station.id,
-        }),
-      })
 
-      await result.json()
-      // Reload data
-      router.refresh()
+      startTransition(() => updateProfileImage(url, fileRef))
       setLoading(false)
       cancelUpload()
     } catch (error) {
@@ -61,7 +48,7 @@ export default function ImageModal({ station, image, cancelUpload }: Props) {
       <ConfirmModal
         onConfirm={updateImage}
         onCancel={cancelUpload}
-        loading={loading}
+        loading={loading || isPending}
         error={error}
         disabled={!image}
       >
@@ -86,7 +73,7 @@ export default function ImageModal({ station, image, cancelUpload }: Props) {
       </ConfirmModal>
 
       {/* Prevent interaction while loading */}
-      {loading && <Mask />}
+      {(loading || isPending) && <Mask />}
     </>
   )
 }

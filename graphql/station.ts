@@ -8,6 +8,7 @@ import type {
   MutationArgsType,
   FollowInput,
   UpdateDisplayNameInput,
+  UpdateImageInput,
 } from "./types"
 
 /**
@@ -341,20 +342,12 @@ export const UPDATE_PROFILE_IMAGE_MUTATION = gql`
 `
 export async function updateStationImage({
   idToken,
-  owner,
-  accountId,
-  image,
-  imageRef,
-  stationId,
   signature,
+  input,
 }: {
   idToken: string
-  owner: string
-  accountId: string
-  image: string
-  imageRef: string
-  stationId: string // Station id to be updated
   signature?: string
+  input: UpdateImageInput
 }) {
   try {
     const data = await client
@@ -367,7 +360,7 @@ export async function updateStationImage({
         MutationReturnType<"updateProfileImage">,
         MutationArgsType<"updateProfileImage">
       >(UPDATE_PROFILE_IMAGE_MUTATION, {
-        input: { owner, accountId, image, imageRef, stationId },
+        input,
       })
 
     return data?.updateProfileImage
@@ -388,20 +381,12 @@ export const UPDATE_BANNER_IMAGE_MUTATION = gql`
 `
 export async function updateStationBannerImage({
   idToken,
-  owner,
-  accountId,
-  image,
-  imageRef,
-  stationId,
   signature,
+  input,
 }: {
   idToken: string
-  owner: string
-  accountId: string
-  image: string
-  imageRef: string
-  stationId: string // Station id to be updated
   signature?: string
+  input: UpdateImageInput
 }) {
   try {
     const data = await client
@@ -414,7 +399,7 @@ export async function updateStationBannerImage({
         MutationReturnType<"updateBannerImage">,
         MutationArgsType<"updateBannerImage">
       >(UPDATE_BANNER_IMAGE_MUTATION, {
-        input: { owner, accountId, image, imageRef, stationId },
+        input,
       })
 
     return data?.updateBannerImage

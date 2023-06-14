@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from "react"
 import { useRouter } from "next/navigation"
 
-import CreateStationModal from "../settings/CreateStationModal"
+import CreateStationModal from "../settings/stations/CreateStationModal"
 import type { Account } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -24,10 +24,9 @@ export default function Station({ account }: Props) {
 
   return (
     <>
-      <h5>Create station</h5>
-      <p className="text-textExtraLight">
-        To start upload and add publishes to playlist, you need a station.
-        Please create one.
+      <h6 className="text-lg">No station found.</h6>
+      <p className="text-textLight">
+        To start upload, follow, comment, and more on VewWit you need a station.
       </p>
 
       {modalVisible && (

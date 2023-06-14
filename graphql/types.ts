@@ -70,3 +70,4 @@ export type UpdatePlaylistDescriptionInput =
 export type DeletePlaylistInput = NexusGenInputs["DeletePlaylistInput"]
 export type RemoveFromPlaylistInput = NexusGenInputs["RemoveFromPlaylistInput"]
 export type UpdateDisplayNameInput = NexusGenInputs["UpdateDisplayNameInput"]
+export type UpdateImageInput = NexusGenInputs["UpdateImageInput"]
