@@ -6,6 +6,7 @@ import type {
   QueryArgsType,
   MutationReturnType,
   MutationArgsType,
+  CacheSessionInput,
 } from "./types"
 
 /**
@@ -142,15 +143,11 @@ export const CACHE_SESSION_MUTATION = gql`
 export async function cacheLoggedInSession({
   idToken,
   signature,
-  address,
-  stationId,
-  accountId,
+  input,
 }: {
   idToken: string
   signature?: string
-  address: string
-  stationId: string
-  accountId: string
+  input: CacheSessionInput
 }) {
   try {
     const data = await client
@@ -162,7 +159,7 @@ export async function cacheLoggedInSession({
       .request<
         MutationReturnType<"cacheSession">,
         MutationArgsType<"cacheSession">
-      >(CACHE_SESSION_MUTATION, { input: { address, stationId, accountId } })
+      >(CACHE_SESSION_MUTATION, { input })
 
     return data?.cacheSession
   } catch (error) {

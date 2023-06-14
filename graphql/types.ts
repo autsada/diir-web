@@ -29,6 +29,7 @@ export type CommentsOrderBy = NexusGenEnums["CommentsOrderBy"]
 export type PlaylistOrderBy = NexusGenEnums["PlaylistOrderBy"]
 
 export type QueryByIdInput = NexusGenInputs["QueryByIdInput"]
+export type CacheSessionInput = NexusGenInputs["CacheSessionInput"]
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
 export type FetchMyPublishesInput = NexusGenInputs["FetchMyPublishesInput"]
 export type FetchPublishesInput = NexusGenInputs["FetchPublishesInput"]

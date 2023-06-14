@@ -15,6 +15,7 @@ interface Props {
   defaultStationId: string
 }
 
+// TODO: Change from using api route to server action
 export default function ManageStations({
   account,
   defaultStationId,
@@ -50,7 +51,7 @@ export default function ManageStations({
 
     try {
       setLoading(true)
-      const result = await fetch(`/station/switch`, {
+      const result = await fetch(`/settings/stations/switch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,21 +75,20 @@ export default function ManageStations({
 
   return (
     <>
-      <div className="mt-5 sm:flex sm:items-start">
-        <div className="sm:w-[40%]">
-          <h6 className="text-base sm:text-lg lg:text-xl">Manage stations</h6>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-y-5 lg:gap-y-0">
+        <div className="col-span-1 lg:col-span-2">
           <button
-            className="btn-blue px-6 my-5 sm:mx-0 rounded-full"
+            className="btn-blue px-5 mx-0 rounded-full"
             onClick={openModal}
           >
             Create new station
           </button>
         </div>
 
-        <div className="mt-2 pb-5 sm:w-[60%]">
+        <div className="lg:col-span-3">
           {stations.length > 0 ? (
             <>
-              <p className="text-textLight">All stations</p>
+              <h6 className="text-base">Your profiles</h6>
               <div className="mt-2 divide-y">
                 {stations.map((st) => (
                   <StationItem

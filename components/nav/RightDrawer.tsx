@@ -80,7 +80,7 @@ export default function RightDrawer({
   async function switchStation(address: string, stationId: string) {
     try {
       setSwitchLoading(true)
-      const result = await fetch(`/station/switch`, {
+      const result = await fetch(`/settings/stations/switch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

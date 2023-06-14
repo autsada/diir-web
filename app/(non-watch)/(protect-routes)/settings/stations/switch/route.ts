@@ -27,9 +27,11 @@ export async function POST(req: Request) {
   const result = await cacheLoggedInSession({
     idToken,
     signature,
-    address,
-    stationId,
-    accountId: account.id,
+    input: {
+      address,
+      stationId,
+      accountId: account.id,
+    },
   })
   return NextResponse.json(result)
 }
