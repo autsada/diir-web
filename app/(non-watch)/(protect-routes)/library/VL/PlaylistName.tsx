@@ -122,19 +122,25 @@ export default function PlaylistName({
             )}
           </div>
         ) : (
-          <div className={isFullWidth ? "w-full" : "sm:w-[40%] md:w-[30%]"}>
+          <div
+            className={
+              isFullWidth
+                ? "w-full px-2 sm:px-0"
+                : "px-2 sm:px-0 sm:w-[40%] md:w-[30%]"
+            }
+          >
             <input
               id="playlist-name"
               type="text"
               defaultValue={optimisticName}
               minLength={1}
               maxLength={120}
-              className="block w-full font-semibold text-lg sm:text-xl bg-transparent border-b-[2px] border-neutral-700"
+              className="block w-full font-semibold text-lg rounded-none sm:text-xl bg-transparent border-b-[2px] border-neutral-700"
             />
             <div className="flex items-center justify-end gap-x-4">
               <button
                 type="button"
-                className="mx-0 px-5 font-semibold text-sm"
+                className="mx-0 px-5 error font-semibold text-sm"
                 onClick={endEditingName}
               >
                 Cancel

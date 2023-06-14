@@ -112,7 +112,7 @@ export default function StationName({ station }: Props) {
               id="display-name"
               type="text"
               defaultValue={optimisticName}
-              className="w-full rounded-none border-b border-neutral-700"
+              className="w-full rounded-none border-b-[2px] border-neutral-700"
             />
             {error && (
               <p className="absolute bottom-5 error text-xs">{error}</p>
