@@ -327,6 +327,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   AccountType: "TRADITIONAL" | "WALLET"
   Category:
+    | "AI"
     | "Animals"
     | "Children"
     | "Education"
