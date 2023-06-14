@@ -9,6 +9,7 @@ import type {
   FollowInput,
   UpdateDisplayNameInput,
   UpdateImageInput,
+  UpdatePreferencesInput,
 } from "./types"
 
 /**
@@ -442,6 +443,45 @@ export async function follow({
       )
 
     return result?.follow
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Update user's preferences
+ */
+export const UPDATE_PREFERENCES_MUTATION = gql`
+  mutation UpdatePreferences($input: UpdatePreferencesInput!) {
+    updatePreferences(input: $input) {
+      status
+    }
+  }
+`
+export async function updatePreferences({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: UpdatePreferencesInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updatePreferences">,
+        MutationArgsType<"updatePreferences">
+      >(UPDATE_PREFERENCES_MUTATION, {
+        input: data,
+      })
+
+    return result?.updatePreferences
   } catch (error) {
     throw error
   }

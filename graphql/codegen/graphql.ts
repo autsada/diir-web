@@ -436,6 +436,7 @@ export type Mutation = {
   updatePlaylistDescription?: Maybe<WriteResult>;
   updatePlaylistName?: Maybe<WriteResult>;
   updatePlaylists?: Maybe<WriteResult>;
+  updatePreferences?: Maybe<WriteResult>;
   updateProfileImage?: Maybe<WriteResult>;
   updatePublish?: Maybe<Publish>;
   validateDisplayName?: Maybe<Scalars['Boolean']['output']>;
@@ -595,6 +596,11 @@ export type MutationUpdatePlaylistNameArgs = {
 
 export type MutationUpdatePlaylistsArgs = {
   input: UpdatePlaylistsInput;
+};
+
+
+export type MutationUpdatePreferencesArgs = {
+  input: UpdatePreferencesInput;
 };
 
 
@@ -1027,6 +1033,13 @@ export type UpdatePlaylistsInput = {
   owner: Scalars['String']['input'];
   playlists: Array<PlaylistItemStatus>;
   publishId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
+export type UpdatePreferencesInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  preferences: Array<Category>;
   stationId: Scalars['String']['input'];
 };
 

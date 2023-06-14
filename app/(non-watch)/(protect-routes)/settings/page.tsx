@@ -4,9 +4,9 @@ import { redirect } from "next/navigation"
 import StationName from "./StationName"
 import StationImage from "./StationImage"
 import BannerImage from "./BannerImage"
+import SectionHeader from "./SectionHeader"
 import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
-import SectionHeader from "./SectionHeader"
 
 export default async function Settings() {
   const data = await getAccount()
