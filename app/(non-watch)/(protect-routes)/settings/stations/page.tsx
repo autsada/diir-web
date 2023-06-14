@@ -1,5 +1,6 @@
 import React, { Suspense } from "react"
 
+import SectionHeader from "../SectionHeader"
 import Address from "./Address"
 import Divider from "@/components/Divider"
 import ManageStations from "./ManageStations"
@@ -14,7 +15,7 @@ export default async function Stations() {
 
   return (
     <>
-      <h5 className="text-xl sm:text-2xl lg:text-3xl">Settings</h5>
+      <SectionHeader sectionName="Stations" />
 
       <div className="mt-5 py-2">
         <h6 className="text-base sm:text-lg lg:text-xl">Your wallet</h6>

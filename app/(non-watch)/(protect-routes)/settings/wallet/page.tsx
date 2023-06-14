@@ -1,5 +1,12 @@
 import React from "react"
 
+import SectionHeader from "../SectionHeader"
+
 export default function Wallet() {
-  return <div>Wallet</div>
+  return (
+    <>
+      <SectionHeader sectionName="Wallet" />
+      Wallet
+    </>
+  )
 }

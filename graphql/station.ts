@@ -7,6 +7,7 @@ import type {
   MutationReturnType,
   MutationArgsType,
   FollowInput,
+  UpdateDisplayNameInput,
 } from "./types"
 
 /**
@@ -301,18 +302,12 @@ export const UPDATE_DISPLAY_NAME_MUTATION = gql`
 `
 export async function updateStationName({
   idToken,
-  owner,
-  accountId,
-  name,
-  stationId,
   signature,
+  input,
 }: {
   idToken: string
-  owner: string
-  accountId: string
-  name: string
-  stationId: string // Station id to be updated
   signature?: string
+  input: UpdateDisplayNameInput
 }) {
   try {
     const data = await client
@@ -325,7 +320,7 @@ export async function updateStationName({
         MutationReturnType<"updateDisplayName">,
         MutationArgsType<"updateDisplayName">
       >(UPDATE_DISPLAY_NAME_MUTATION, {
-        input: { owner, accountId, name, stationId },
+        input,
       })
 
     return data?.updateDisplayName

@@ -40,7 +40,7 @@ export default function BannerImage({ station }: Props) {
   return (
     <>
       <div
-        className={`relative z-10 mx-auto w-[150px] h-[85px] sm:w-full sm:h-[160px] cursor-pointer rounded bg-white ${
+        className={`relative z-10 mx-auto w-full h-[160px] cursor-pointer rounded-lg overflow-hidden bg-white ${
           !!imageError
             ? "border-[2px] border-red-500"
             : "border border-gray-200"

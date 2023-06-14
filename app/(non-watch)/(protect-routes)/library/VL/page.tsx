@@ -50,8 +50,6 @@ export default async function WatchLater() {
     },
   })
 
-  console.log("result -->", watchLaterResult)
-
   return (
     <div className="px-0 sm:px-4">
       {!watchLaterResult ? (

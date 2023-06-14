@@ -1,12 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import {
-  IoSettingsOutline,
-  IoSettings,
-  IoCaretDownSharp,
-  IoCaretUpSharp,
-} from "react-icons/io5"
+import { IoSettingsOutline, IoSettings } from "react-icons/io5"
 import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
 import { BsCollectionPlay, BsCollectionPlayFill } from "react-icons/bs"
 import { useDisconnect } from "wagmi"
@@ -36,7 +31,6 @@ export default function RightDrawer({
   const [loading, setLoading] = useState(false)
   const [isStationsExpanded, setIsStationExpanded] = useState(false)
   const [switchLoading, setSwitchLoading] = useState(false)
-  const [isSettingsExpanded, setIsSettingsExpanded] = useState(false)
 
   const router = useRouter()
   const { disconnect } = useDisconnect()
@@ -81,10 +75,6 @@ export default function RightDrawer({
 
   const unViewStations = useCallback(() => {
     setIsStationExpanded(false)
-  }, [])
-
-  const toggleSettings = useCallback(() => {
-    setIsSettingsExpanded((prev) => !prev)
   }, [])
 
   async function switchStation(address: string, stationId: string) {
@@ -212,46 +202,14 @@ export default function RightDrawer({
                 InActiveIcon={BsCollectionPlay}
               />
             </div>
-            <div className="relative w-full px-5 mt-5" onClick={toggleSettings}>
+            <div className="w-full px-5 mt-5">
               <ActiveLink
                 name="Settings"
-                href=""
+                href="/settings"
                 ActiveIcon={IoSettings}
                 InActiveIcon={IoSettingsOutline}
-                withLink={false}
               />
-              <div className="absolute top-0 right-[30px] bottom-0 flex items-center justify-center cursor-pointer">
-                {!isSettingsExpanded ? (
-                  <IoCaretDownSharp />
-                ) : (
-                  <IoCaretUpSharp />
-                )}
-              </div>
             </div>
-            {isSettingsExpanded && (
-              <div className="px-12">
-                <div className="w-full px-10 mt-1">
-                  <ActiveLink name="General" href="/settings" isSubLink />
-                </div>
-                <div className="w-full px-10 mt-1">
-                  <ActiveLink name="Wallet" href="/settings/wallet" isSubLink />
-                </div>
-                <div className="w-full px-10 mt-1">
-                  <ActiveLink
-                    name="Preferences"
-                    href="/settings/preferences"
-                    isSubLink
-                  />
-                </div>
-                <div className="w-full px-10 mt-1">
-                  <ActiveLink
-                    name="Stations"
-                    href="/settings/stations"
-                    isSubLink
-                  />
-                </div>
-              </div>
-            )}
 
             <div className="mt-10">
               <button
