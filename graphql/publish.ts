@@ -12,6 +12,7 @@ import type {
   UpdatePublishInput,
   FetchPublishesByCatInput,
   LikePublishInput,
+  FetchStationPublishesInput,
 } from "./types"
 import { FetchSuggestedPublishesInput } from "./codegen/graphql"
 
@@ -407,6 +408,57 @@ export async function fetchSuggestedVideos({
     })
 
     return result?.fetchSuggestedVideos
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Fetch publishes of a station
+ */
+export const FETCH_STATION_PUBLISHES_QUERY = gql`
+  query FetchStationPublishes($input: FetchStationPublishesInput!) {
+    fetchStationPublishes(input: $input) {
+      pageInfo {
+        count
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          createdAt
+          title
+          views
+          thumbSource
+          thumbnail
+          playback {
+            id
+            duration
+            hls
+            dash
+            preview
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchStationPublishes(data: FetchStationPublishesInput) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+      })
+      .request<
+        QueryReturnType<"fetchStationPublishes">,
+        QueryArgsType<"fetchStationPublishes">
+      >(FETCH_STATION_PUBLISHES_QUERY, {
+        input: data,
+      })
+
+    return result?.fetchStationPublishes
   } catch (error) {
     throw error
   }

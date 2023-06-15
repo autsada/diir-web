@@ -7,7 +7,7 @@ import { toast } from "react-toastify"
 import ButtonLoader from "@/components/ButtonLoader"
 import ConfirmModal from "@/components/ConfirmModal"
 import PlaylistItem from "./PlaylistItem"
-import PlaylistActionsModal from "./PlaylistActionsModal"
+import ActionsModal from "./ActionsModal"
 import UpdatePlaylistNameModal from "./UpdatePlaylistNameModal"
 import Mask from "@/components/Mask"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
@@ -209,7 +209,7 @@ export default function Playlists({
 
       {/* Actions modal */}
       {actionsModalVisible && targetPlaylist && (
-        <PlaylistActionsModal
+        <ActionsModal
           closeModal={oncloseActions}
           top={screenHeight - positionY < 120 ? positionY - 120 : positionY} // 120 is modal height
           left={

@@ -88,20 +88,20 @@ export const GET_STATION_BY_NAME_QUERY = gql`
       publishesCount
       isFollowing
       isOwner
-      publishes {
-        id
-        thumbnail
-        title
-        createdAt
-        views
-        playback {
-          id
-          preview
-          duration
-          dash
-          hls
-        }
-      }
+      # publishes {
+      #   id
+      #   thumbnail
+      #   title
+      #   createdAt
+      #   views
+      #   playback {
+      #     id
+      #     preview
+      #     duration
+      #     dash
+      #     hls
+      #   }
+      # }
     }
   }
 `

@@ -44,7 +44,7 @@ export default function ContentItem({ publish, setPOS, onOpenActions }: Props) {
         <div className="w-1/2 sm:w-[200] md:w-[220px] lg:w-[240px]">
           <Link href={`/watch/${publish.id}`}>
             <div
-              className="relative w-full h-[110px] sm:h-[130px] bg-neutral-600 rounded-xl overflow-hidden"
+              className="relative w-full h-[110px] sm:h-[130px] bg-neutral-700 rounded-xl overflow-hidden"
               onMouseOver={onMouseOn}
               onMouseLeave={onMouseLeave}
             >

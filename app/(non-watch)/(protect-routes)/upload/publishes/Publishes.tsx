@@ -1,10 +1,10 @@
 import React from "react"
 
 import PublishItem from "./PublishItem"
-import type { FetchPublishesResponse } from "@/graphql/codegen/graphql"
+import type { FetchPublishesResponse, Maybe } from "@/graphql/codegen/graphql"
 
 interface Props {
-  fetchResult: FetchPublishesResponse | undefined
+  fetchResult: Maybe<FetchPublishesResponse> | undefined
 }
 
 export default function Publishes({ fetchResult }: Props) {

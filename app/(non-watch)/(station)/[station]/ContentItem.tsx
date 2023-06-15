@@ -3,8 +3,6 @@ import Link from "next/link"
 import { HiDotsVertical } from "react-icons/hi"
 
 import VideoPlayer from "@/components/VideoPlayer"
-import Avatar from "@/components/Avatar"
-import StationName from "@/components/StationName"
 import {
   calculateTimeElapsed,
   getPostExcerpt,
@@ -15,16 +13,21 @@ import type { Publish } from "@/graphql/codegen/graphql"
 interface Props {
   publish: Publish | null | undefined
   onOpenActions: (p: Publish) => void
-  setPOS: (posX: number, posY: number, screenHeight: number) => void
+  setPOS: (
+    posX: number,
+    posY: number,
+    screenHeight: number,
+    screenWidth: number
+  ) => void
 }
 
-export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
+export default function ContentItem({ publish, onOpenActions, setPOS }: Props) {
   const [playing, setPlaying] = useState(false)
 
   function onClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (!publish) return
     onOpenActions(publish)
-    setPOS(e.clientX, e.clientY, window?.innerHeight)
+    setPOS(e.clientX, e.clientY, window?.innerHeight, window?.innerWidth)
   }
 
   const onMouseOn = useCallback(() => {
@@ -38,11 +41,11 @@ export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
   if (!publish) return null
 
   return (
-    <div className="relative w-full bg-white cursor-pointer">
-      <div className="relative z-0">
+    <div className="relative w-full sm:w-[220px] cursor-pointer">
+      <div className="relative z-0 grid grid-cols-2 sm:grid-cols-1 gap-x-2 sm:gap-x-0 sm:gap-y-2">
         <Link href={`/watch/${publish.id}`}>
           <div
-            className="relative w-full h-[240px] sm:h-[220px] bg-neutral-700 rounded-none sm:rounded-xl overflow-hidden"
+            className="relative h-[100px] sm:h-[120px] bg-neutral-700 rounded-lg overflow-hidden"
             onMouseOver={onMouseOn}
             onMouseLeave={onMouseLeave}
           >
@@ -68,31 +71,27 @@ export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
           </div>
         </Link>
 
-        <div className="flex items-start py-4 px-2 gap-x-5">
-          <Avatar profile={publish.creator} />
-          <div className="w-full text-left mr-8">
-            <Link href={`/watch/${publish.id}`}>
-              <h6 className="text-base sm:text-lg">
-                {getPostExcerpt(publish.title || "", 60)}
-              </h6>
-            </Link>
-            <StationName profile={publish.creator} />
-            <Link href={`/watch/${publish.id}`}>
-              <div className="flex items-center gap-x-4">
-                <p className="font-light text-textExtraLight text-sm sm:text-base">
-                  {publish.views || 0} views
-                </p>
-                <p className="font-light text-textExtraLight text-sm sm:text-base">
-                  {calculateTimeElapsed(publish.createdAt)}
-                </p>
-              </div>
-            </Link>
-          </div>
+        <div className="text-left mr-4">
+          <Link href={`/watch/${publish.id}`}>
+            <h6 className="text-sm sm:text-base">
+              {getPostExcerpt(publish.title || "", 40)}
+            </h6>
+          </Link>
+          <Link href={`/watch/${publish.id}`}>
+            <div className="flex items-center gap-x-4">
+              <p className="font-light text-textExtraLight text-xs sm:text-sm">
+                {publish.views || 0} views
+              </p>
+              <p className="font-light text-textExtraLight text-xs sm:text-sm">
+                {calculateTimeElapsed(publish.createdAt)}
+              </p>
+            </div>
+          </Link>
         </div>
       </div>
 
       <div
-        className="absolute top-[250px] sm:top-[230px] right-2 p-[10px]"
+        className="absolute top-0 sm:top-[135px] right-0 px-[2px]"
         onClick={onClick}
       >
         <HiDotsVertical />

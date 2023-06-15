@@ -27,12 +27,15 @@ export type ReportReason = NexusGenEnums["ReportReason"]
 export type CommentType = NexusGenEnums["CommentType"]
 export type CommentsOrderBy = NexusGenEnums["CommentsOrderBy"]
 export type PlaylistOrderBy = NexusGenEnums["PlaylistOrderBy"]
+export type PublishOrderBy = NexusGenEnums["PublishOrderBy"]
 
 export type QueryByIdInput = NexusGenInputs["QueryByIdInput"]
 export type CacheSessionInput = NexusGenInputs["CacheSessionInput"]
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
 export type FetchMyPublishesInput = NexusGenInputs["FetchMyPublishesInput"]
 export type FetchPublishesInput = NexusGenInputs["FetchPublishesInput"]
+export type FetchStationPublishesInput =
+  NexusGenInputs["FetchStationPublishesInput"]
 export type FetchPublishesByCatInput =
   NexusGenInputs["FetchPublishesByCatInput"]
 export type AddToWatchLaterInput = NexusGenInputs["AddToWatchLaterInput"]

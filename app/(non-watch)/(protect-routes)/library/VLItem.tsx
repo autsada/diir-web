@@ -45,7 +45,7 @@ export default function Item({ publish, onOpenActions, setPOS }: Props) {
       <div className="relative z-0">
         <Link href={`/watch/${publish.id}`}>
           <div
-            className="relative h-[100px] sm:h-[140px] bg-neutral-600 rounded-lg overflow-hidden"
+            className="relative h-[100px] sm:h-[140px] bg-neutral-700 rounded-lg overflow-hidden"
             onMouseOver={onMouseOn}
             onMouseLeave={onMouseLeave}
           >

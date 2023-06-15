@@ -3,8 +3,8 @@ import { redirect } from "next/navigation"
 
 import Publishes from "../Publishes"
 import { getAccount } from "@/lib/server"
-import { getMyPublishes, getStationById } from "@/graphql"
-import type { QueryPublishKind, Station, Publish } from "@/graphql/types"
+import { fetchMyPublishes, getStationById } from "@/graphql"
+import type { QueryPublishKind } from "@/graphql/types"
 
 export default async function Page({
   params,
@@ -25,7 +25,7 @@ export default async function Page({
   }
 
   // Query station by id
-  const station = (await getStationById(account?.defaultStation?.id)) as Station
+  const station = await getStationById(account?.defaultStation?.id)
 
   if (!station) {
     redirect("/settings")
@@ -34,7 +34,7 @@ export default async function Page({
   // Query all publishes by kind.
   const kind = params.kind
 
-  let publishes = (await getMyPublishes({
+  let fetchResult = await fetchMyPublishes({
     idToken,
     signature,
     data: {
@@ -43,7 +43,7 @@ export default async function Page({
       creatorId: station.id,
       kind,
     },
-  })) as Publish[]
+  })
 
-  return <Publishes publishes={publishes} />
+  return <Publishes fetchResult={fetchResult} />
 }

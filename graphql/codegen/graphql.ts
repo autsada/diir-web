@@ -61,6 +61,7 @@ export type CalculateTipsResult = {
 };
 
 export enum Category {
+  Ai = 'AI',
   Animals = 'Animals',
   Children = 'Children',
   Education = 'Education',
@@ -327,6 +328,14 @@ export type FetchPublishesResponse = {
   __typename?: 'FetchPublishesResponse';
   edges: Array<PublishEdge>;
   pageInfo: PageInfo;
+};
+
+export type FetchStationPublishesInput = {
+  creatorId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  kind?: InputMaybe<QueryPublishKind>;
+  orderBy?: InputMaybe<PublishOrderBy>;
+  requestorId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FetchSuggestedPublishesInput = {
@@ -746,11 +755,16 @@ export type PublishEdge = {
 };
 
 export enum PublishKind {
-  Adds = 'Adds',
+  Ads = 'Ads',
   Blog = 'Blog',
   Podcast = 'Podcast',
   Short = 'Short',
   Video = 'Video'
+}
+
+export enum PublishOrderBy {
+  Latest = 'latest',
+  Popular = 'popular'
 }
 
 export type Query = {
@@ -764,6 +778,7 @@ export type Query = {
   fetchPlaylistItems?: Maybe<FetchPlaylistItemsResponse>;
   fetchPreviewPlaylists?: Maybe<FetchPreviewPlaylistsResponse>;
   fetchPreviewWatchLater?: Maybe<FetchWatchLaterResponse>;
+  fetchStationPublishes?: Maybe<FetchPublishesResponse>;
   fetchSuggestedVideos?: Maybe<FetchPublishesResponse>;
   fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
   fetchWatchLater?: Maybe<FetchWatchLaterResponse>;
@@ -820,6 +835,11 @@ export type QueryFetchPreviewWatchLaterArgs = {
 };
 
 
+export type QueryFetchStationPublishesArgs = {
+  input: FetchStationPublishesInput;
+};
+
+
 export type QueryFetchSuggestedVideosArgs = {
   input: FetchSuggestedPublishesInput;
 };
@@ -870,7 +890,7 @@ export type QueryByNameInput = {
 };
 
 export enum QueryPublishKind {
-  Adds = 'adds',
+  Ads = 'ads',
   All = 'all',
   Blogs = 'blogs',
   Podcasts = 'podcasts',

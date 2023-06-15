@@ -3,7 +3,6 @@ import React from "react"
 import { getAccount } from "@/lib/server"
 import { getStationById } from "@/graphql"
 import { redirect } from "next/navigation"
-import type { Station } from "@/graphql/codegen/graphql"
 import PublishTemplate from "./PublishTemplate"
 
 export default async function Layout({
@@ -18,11 +17,15 @@ export default async function Layout({
   }
 
   // Query station by id
-  const station = (await getStationById(account?.defaultStation?.id)) as Station
+  const station = await getStationById(
+    account?.defaultStation?.id,
+    account?.defaultStation?.id
+  )
 
   if (!station) {
     redirect("/settings")
   }
+
   return (
     <>
       <PublishTemplate station={station} />

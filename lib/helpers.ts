@@ -42,3 +42,5 @@ export const contentCategories = [
   "Men",
   "Other",
 ] as const
+
+export const publishKinds = ["videos", "blogs", "podcasts", "ads"] as const
