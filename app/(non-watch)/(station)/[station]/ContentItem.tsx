@@ -42,10 +42,10 @@ export default function ContentItem({ publish, onOpenActions, setPOS }: Props) {
 
   return (
     <div className="relative w-full sm:w-[220px] cursor-pointer">
-      <div className="relative z-0 grid grid-cols-2 sm:grid-cols-1 gap-x-2 sm:gap-x-0 sm:gap-y-2">
+      <div className="relative z-0 flex sm:flex-col gap-x-2 sm:gap-x-0 sm:gap-y-2">
         <Link href={`/watch/${publish.id}`}>
           <div
-            className="relative h-[100px] sm:h-[120px] bg-neutral-700 rounded-lg overflow-hidden"
+            className="relative w-[180px] sm:w-full h-[100px] sm:h-[120px] bg-neutral-700 rounded-lg overflow-hidden"
             onMouseOver={onMouseOn}
             onMouseLeave={onMouseLeave}
           >
@@ -71,7 +71,7 @@ export default function ContentItem({ publish, onOpenActions, setPOS }: Props) {
           </div>
         </Link>
 
-        <div className="text-left mr-4">
+        <div className="flex-grow text-left mr-4">
           <Link href={`/watch/${publish.id}`}>
             <h6 className="text-sm sm:text-base">
               {getPostExcerpt(publish.title || "", 40)}
@@ -79,10 +79,10 @@ export default function ContentItem({ publish, onOpenActions, setPOS }: Props) {
           </Link>
           <Link href={`/watch/${publish.id}`}>
             <div className="flex items-center gap-x-4">
-              <p className="font-light text-textExtraLight text-xs sm:text-sm">
+              <p className="text-textLight text-sm sm:text-base">
                 {publish.views || 0} views
               </p>
-              <p className="font-light text-textExtraLight text-xs sm:text-sm">
+              <p className="text-textLight text-sm sm:text-base">
                 {calculateTimeElapsed(publish.createdAt)}
               </p>
             </div>

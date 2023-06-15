@@ -177,17 +177,21 @@ export default function ContentItems({
   }, [creatorId, creatorName, tab, pageInfo, setLoading, sortBy])
   const { observedRef } = useInfiniteScroll(0.5, fetchMoreItems)
 
-  // Fetch watch later when user selects sort by
+  // Fetch publishes when user selects sort by
+  // It's a first fetch so there is no cursor
   const fetchWithSortBy = useCallback(
     async (ob: PublishOrderBy) => {
+      if (!creatorId || !creatorName) return
       try {
         setLoading(true)
-        const res = await fetch(`/library/VL/query`, {
+        const res = await fetch(`/@${creatorName}/publishes`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            creatorId,
+            kind: tab,
             sortBy: ob,
           }),
         })
@@ -201,7 +205,7 @@ export default function ContentItems({
         setLoading(false)
       }
     },
-    [setItems, setPageInfo]
+    [creatorName, creatorId, tab, setItems, setPageInfo]
   )
 
   const onSelectSortBy = useCallback(
@@ -221,11 +225,7 @@ export default function ContentItems({
             )
           } else {
             setItems((prev) =>
-              prev.sort(
-                (a, b) =>
-                  (new Date(a.node?.createdAt) as any) -
-                  (new Date(b.node?.createdAt) as any)
-              )
+              prev.sort((a, b) => (b.node?.views || 0) - (a.node?.views || 0))
             )
           }
         } else {

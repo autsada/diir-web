@@ -41,37 +41,35 @@ export default function ContentItem({ publish, setPOS, onOpenActions }: Props) {
   return (
     <div className="relative w-full bg-white">
       <div className="relative z-0 flex gap-x-2 sm:gap-x-4">
-        <div className="w-1/2 sm:w-[200] md:w-[220px] lg:w-[240px]">
-          <Link href={`/watch/${publish.id}`}>
-            <div
-              className="relative w-full h-[110px] sm:h-[130px] bg-neutral-700 rounded-xl overflow-hidden"
-              onMouseOver={onMouseOn}
-              onMouseLeave={onMouseLeave}
-            >
-              <VideoPlayer
-                playback={publish.playback || undefined}
-                controls={playing}
-                playing={playing}
-                thumbnail={
-                  publish.kind === "Short"
-                    ? undefined
-                    : publish.thumbSource === "custom" && publish.thumbnail
-                    ? publish.thumbnail
-                    : publish.playback?.thumbnail
-                }
-                playIcon={<></>}
-              />
+        <Link href={`/watch/${publish.id}`}>
+          <div
+            className="relative w-[180px] sm:w-[200px] lg:w-[240px] h-[110px] lg:h-[130px] bg-neutral-700 rounded-xl overflow-hidden"
+            onMouseOver={onMouseOn}
+            onMouseLeave={onMouseLeave}
+          >
+            <VideoPlayer
+              playback={publish.playback || undefined}
+              controls={playing}
+              playing={playing}
+              thumbnail={
+                publish.kind === "Short"
+                  ? undefined
+                  : publish.thumbSource === "custom" && publish.thumbnail
+                  ? publish.thumbnail
+                  : publish.playback?.thumbnail
+              }
+              playIcon={<></>}
+            />
 
-              {publish.playback && (
-                <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
-                  {secondsToHourFormat(publish.playback?.duration)}
-                </div>
-              )}
-            </div>
-          </Link>
-        </div>
+            {publish.playback && (
+              <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
+                {secondsToHourFormat(publish.playback?.duration)}
+              </div>
+            )}
+          </div>
+        </Link>
 
-        <div className="w-1/2 mr-4">
+        <div className="flex-grow mr-4">
           <div>
             <Link href={`/watch/${publish.id}`}>
               <h6 className="text-base">
@@ -79,11 +77,13 @@ export default function ContentItem({ publish, setPOS, onOpenActions }: Props) {
               </h6>
             </Link>
             <div className="mt-1">
-              <StationName profile={publish.creator} fontSize="sm" />
+              <StationName profile={publish.creator} fontSize="base" />
               <Link href={`/watch/${publish.id}`}>
                 <div className="flex items-center gap-x-4 text-textExtraLight">
-                  <p className="text-xs">{publish.views || 0} views</p>
-                  <p className="text-xs">
+                  <p className="text-textLight text-sm sm:text-base">
+                    {publish.views || 0} views
+                  </p>
+                  <p className="text-textLight text-sm sm:text-base">
                     {calculateTimeElapsed(publish.createdAt)}
                   </p>
                 </div>

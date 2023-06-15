@@ -79,21 +79,21 @@ export default function Item({ publish, onOpenActions, setPOS }: Props) {
           </Link>
           <Link href={`/@${publish.creator?.name}`}>
             <div className="flex items-center gap-x-2">
-              <h6 className="text-xs sm:text-sm">
+              <h6 className="text-sm sm:text-base">
                 {publish.creator?.displayName || ""}
               </h6>
               <span className="text-thin text-xs">|</span>
-              <p className="font-light text-textLight text-xs sm:text-sm">
+              <p className="font-light text-textLight text-sm sm:text-base">
                 @{publish.creator?.name || ""}
               </p>
             </div>
           </Link>
           <Link href={`/watch/${publish.id}`}>
             <div className="flex items-center gap-x-4">
-              <p className="font-light text-textExtraLight text-xs sm:text-sm">
+              <p className="text-textLight text-sm sm:text-base">
                 {publish.views || 0} views
               </p>
-              <p className="font-light text-textExtraLight text-xs sm:text-sm">
+              <p className="text-textLight text-sm sm:text-base">
                 {calculateTimeElapsed(publish.createdAt)}
               </p>
             </div>

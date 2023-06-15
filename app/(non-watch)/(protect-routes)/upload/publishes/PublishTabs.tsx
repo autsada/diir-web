@@ -16,7 +16,6 @@ export default function PublishTabs({ station }: Props) {
   const params = useParams()
   const tab = params?.kind
 
-  console.log("owner -->", isOwner)
   return (
     <div className="flex gap-x-1 sm:gap-x-4">
       <Tab href={`/@${station.name}`} name="HOME" isActive={!tab} />
