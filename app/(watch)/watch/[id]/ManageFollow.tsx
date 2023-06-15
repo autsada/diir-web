@@ -111,7 +111,7 @@ export default function ManageFollow({
       ) : (
         <button
           type="button"
-          className="btn-dark mx-0 text-sm sm:text-base w-[100px] sm:w-[110px] rounded-full"
+          className="btn-orange mx-0 text-sm sm:text-base w-[100px] sm:w-[110px] rounded-full"
           onClick={followDebounce}
         >
           Follow

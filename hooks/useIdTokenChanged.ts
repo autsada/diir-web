@@ -20,10 +20,9 @@ export function useIdTokenChanged() {
         setIdToken(undefined)
         deleteCookie("dtoken")
         deleteCookie("dsignature")
+        // Reload data to logged user out
+        router.refresh()
       }
-
-      // Reload data
-      router.refresh()
     })
 
     return unsubscribe
