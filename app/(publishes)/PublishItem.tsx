@@ -19,6 +19,10 @@ interface Props {
 }
 
 export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
+  const thumbnail =
+    publish?.thumbSource === "custom" && publish?.thumbnail
+      ? publish?.thumbnail
+      : publish?.playback?.thumbnail
   const [playing, setPlaying] = useState(false)
 
   function onClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -38,28 +42,43 @@ export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
   if (!publish) return null
 
   return (
-    <div className="relative w-full bg-white cursor-pointer">
+    <div className="relative w-full sm:w-[340px] md:w-full lg:max-w-[380px] bg-white cursor-pointer">
       <div className="relative z-0">
         <Link href={`/watch/${publish.id}`}>
           <div
-            className="relative w-full h-[240px] sm:h-[220px] bg-neutral-700 rounded-none sm:rounded-xl overflow-hidden"
+            className="relative h-[240px] sm:h-[200px] md:h-[180px] lg:h-[220px] xl:h-[200px] bg-neutral-700 rounded-none sm:rounded-xl overflow-hidden"
             onMouseOver={onMouseOn}
             onMouseLeave={onMouseLeave}
           >
-            <VideoPlayer
-              playback={publish.playback || undefined}
-              controls={playing}
-              playing={playing}
-              thumbnail={
-                publish.kind === "Short"
-                  ? undefined
-                  : publish.thumbSource === "custom" && publish.thumbnail
-                  ? publish.thumbnail
-                  : publish.playback?.thumbnail
-              }
-              playIcon={<></>}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={thumbnail || ""}
+              alt={publish.title || ""}
+              className={`${
+                playing || !thumbnail ? "hidden" : "block"
+              } w-full h-full ${
+                publish?.kind === "Short" ? "object-contain" : "object-cover"
+              }`}
             />
-
+            <div
+              className={`${
+                !playing && thumbnail ? "hidden" : "block"
+              } w-full h-full`}
+            >
+              <VideoPlayer
+                playback={publish.playback || undefined}
+                controls={playing}
+                playing={playing}
+                thumbnail={
+                  publish.kind === "Short"
+                    ? undefined
+                    : publish.thumbSource === "custom" && publish.thumbnail
+                    ? publish.thumbnail
+                    : publish.playback?.thumbnail
+                }
+                playIcon={<></>}
+              />
+            </div>
             {publish.playback && (
               <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
                 {secondsToHourFormat(publish.playback?.duration)}
@@ -92,7 +111,7 @@ export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
       </div>
 
       <div
-        className="absolute top-[250px] sm:top-[230px] right-2 p-[10px]"
+        className="absolute top-[250px] sm:top-[210px] md:top-[190px] lg:top-[230px] xl:top-[210px] right-2 p-[10px]"
         onClick={onClick}
       >
         <HiDotsVertical />

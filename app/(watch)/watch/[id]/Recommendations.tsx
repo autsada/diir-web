@@ -186,7 +186,7 @@ export default function Recommendations({
 
   return (
     <>
-      <div className="bg-white">
+      <div className="pb-10 sm:pb-0 bg-white">
         {suggestedItems.map((edge, index) =>
           !edge.node ? null : (
             <RecommendationItem
