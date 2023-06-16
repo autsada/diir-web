@@ -253,8 +253,8 @@ export default function ContentItems({
             )}
           </div>
 
-          <div className="ml-0 md:ml-[300px] lg:ml-[400px] mt-5 md:mt-0 sm:py-5 pb-20 sm:pb-0">
-            <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4">
+          <div className="ml-0 md:ml-[300px] lg:ml-[400px] mt-5 md:mt-0 sm:py-5 pb-20 md:pb-0">
+            <div className="px-2 grid grid-cols-1 gap-y-3 sm:gap-y-4 md:px-14 lg:px-0">
               {items.length > 1 && (
                 <ItemsHeader sortBy={sortBy} onSelectSortBy={onSelectSortBy} />
               )}

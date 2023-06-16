@@ -90,7 +90,7 @@ export default function ManageFollow({
     <>
       {isOwner ? (
         <Link href={ownerHref}>
-          <button className="btn-orange text-sm sm:text-base px-5 rounded-full">
+          <button className="btn-dark text-sm sm:text-base px-5 rounded-full">
             {ownerLinkText}
           </button>
         </Link>

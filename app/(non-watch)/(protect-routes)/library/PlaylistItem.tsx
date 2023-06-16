@@ -28,8 +28,9 @@ export default function PlaylistItem({ item, onOpenActions, setPOS }: Props) {
   return (
     <div className="w-full grid grid-cols-2 gap-x-1 sm:grid-cols-1 sm:gap-y-2 cursor-pointer">
       <Link href={`/library/${item.id}`}>
-        <div className="relative z-0 h-[110px] sm:h-[150px] rounded-lg overflow-hidden bg-neutral-500">
+        <div className="relative z-0 h-[110px] sm:h-[150px] md:h-[140px] rounded-lg overflow-hidden bg-neutral-500">
           {pl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={
                 pl.thumbSource === "custom" && pl.thumbnail

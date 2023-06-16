@@ -183,7 +183,7 @@ export default function Playlists({
         </div>
 
         {playlists.length > 0 && (
-          <div className="mt-5 w-full grid grid-cols-1 gap-y-2 sm:grid-cols-2 sm:gap-y-6 sm:gap-x-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-5 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center gap-y-2 sm:gap-y-6 sm:gap-x-2 sm:px-10 md:px-5 lg:px-10 xl:px-20">
             {playlists.map((edge) =>
               !edge.node ? null : (
                 <PlaylistItem

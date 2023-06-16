@@ -18,6 +18,11 @@ interface Props {
 }
 
 export default function ContentItem({ publish, setPOS, onOpenActions }: Props) {
+  const thumbnail =
+    publish?.thumbSource === "custom" && publish?.thumbnail
+      ? publish?.thumbnail
+      : publish?.playback?.thumbnail
+
   const [playing, setPlaying] = useState(false)
 
   const onMouseOn = useCallback(() => {
@@ -39,27 +44,37 @@ export default function ContentItem({ publish, setPOS, onOpenActions }: Props) {
   if (!publish) return null
 
   return (
-    <div className="relative w-full bg-white">
-      <div className="relative z-0 flex gap-x-2 sm:gap-x-4">
+    <div className="relative w-full md:max-w-[220px] lg:max-w-none bg-white">
+      <div className="relative z-0 flex md:flex-col lg:flex-row gap-x-2 sm:gap-x-4 md:gap-y-2 lg:gap-y-0">
         <Link href={`/watch/${publish.id}`}>
           <div
-            className="relative w-[180px] sm:w-[200px] lg:w-[240px] h-[110px] lg:h-[130px] bg-neutral-700 rounded-xl overflow-hidden"
+            className="relative w-[180px] sm:w-[200px] md:w-full lg:w-[240px] h-[110px] lg:h-[130px] bg-neutral-700 rounded-xl overflow-hidden"
             onMouseOver={onMouseOn}
             onMouseLeave={onMouseLeave}
           >
-            <VideoPlayer
-              playback={publish.playback || undefined}
-              controls={playing}
-              playing={playing}
-              thumbnail={
-                publish.kind === "Short"
-                  ? undefined
-                  : publish.thumbSource === "custom" && publish.thumbnail
-                  ? publish.thumbnail
-                  : publish.playback?.thumbnail
-              }
-              playIcon={<></>}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={thumbnail || ""}
+              alt={publish.title || ""}
+              className={`${
+                playing || !thumbnail ? "hidden" : "block"
+              } w-full h-full ${
+                publish?.kind === "Short" ? "object-contain" : "object-cover"
+              }`}
             />
+            <div
+              className={`${
+                !playing && thumbnail ? "hidden" : "block"
+              } w-full h-full`}
+            >
+              <VideoPlayer
+                playback={publish.playback || undefined}
+                controls={playing}
+                playing={playing}
+                thumbnail={publish.kind === "Short" ? undefined : thumbnail}
+                playIcon={<></>}
+              />
+            </div>
 
             {publish.playback && (
               <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
@@ -69,7 +84,7 @@ export default function ContentItem({ publish, setPOS, onOpenActions }: Props) {
           </div>
         </Link>
 
-        <div className="flex-grow mr-4">
+        <div className="flex-grow md:w-[90%] lg:w-auto mr-4 md:pl-2 lg:pl-0">
           <div>
             <Link href={`/watch/${publish.id}`}>
               <h6 className="text-base">
@@ -94,7 +109,7 @@ export default function ContentItem({ publish, setPOS, onOpenActions }: Props) {
       </div>
 
       <div
-        className="absolute -top-1 right-0 cursor-pointer py-2 px-1"
+        className="absolute -top-1 md:top-[110px] lg:-top-1 right-0 cursor-pointer py-2 px-1"
         onClick={openActionsModal}
       >
         <HiDotsVertical />
