@@ -282,6 +282,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
       creatorId
       thumbnail
       thumbSource
+      views
       creator {
         id
         name
@@ -621,6 +622,35 @@ export async function disLike({
       })
 
     return result?.disLikePublish
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * DisLike / Undo disLike publish
+ */
+export const COUNT_VIEW_MUTATION = gql`
+  mutation CountViews($publishId: String!) {
+    countViews(publishId: $publishId) {
+      status
+    }
+  }
+`
+export async function countViews(publishId: string) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+      })
+      .request<
+        MutationReturnType<"countViews">,
+        MutationArgsType<"countViews">
+      >(COUNT_VIEW_MUTATION, {
+        publishId,
+      })
+
+    return result?.countViews
   } catch (error) {
     throw error
   }

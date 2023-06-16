@@ -1,7 +1,7 @@
 "use client"
 
+import type { JSXElementConstructor, ReactElement } from "react"
 import Player from "react-player"
-import { JSXElementConstructor, ReactElement } from "react"
 
 import type { PlaybackLink } from "@/graphql/codegen/graphql"
 
@@ -11,6 +11,7 @@ interface Props {
   controls?: boolean
   thumbnail?: string
   playIcon?: ReactElement<any, string | JSXElementConstructor<any>> | undefined
+  onReady?: () => void
 }
 
 export default function VideoPlayer({
@@ -19,6 +20,7 @@ export default function VideoPlayer({
   controls = true,
   thumbnail,
   playIcon,
+  onReady,
 }: Props) {
   if (!playback) return null
 
@@ -34,6 +36,7 @@ export default function VideoPlayer({
       muted={true}
       playing={playing}
       playIcon={playIcon}
+      onReady={onReady}
     />
   )
 }

@@ -7,6 +7,7 @@ import {
   addToNewPlaylist,
   addToWatchLater,
   commentPublish,
+  countViews,
   disLike,
   disLikeComment,
   dontRecommend,
@@ -418,7 +419,7 @@ export async function dontRecommendStation(targetId: string) {
       },
     })
 
-    // Revalidate watch later page
+    // Revalidate page
     revalidatePath(`/`)
   } catch (error) {
     console.error(error)
@@ -427,6 +428,7 @@ export async function dontRecommendStation(targetId: string) {
 
 /**
  * @param publishId A publish id to be reported
+ * @param reason A reason to be reported
  */
 export async function reportPublish(publishId: string, reason: ReportReason) {
   try {
@@ -450,6 +452,23 @@ export async function reportPublish(publishId: string, reason: ReportReason) {
         reason,
       },
     })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+/**
+ * @param publishId A publish id to be counted
+ */
+export async function countPublishViews(publishId: string) {
+  try {
+    if (!publishId) throw new Error("Bad input")
+
+    await countViews(publishId)
+
+    // Revalidate watch page
+    revalidatePath(`/`)
+    revalidatePath(`/watch/[id]`)
   } catch (error) {
     console.error(error)
   }

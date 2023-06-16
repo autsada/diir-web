@@ -2,7 +2,7 @@ import React, { Suspense } from "react"
 import { redirect } from "next/navigation"
 import type { Metadata, ResolvingMetadata } from "next"
 
-import VideoPlayer from "@/components/VideoPlayer"
+import PlayerSection from "./PlayerSection"
 import ButtonLoader from "@/components/ButtonLoader"
 import Description from "./Description"
 import Avatar from "@/components/Avatar"
@@ -164,7 +164,10 @@ export default async function Watch({ params }: Props) {
           ) : (
             <div id="player" className="w-full h-full">
               <Suspense fallback={<ButtonLoader loading />}>
-                <VideoPlayer playback={publish.playback} playing={true} />
+                <PlayerSection
+                  publishId={publish.id}
+                  playback={publish.playback}
+                />
               </Suspense>
             </div>
           )}
@@ -206,7 +209,9 @@ export default async function Watch({ params }: Props) {
           </div>
 
           <div className="flex items-center gap-x-4 font-thin text-sm">
-            <p>{publish.views || 0} views</p>
+            <p>
+              {publish.views || 0} view{publish.views === 1 ? "" : "s"}
+            </p>
             <p>{calculateTimeElapsed(publish.createdAt)}</p>
           </div>
 

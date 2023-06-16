@@ -80,7 +80,7 @@ export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
             <Link href={`/watch/${publish.id}`}>
               <div className="flex items-center gap-x-4">
                 <p className="font-light text-textLight text-sm sm:text-base">
-                  {publish.views || 0} views
+                  {publish.views || 0} view{publish.views === 1 ? "" : "s"}
                 </p>
                 <p className="font-light text-textLight text-sm sm:text-base">
                   {calculateTimeElapsed(publish.createdAt)}

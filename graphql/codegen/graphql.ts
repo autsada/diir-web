@@ -420,6 +420,7 @@ export type Mutation = {
   cacheSession: WriteResult;
   calculateTips?: Maybe<CalculateTipsResult>;
   comment?: Maybe<WriteResult>;
+  countViews?: Maybe<WriteResult>;
   createAccount?: Maybe<Account>;
   createDraftPublish?: Maybe<CreateDraftPublishResult>;
   createStation?: Maybe<Station>;
@@ -480,6 +481,11 @@ export type MutationCalculateTipsArgs = {
 
 export type MutationCommentArgs = {
   input: CommentPublishInput;
+};
+
+
+export type MutationCountViewsArgs = {
+  publishId: Scalars['String']['input'];
 };
 
 
