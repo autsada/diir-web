@@ -22,6 +22,10 @@ interface Props {
 }
 
 export default function ContentItem({ publish, onOpenActions, setPOS }: Props) {
+  const thumbnail =
+    publish?.thumbSource === "custom" && publish?.thumbnail
+      ? publish?.thumbnail
+      : publish?.playback?.thumbnail
   const [playing, setPlaying] = useState(false)
 
   function onClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -49,25 +53,33 @@ export default function ContentItem({ publish, onOpenActions, setPOS }: Props) {
             onMouseOver={onMouseOn}
             onMouseLeave={onMouseLeave}
           >
-            <VideoPlayer
-              playback={publish.playback || undefined}
-              controls={playing}
-              playing={playing}
-              thumbnail={
-                publish.kind === "Short"
-                  ? undefined
-                  : publish.thumbSource === "custom" && publish.thumbnail
-                  ? publish.thumbnail
-                  : publish.playback?.thumbnail
-              }
-              playIcon={<></>}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={thumbnail || ""}
+              alt={publish.title || ""}
+              className={`${playing || !thumbnail ? "hidden" : "block"} ${
+                publish?.kind === "Short" ? "object-contain" : "object-cover"
+              }`}
             />
+            <div
+              className={`${
+                !playing && thumbnail ? "hidden" : "block"
+              } w-full h-full`}
+            >
+              <VideoPlayer
+                playback={publish.playback || undefined}
+                controls={playing}
+                playing={playing}
+                thumbnail={publish.kind === "Short" ? undefined : thumbnail}
+                playIcon={<></>}
+              />
 
-            {publish.playback && (
-              <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
-                {secondsToHourFormat(publish.playback?.duration)}
-              </div>
-            )}
+              {publish.playback && (
+                <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
+                  {secondsToHourFormat(publish.playback?.duration)}
+                </div>
+              )}
+            </div>
           </div>
         </Link>
 

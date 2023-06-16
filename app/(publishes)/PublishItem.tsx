@@ -69,13 +69,7 @@ export default function PublishItem({ publish, onOpenActions, setPOS }: Props) {
                 playback={publish.playback || undefined}
                 controls={playing}
                 playing={playing}
-                thumbnail={
-                  publish.kind === "Short"
-                    ? undefined
-                    : publish.thumbSource === "custom" && publish.thumbnail
-                    ? publish.thumbnail
-                    : publish.playback?.thumbnail
-                }
+                thumbnail={publish.kind === "Short" ? undefined : thumbnail}
                 playIcon={<></>}
               />
             </div>
