@@ -164,7 +164,7 @@ export default function ActionsModal({
         >
           <Item
             Icon={AiOutlineClockCircle}
-            text="Add to Watch Later"
+            text="Add to View Later"
             onClick={addToWatchLater}
           />
           <Item

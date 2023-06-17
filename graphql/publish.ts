@@ -510,7 +510,7 @@ export const FETCH_SHORTS_QUERY = gql`
     }
   }
 `
-export async function fetchShortsQuery(input: FetchShortsInput) {
+export async function fetchShorts(input: FetchShortsInput) {
   try {
     const result = await client
       .setHeaders({
@@ -518,6 +518,97 @@ export async function fetchShortsQuery(input: FetchShortsInput) {
       })
       .request<QueryReturnType<"fetchShorts">, QueryArgsType<"fetchShorts">>(
         FETCH_SHORTS_QUERY,
+        {
+          input,
+        }
+      )
+
+    return result?.fetchShorts
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Get short video by id
+ */
+export const GET_SHORT_QUERY = gql`
+  query GetShort($input: GetShortInput!) {
+    getShort(input: $input) {
+      item {
+        id
+        title
+        createdAt
+        views
+        visibility
+        thumbSource
+        thumbnail
+        primaryCategory
+        secondaryCategory
+        kind
+        creator {
+          id
+          name
+          displayName
+          image
+          defaultColor
+        }
+        playback {
+          id
+          videoId
+          duration
+          hls
+          dash
+          thumbnail
+        }
+      }
+      followingShorts {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          cursor
+          node {
+            id
+            title
+            createdAt
+            views
+            visibility
+            thumbSource
+            thumbnail
+            primaryCategory
+            secondaryCategory
+            kind
+            creator {
+              id
+              name
+              displayName
+              image
+              defaultColor
+            }
+            playback {
+              id
+              videoId
+              duration
+              hls
+              dash
+              thumbnail
+            }
+          }
+        }
+      }
+    }
+  }
+`
+export async function getShort(input: FetchShortsInput) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+      })
+      .request<QueryReturnType<"fetchShorts">, QueryArgsType<"fetchShorts">>(
+        GET_SHORT_QUERY,
         {
           input,
         }

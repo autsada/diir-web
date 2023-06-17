@@ -37,6 +37,7 @@ export type FetchStationPublishesInput =
 export type FetchPublishesByCatInput =
   NexusGenInputs["FetchPublishesByCatInput"]
 export type FetchShortsInput = NexusGenInputs["FetchShortsInput"]
+export type GetShortInput = NexusGenInputs["GetShortInput"]
 export type FetchWatchLaterInput = NexusGenInputs["FetchWatchLaterInput"]
 export type FetchMyPlaylistsInput = NexusGenInputs["FetchMyPlaylistsInput"]
 export type CheckPublishPlaylistsInput =

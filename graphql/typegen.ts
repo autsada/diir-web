@@ -198,6 +198,11 @@ export interface NexusGenInputs {
     // input type
     accountType: NexusGenEnums["AccountType"] // AccountType!
   }
+  GetShortInput: {
+    // input type
+    publishId: string // String!
+    requestorId?: string | null // String
+  }
   LikeCommentInput: {
     // input type
     accountId: string // String!
@@ -505,6 +510,11 @@ export interface NexusGenObjects {
     followerId: string // String!
     followingId: string // String!
   }
+  GetShortResponse: {
+    // root type
+    followingShorts?: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    item?: NexusGenRootTypes["Publish"] | null // Publish
+  }
   Like: {
     // root type
     createdAt: NexusGenScalars["DateTime"] // DateTime!
@@ -810,6 +820,11 @@ export interface NexusGenFieldTypes {
     following: NexusGenRootTypes["Station"] // Station!
     followingId: string // String!
   }
+  GetShortResponse: {
+    // field return type
+    followingShorts: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    item: NexusGenRootTypes["Publish"] | null // Publish
+  }
   Like: {
     // field return type
     createdAt: NexusGenScalars["DateTime"] // DateTime!
@@ -987,6 +1002,7 @@ export interface NexusGenFieldTypes {
     getBalance: string // String!
     getMyAccount: NexusGenRootTypes["Account"] | null // Account
     getPublishById: NexusGenRootTypes["Publish"] | null // Publish
+    getShort: NexusGenRootTypes["GetShortResponse"] | null // GetShortResponse
     getStationById: NexusGenRootTypes["Station"] | null // Station
     getStationByName: NexusGenRootTypes["Station"] | null // Station
   }
@@ -1204,6 +1220,11 @@ export interface NexusGenFieldTypeNames {
     following: "Station"
     followingId: "String"
   }
+  GetShortResponse: {
+    // field return type name
+    followingShorts: "FetchPublishesResponse"
+    item: "Publish"
+  }
   Like: {
     // field return type name
     createdAt: "DateTime"
@@ -1377,6 +1398,7 @@ export interface NexusGenFieldTypeNames {
     getBalance: "String"
     getMyAccount: "Account"
     getPublishById: "Publish"
+    getShort: "GetShortResponse"
     getStationById: "Station"
     getStationByName: "Station"
   }
@@ -1676,6 +1698,10 @@ export interface NexusGenArgTypes {
     getPublishById: {
       // args
       input: NexusGenInputs["QueryByIdInput"] // QueryByIdInput!
+    }
+    getShort: {
+      // args
+      input: NexusGenInputs["GetShortInput"] // GetShortInput!
     }
     getStationById: {
       // args

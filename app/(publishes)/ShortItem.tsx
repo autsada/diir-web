@@ -24,10 +24,12 @@ export default function ShortItem({ publish }: Props) {
     setPlaying(false)
   }, [])
 
+  if (!publish) return null
+
   return (
-    <Link href={`/shorts`}>
+    <Link href={`/shorts/${publish.id}`}>
       <div
-        className="h-[250px] w-[150px] sm:h-[300px] sm:w-[180px] md:h-[380px] md:w-[220px] flex items-center justify-center rounded-xl overflow-hidden bg-neutral-700 cursor-pointer"
+        className="relative h-[280px] w-[160px] sm:h-[300px] sm:w-[180px] md:h-[380px] md:w-[220px] flex items-center justify-center rounded-xl overflow-hidden bg-neutral-700 cursor-pointer"
         onMouseOver={onMouseOn}
         onMouseLeave={onMouseLeave}
       >
@@ -38,14 +40,14 @@ export default function ShortItem({ publish }: Props) {
           thumbnail={thumbnail}
           playIcon={<></>}
         />
-      </div>
-      <div className="mt-2 w-full">
-        <h6 className="text-base sm:text-lg">
-          {getPostExcerpt(publish.title || "", 60)}
-        </h6>
-        <p className="font-light text-textLight text-sm sm:text-base">
-          {publish.views || 0} view{publish.views === 1 ? "" : "s"}
-        </p>
+        <div className="absolute bottom-0 w-full py-1 px-2">
+          <h6 className="text-base sm:text-lg text-white">
+            {getPostExcerpt(publish.title || "", 40)}
+          </h6>
+          <p className="font-light text-sm sm:text-base text-white">
+            {publish.views || 0} view{publish.views === 1 ? "" : "s"}
+          </p>
+        </div>
       </div>
     </Link>
   )

@@ -3,7 +3,7 @@ import { getAccount } from "@/lib/server"
 import {
   fetchAllVideos,
   fetchMyPlaylists,
-  fetchShortsQuery,
+  fetchShorts,
   getStationById,
 } from "@/graphql"
 
@@ -23,7 +23,7 @@ export default async function Home() {
   const videosResult = await fetchAllVideos({ requestorId: station?.id })
 
   // Fetch short videos
-  const shortsResult = await fetchShortsQuery({
+  const shortsResult = await fetchShorts({
     cursor: null,
     requestorId: station?.id,
   })

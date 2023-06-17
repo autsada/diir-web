@@ -382,6 +382,17 @@ export type GetMyAccountInput = {
   accountType: AccountType;
 };
 
+export type GetShortInput = {
+  publishId: Scalars['String']['input'];
+  requestorId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GetShortResponse = {
+  __typename?: 'GetShortResponse';
+  followingShorts?: Maybe<FetchPublishesResponse>;
+  item?: Maybe<Publish>;
+};
+
 export type Like = {
   __typename?: 'Like';
   createdAt: Scalars['DateTime']['output'];
@@ -797,6 +808,7 @@ export type Query = {
   getBalance: Scalars['String']['output'];
   getMyAccount?: Maybe<Account>;
   getPublishById?: Maybe<Publish>;
+  getShort?: Maybe<GetShortResponse>;
   getStationById?: Maybe<Station>;
   getStationByName?: Maybe<Station>;
 };
@@ -884,6 +896,11 @@ export type QueryGetMyAccountArgs = {
 
 export type QueryGetPublishByIdArgs = {
   input: QueryByIdInput;
+};
+
+
+export type QueryGetShortArgs = {
+  input: GetShortInput;
 };
 
 
