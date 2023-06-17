@@ -18,19 +18,23 @@ import type {
   FetchPublishesResponse,
   FetchPlaylistsResponse,
   CheckPublishPlaylistsResponse,
+  Maybe,
 } from "@/graphql/codegen/graphql"
+import Shorts from "./Shorts"
 
 interface Props {
   isAuthenticated: boolean
   profile: Station | undefined
-  videosResult: FetchPublishesResponse
-  playlistsResult: FetchPlaylistsResponse | undefined
+  videosResult: Maybe<FetchPublishesResponse> | undefined
+  shortsResult: Maybe<FetchPublishesResponse> | undefined
+  playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
 }
 
 export default function Videos({
   isAuthenticated,
   profile,
   videosResult,
+  shortsResult,
   playlistsResult,
 }: Props) {
   const [loading, setLoading] = useState(false)
@@ -131,6 +135,13 @@ export default function Videos({
     setTargetPublish(undefined)
   }, [])
 
+  // if (!videosResult || videosResult?.edges?.length === 0)
+  //   return (
+  //     <div className="w-full py-10 text-center">
+  //       <h6>No videos found</h6>
+  //     </div>
+  //   )
+
   return (
     <>
       <div className="fixed z-10 top-[70px] left-0 sm:left-[116px] right-0 h-[40px] bg-white">
@@ -145,8 +156,11 @@ export default function Videos({
         </div>
       </div>
 
-      {/* Render videos by category */}
-      <>
+      <div className="py-1 pb-20 md:py-5 md:px-10 lg:px-24 xl:px-14">
+        {/* Short videos */}
+        <Shorts fetchResult={shortsResult} selectedTab={selectedCat} />
+
+        {/* Render videos by category */}
         <VideosByCat
           tab="All"
           selectedTab={selectedCat}
@@ -168,7 +182,7 @@ export default function Videos({
             setPOS={setPOS}
           />
         ))}
-      </>
+      </div>
 
       {/* Actions modal */}
       {actionsModalVisible && (

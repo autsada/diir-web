@@ -160,6 +160,11 @@ export interface NexusGenInputs {
     cursor?: string | null // String
     requestorId?: string | null // String
   }
+  FetchShortsInput: {
+    // input type
+    cursor?: string | null // String
+    requestorId?: string | null // String
+  }
   FetchStationPublishesInput: {
     // input type
     creatorId: string // String!
@@ -974,6 +979,7 @@ export interface NexusGenFieldTypes {
       | NexusGenRootTypes["FetchPreviewPlaylistsResponse"]
       | null // FetchPreviewPlaylistsResponse
     fetchPreviewWatchLater: NexusGenRootTypes["FetchWatchLaterResponse"] | null // FetchWatchLaterResponse
+    fetchShorts: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchStationPublishes: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchSuggestedVideos: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchVideosByCategory: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
@@ -1363,6 +1369,7 @@ export interface NexusGenFieldTypeNames {
     fetchPlaylistItems: "FetchPlaylistItemsResponse"
     fetchPreviewPlaylists: "FetchPreviewPlaylistsResponse"
     fetchPreviewWatchLater: "FetchWatchLaterResponse"
+    fetchShorts: "FetchPublishesResponse"
     fetchStationPublishes: "FetchPublishesResponse"
     fetchSuggestedVideos: "FetchPublishesResponse"
     fetchVideosByCategory: "FetchPublishesResponse"
@@ -1637,6 +1644,10 @@ export interface NexusGenArgTypes {
     fetchPreviewWatchLater: {
       // args
       input: NexusGenInputs["FetchWatchLaterInput"] // FetchWatchLaterInput!
+    }
+    fetchShorts: {
+      // args
+      input: NexusGenInputs["FetchShortsInput"] // FetchShortsInput!
     }
     fetchStationPublishes: {
       // args

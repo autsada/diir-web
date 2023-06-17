@@ -30,24 +30,30 @@ export type PlaylistOrderBy = NexusGenEnums["PlaylistOrderBy"]
 export type PublishOrderBy = NexusGenEnums["PublishOrderBy"]
 
 export type QueryByIdInput = NexusGenInputs["QueryByIdInput"]
-export type CacheSessionInput = NexusGenInputs["CacheSessionInput"]
-export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
 export type FetchMyPublishesInput = NexusGenInputs["FetchMyPublishesInput"]
 export type FetchPublishesInput = NexusGenInputs["FetchPublishesInput"]
 export type FetchStationPublishesInput =
   NexusGenInputs["FetchStationPublishesInput"]
 export type FetchPublishesByCatInput =
   NexusGenInputs["FetchPublishesByCatInput"]
-export type AddToWatchLaterInput = NexusGenInputs["AddToWatchLaterInput"]
-export type RemoveFromWatchLaterInput =
-  NexusGenInputs["RemoveFromWatchLaterInput"]
-export type RemoveAllWatchLaterInput =
-  NexusGenInputs["RemoveAllWatchLaterInput"]
+export type FetchShortsInput = NexusGenInputs["FetchShortsInput"]
 export type FetchWatchLaterInput = NexusGenInputs["FetchWatchLaterInput"]
 export type FetchMyPlaylistsInput = NexusGenInputs["FetchMyPlaylistsInput"]
 export type CheckPublishPlaylistsInput =
   NexusGenInputs["CheckPublishPlaylistsInput"]
 export type FetchPlaylistItemsInput = NexusGenInputs["FetchPlaylistItemsInput"]
+export type FetchDontRecommendsInput =
+  NexusGenInputs["FetchDontRecommendsInput"]
+export type FetchSuggestedPublishesInput =
+  NexusGenInputs["FetchSuggestedPublishesInput"]
+
+export type CacheSessionInput = NexusGenInputs["CacheSessionInput"]
+export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
+export type AddToWatchLaterInput = NexusGenInputs["AddToWatchLaterInput"]
+export type RemoveFromWatchLaterInput =
+  NexusGenInputs["RemoveFromWatchLaterInput"]
+export type RemoveAllWatchLaterInput =
+  NexusGenInputs["RemoveAllWatchLaterInput"]
 export type CreatePlayListInput = NexusGenInputs["CreatePlayListInput"]
 export type AddToPlaylistInput = NexusGenInputs["AddToPlaylistInput"]
 export type UpdatePlaylistsInput = NexusGenInputs["UpdatePlaylistsInput"]
@@ -56,8 +62,6 @@ export type DisplayedPlaylist = {
   list: Maybe<Playlist> | undefined
 }
 export type DontRecommendInput = NexusGenInputs["DontRecommendInput"]
-export type FetchDontRecommendsInput =
-  NexusGenInputs["FetchDontRecommendsInput"]
 export type ReportPublishInput = NexusGenInputs["ReportPublishInput"]
 export type LikePublishInput = NexusGenInputs["LikePublishInput"]
 export type TipAmount = 1 | 2 | 5 | 10 | 25 | 50 | 100 | 1000 | 2000
@@ -66,8 +70,6 @@ export type FetchCommentsByPublishIdInput =
 export type CommentPublishInput = NexusGenInputs["CommentPublishInput"]
 export type LikeCommentInput = NexusGenInputs["LikeCommentInput"]
 export type FollowInput = NexusGenInputs["FollowInput"]
-export type FetchSuggestedPublishesInput =
-  NexusGenInputs["FetchSuggestedPublishesInput"]
 export type UpdatePlaylistNameInput = NexusGenInputs["UpdatePlaylistNameInput"]
 export type UpdatePlaylistDescriptionInput =
   NexusGenInputs["UpdatePlaylistDescriptionInput"]

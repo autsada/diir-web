@@ -13,6 +13,7 @@ import type {
   FetchPublishesByCatInput,
   LikePublishInput,
   FetchStationPublishesInput,
+  FetchShortsInput,
 } from "./types"
 import { FetchSuggestedPublishesInput } from "./codegen/graphql"
 
@@ -460,6 +461,69 @@ export async function fetchStationPublishes(data: FetchStationPublishesInput) {
       })
 
     return result?.fetchStationPublishes
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Fetch short videos
+ */
+export const FETCH_SHORTS_QUERY = gql`
+  query FetchShorts($input: FetchShortsInput!) {
+    fetchShorts(input: $input) {
+      pageInfo {
+        count
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          title
+          createdAt
+          views
+          visibility
+          thumbSource
+          thumbnail
+          primaryCategory
+          secondaryCategory
+          kind
+          creator {
+            id
+            name
+            displayName
+            image
+            defaultColor
+          }
+          playback {
+            id
+            videoId
+            duration
+            hls
+            dash
+            thumbnail
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchShortsQuery(input: FetchShortsInput) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+      })
+      .request<QueryReturnType<"fetchShorts">, QueryArgsType<"fetchShorts">>(
+        FETCH_SHORTS_QUERY,
+        {
+          input,
+        }
+      )
+
+    return result?.fetchShorts
   } catch (error) {
     throw error
   }

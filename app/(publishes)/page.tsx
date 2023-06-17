@@ -1,6 +1,11 @@
 import Videos from "./Videos"
 import { getAccount } from "@/lib/server"
-import { fetchAllVideos, fetchMyPlaylists, getStationById } from "@/graphql"
+import {
+  fetchAllVideos,
+  fetchMyPlaylists,
+  fetchShortsQuery,
+  getStationById,
+} from "@/graphql"
 
 export default async function Home() {
   const data = await getAccount()
@@ -14,7 +19,14 @@ export default async function Home() {
       ? undefined
       : await getStationById(account?.defaultStation?.id)
 
-  let videosResult = await fetchAllVideos({ requestorId: station?.id })
+  // Fetch videos
+  const videosResult = await fetchAllVideos({ requestorId: station?.id })
+
+  // Fetch short videos
+  const shortsResult = await fetchShortsQuery({
+    cursor: null,
+    requestorId: station?.id,
+  })
 
   // Fetch user's playlists if user is authenticated
   const playlistsResult = !station
@@ -30,21 +42,15 @@ export default async function Home() {
         },
       })
 
-  if (!videosResult || videosResult?.edges?.length === 0)
-    return (
-      <div className="w-full py-10 text-center">
-        <h6>No videos found</h6>
-      </div>
-    )
-
   return (
-    <main>
+    <div className="mt-[40px] py-2 sm:px-4 sm:ml-[100px]">
       <Videos
         profile={station || undefined}
         isAuthenticated={!!account}
         videosResult={videosResult}
+        shortsResult={shortsResult}
         playlistsResult={playlistsResult || undefined}
       />
-    </main>
+    </div>
   )
 }

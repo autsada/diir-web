@@ -330,6 +330,11 @@ export type FetchPublishesResponse = {
   pageInfo: PageInfo;
 };
 
+export type FetchShortsInput = {
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  requestorId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type FetchStationPublishesInput = {
   creatorId: Scalars['String']['input'];
   cursor?: InputMaybe<Scalars['String']['input']>;
@@ -784,6 +789,7 @@ export type Query = {
   fetchPlaylistItems?: Maybe<FetchPlaylistItemsResponse>;
   fetchPreviewPlaylists?: Maybe<FetchPreviewPlaylistsResponse>;
   fetchPreviewWatchLater?: Maybe<FetchWatchLaterResponse>;
+  fetchShorts?: Maybe<FetchPublishesResponse>;
   fetchStationPublishes?: Maybe<FetchPublishesResponse>;
   fetchSuggestedVideos?: Maybe<FetchPublishesResponse>;
   fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
@@ -838,6 +844,11 @@ export type QueryFetchPreviewPlaylistsArgs = {
 
 export type QueryFetchPreviewWatchLaterArgs = {
   input: FetchWatchLaterInput;
+};
+
+
+export type QueryFetchShortsArgs = {
+  input: FetchShortsInput;
 };
 
 

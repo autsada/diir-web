@@ -4,13 +4,17 @@ import Mask from "@/components/Mask"
 import PublishItem from "./PublishItem"
 import ButtonLoader from "@/components/ButtonLoader"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
-import type { FetchPublishesResponse, Publish } from "@/graphql/codegen/graphql"
+import type {
+  Maybe,
+  FetchPublishesResponse,
+  Publish,
+} from "@/graphql/codegen/graphql"
 import type { PublishCategory } from "@/graphql/types"
 
 interface Props {
   tab: PublishCategory | "All"
   selectedTab: PublishCategory | "All"
-  fetchResult?: FetchPublishesResponse
+  fetchResult?: Maybe<FetchPublishesResponse> | undefined
   loading: boolean
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
   onOpenActions: (p: Publish) => void
@@ -100,17 +104,13 @@ export default function VideosByCat({
 
   return (
     <>
-      <div
-        className={`${
-          tab !== selectedTab ? "hidden" : "block"
-        } mt-[40px] py-2 sm:px-4 sm:ml-[100px]`}
-      >
+      <div className={`mt-10 ${tab !== selectedTab ? "hidden" : "block"}`}>
         {!loading && videos.length === 0 ? (
-          <div className="w-full py-10 text-center">
+          <div className="w-full text-center">
             <h6>No videos found</h6>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-2 sm:gap-y-4 md:gap-y-2 md:gap-x-4 justify-items-center py-1 pb-20 md:py-5 md:px-10 lg:px-24 xl:px-14 bg-white divide-y-[4px] sm:divide-y-0 divide-neutral-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-2 sm:gap-y-4 md:gap-y-2 md:gap-x-4 justify-items-center bg-white divide-y-[4px] sm:divide-y-0 divide-neutral-200">
             {videos.map((edge, i) => (
               <PublishItem
                 key={`${edge?.node?.id}-${tab}-${i}`}
