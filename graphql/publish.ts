@@ -14,6 +14,7 @@ import type {
   LikePublishInput,
   FetchStationPublishesInput,
   FetchShortsInput,
+  GetShortInput,
 } from "./types"
 import { FetchSuggestedPublishesInput } from "./codegen/graphql"
 
@@ -601,21 +602,22 @@ export const GET_SHORT_QUERY = gql`
     }
   }
 `
-export async function getShort(input: FetchShortsInput) {
+export async function getShort(input: GetShortInput) {
   try {
     const result = await client
       .setHeaders({
         "Content-Type": "application/json",
       })
-      .request<QueryReturnType<"fetchShorts">, QueryArgsType<"fetchShorts">>(
+      .request<QueryReturnType<"getShort">, QueryArgsType<"getShort">>(
         GET_SHORT_QUERY,
         {
           input,
         }
       )
 
-    return result?.fetchShorts
+    return result?.getShort
   } catch (error) {
+    console.log("error -->", error)
     throw error
   }
 }

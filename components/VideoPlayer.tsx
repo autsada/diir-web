@@ -12,6 +12,7 @@ interface Props {
   thumbnail?: string
   playIcon?: ReactElement<any, string | JSXElementConstructor<any>> | undefined
   onReady?: () => void
+  loop?: boolean
 }
 
 export default function VideoPlayer({
@@ -21,6 +22,7 @@ export default function VideoPlayer({
   thumbnail,
   playIcon,
   onReady,
+  loop = false,
 }: Props) {
   if (!playback) return null
 
@@ -37,6 +39,7 @@ export default function VideoPlayer({
       playing={playing}
       playIcon={playIcon}
       onReady={onReady}
+      loop={loop}
     />
   )
 }

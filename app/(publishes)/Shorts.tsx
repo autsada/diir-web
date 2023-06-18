@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 
 import { Maybe, FetchPublishesResponse } from "@/graphql/codegen/graphql"
@@ -26,6 +26,15 @@ export default function Shorts({ fetchResult, selectedTab }: Props) {
       setPageInfo(fetchResult.pageInfo)
     }
   }
+
+  useEffect(() => {
+    const els = document?.getElementsByTagName("video")
+    if (els.length > 0) {
+      for (let i = 0; i < els.length; i++) {
+        els[i].style.objectFit = "cover"
+      }
+    }
+  }, [])
 
   if (shorts.length === 0) return null
 
