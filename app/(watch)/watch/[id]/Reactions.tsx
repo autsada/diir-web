@@ -16,7 +16,6 @@ import type {
   FetchPlaylistsResponse,
   Maybe,
   Publish,
-  Station,
 } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -24,6 +23,7 @@ interface Props {
   isAuthenticated: boolean
   playlistsResult: FetchPlaylistsResponse | undefined
   publishPlaylistsData: Maybe<CheckPublishPlaylistsResponse> | undefined
+  withReactDescription?: boolean
 }
 
 export default function Reactions({
@@ -31,6 +31,7 @@ export default function Reactions({
   isAuthenticated,
   playlistsResult,
   publishPlaylistsData,
+  withReactDescription = true,
 }: Props) {
   const router = useRouter()
 
@@ -57,16 +58,29 @@ export default function Reactions({
         liked={!!publish?.liked}
         likesCount={publish?.likesCount}
         disLiked={!!publish?.disLiked}
+        withDescription={withReactDescription}
       />
-      <TipReaction isAuthenticated={isAuthenticated} publish={publish} />
-      <ShareReaction publishId={publish.id} title={publish.title || ""} />
+      <TipReaction
+        isAuthenticated={isAuthenticated}
+        publish={publish}
+        withDescription={withReactDescription}
+      />
+      <ShareReaction
+        publishId={publish.id}
+        title={publish.title || ""}
+        withDescription={withReactDescription}
+      />
       <SaveReaction
         publishId={publish?.id}
         isAuthenticated={isAuthenticated}
         playlistsResult={playlistsResult}
         publishPlaylistsData={publishPlaylistsData}
+        withDescription={withReactDescription}
       />
-      <ReportReaction publishId={publish?.id} />
+      <ReportReaction
+        publishId={publish?.id}
+        withDescription={withReactDescription}
+      />
     </>
   )
 }

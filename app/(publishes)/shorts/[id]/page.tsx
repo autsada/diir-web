@@ -26,7 +26,7 @@ export default async function Page({ params }: Props) {
   })
 
   return (
-    <div className="fixed z-50 top-0 sm:top-[70px] bottom-0 left-0 sm:left-[100px] right-0">
+    <div className="fixed z-50 top-0 sm:pt-[70px] bottom-0 left-0 sm:left-[100px] right-0">
       <ViewArea shortResult={shortResult} />
     </div>
   )

@@ -6,9 +6,13 @@ import ReportModal from "@/app/(publishes)/ReportModal"
 
 interface Props {
   publishId: string
+  withDescription?: boolean
 }
 
-export default function ReportReaction({ publishId }: Props) {
+export default function ReportReaction({
+  publishId,
+  withDescription = true,
+}: Props) {
   const [reportModalVisible, setReportModalVisible] = useState(false)
 
   const openReportModalVisible = useCallback(() => {
@@ -23,10 +27,10 @@ export default function ReportReaction({ publishId }: Props) {
     <>
       <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
         <Reaction
-          width={120}
           IconOutline={AiOutlineFlag}
           IconFill={AiFillFlag}
-          desc="Report"
+          description="Report"
+          withDescription={withDescription}
           isActive={false}
           onClick={openReportModalVisible}
         />

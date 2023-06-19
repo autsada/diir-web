@@ -15,6 +15,7 @@ interface Props {
   publishId: string
   playlistsResult: FetchPlaylistsResponse | undefined
   publishPlaylistsData: Maybe<CheckPublishPlaylistsResponse> | undefined
+  withDescription?: boolean
 }
 
 export default function SaveReaction({
@@ -22,6 +23,7 @@ export default function SaveReaction({
   isAuthenticated,
   playlistsResult,
   publishPlaylistsData,
+  withDescription = true,
 }: Props) {
   const [addToPlaylistsModalVisible, setAddToPlaylistsModalVisible] =
     useState(false)
@@ -65,10 +67,10 @@ export default function SaveReaction({
     <>
       <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
         <Reaction
-          width={100}
           IconOutline={AiOutlineFolderAdd}
           IconFill={AiFillFolderAdd}
-          desc="Save"
+          description="Save"
+          withDescription={withDescription}
           isActive={false}
           onClick={handleSavePublish}
         />

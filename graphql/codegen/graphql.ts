@@ -391,6 +391,7 @@ export type GetShortResponse = {
   __typename?: 'GetShortResponse';
   followingShorts?: Maybe<FetchPublishesResponse>;
   item?: Maybe<Publish>;
+  precedingShorts?: Maybe<FetchPublishesResponse>;
 };
 
 export type Like = {

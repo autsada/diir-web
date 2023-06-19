@@ -35,9 +35,7 @@ export default async function Page() {
       })
 
   return (
-    <div className="py-2 px-4 sm:px-8 sm:ml-[100px]">
-      <h6 className="text-base sm:text-lg lg:text-xl">Shorts</h6>
-
+    <div className="sm:ml-[100px]">
       <Shorts
         isAuthenticated={!!account}
         profile={station}

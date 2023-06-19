@@ -9,9 +9,14 @@ import type { Publish } from "@/graphql/codegen/graphql"
 interface Props {
   isAuthenticated: boolean
   publish: Publish
+  withDescription?: boolean
 }
 
-export default function TipReaction({ isAuthenticated, publish }: Props) {
+export default function TipReaction({
+  isAuthenticated,
+  publish,
+  withDescription = true,
+}: Props) {
   const [tipModalVisible, setTipModalVisible] = useState(false)
 
   const { onVisible: openAuthModal } = useAuthContext()
@@ -36,7 +41,8 @@ export default function TipReaction({ isAuthenticated, publish }: Props) {
         <Reaction
           IconOutline={AiOutlineDollarCircle}
           IconFill={AiFillDollarCircle}
-          desc="Tip"
+          description="Tip"
+          withDescription={withDescription}
           isActive={false}
           onClick={handleStartTip}
         />

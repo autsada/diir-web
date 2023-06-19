@@ -40,7 +40,7 @@ export default function ShortItem({ publish }: Props) {
           thumbnail={thumbnail}
           playIcon={<></>}
         />
-        <div className="absolute bottom-0 w-full py-1 px-2">
+        <div className="absolute top-0 w-full py-1 px-2">
           <h6 className="text-base sm:text-lg text-white">
             {getPostExcerpt(publish.title || "", 40)}
           </h6>

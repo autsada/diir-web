@@ -17,6 +17,7 @@ interface Props {
   liked: boolean
   likesCount: number
   disLiked: boolean
+  withDescription?: boolean
 }
 
 export default function LikeReaction({
@@ -25,6 +26,7 @@ export default function LikeReaction({
   liked,
   likesCount,
   disLiked,
+  withDescription = true,
 }: Props) {
   const [isPending, startTransition] = useTransition()
 
@@ -97,22 +99,26 @@ export default function LikeReaction({
   )
 
   return (
-    <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x">
-      <Reaction
-        width={80}
-        IconOutline={AiOutlineLike}
-        IconFill={AiFillLike}
-        desc={`${optimisticLikesCount}`}
-        isActive={optimisticLiked}
-        onClick={likeDebounce}
-      />
-      <Reaction
-        width={60}
-        IconOutline={AiOutlineDislike}
-        IconFill={AiFillDislike}
-        isActive={optimisticDisLiked}
-        onClick={disLikeDebounce}
-      />
-    </div>
+    <>
+      <div className="h-[40px] flex items-center justify-center rounded-full overflow-hidden">
+        <Reaction
+          IconOutline={AiOutlineLike}
+          IconFill={AiFillLike}
+          description={`${optimisticLikesCount}`}
+          withDescription={withDescription}
+          isActive={optimisticLiked}
+          onClick={likeDebounce}
+        />
+      </div>
+      <div className="h-[40px] flex items-center justify-center rounded-full overflow-hidden">
+        <Reaction
+          IconOutline={AiOutlineDislike}
+          IconFill={AiFillDislike}
+          withDescription={false}
+          isActive={optimisticDisLiked}
+          onClick={disLikeDebounce}
+        />
+      </div>
+    </>
   )
 }

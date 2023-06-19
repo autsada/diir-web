@@ -7,9 +7,14 @@ import ShareModal from "@/app/(publishes)/ShareModal"
 interface Props {
   publishId: string
   title: string
+  withDescription?: boolean
 }
 
-export default function ShareReaction({ publishId, title }: Props) {
+export default function ShareReaction({
+  publishId,
+  title,
+  withDescription = true,
+}: Props) {
   const [shareModalVisible, setShareModalVisible] = useState(false)
 
   const openShareModal = useCallback(() => {
@@ -44,10 +49,10 @@ export default function ShareReaction({ publishId, title }: Props) {
     <>
       <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
         <Reaction
-          width={110}
           IconOutline={AiOutlineShareAlt}
           IconFill={AiOutlineShareAlt}
-          desc="Share"
+          description="Share"
+          withDescription={withDescription}
           isActive={false}
           onClick={onStartShare}
         />

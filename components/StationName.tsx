@@ -3,6 +3,7 @@
 import React from "react"
 import Link from "next/link"
 
+import { getPostExcerpt } from "@/lib/client"
 import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -23,7 +24,7 @@ export default function StationName({ profile, fontSize = "base" }: Props) {
               : "text-base sm:text-lg"
           }
         >
-          {profile?.displayName || ""}
+          {getPostExcerpt(profile?.displayName || "", 8)}
         </h6>
         <span className="text-thin text-xs">|</span>
         <p
@@ -35,7 +36,7 @@ export default function StationName({ profile, fontSize = "base" }: Props) {
               : "text-lg"
           }`}
         >
-          @{profile?.name || ""}
+          @{getPostExcerpt(profile?.name || "", 8)}
         </p>
       </div>
     </Link>
