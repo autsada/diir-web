@@ -1,5 +1,5 @@
 /**
- * For use in the `ViewItem` which is a carousel item as it has a layout issue for the modal so we cannot reuse the `Reactions` component that we already have.
+ * For use in the `ViewModal` which is a carousel item as it has a layout issue on the modal so we cannot reuse the `Reactions` component that we already have.
  */
 
 import React, { useEffect } from "react"
@@ -13,35 +13,26 @@ import SaveReaction from "./SaveReaction"
 import ReportReaction from "./ReportReaction"
 import CommentsReaction from "./CommentReaction"
 import { db, publishesCollection } from "@/firebase/config"
-import type {
-  CheckPublishPlaylistsResponse,
-  FetchPlaylistsResponse,
-  Maybe,
-  Publish,
-} from "@/graphql/codegen/graphql"
+import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
   publish: Publish
   isAuthenticated: boolean
-  playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
-  publishPlaylistsData: Maybe<CheckPublishPlaylistsResponse> | undefined
   handleStartTip: () => void
   onStartShare: () => void
   handleSavePublish: () => Promise<void>
   openReportModal: () => void
-  openCommentsModal: () => void
+  commentAction: () => void
 }
 
 export default function ActionsForCarousel({
   publish,
   isAuthenticated,
-  playlistsResult,
-  publishPlaylistsData,
   handleStartTip,
   onStartShare,
   handleSavePublish,
   openReportModal,
-  openCommentsModal,
+  commentAction,
 }: Props) {
   const router = useRouter()
 
@@ -76,7 +67,10 @@ export default function ActionsForCarousel({
       <ShareReaction onStartShare={onStartShare} />
       <SaveReaction handleSavePublish={handleSavePublish} />
       <ReportReaction openReportModal={openReportModal} />
-      <CommentsReaction openCommentsModal={openCommentsModal} />
+      <CommentsReaction
+        commentAction={commentAction}
+        commentsCount={publish?.commentsCount}
+      />
     </>
   )
 }

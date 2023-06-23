@@ -1,83 +1,44 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useEffect } from "react"
 import { isMobile } from "react-device-detect"
 
 import ManageFollow from "@/app/(watch)/watch/[id]/ManageFollow"
 import Avatar from "@/components/Avatar"
 import VideoPlayer from "@/components/VideoPlayer"
 import ActionsForCarousel from "./ActionsForCarousel"
-import TipModal from "./TipModal"
-import ShareModal from "./ShareModal"
-import AddToPlaylistsModal from "./AddToPlaylistsModal"
-import ReportModal from "./ReportModal"
-import { useAuthContext } from "@/context/AuthContext"
 import { getPostExcerpt } from "@/lib/client"
 import { useExpandContent } from "@/hooks/useExpandContent"
-import type {
-  CheckPublishPlaylistsResponse,
-  FetchPlaylistsResponse,
-  Maybe,
-  Publish,
-  Station,
-} from "@/graphql/codegen/graphql"
+import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
-  isAuthenticated: boolean
-  profile: Maybe<Station> | undefined
-  publish: Publish
-  playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
   isSelected?: boolean
   isPrevious?: boolean
-  setIsModalOpened: React.Dispatch<React.SetStateAction<boolean>>
+  isAuthenticated: boolean
+  publish: Publish
+  handleStartTip: () => void
+  onStartShare: () => void
+  handleSavePublish: () => Promise<void>
+  openReportModal: () => void
+  openCommentsModal: () => void
 }
 
 export default function ViewItem({
-  isAuthenticated,
-  profile,
-  publish,
-  playlistsResult,
   isSelected,
-  setIsModalOpened,
+  isAuthenticated,
+  publish,
+  handleStartTip,
+  onStartShare,
+  handleSavePublish,
+  openReportModal,
+  openCommentsModal,
 }: Props) {
   const playback = publish.playback
   const description = publish.description || ""
-
-  const [publishPlaylistsData, setPublishPlaylistsData] =
-    useState<CheckPublishPlaylistsResponse>()
-  const [tipModalVisible, setTipModalVisible] = useState(false)
-  const [shareModalVisible, setShareModalVisible] = useState(false)
-  const [addToPlaylistsModalVisible, setAddToPlaylistsModalVisible] =
-    useState(false)
-  const [prevPlaylists, setPrevPlaylists] = useState(playlistsResult?.edges)
-  const [playlists, setPlaylists] = useState(playlistsResult?.edges || [])
-  // When playlists result changed
-  if (playlistsResult?.edges !== prevPlaylists) {
-    setPrevPlaylists(playlistsResult?.edges)
-    setPlaylists(playlistsResult?.edges || [])
-  }
-
-  const [prevPlaylistsPageInfo, setPrevPlaylistsPageInfo] = useState(
-    playlistsResult?.pageInfo
-  )
-  const [playlistsPageInfo, setPlaylistsPageInfo] = useState(
-    playlistsResult?.pageInfo
-  )
-  // When playlists page info changed
-  if (playlistsResult?.pageInfo !== prevPlaylistsPageInfo) {
-    setPrevPlaylistsPageInfo(playlistsResult?.pageInfo)
-    setPlaylistsPageInfo(playlistsResult?.pageInfo)
-  }
-
-  const [reportModalVisible, setReportModalVisible] = useState(false)
-  const [commentsModalVisible, setCommentsModalVisible] = useState(false)
-
-  const { onVisible: openAuthModal } = useAuthContext()
 
   const initialDisplayed = 200
   const { displayedContent, expandContent, shrinkContent } = useExpandContent(
     description,
     initialDisplayed
   ) // For displaying description
-  const containerRef = useRef<HTMLDivElement>(null)
 
   // Set video el style to cover
   useEffect(() => {
@@ -89,131 +50,14 @@ export default function ViewItem({
     }
   }, [])
 
-  // Close modals when the item is not selected
-  useEffect(() => {
-    if (!isSelected) {
-      setTipModalVisible(false)
-      setShareModalVisible(false)
-      setAddToPlaylistsModalVisible(false)
-    }
-  }, [isSelected])
-
-  const fetchPublishPlaylistData = useCallback(async () => {
-    try {
-      if (!publish || !isAuthenticated || !profile) return
-
-      // Call the api route to check if the publish already add to any user's playlists
-      const res = await fetch(`/library/playlists/publish`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ publishId: publish.id }),
-      })
-      const data = (await res.json()) as {
-        result: CheckPublishPlaylistsResponse
-      }
-      setPublishPlaylistsData(data.result)
-    } catch (error) {
-      console.error(error)
-    }
-  }, [publish, isAuthenticated, profile, setPublishPlaylistsData])
-  // Fetch publish playlist data
-  useEffect(() => {
-    fetchPublishPlaylistData()
-  }, [fetchPublishPlaylistData])
-
-  const handleStartTip = useCallback(() => {
-    if (!publish?.id) return
-
-    if (!isAuthenticated) {
-      openAuthModal()
-    } else {
-      setTipModalVisible(true)
-      setIsModalOpened(true)
-    }
-  }, [publish, isAuthenticated, openAuthModal, setIsModalOpened])
-
-  const closeTipModal = useCallback(() => {
-    setTipModalVisible(false)
-    setIsModalOpened(false)
-  }, [setIsModalOpened])
-
-  const openShareModal = useCallback(() => {
-    setShareModalVisible(true)
-    setIsModalOpened(true)
-  }, [setIsModalOpened])
-
-  const closeShareModal = useCallback(() => {
-    setShareModalVisible(false)
-    setIsModalOpened(false)
-  }, [setIsModalOpened])
-
-  const onStartShare = useCallback(async () => {
-    if (typeof window === "undefined" || !publish) return
-
-    const shareData = {
-      title: publish.title || "",
-      text: publish.title || "",
-      url: `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/watch/${publish.id}`,
-    }
-
-    if (navigator.share && navigator.canShare(shareData)) {
-      try {
-        await navigator.share(shareData)
-      } catch (error) {
-        console.error(error)
-      }
-    } else {
-      openShareModal()
-    }
-  }, [publish, openShareModal])
-
-  const handleSavePublish = useCallback(async () => {
-    if (!publish) return
-
-    if (!isAuthenticated) {
-      openAuthModal()
-    } else {
-      setAddToPlaylistsModalVisible(true)
-      setIsModalOpened(true)
-    }
-  }, [publish, isAuthenticated, openAuthModal, setIsModalOpened])
-
-  const closeAddToPlaylistsModal = useCallback(() => {
-    setAddToPlaylistsModalVisible(false)
-    setIsModalOpened(false)
-  }, [setIsModalOpened])
-
-  const openReportModal = useCallback(() => {
-    setReportModalVisible(true)
-    setIsModalOpened(true)
-  }, [])
-
-  const closeReportModal = useCallback(() => {
-    setReportModalVisible(false)
-    setIsModalOpened(false)
-  }, [])
-
-  const openCommentsModal = useCallback(() => {
-    setCommentsModalVisible(true)
-    setIsModalOpened(true)
-  }, [])
-
-  const closeCommentsModal = useCallback(() => {
-    setCommentsModalVisible(false)
-    setIsModalOpened(false)
-  }, [])
-
   if (!playback) return null
 
   return (
     <div
       id={publish.id}
-      ref={containerRef}
       className="relative w-full h-[100vh] flex items-center justify-center"
     >
-      <div className="lg:hidden relative w-full h-full bg-black">
+      <div className="relative w-full h-full bg-black">
         <VideoPlayer
           playback={playback}
           playing={isSelected}
@@ -265,53 +109,15 @@ export default function ViewItem({
             <ActionsForCarousel
               isAuthenticated={isAuthenticated}
               publish={publish}
-              playlistsResult={playlistsResult}
-              publishPlaylistsData={publishPlaylistsData}
               handleStartTip={handleStartTip}
               onStartShare={onStartShare}
               handleSavePublish={handleSavePublish}
               openReportModal={openReportModal}
-              openCommentsModal={openCommentsModal}
+              commentAction={openCommentsModal}
             />
           </div>
         </div>
       </div>
-
-      {/* Tip modal */}
-      {tipModalVisible && publish && (
-        <TipModal
-          publishId={publish?.id}
-          closeModal={closeTipModal}
-          creator={publish.creator}
-        />
-      )}
-
-      {/* Share modal */}
-      {shareModalVisible && publish && (
-        <ShareModal
-          publishId={publish.id}
-          title={publish.title || ""}
-          closeModal={closeShareModal}
-        />
-      )}
-
-      {/* Add to playlist modal */}
-      {addToPlaylistsModalVisible && publishPlaylistsData && publish && (
-        <AddToPlaylistsModal
-          closeModal={closeAddToPlaylistsModal}
-          publishId={publish.id}
-          playlists={playlists}
-          setPlaylists={setPlaylists}
-          playlistsPageInfo={playlistsPageInfo}
-          setPlaylistsPageInfo={setPlaylistsPageInfo}
-          publishPlaylistsData={publishPlaylistsData}
-        />
-      )}
-
-      {/* Report modal */}
-      {reportModalVisible && publish && (
-        <ReportModal publishId={publish.id} closeModal={closeReportModal} />
-      )}
     </div>
   )
 }
