@@ -23,7 +23,13 @@ interface Props {
   isAuthenticated: boolean
   playlistsResult: FetchPlaylistsResponse | undefined
   publishPlaylistsData: Maybe<CheckPublishPlaylistsResponse> | undefined
-  withReactDescription?: boolean
+  withLikeDescription?: boolean
+  likeBtnVerticalLayout?: boolean
+  likeDescriptionColor?: string
+  withTipDescription?: boolean
+  withShareDescription?: boolean
+  withSaveDescription?: boolean
+  withReportDescription?: boolean
 }
 
 export default function Reactions({
@@ -31,7 +37,13 @@ export default function Reactions({
   isAuthenticated,
   playlistsResult,
   publishPlaylistsData,
-  withReactDescription = true,
+  withLikeDescription = true,
+  likeBtnVerticalLayout,
+  likeDescriptionColor,
+  withTipDescription = true,
+  withShareDescription = true,
+  withSaveDescription = true,
+  withReportDescription = true,
 }: Props) {
   const router = useRouter()
 
@@ -58,28 +70,31 @@ export default function Reactions({
         liked={!!publish?.liked}
         likesCount={publish?.likesCount}
         disLiked={!!publish?.disLiked}
-        withDescription={withReactDescription}
+        withDescription={withLikeDescription}
+        buttonWith="w-[80px]"
+        verticalLayout={likeBtnVerticalLayout}
+        descriptionColor={likeDescriptionColor}
       />
       <TipReaction
         isAuthenticated={isAuthenticated}
         publish={publish}
-        withDescription={withReactDescription}
+        withDescription={withTipDescription}
       />
       <ShareReaction
         publishId={publish.id}
         title={publish.title || ""}
-        withDescription={withReactDescription}
+        withDescription={withShareDescription}
       />
       <SaveReaction
         publishId={publish?.id}
         isAuthenticated={isAuthenticated}
         playlistsResult={playlistsResult}
         publishPlaylistsData={publishPlaylistsData}
-        withDescription={withReactDescription}
+        withDescription={withSaveDescription}
       />
       <ReportReaction
         publishId={publish?.id}
-        withDescription={withReactDescription}
+        withDescription={withReportDescription}
       />
     </>
   )

@@ -18,6 +18,9 @@ interface Props {
   likesCount: number
   disLiked: boolean
   withDescription?: boolean
+  buttonWith?: string // w-[100px] for exp
+  verticalLayout?: boolean
+  descriptionColor?: string // text-white for exp
 }
 
 export default function LikeReaction({
@@ -27,6 +30,9 @@ export default function LikeReaction({
   likesCount,
   disLiked,
   withDescription = true,
+  buttonWith,
+  verticalLayout = false,
+  descriptionColor,
 }: Props) {
   const [isPending, startTransition] = useTransition()
 
@@ -100,15 +106,29 @@ export default function LikeReaction({
 
   return (
     <>
-      <div className="h-[40px] flex items-center justify-center rounded-full overflow-hidden">
-        <Reaction
-          IconOutline={AiOutlineLike}
-          IconFill={AiFillLike}
-          description={`${optimisticLikesCount}`}
-          withDescription={withDescription}
-          isActive={optimisticLiked}
-          onClick={likeDebounce}
-        />
+      <div>
+        <div
+          className={`h-[40px] flex items-center justify-center rounded-full overflow-hidden bg-red-300`}
+        >
+          <Reaction
+            IconOutline={AiOutlineLike}
+            IconFill={AiFillLike}
+            description={`${optimisticLikesCount || ""}`}
+            withDescription={verticalLayout ? false : withDescription}
+            isActive={optimisticLiked}
+            onClick={likeDebounce}
+            width={verticalLayout ? undefined : buttonWith}
+          />
+        </div>
+        {verticalLayout && (
+          <div
+            className={`w-full text-center font-light text-xs sm:text-sm ${
+              descriptionColor ? descriptionColor : "text-textRegular"
+            }`}
+          >
+            {optimisticLikesCount || ""}
+          </div>
+        )}
       </div>
       <div className="h-[40px] flex items-center justify-center rounded-full overflow-hidden">
         <Reaction

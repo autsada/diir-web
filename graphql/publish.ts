@@ -483,6 +483,7 @@ export const FETCH_SHORTS_QUERY = gql`
         node {
           id
           title
+          description
           createdAt
           views
           visibility
@@ -553,6 +554,7 @@ export const GET_SHORT_QUERY = gql`
           node {
             id
             title
+            description
             createdAt
             views
             visibility

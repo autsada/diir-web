@@ -9,6 +9,7 @@ interface Props {
   withDescription: boolean
   isActive?: boolean
   onClick: () => void
+  width?: string // w-[100px] for exp
 }
 
 export default function Reaction({
@@ -19,10 +20,13 @@ export default function Reaction({
   withDescription,
   isActive,
   onClick,
+  width,
 }: Props) {
   return (
     <div
-      className="relative h-full w-max px-4 flex items-center gap-x-2 cursor-pointer bg-gray-100 hover:bg-gray-200"
+      className={`relative h-full ${
+        !width ? "w-max" : width
+      } px-4 flex items-center justify-center gap-x-2 cursor-pointer bg-gray-100 hover:bg-gray-200`}
       onClick={onClick}
     >
       <div className="h-full flex items-center justify-center">
@@ -30,7 +34,7 @@ export default function Reaction({
       </div>
 
       {description && withDescription && (
-        <div className="h-full font-semibold text-sm sm:text-base flex items-center justify-center">
+        <div className="h-full text-xs sm:text-sm flex items-center justify-center">
           {description}
         </div>
       )}

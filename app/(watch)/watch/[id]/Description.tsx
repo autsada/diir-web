@@ -33,10 +33,10 @@ export default function Description({ createdAt, description }: Props) {
           </span>
         )}
       </p>
-      {description.length > description.length &&
+      {description.length > initialDisplayed &&
         description.length === displayedContent.length && (
           <p
-            className="mt-2 font-semibold cursor-pointer"
+            className="mt-2 text-sm font-semibold cursor-pointer"
             onClick={shrinkContent}
           >
             Show less

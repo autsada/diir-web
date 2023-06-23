@@ -1,5 +1,4 @@
 import React from "react"
-import Image from "next/image"
 import Link from "next/link"
 
 import type { Station } from "@/graphql/codegen/graphql"
@@ -53,7 +52,8 @@ export default function Avatar({
             </div>
           )
         ) : (
-          <Image
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={profile.image}
             alt={profile.displayName || ""}
             width={width}
@@ -87,7 +87,8 @@ export default function Avatar({
           </div>
         )
       ) : (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={profile.image}
           alt={profile.displayName || ""}
           width={width}

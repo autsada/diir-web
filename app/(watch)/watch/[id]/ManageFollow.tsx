@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useTransition, useMemo } from "react"
 import Link from "next/link"
 import _ from "lodash"
+import { AiOutlinePlus, AiOutlineCheck } from "react-icons/ai"
 
 import ConfirmModal from "@/components/ConfirmModal"
 import { useAuthContext } from "@/context/AuthContext"
@@ -14,6 +15,7 @@ interface Props {
   follow: Station
   ownerHref: string
   ownerLinkText: string
+  useIconStyle?: boolean
 }
 
 export default function ManageFollow({
@@ -21,6 +23,7 @@ export default function ManageFollow({
   follow,
   ownerHref,
   ownerLinkText,
+  useIconStyle = false,
 }: Props) {
   const isOwner = follow?.isOwner
   const followerId = follow?.id
@@ -86,7 +89,24 @@ export default function ManageFollow({
 
   if (!follow) return null
 
-  return (
+  return useIconStyle ? (
+    <>
+      {!isOwner && (
+        <div
+          className={`w-[20px] h-[20px] mx-auto flex items-center justify-center ${
+            !optimisticFollowing ? "bg-orangeBase" : "bg-blueBase"
+          } rounded-full cursor-pointer`}
+          onClick={isPending ? undefined : followDebounce}
+        >
+          {!optimisticFollowing ? (
+            <AiOutlinePlus size={12} className="text-white" />
+          ) : (
+            <AiOutlineCheck size={12} className="text-white" />
+          )}
+        </div>
+      )}
+    </>
+  ) : (
     <>
       {isOwner ? (
         <Link href={ownerHref}>
