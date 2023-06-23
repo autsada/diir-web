@@ -1,19 +1,17 @@
 // For mobile view only
-import React, { useCallback, useRef, useEffect, useState } from "react"
+import React, { useCallback, useState } from "react"
 import { MdKeyboardBackspace } from "react-icons/md"
 import { Carousel } from "react-responsive-carousel"
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 import { isMobile } from "react-device-detect"
 
+import ViewItem from "./ViewItem"
 import type {
-  PageInfo,
   PublishEdge,
-  Publish,
   Maybe,
   FetchPlaylistsResponse,
   Station,
 } from "@/graphql/codegen/graphql"
-import ViewItem from "./ViewItem"
 
 interface Props {
   isAuthenticated: boolean
@@ -36,7 +34,8 @@ export default function ViewModal({
 }: Props) {
   const activeIndex = items.findIndex((item) => item.node?.id === activeId)
 
-  const containerRef = useRef<HTMLDivElement>(null)
+  // Use this state to disable swipe when a modal is opened
+  const [isModalOpened, setIsModalOpened] = useState(false)
 
   const onSlideChange = useCallback(
     (index: number, item: React.ReactNode) => {
@@ -184,30 +183,30 @@ export default function ViewModal({
             return <item.type {...item.props} {...options} />
           }}
           onChange={onSlideChange}
-          renderArrowPrev={(onClick) => {
-            return (
-              <button
-                id="prev-page"
-                type="button"
-                className="hidden"
-                onClick={onClick}
-              >
-                Prev
-              </button>
-            )
-          }}
-          renderArrowNext={(onClick) => {
-            return (
-              <button
-                id="next-page"
-                type="button"
-                className="hidden"
-                onClick={onClick}
-              >
-                Next
-              </button>
-            )
-          }}
+          // renderArrowPrev={(onClick) => {
+          //   return (
+          //     <button
+          //       id="prev-page"
+          //       type="button"
+          //       className="hidden"
+          //       onClick={onClick}
+          //     >
+          //       Prev
+          //     </button>
+          //   )
+          // }}
+          // renderArrowNext={(onClick) => {
+          //   return (
+          //     <button
+          //       id="next-page"
+          //       type="button"
+          //       className="hidden"
+          //       onClick={onClick}
+          //     >
+          //       Next
+          //     </button>
+          //   )
+          // }}
         >
           {items
             .filter((edge) => !!edge.node)
@@ -218,11 +217,11 @@ export default function ViewModal({
                 profile={profile}
                 playlistsResult={playlistsResult}
                 publish={edge.node!}
+                setIsModalOpened={setIsModalOpened}
               />
             ))}
         </Carousel>
       )}
-      {/* </div> */}
     </div>
   )
 }

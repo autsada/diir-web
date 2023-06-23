@@ -4,7 +4,7 @@ import React, { useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { MdKeyboardBackspace } from "react-icons/md"
 
-export default function ContentSection() {
+export default function Content() {
   const router = useRouter()
 
   const goBack = useCallback(() => {
@@ -12,12 +12,15 @@ export default function ContentSection() {
   }, [router])
 
   return (
-    <div className="relative">
+    <div className="fixed z-50 inset-0 bg-black">
       <div
-        className="absolute top-4 left-4 px-2 cursor-pointer"
+        className="fixed z-50 top-8 left-4 p-2 cursor-pointer bg-neutral-400 rounded-full"
         onClick={goBack}
       >
         <MdKeyboardBackspace color="white" size={25} />
+      </div>
+      <div className="w-full h-full flex">
+        <div></div>
       </div>
     </div>
   )

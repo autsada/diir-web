@@ -2,6 +2,6 @@
 
 import React, { useCallback } from "react"
 
-export default function CommentsSection() {
+export default function Comments() {
   return <div className="">Comments</div>
 }

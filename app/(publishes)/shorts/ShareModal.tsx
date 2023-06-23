@@ -22,7 +22,7 @@ import {
   WhatsappShareButton,
 } from "react-share"
 
-import ModalWrapper from "@/components/ModalWrapper"
+import CustomModalWrapper from "./CustomModalWrapper"
 import CloseButton from "@/components/CloseButton"
 
 interface Props {
@@ -62,7 +62,7 @@ export default function ShareModal({ publishId, title, closeModal }: Props) {
   }
 
   return (
-    <ModalWrapper visible>
+    <CustomModalWrapper visible closeModal={closeModal}>
       <div className="fixed z-10 inset-0" onClick={closeModal}></div>
       <div className="relative z-20 py-5 w-[600px] max-w-[90%] text-center bg-white rounded-xl overflow-hidden">
         <div className="px-4 sm:px-10 flex items-center justify-between gap-x-5">
@@ -195,6 +195,6 @@ export default function ShareModal({ publishId, title, closeModal }: Props) {
           </p>
         </div>
       </div>
-    </ModalWrapper>
+    </CustomModalWrapper>
   )
 }
