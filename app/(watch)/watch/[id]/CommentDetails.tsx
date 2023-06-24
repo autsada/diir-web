@@ -4,8 +4,10 @@ import CommentBaseItem from "./CommentBaseItem"
 import ButtonLoader from "@/components/ButtonLoader"
 import CommentBox from "./CommentBox"
 import SubComments from "./SubComments"
+import Mask from "@/components/Mask"
 import { useAuthContext } from "@/context/AuthContext"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
+import { wait } from "@/lib/helpers"
 import { commentOnPublish } from "./actions"
 import type {
   FetchCommentsResponse,
@@ -29,6 +31,10 @@ interface Props {
   openSubComments: (c: Comment) => void
   activeComment: Comment | undefined
   fetchCommentsSortBy?: CommentsOrderBy
+  reloadComments?: (
+    publishId: string,
+    orderBy?: CommentsOrderBy
+  ) => Promise<void>
 }
 
 export default function CommentDetails({
@@ -43,15 +49,18 @@ export default function CommentDetails({
   openSubComments,
   activeComment,
   fetchCommentsSortBy,
+  reloadComments,
 }: Props) {
   const [commentsLoading, setCommentsLoading] = useState(false)
 
   const { onVisible: openAuthModal } = useAuthContext()
   const [isPending, startTransition] = useTransition()
 
-  const confirmComment = useCallback(() => {
+  const confirmComment = useCallback(async () => {
     if (!publishId) return null
-    const el = document.getElementById(publishId) as HTMLTextAreaElement
+    const el = document.getElementById(
+      `${publishId}-comment-box`
+    ) as HTMLTextAreaElement
     if (!el) return null
 
     const content = el.value
@@ -60,12 +69,21 @@ export default function CommentDetails({
     startTransition(() => commentOnPublish(content, publishId))
     el.value = ""
 
+    // Reload comments
+    // Wait 1000 ms before loading
+    if (reloadComments) {
+      await wait(1000)
+      reloadComments(publishId, fetchCommentsSortBy)
+    }
+
     return "Ok"
-  }, [publishId])
+  }, [publishId, reloadComments, fetchCommentsSortBy])
 
   const clearComment = useCallback(() => {
     if (!publishId) return
-    const el = document.getElementById(publishId) as HTMLTextAreaElement
+    const el = document.getElementById(
+      `${publishId}-comment-box`
+    ) as HTMLTextAreaElement
     if (!el) return
 
     el.value = ""
@@ -115,13 +133,15 @@ export default function CommentDetails({
             comment={activeComment}
             isAuthenticated={isAuthenticated}
             profile={profile}
+            reloadComments={reloadComments}
+            fetchCommentsSortBy={fetchCommentsSortBy}
           />
         </div>
       ) : (
         <>
           {isAuthenticated ? (
             <CommentBox
-              inputId={publishId}
+              inputId={`${publishId}-comment-box`}
               profile={profile}
               onSubmit={confirmComment}
               clearComment={clearComment}
@@ -149,6 +169,8 @@ export default function CommentDetails({
                   publishId={publishId}
                   comment={edge.node}
                   openSubComments={openSubComments}
+                  reloadComments={reloadComments}
+                  fetchCommentsSortBy={fetchCommentsSortBy}
                 />
               ))}
 
@@ -167,6 +189,9 @@ export default function CommentDetails({
           </div>
         </>
       )}
+
+      {/* Prevent user interactions while loading */}
+      {isPending && <Mask />}
     </div>
   )
 }

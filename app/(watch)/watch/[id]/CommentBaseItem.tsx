@@ -2,6 +2,7 @@ import React from "react"
 
 import CommentItem from "./CommentItem"
 import type { Comment, Maybe, Station } from "@/graphql/codegen/graphql"
+import type { CommentsOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -9,6 +10,11 @@ interface Props {
   publishId: string
   comment: Maybe<Comment> | undefined
   openSubComments: (c: Comment) => void
+  reloadComments?: (
+    publishId: string,
+    orderBy?: CommentsOrderBy
+  ) => Promise<void>
+  fetchCommentsSortBy?: CommentsOrderBy
 }
 
 export default function CommentBaseItem({
@@ -17,6 +23,8 @@ export default function CommentBaseItem({
   publishId,
   comment,
   openSubComments,
+  reloadComments,
+  fetchCommentsSortBy,
 }: Props) {
   if (!comment) return null
 
@@ -27,6 +35,8 @@ export default function CommentBaseItem({
         profile={profile}
         comment={comment}
         publishId={publishId}
+        reloadComments={reloadComments}
+        fetchCommentsSortBy={fetchCommentsSortBy}
       />
 
       {/* Comments */}

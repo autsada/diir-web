@@ -118,7 +118,7 @@ export default function CommentsHeader({
 
   return (
     <>
-      <div className="h-[30px] flex items-center gap-x-4">
+      <div className="h-[30px] flex items-center gap-x-4 bg-white">
         {!subCommentsVisible ? (
           <>
             <div className="h-full flex items-center gap-x-2">

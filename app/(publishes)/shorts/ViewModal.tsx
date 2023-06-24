@@ -9,6 +9,7 @@ import TipModal from "@/app/(watch)/watch/[id]/TipModal"
 import ShareModal from "../ShareModal"
 import AddToPlaylistsModal from "@/app/(watch)/watch/[id]/AddToPlaylistsModal"
 import ReportModal from "../ReportModal"
+import CommentsModal from "@/app/(watch)/watch/[id]/CommentsModal"
 import { useAuthContext } from "@/context/AuthContext"
 import type {
   PublishEdge,
@@ -17,7 +18,12 @@ import type {
   Station,
   Publish,
   CheckPublishPlaylistsResponse,
+  PageInfo,
+  CommentEdge,
+  FetchCommentsResponse,
+  Comment,
 } from "@/graphql/codegen/graphql"
+import type { CommentsOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -69,6 +75,12 @@ export default function ViewModal({
     setPrevPlaylistsPageInfo(playlistsResult?.pageInfo)
     setPlaylistsPageInfo(playlistsResult?.pageInfo)
   }
+
+  const [commentPageInfo, setCommentPageInfo] = useState<PageInfo>()
+  const [commentEdges, setCommentEdges] = useState<CommentEdge[]>([])
+  const [commentsLoading, setCommentsLoading] = useState(false)
+  const [subCommentsVisible, setSubCommentsVisible] = useState(false)
+  const [activeComment, setActiveComment] = useState<Comment>()
 
   const { onVisible: openAuthModal } = useAuthContext()
 
@@ -177,12 +189,61 @@ export default function ViewModal({
     setReportModalVisible(false)
   }, [])
 
+  // Fetch publish's comments when target publish changed
+  useEffect(() => {
+    if (!targetPublish) return
+    // Reset states before setting the new one
+    setCommentEdges([])
+    setCommentPageInfo(undefined)
+    fetchPublishComments(targetPublish.id)
+  }, [targetPublish])
+
+  const fetchPublishComments = useCallback(
+    async (publishId: string, orderBy?: CommentsOrderBy) => {
+      try {
+        setCommentsLoading(true)
+        const res = await fetch(`/comments`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            publishId,
+            sortBy: orderBy,
+          }),
+        })
+        const data = (await res.json()) as {
+          result: FetchCommentsResponse
+        }
+        // Reset state before setting the new one
+        setCommentEdges(data.result.edges)
+        setCommentPageInfo(data?.result?.pageInfo)
+        setCommentsLoading(false)
+      } catch (error) {
+        setCommentsLoading(false)
+      }
+    },
+    []
+  )
+
   const openCommentsModal = useCallback(() => {
     setCommentsModalVisible(true)
   }, [])
 
   const closeCommentsModal = useCallback(() => {
     setCommentsModalVisible(false)
+    setSubCommentsVisible(false)
+    setActiveComment(undefined)
+  }, [])
+
+  const openSubComments = useCallback((c: Comment) => {
+    setSubCommentsVisible(true)
+    setActiveComment(c)
+  }, [])
+
+  const closeSubComments = useCallback(() => {
+    setSubCommentsVisible(false)
+    setActiveComment(undefined)
   }, [])
 
   return (
@@ -190,7 +251,7 @@ export default function ViewModal({
       <div className="fixed z-50 inset-0 bg-black">
         <div
           className="fixed z-50 top-8 left-4 p-2 cursor-pointer bg-neutral-400 rounded-full"
-          onClick={loading ? undefined : closeModal}
+          onClick={loading || commentsLoading ? undefined : closeModal}
         >
           <MdKeyboardBackspace color="white" size={25} />
         </div>
@@ -290,6 +351,27 @@ export default function ViewModal({
         <ReportModal
           publishId={targetPublish.id}
           closeModal={closeReportModal}
+        />
+      )}
+
+      {/* Comments modal */}
+      {commentsModalVisible && targetPublish && (
+        <CommentsModal
+          isAuthenticated={isAuthenticated}
+          profile={profile}
+          commentsCount={commentEdges.length}
+          closeModal={closeCommentsModal}
+          publishId={targetPublish?.id}
+          pageInfo={commentPageInfo}
+          setPageInfo={setCommentPageInfo}
+          edges={commentEdges}
+          setEdges={setCommentEdges}
+          subCommentsVisible={subCommentsVisible}
+          openSubComments={openSubComments}
+          activeComment={activeComment}
+          closeSubComments={closeSubComments}
+          loading={commentsLoading}
+          reloadComments={fetchPublishComments}
         />
       )}
     </>

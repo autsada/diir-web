@@ -8,7 +8,7 @@ interface Props {
   profile: Maybe<Station> | undefined
   avatarSize?: number
   replyTo?: string
-  onSubmit: () => "Ok" | null
+  onSubmit: () => Promise<"Ok" | null>
   fontSize?: "sm" | "base" | "lg"
   clearComment: () => void
 }

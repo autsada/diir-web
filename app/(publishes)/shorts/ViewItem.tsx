@@ -69,7 +69,7 @@ export default function ViewItem({
             <h6 className="text-base sm:text-lg text-white">
               {getPostExcerpt(publish.title || "", 40)}
             </h6>
-            <p className="font-light sm:text-base text-white">
+            <p className="font-light text-white">
               {displayedContent}{" "}
               {description.length > displayedContent.length && (
                 <span

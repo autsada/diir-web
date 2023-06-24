@@ -10,6 +10,7 @@ import _ from "lodash"
 import Avatar from "@/components/Avatar"
 import CommentBox from "./CommentBox"
 import StationName from "@/components/StationName"
+import Mask from "@/components/Mask"
 import { useExpandContent } from "@/hooks/useExpandContent"
 import { useAuthContext } from "@/context/AuthContext"
 import { calculateTimeElapsed } from "@/lib/client"
@@ -18,7 +19,9 @@ import {
   disLikePublishComment,
   likePublishComment,
 } from "./actions"
+import { wait } from "@/lib/helpers"
 import type { Comment, Maybe, Station } from "@/graphql/codegen/graphql"
+import type { CommentsOrderBy } from "@/graphql/types"
 
 interface Props {
   isAuthenticated: boolean
@@ -28,6 +31,11 @@ interface Props {
   comment: Comment
   avatarSize?: number
   isSub?: boolean
+  reloadComments?: (
+    publishId: string,
+    orderBy?: CommentsOrderBy
+  ) => Promise<void>
+  fetchCommentsSortBy?: CommentsOrderBy
 }
 
 export default function CommentItem({
@@ -38,6 +46,8 @@ export default function CommentItem({
   publishId,
   avatarSize = 40,
   isSub = false,
+  reloadComments,
+  fetchCommentsSortBy,
 }: Props) {
   const parentCommentId = parentComment?.id
   const commentId = comment?.id || ""
@@ -64,9 +74,11 @@ export default function CommentItem({
     setIsReplying((prev) => !prev)
   }, [])
 
-  const confirmReply = useCallback(() => {
+  const confirmReply = useCallback(async () => {
     if (!publishId || !commentId) return null
-    const el = document.getElementById(commentId) as HTMLTextAreaElement
+    const el = document.getElementById(
+      `${commentId}-comment-box`
+    ) as HTMLTextAreaElement
     if (!el) return null
 
     const content = el.value
@@ -86,18 +98,33 @@ export default function CommentItem({
     // Clear text input
     el.value = ""
 
+    // Reload comments
+    // Wait 1000 ms before loading
+    if (reloadComments) {
+      await wait(1000)
+      reloadComments(publishId, fetchCommentsSortBy)
+    }
+
     return "Ok"
-  }, [publishId, parentCommentId, commentId])
+  }, [
+    publishId,
+    parentCommentId,
+    commentId,
+    reloadComments,
+    fetchCommentsSortBy,
+  ])
 
   const clearComment = useCallback(() => {
     if (!commentId) return
-    const el = document.getElementById(commentId) as HTMLTextAreaElement
+    const el = document.getElementById(
+      `${commentId}-comment-box`
+    ) as HTMLTextAreaElement
     if (!el) return
 
     el.value = ""
   }, [commentId])
 
-  const handleLikeComment = useCallback(() => {
+  const handleLikeComment = useCallback(async () => {
     if (!publishId || !commentId) return
 
     if (!isAuthenticated) {
@@ -111,6 +138,12 @@ export default function CommentItem({
         liked ? (likesCount > 0 ? likesCount - 1 : likesCount) : likesCount + 1
       )
       startTransition(() => likePublishComment(publishId, commentId))
+      // Reload comments
+      // Wait 1000 ms before loading
+      if (reloadComments) {
+        await wait(1000)
+        reloadComments(publishId, fetchCommentsSortBy)
+      }
     }
   }, [
     isAuthenticated,
@@ -120,6 +153,8 @@ export default function CommentItem({
     liked,
     likesCount,
     disLiked,
+    reloadComments,
+    fetchCommentsSortBy,
   ])
 
   const likeDebounce = useMemo(
@@ -127,7 +162,7 @@ export default function CommentItem({
     [handleLikeComment]
   )
 
-  const handleDisLikeComment = useCallback(() => {
+  const handleDisLikeComment = useCallback(async () => {
     if (!publishId || !commentId) return
 
     if (!isAuthenticated) {
@@ -139,6 +174,12 @@ export default function CommentItem({
         setOptimisticLikesCount(likesCount > 0 ? likesCount - 1 : likesCount)
       }
       startTransition(() => disLikePublishComment(publishId, commentId))
+      // Reload comments
+      // Wait 1000 ms before loading
+      if (reloadComments) {
+        await wait(1000)
+        reloadComments(publishId, fetchCommentsSortBy)
+      }
     }
   }, [
     isAuthenticated,
@@ -148,6 +189,8 @@ export default function CommentItem({
     disLiked,
     liked,
     likesCount,
+    reloadComments,
+    fetchCommentsSortBy,
   ])
 
   const disLikeDebounce = useMemo(
@@ -217,7 +260,9 @@ export default function CommentItem({
                   <AiOutlineLike size={20} />
                 )}
               </div>
-              <p className="text-sm text-textLight">{optimisticLikesCount}</p>
+              <p className="text-sm text-textLight">
+                {optimisticLikesCount > 0 ? optimisticLikesCount : <>&nbsp;</>}
+              </p>
             </div>
             <div className="w-[40px]">
               <div
@@ -247,7 +292,7 @@ export default function CommentItem({
         {/* Reply box */}
         {isAuthenticated && isReplying && (
           <CommentBox
-            inputId={commentId}
+            inputId={`${commentId}-comment-box`}
             profile={profile}
             avatarSize={avatarSize}
             replyTo={parentComment ? `@${comment.creator?.name}` : undefined}
@@ -257,6 +302,8 @@ export default function CommentItem({
           />
         )}
       </div>
+
+      {isPending && <Mask />}
     </div>
   )
 }

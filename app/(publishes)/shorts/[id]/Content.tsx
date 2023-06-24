@@ -1,10 +1,14 @@
 "use client"
 
-import React, { useCallback } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { MdKeyboardBackspace } from "react-icons/md"
 
-export default function Content() {
+interface Props {
+  id: string
+}
+
+export default function Content({ id }: Props) {
   const router = useRouter()
 
   const goBack = useCallback(() => {

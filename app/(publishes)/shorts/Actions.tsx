@@ -43,14 +43,18 @@ export default function Actions({
         withSaveDescription={false}
         withReportDescription={false}
       />
-      <div className="h-[40px] flex items-center rounded-full overflow-hidden bg-gray-100">
-        <Reaction
-          IconOutline={MdComment}
-          IconFill={MdOutlineComment}
-          description={`${publish.commentsCount || ""}`}
-          withDescription={true}
-          onClick={commentAction}
-        />
+      <div className="text-center">
+        <div className="h-[40px] flex items-center rounded-full overflow-hidden bg-gray-100">
+          <Reaction
+            IconOutline={MdComment}
+            IconFill={MdOutlineComment}
+            withDescription={false}
+            onClick={commentAction}
+          />
+        </div>
+        <p className="text-xs sm:text-sm">
+          {publish.commentsCount ? publish.commentsCount : <>&nbsp;</>}
+        </p>
       </div>
     </>
   )
