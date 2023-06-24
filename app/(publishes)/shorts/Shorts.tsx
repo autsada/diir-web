@@ -1,12 +1,11 @@
 "use client"
 
-import React, { useCallback, useState, useEffect, useTransition } from "react"
-import { usePathname } from "next/navigation"
+import React, { useCallback, useState, useEffect } from "react"
 import _ from "lodash"
 
 import ButtonLoader from "@/components/ButtonLoader"
 import ShortItem from "./ShortItem"
-import { useAuthContext } from "@/context/AuthContext"
+import ViewModal from "./ViewModal"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import type {
   FetchPlaylistsResponse,
@@ -14,7 +13,6 @@ import type {
   Maybe,
   Station,
 } from "@/graphql/codegen/graphql"
-import ViewModal from "./ViewModal"
 
 interface Props {
   isAuthenticated: boolean
@@ -29,21 +27,22 @@ export default function Shorts({
   fetchResult,
   playlistsResult,
 }: Props) {
-  const fetchedShorts = fetchResult?.edges
-  const [prevShorts, setPrevShorts] = useState(fetchedShorts)
-  const [shorts, setShorts] = useState(fetchedShorts || [])
-  if (fetchedShorts !== prevShorts) {
-    setPrevShorts(fetchedShorts)
-    setShorts(fetchedShorts || [])
+  const [prevShorts, setPrevShorts] = useState(fetchResult?.edges)
+  const [shorts, setShorts] = useState(fetchResult?.edges || [])
+  const isShortsEqual = _.isEqual(fetchResult?.edges, prevShorts)
+  // When shorts changed
+  if (!isShortsEqual) {
+    setPrevShorts(fetchResult?.edges)
+    setShorts(fetchResult?.edges || [])
   }
 
-  const fetchedPageInfo = fetchResult?.pageInfo
-  const [prevPageInfo, setPrevPageInfo] = useState(fetchedPageInfo)
-  const [pageInfo, setPageInfo] = useState(fetchedPageInfo)
+  const [prevPageInfo, setPrevPageInfo] = useState(fetchResult?.pageInfo)
+  const [pageInfo, setPageInfo] = useState(fetchResult?.pageInfo)
+  const isPageInfoEqual = _.isEqual(fetchResult?.pageInfo, prevPageInfo)
   // When page info changed
-  if (fetchedPageInfo !== prevPageInfo) {
-    setPrevPageInfo(fetchedPageInfo)
-    setPageInfo(fetchedPageInfo)
+  if (!isPageInfoEqual) {
+    setPrevPageInfo(fetchResult?.pageInfo)
+    setPageInfo(fetchResult?.pageInfo)
   }
 
   const [loading, setLoading] = useState(false)
@@ -84,7 +83,7 @@ export default function Shorts({
     } catch (error) {
       setLoading(false)
     }
-  }, [pageInfo, setLoading])
+  }, [pageInfo])
   const { observedRef } = useInfiniteScroll(0.5, fetchMore)
 
   const openViewModal = useCallback((p: string) => {
@@ -99,24 +98,6 @@ export default function Shorts({
       window.history.replaceState("", "", "/shorts")
     }
   }, [])
-
-  // const handleFollow = useCallback(() => {
-  //   if (!followerId) return
-
-  //   if (!isAuthenticated) {
-  //     openAuthModal()
-  //   } else {
-  //     setOptimisticFollowing(!isFollowing)
-
-  //     startTransition(() => followStation(followerId))
-  //     router.refresh()
-  //   }
-  // }, [isAuthenticated, openAuthModal, followerId, isFollowing, router])
-
-  // const followDebounce = useMemo(
-  //   () => _.debounce(handleFollow, 200),
-  //   [handleFollow]
-  // )
 
   return (
     <>
