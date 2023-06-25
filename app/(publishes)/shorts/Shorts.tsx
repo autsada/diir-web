@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useState, useEffect } from "react"
+import React, { useCallback, useState, useEffect, useMemo } from "react"
 import _ from "lodash"
 
 import ButtonLoader from "@/components/ButtonLoader"
@@ -29,7 +29,10 @@ export default function Shorts({
 }: Props) {
   const [prevShorts, setPrevShorts] = useState(fetchResult?.edges)
   const [shorts, setShorts] = useState(fetchResult?.edges || [])
-  const isShortsEqual = _.isEqual(fetchResult?.edges, prevShorts)
+  const isShortsEqual = useMemo(
+    () => _.isEqual(fetchResult?.edges, prevShorts),
+    [fetchResult?.edges, prevShorts]
+  )
   // When shorts changed
   if (!isShortsEqual) {
     setPrevShorts(fetchResult?.edges)
@@ -38,7 +41,10 @@ export default function Shorts({
 
   const [prevPageInfo, setPrevPageInfo] = useState(fetchResult?.pageInfo)
   const [pageInfo, setPageInfo] = useState(fetchResult?.pageInfo)
-  const isPageInfoEqual = _.isEqual(fetchResult?.pageInfo, prevPageInfo)
+  const isPageInfoEqual = useMemo(
+    () => _.isEqual(fetchResult?.pageInfo, prevPageInfo),
+    [fetchResult?.pageInfo, prevPageInfo]
+  )
   // When page info changed
   if (!isPageInfoEqual) {
     setPrevPageInfo(fetchResult?.pageInfo)

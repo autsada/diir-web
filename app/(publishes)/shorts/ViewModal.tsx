@@ -84,17 +84,56 @@ export default function ViewModal({
 
   const { onVisible: openAuthModal } = useAuthContext()
 
+  const fetchPublishComments = useCallback(
+    async (publishId: string, orderBy?: CommentsOrderBy) => {
+      try {
+        setCommentsLoading(true)
+        const res = await fetch(`/comments`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            publishId,
+            sortBy: orderBy,
+          }),
+        })
+        const data = (await res.json()) as {
+          result: FetchCommentsResponse
+        }
+        // Reset state before setting the new one
+        setCommentEdges(data.result.edges)
+        setCommentPageInfo(data?.result?.pageInfo)
+        setCommentsLoading(false)
+      } catch (error) {
+        setCommentsLoading(false)
+      }
+    },
+    []
+  )
+  // Fetch publish's comments for the first slide
+  useEffect(() => {
+    if (!initialItem?.id) return
+    // Reset states before setting the new one
+    setCommentEdges([])
+    setCommentPageInfo(undefined)
+    fetchPublishComments(initialItem.id)
+  }, [initialItem?.id, fetchPublishComments])
+
   const onSlideChange = useCallback(
     (index: number, item: React.ReactNode) => {
       const viewItem = item as ReturnType<typeof ViewItem>
       const { publish } = viewItem?.props as { publish: Publish }
       setTargetPublish(publish)
+      setCommentEdges([])
+      setCommentPageInfo(undefined)
+      fetchPublishComments(publish.id)
       // If the slide reaches the end of the items array
       if (index === items.length - 1) {
         fetchMoreShorts()
       }
     },
-    [items.length, fetchMoreShorts]
+    [items.length, fetchMoreShorts, fetchPublishComments]
   )
 
   const fetchPublishPlaylistData = useCallback(async () => {
@@ -188,43 +227,6 @@ export default function ViewModal({
   const closeReportModal = useCallback(() => {
     setReportModalVisible(false)
   }, [])
-
-  // Fetch publish's comments when target publish changed
-  useEffect(() => {
-    if (!targetPublish) return
-    // Reset states before setting the new one
-    setCommentEdges([])
-    setCommentPageInfo(undefined)
-    fetchPublishComments(targetPublish.id)
-  }, [targetPublish])
-
-  const fetchPublishComments = useCallback(
-    async (publishId: string, orderBy?: CommentsOrderBy) => {
-      try {
-        setCommentsLoading(true)
-        const res = await fetch(`/comments`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            publishId,
-            sortBy: orderBy,
-          }),
-        })
-        const data = (await res.json()) as {
-          result: FetchCommentsResponse
-        }
-        // Reset state before setting the new one
-        setCommentEdges(data.result.edges)
-        setCommentPageInfo(data?.result?.pageInfo)
-        setCommentsLoading(false)
-      } catch (error) {
-        setCommentsLoading(false)
-      }
-    },
-    []
-  )
 
   const openCommentsModal = useCallback(() => {
     setCommentsModalVisible(true)
