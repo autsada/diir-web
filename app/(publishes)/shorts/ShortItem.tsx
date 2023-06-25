@@ -1,7 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { isMobile } from "react-device-detect"
 
 import Avatar from "@/components/Avatar"
 import StationName from "@/components/StationName"
@@ -27,7 +25,6 @@ interface Props {
   profile: Maybe<Station> | undefined
   publish: Publish
   playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
-  openViewModal: (id: string) => void
 }
 
 export default function ShortItem1({
@@ -35,7 +32,6 @@ export default function ShortItem1({
   isAuthenticated,
   profile,
   playlistsResult,
-  openViewModal,
 }: Props) {
   const thumbnail =
     publish?.thumbSource === "custom" && publish?.thumbnail
@@ -44,8 +40,6 @@ export default function ShortItem1({
   const [playing, setPlaying] = useState(false)
   const [publishPlaylistsData, setPublishPlaylistsData] =
     useState<CheckPublishPlaylistsResponse>()
-
-  const router = useRouter()
 
   const onEntering = useCallback(() => {
     setPlaying(true)
@@ -81,10 +75,6 @@ export default function ShortItem1({
     fetchPublishPlaylistData()
   }, [fetchPublishPlaylistData])
 
-  const navigage = useCallback(() => {
-    router.push(`/shorts/${publish.id}`)
-  }, [publish, router])
-
   if (!publish) return null
 
   return (
@@ -95,20 +85,11 @@ export default function ShortItem1({
       <div className="flex items-start gap-x-2">
         <Avatar profile={publish.creator} />
         <div className="flex-grow text-left">
-          {isMobile ? (
-            <h6
-              className="text-base sm:text-lg"
-              onClick={openViewModal.bind(undefined, publish.id)}
-            >
+          <Link href={`/shorts/${publish.id}`}>
+            <h6 className="text-base sm:text-lg">
               {getPostExcerpt(publish.title || "", 30)}
             </h6>
-          ) : (
-            <Link href={`/shorts/${publish.id}`}>
-              <h6 className="text-base sm:text-lg">
-                {getPostExcerpt(publish.title || "", 30)}
-              </h6>
-            </Link>
-          )}
+          </Link>
           <StationName profile={publish.creator} />
         </div>
         <ManageFollow
@@ -134,68 +115,35 @@ export default function ShortItem1({
                 {getPostExcerpt(publish.title || "", 40)}
               </h6>
             </div>
-
-            {isMobile ? (
-              <div onClick={openViewModal.bind(undefined, publish.id)}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={thumbnail || ""}
-                  alt={publish.title || ""}
-                  className={`${
-                    playing || !thumbnail ? "hidden" : "block"
-                  } w-full h-full object-cover`}
+            <Link href={`/shorts/${publish.id}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={thumbnail || ""}
+                alt={publish.title || ""}
+                className={`${
+                  playing || !thumbnail ? "hidden" : "block"
+                } w-full h-full object-cover`}
+              />
+              <div
+                className={`${
+                  !playing && thumbnail ? "hidden" : "block"
+                } w-full h-full`}
+              >
+                <VideoPlayer
+                  playback={publish.playback || undefined}
+                  controls={playing}
+                  playing={playing}
+                  loop={playing}
+                  thumbnail={publish.kind === "Short" ? undefined : thumbnail}
+                  playIcon={<></>}
                 />
-                <div
-                  className={`${
-                    !playing && thumbnail ? "hidden" : "block"
-                  } w-full h-full`}
-                >
-                  <VideoPlayer
-                    playback={publish.playback || undefined}
-                    controls={playing}
-                    playing={playing}
-                    loop={playing}
-                    thumbnail={publish.kind === "Short" ? undefined : thumbnail}
-                    playIcon={<></>}
-                  />
-                </div>
-                {publish.playback && (
-                  <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
-                    {secondsToHourFormat(publish.playback?.duration)}
-                  </div>
-                )}
               </div>
-            ) : (
-              <Link href={`/shorts/${publish.id}`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={thumbnail || ""}
-                  alt={publish.title || ""}
-                  className={`${
-                    playing || !thumbnail ? "hidden" : "block"
-                  } w-full h-full object-cover`}
-                />
-                <div
-                  className={`${
-                    !playing && thumbnail ? "hidden" : "block"
-                  } w-full h-full`}
-                >
-                  <VideoPlayer
-                    playback={publish.playback || undefined}
-                    controls={playing}
-                    playing={playing}
-                    loop={playing}
-                    thumbnail={publish.kind === "Short" ? undefined : thumbnail}
-                    playIcon={<></>}
-                  />
+              {publish.playback && (
+                <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
+                  {secondsToHourFormat(publish.playback?.duration)}
                 </div>
-                {publish.playback && (
-                  <div className="absolute bottom-2 right-2 px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
-                    {secondsToHourFormat(publish.playback?.duration)}
-                  </div>
-                )}
-              </Link>
-            )}
+              )}
+            </Link>
           </div>
         </div>
         <div className="flex flex-col items-center justify-end gap-y-2 w-[90px] sm:w-[80px] pb-5">
@@ -204,9 +152,6 @@ export default function ShortItem1({
             publish={publish}
             playlistsResult={playlistsResult}
             publishPlaylistsData={publishPlaylistsData}
-            commentAction={
-              isMobile ? openViewModal.bind(undefined, publish.id) : navigage
-            }
             likeBtnVerticalLayout
           />
         </div>

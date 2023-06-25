@@ -2,7 +2,11 @@ import Shorts from "./Shorts"
 import { fetchMyPlaylists, fetchShorts, getStationById } from "@/graphql"
 import { getAccount } from "@/lib/server"
 
-export default async function Page() {
+type Props = {
+  searchParams: { id?: string }
+}
+
+export default async function Page({ searchParams }: Props) {
   const data = await getAccount()
   const account = data?.account
   const idToken = data?.idToken
@@ -41,6 +45,7 @@ export default async function Page() {
         profile={station}
         fetchResult={shortsResult}
         playlistsResult={playlistsResult}
+        initialId={searchParams.id}
       />
     </div>
   )

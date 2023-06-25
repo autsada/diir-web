@@ -1,5 +1,6 @@
 // For mobile view only
 import React, { useCallback, useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { MdKeyboardBackspace } from "react-icons/md"
 import { Carousel } from "react-responsive-carousel"
 import "react-responsive-carousel/lib/styles/carousel.min.css"
@@ -29,7 +30,6 @@ interface Props {
   isAuthenticated: boolean
   profile: Maybe<Station> | undefined
   playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
-  closeModal?: () => void
   items: PublishEdge[]
   activeId: string
   fetchMoreShorts: () => Promise<void>
@@ -40,7 +40,6 @@ export default function ViewModal({
   profile,
   playlistsResult,
   items,
-  closeModal,
   activeId,
   fetchMoreShorts,
 }: Props) {
@@ -83,6 +82,7 @@ export default function ViewModal({
   const [activeComment, setActiveComment] = useState<Comment>()
 
   const { onVisible: openAuthModal } = useAuthContext()
+  const router = useRouter()
 
   const fetchPublishComments = useCallback(
     async (publishId: string, orderBy?: CommentsOrderBy) => {
@@ -248,12 +248,16 @@ export default function ViewModal({
     setActiveComment(undefined)
   }, [])
 
+  const goBack = useCallback(() => {
+    router.back()
+  }, [router])
+
   return (
     <>
       <div className="fixed z-50 inset-0 bg-black">
         <div
           className="fixed z-50 top-8 left-4 p-2 cursor-pointer bg-neutral-400 rounded-full"
-          onClick={loading || commentsLoading ? undefined : closeModal}
+          onClick={loading || commentsLoading ? undefined : goBack}
         >
           <MdKeyboardBackspace color="white" size={25} />
         </div>

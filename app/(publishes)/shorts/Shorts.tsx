@@ -2,6 +2,7 @@
 
 import React, { useCallback, useState, useEffect, useMemo } from "react"
 import _ from "lodash"
+import { isMobile } from "react-device-detect"
 
 import ButtonLoader from "@/components/ButtonLoader"
 import ShortItem from "./ShortItem"
@@ -19,6 +20,7 @@ interface Props {
   profile: Maybe<Station> | undefined
   fetchResult: Maybe<FetchPublishesResponse> | undefined
   playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
+  initialId?: string // The first publish to be displayed when `ViewModal` is openned
 }
 
 export default function Shorts({
@@ -26,6 +28,7 @@ export default function Shorts({
   profile,
   fetchResult,
   playlistsResult,
+  initialId,
 }: Props) {
   const [prevShorts, setPrevShorts] = useState(fetchResult?.edges)
   const [shorts, setShorts] = useState(fetchResult?.edges || [])
@@ -52,9 +55,6 @@ export default function Shorts({
   }
 
   const [loading, setLoading] = useState(false)
-  const [viewModalVisible, setViewModalVisible] = useState(false)
-  // The item to be shown on the view modal when user opens it
-  const [initialDisplayedId, setInitialDisplayedId] = useState("")
 
   // Set video el style to cover
   useEffect(() => {
@@ -92,19 +92,6 @@ export default function Shorts({
   }, [pageInfo])
   const { observedRef } = useInfiniteScroll(0.5, fetchMore)
 
-  const openViewModal = useCallback((p: string) => {
-    setViewModalVisible(true)
-    setInitialDisplayedId(p)
-  }, [])
-
-  const closeViewModal = useCallback(() => {
-    setViewModalVisible(false)
-    setInitialDisplayedId("")
-    if (typeof window !== "undefined") {
-      window.history.replaceState("", "", "/shorts")
-    }
-  }, [])
-
   return (
     <>
       <div className="mt-4">
@@ -123,7 +110,7 @@ export default function Shorts({
                   isAuthenticated={isAuthenticated}
                   profile={profile}
                   playlistsResult={playlistsResult}
-                  openViewModal={openViewModal}
+                  // openViewModal={openViewModal}
                 />
               )
             )}
@@ -140,14 +127,13 @@ export default function Shorts({
         )}
       </div>
 
-      {viewModalVisible && initialDisplayedId && (
+      {isMobile && shorts.length > 0 && shorts[0]?.node && (
         <ViewModal
           items={shorts}
           isAuthenticated={isAuthenticated}
           profile={profile}
           playlistsResult={playlistsResult}
-          closeModal={closeViewModal}
-          activeId={initialDisplayedId}
+          activeId={initialId || shorts[0]?.node?.id}
           fetchMoreShorts={fetchMore}
         />
       )}
