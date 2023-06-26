@@ -41,6 +41,23 @@ export default function ShortItem1({
   const [publishPlaylistsData, setPublishPlaylistsData] =
     useState<CheckPublishPlaylistsResponse>()
 
+  // Set video el style to contain
+  useEffect(() => {
+    const container = document?.getElementById(
+      `short-item-player-${publish.id}`
+    )
+    if (container) {
+      const nodes = container.children
+      if (nodes[0]) {
+        const divs = nodes[0].children
+        const video = divs[0] as HTMLVideoElement
+        if (video) {
+          video.style.objectFit = "cover"
+        }
+      }
+    }
+  }, [publish?.id])
+
   const onEntering = useCallback(() => {
     setPlaying(true)
   }, [])
@@ -125,6 +142,7 @@ export default function ShortItem1({
                 } w-full h-full object-cover`}
               />
               <div
+                id={`short-item-player-${publish.id}`}
                 className={`${
                   !playing && thumbnail ? "hidden" : "block"
                 } w-full h-full`}
