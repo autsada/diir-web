@@ -43,7 +43,7 @@ export default function Actions({
         withSaveDescription={false}
         withReportDescription={false}
       />
-      <Link href={`/shorts/${publish.id}`}>
+      <Link href={`/shorts?id=${publish.id}`}>
         <div className="text-center">
           <div className="h-[40px] flex items-center rounded-full overflow-hidden bg-gray-100">
             <Reaction

@@ -13,7 +13,7 @@ import type {
 interface Props {
   isAuthenticated: boolean
   publishId: string
-  playlistsResult: FetchPlaylistsResponse | undefined
+  playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
   publishPlaylistsData: Maybe<CheckPublishPlaylistsResponse> | undefined
   withDescription?: boolean
 }

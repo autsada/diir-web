@@ -1,6 +1,14 @@
 import { getCountries } from "react-phone-number-input/input"
 import en from "react-phone-number-input/locale/en.json"
 
+import type {
+  PublishEdge,
+  CommentEdge,
+  PlaylistEdge,
+  PlaylistItemEdge,
+  WatchLaterEdge,
+} from "@/graphql/codegen/graphql"
+
 export function getCountryNames() {
   return getCountries()
     .map((c) => ({ code: c, name: en[c] }))
@@ -44,3 +52,22 @@ export const contentCategories = [
 ] as const
 
 export const publishKinds = ["videos", "blogs", "podcasts", "ads"] as const
+
+export function combineEdges<
+  T extends
+    | PublishEdge
+    | CommentEdge
+    | PlaylistEdge
+    | PlaylistItemEdge
+    | WatchLaterEdge
+>(initialEdges: T[], newEdges: T[]) {
+  const edges = newEdges.filter(
+    (newEdge) =>
+      !initialEdges
+        .map((edge) => edge?.node?.id || "")
+        .includes(newEdge?.node?.id || "")
+  )
+  const allEdges = [...initialEdges, ...edges]
+
+  return allEdges
+}

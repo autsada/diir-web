@@ -6,12 +6,15 @@ import { isMobile } from "react-device-detect"
 
 import ButtonLoader from "@/components/ButtonLoader"
 import ShortItem from "./ShortItem"
+import MobileViewModal from "./MobileViewModal"
 import ViewModal from "./ViewModal"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
+import { combineEdges } from "@/lib/helpers"
 import type {
   FetchPlaylistsResponse,
   FetchPublishesResponse,
   Maybe,
+  PublishEdge,
   Station,
 } from "@/graphql/codegen/graphql"
 
@@ -83,7 +86,7 @@ export default function Shorts({
       const data = (await res.json()) as {
         result: FetchPublishesResponse
       }
-      setShorts((prev) => [...prev, ...data.result.edges])
+      setShorts((prev) => combineEdges<PublishEdge>(prev, data?.result?.edges))
       setPageInfo(data?.result?.pageInfo)
       setLoading(false)
     } catch (error) {
@@ -110,7 +113,6 @@ export default function Shorts({
                   isAuthenticated={isAuthenticated}
                   profile={profile}
                   playlistsResult={playlistsResult}
-                  // openViewModal={openViewModal}
                 />
               )
             )}
@@ -127,13 +129,26 @@ export default function Shorts({
         )}
       </div>
 
+      {/* Mobile/tablet view */}
       {isMobile && shorts.length > 0 && shorts[0]?.node && (
-        <ViewModal
+        <MobileViewModal
           items={shorts}
           isAuthenticated={isAuthenticated}
           profile={profile}
           playlistsResult={playlistsResult}
           activeId={initialId || shorts[0]?.node?.id}
+          fetchMoreShorts={fetchMore}
+        />
+      )}
+
+      {/* Desktop view */}
+      {!isMobile && initialId && (
+        <ViewModal
+          items={shorts}
+          isAuthenticated={isAuthenticated}
+          profile={profile}
+          playlistsResult={playlistsResult}
+          activeId={initialId}
           fetchMoreShorts={fetchMore}
         />
       )}

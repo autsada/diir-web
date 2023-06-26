@@ -544,46 +544,10 @@ export async function fetchShorts(input: FetchShortsInput) {
 export const GET_SHORT_QUERY = gql`
   query GetShort($input: GetShortInput!) {
     getShort(input: $input) {
-      precedingShorts {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          cursor
-          node {
-            id
-            title
-            description
-            createdAt
-            views
-            visibility
-            thumbSource
-            thumbnail
-            primaryCategory
-            secondaryCategory
-            kind
-            creator {
-              id
-              name
-              displayName
-              image
-              defaultColor
-            }
-            playback {
-              id
-              videoId
-              duration
-              hls
-              dash
-              thumbnail
-            }
-          }
-        }
-      }
-      item {
+      current {
         id
         title
+        description
         createdAt
         views
         visibility
@@ -592,12 +556,19 @@ export const GET_SHORT_QUERY = gql`
         primaryCategory
         secondaryCategory
         kind
+        liked
+        disLiked
+        likesCount
+        commentsCount
         creator {
           id
           name
           displayName
           image
+          followersCount
+          isFollowing
           defaultColor
+          isOwner
         }
         playback {
           id
@@ -608,40 +579,74 @@ export const GET_SHORT_QUERY = gql`
           thumbnail
         }
       }
-      followingShorts {
-        pageInfo {
-          endCursor
-          hasNextPage
+      prev {
+        id
+        title
+        description
+        createdAt
+        views
+        visibility
+        thumbSource
+        thumbnail
+        primaryCategory
+        secondaryCategory
+        kind
+        liked
+        disLiked
+        likesCount
+        commentsCount
+        creator {
+          id
+          name
+          displayName
+          image
+          followersCount
+          isFollowing
+          defaultColor
+          isOwner
         }
-        edges {
-          cursor
-          node {
-            id
-            title
-            createdAt
-            views
-            visibility
-            thumbSource
-            thumbnail
-            primaryCategory
-            secondaryCategory
-            kind
-            creator {
-              id
-              name
-              displayName
-              image
-              defaultColor
-            }
-            playback {
-              id
-              videoId
-              duration
-              hls
-              dash
-              thumbnail
-            }
-          }
+        playback {
+          id
+          videoId
+          duration
+          hls
+          dash
+          thumbnail
+        }
+      }
+      next {
+        id
+        title
+        description
+        createdAt
+        views
+        visibility
+        thumbSource
+        thumbnail
+        primaryCategory
+        secondaryCategory
+        kind
+        liked
+        disLiked
+        likesCount
+        commentsCount
+        creator {
+          id
+          name
+          displayName
+          image
+          followersCount
+          isFollowing
+          defaultColor
+          isOwner
+        }
+        playback {
+          id
+          videoId
+          duration
+          hls
+          dash
+          thumbnail
         }
       }
     }

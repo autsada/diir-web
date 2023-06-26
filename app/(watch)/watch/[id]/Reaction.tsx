@@ -34,7 +34,7 @@ export default function Reaction({
       </div>
 
       {description && withDescription && (
-        <div className="h-full text-xs sm:text-sm flex items-center justify-center">
+        <div className="h-full font-semibold text-xs sm:text-sm flex items-center justify-center">
           {description}
         </div>
       )}

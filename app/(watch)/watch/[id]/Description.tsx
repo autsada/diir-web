@@ -8,13 +8,17 @@ import { formatDate } from "@/lib/client"
 interface Props {
   createdAt: string
   description?: string | null
+  showLen?: number
 }
 
-export default function Description({ createdAt, description }: Props) {
-  const initialDisplayed = 200
+export default function Description({
+  createdAt,
+  description,
+  showLen = 200,
+}: Props) {
   const { displayedContent, expandContent, shrinkContent } = useExpandContent(
     description || "",
-    initialDisplayed
+    showLen
   )
 
   if (!description) return null
@@ -33,7 +37,7 @@ export default function Description({ createdAt, description }: Props) {
           </span>
         )}
       </p>
-      {description.length > initialDisplayed &&
+      {description.length > showLen &&
         description.length === displayedContent.length && (
           <p
             className="mt-2 text-sm font-semibold cursor-pointer"

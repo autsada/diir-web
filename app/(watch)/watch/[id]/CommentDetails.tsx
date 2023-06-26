@@ -161,6 +161,8 @@ export default function CommentDetails({
           <div className="w-full mt-6 pb-20 sm:pb-10">
             {edges &&
               edges.length > 0 &&
+              // This is to make sure that we display the comments that belong to the correct publish
+              edges.every((edge) => edge?.node?.publishId === publishId) &&
               edges.map((edge) => (
                 <CommentBaseItem
                   isAuthenticated={isAuthenticated}

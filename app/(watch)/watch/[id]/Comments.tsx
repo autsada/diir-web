@@ -26,6 +26,10 @@ interface Props {
   publish: Publish
   profile: Maybe<Station> | undefined
   commentsResult: Maybe<FetchCommentsResponse> | undefined
+  reloadComments?: (
+    publishId: string,
+    orderBy?: CommentsOrderBy
+  ) => Promise<void>
 }
 
 export default function Comments({
@@ -33,6 +37,7 @@ export default function Comments({
   publish,
   profile,
   commentsResult,
+  reloadComments,
 }: Props) {
   const [prevCommentsResult, setPrevCommentResult] = useState(commentsResult)
   const [pageInfo, setPageInfo] = useState(commentsResult?.pageInfo)
@@ -175,6 +180,7 @@ export default function Comments({
             openSubComments={openSubComments}
             activeComment={activeComment}
             fetchCommentsSortBy={sortBy}
+            reloadComments={reloadComments}
           />
         </>
       )}

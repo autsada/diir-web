@@ -512,9 +512,9 @@ export interface NexusGenObjects {
   }
   GetShortResponse: {
     // root type
-    followingShorts?: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
-    item?: NexusGenRootTypes["Publish"] | null // Publish
-    precedingShorts?: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    current: NexusGenRootTypes["Publish"] // Publish!
+    next?: NexusGenRootTypes["Publish"] | null // Publish
+    prev?: NexusGenRootTypes["Publish"] | null // Publish
   }
   Like: {
     // root type
@@ -823,9 +823,9 @@ export interface NexusGenFieldTypes {
   }
   GetShortResponse: {
     // field return type
-    followingShorts: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
-    item: NexusGenRootTypes["Publish"] | null // Publish
-    precedingShorts: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    current: NexusGenRootTypes["Publish"] // Publish!
+    next: NexusGenRootTypes["Publish"] | null // Publish
+    prev: NexusGenRootTypes["Publish"] | null // Publish
   }
   Like: {
     // field return type
@@ -1224,9 +1224,9 @@ export interface NexusGenFieldTypeNames {
   }
   GetShortResponse: {
     // field return type name
-    followingShorts: "FetchPublishesResponse"
-    item: "Publish"
-    precedingShorts: "FetchPublishesResponse"
+    current: "Publish"
+    next: "Publish"
+    prev: "Publish"
   }
   Like: {
     // field return type name

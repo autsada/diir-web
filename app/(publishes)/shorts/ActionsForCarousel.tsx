@@ -23,6 +23,9 @@ interface Props {
   handleSavePublish: () => Promise<void>
   openReportModal: () => void
   commentAction: () => void
+  withCommentIcon?: boolean
+  withLikeDescription?: boolean
+  likeVerticalLayout?: boolean
 }
 
 export default function ActionsForCarousel({
@@ -33,6 +36,9 @@ export default function ActionsForCarousel({
   handleSavePublish,
   openReportModal,
   commentAction,
+  withCommentIcon = true,
+  withLikeDescription = false,
+  likeVerticalLayout = true,
 }: Props) {
   const router = useRouter()
 
@@ -59,18 +65,20 @@ export default function ActionsForCarousel({
         liked={!!publish?.liked}
         likesCount={publish?.likesCount}
         disLiked={!!publish?.disLiked}
-        withDescription={false}
-        verticalLayout={true}
+        withDescription={withLikeDescription}
+        verticalLayout={likeVerticalLayout}
         descriptionColor="text-white"
       />
       <TipReaction handleStartTip={handleStartTip} />
       <ShareReaction onStartShare={onStartShare} />
       <SaveReaction handleSavePublish={handleSavePublish} />
       <ReportReaction openReportModal={openReportModal} />
-      <CommentsReaction
-        commentAction={commentAction}
-        commentsCount={publish?.commentsCount}
-      />
+      {withCommentIcon && (
+        <CommentsReaction
+          commentAction={commentAction}
+          commentsCount={publish?.commentsCount}
+        />
+      )}
     </>
   )
 }

@@ -28,6 +28,7 @@ export const FETCH_COMMENTS_BY_PUBLISH_ID_QUERY = gql`
           content
           createdAt
           updatedAt
+          publishId
           creator {
             id
             name

@@ -27,5 +27,5 @@ export default async function Page({ params }: Props) {
     requestorId: station?.id,
   })
 
-  return <Content id={params.id} />
+  return <Content id={params.id} fetchedResult={shortResult} />
 }

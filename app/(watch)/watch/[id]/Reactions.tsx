@@ -21,7 +21,7 @@ import type {
 interface Props {
   publish: Publish
   isAuthenticated: boolean
-  playlistsResult: FetchPlaylistsResponse | undefined
+  playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
   publishPlaylistsData: Maybe<CheckPublishPlaylistsResponse> | undefined
   withLikeDescription?: boolean
   likeBtnVerticalLayout?: boolean

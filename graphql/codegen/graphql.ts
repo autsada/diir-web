@@ -389,9 +389,9 @@ export type GetShortInput = {
 
 export type GetShortResponse = {
   __typename?: 'GetShortResponse';
-  followingShorts?: Maybe<FetchPublishesResponse>;
-  item?: Maybe<Publish>;
-  precedingShorts?: Maybe<FetchPublishesResponse>;
+  current: Publish;
+  next?: Maybe<Publish>;
+  prev?: Maybe<Publish>;
 };
 
 export type Like = {
