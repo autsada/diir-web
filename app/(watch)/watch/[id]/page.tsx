@@ -1,5 +1,5 @@
 import React, { Suspense } from "react"
-import { redirect } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import type { Metadata, ResolvingMetadata } from "next"
 
 import PlayerSection from "./PlayerSection"
@@ -107,6 +107,14 @@ export default async function Watch({ params }: Props) {
     requestorId: station ? station.id : null,
   })
 
+  if (!publish) {
+    notFound()
+  }
+
+  if (publish.kind === "Short") {
+    redirect(`/shorts?id=${publish.id}`)
+  }
+
   // Fetch user's playlists if user is authenticated
   const playlistsResult = !station
     ? undefined
@@ -148,10 +156,6 @@ export default async function Watch({ params }: Props) {
     cursor: null,
     publishId: params.id,
   })
-
-  if (!publish) {
-    redirect("/")
-  }
 
   return (
     <div className="w-full overflow-y-hidden">

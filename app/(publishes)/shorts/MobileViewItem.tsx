@@ -4,7 +4,7 @@ import ManageFollow from "@/app/(watch)/watch/[id]/ManageFollow"
 import Avatar from "@/components/Avatar"
 import VideoPlayer from "@/components/VideoPlayer"
 import ActionsForCarousel from "./ActionsForCarousel"
-import { getPostExcerpt } from "@/lib/client"
+import { calculateTimeElapsed, getPostExcerpt } from "@/lib/client"
 import { useExpandContent } from "@/hooks/useExpandContent"
 import type { Publish } from "@/graphql/codegen/graphql"
 
@@ -33,7 +33,7 @@ export default function MobileViewItem({
   const playback = publish.playback
   const description = publish.description || ""
 
-  const initialDisplayed = 200
+  const initialDisplayed = 60
   const { displayedContent, expandContent, shrinkContent } = useExpandContent(
     description,
     initialDisplayed
@@ -57,17 +57,25 @@ export default function MobileViewItem({
       className="relative w-full h-[100vh] flex items-center justify-center"
     >
       <div className="relative w-full h-full bg-black">
-        <VideoPlayer
-          playback={playback}
-          playing={isSelected}
-          loop={isSelected}
-        />
+        <div id="short-mobile-player" className="w-full h-full">
+          <VideoPlayer
+            playback={playback}
+            playing={isSelected}
+            loop={isSelected}
+          />
+        </div>
 
         <div className="absolute left-0 right-20 top-20 py-1 px-2 overflow-y-auto">
           <div className="text-left max-h-[50vh]">
             <h6 className="text-base sm:text-lg text-white">
               {getPostExcerpt(publish.title || "", 40)}
             </h6>
+            <div className="mt-1 flex items-center gap-x-4 font-thin italic text-xs text-white">
+              <p>
+                {publish.views || 0} view{publish.views === 1 ? "" : "s"}
+              </p>
+              <p>{calculateTimeElapsed(publish.createdAt)}</p>
+            </div>
             <p className="font-light text-white">
               {displayedContent}{" "}
               {description.length > displayedContent.length && (

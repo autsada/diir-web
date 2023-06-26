@@ -1,31 +1,26 @@
-import React from "react"
+import { notFound, redirect } from "next/navigation"
 
-import Content from "./Content"
-import Comments from "./Comments"
-import ViewArea from "./ViewArea"
-import { getAccount } from "@/lib/server"
-import { getShort, getStationById } from "@/graphql"
+import { getShort } from "@/graphql"
 
 type Props = {
   params: { id: string }
 }
 
 export default async function Page({ params }: Props) {
-  const data = await getAccount()
-  const account = data?.account
-  const idToken = data?.idToken
-
-  // Query station by id
-  const station =
-    !account || !idToken || !account.defaultStation
-      ? undefined
-      : await getStationById(account?.defaultStation?.id)
-
   const publishId = params.id
-  const shortResult = await getShort({
+  const publish = await getShort({
     publishId,
-    requestorId: station?.id,
   })
 
-  return <Content id={params.id} fetchedResult={shortResult} />
+  if (!publish) {
+    notFound()
+  } else {
+    if (publish.kind === "Short") {
+      redirect(`/shorts?id=${publish.id}`)
+    } else {
+      redirect(`/watch/${publish.id}`)
+    }
+  }
+
+  return null
 }

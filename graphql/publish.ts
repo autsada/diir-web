@@ -544,111 +544,11 @@ export async function fetchShorts(input: FetchShortsInput) {
 export const GET_SHORT_QUERY = gql`
   query GetShort($input: GetShortInput!) {
     getShort(input: $input) {
-      current {
-        id
-        title
-        description
-        createdAt
-        views
-        visibility
-        thumbSource
-        thumbnail
-        primaryCategory
-        secondaryCategory
-        kind
-        liked
-        disLiked
-        likesCount
-        commentsCount
-        creator {
-          id
-          name
-          displayName
-          image
-          followersCount
-          isFollowing
-          defaultColor
-          isOwner
-        }
-        playback {
-          id
-          videoId
-          duration
-          hls
-          dash
-          thumbnail
-        }
-      }
-      prev {
-        id
-        title
-        description
-        createdAt
-        views
-        visibility
-        thumbSource
-        thumbnail
-        primaryCategory
-        secondaryCategory
-        kind
-        liked
-        disLiked
-        likesCount
-        commentsCount
-        creator {
-          id
-          name
-          displayName
-          image
-          followersCount
-          isFollowing
-          defaultColor
-          isOwner
-        }
-        playback {
-          id
-          videoId
-          duration
-          hls
-          dash
-          thumbnail
-        }
-      }
-      next {
-        id
-        title
-        description
-        createdAt
-        views
-        visibility
-        thumbSource
-        thumbnail
-        primaryCategory
-        secondaryCategory
-        kind
-        liked
-        disLiked
-        likesCount
-        commentsCount
-        creator {
-          id
-          name
-          displayName
-          image
-          followersCount
-          isFollowing
-          defaultColor
-          isOwner
-        }
-        playback {
-          id
-          videoId
-          duration
-          hls
-          dash
-          thumbnail
-        }
-      }
+      id
+      title
+      description
+      createdAt
+      kind
     }
   }
 `
@@ -667,7 +567,6 @@ export async function getShort(input: GetShortInput) {
 
     return result?.getShort
   } catch (error) {
-    console.log("error -->", error)
     throw error
   }
 }

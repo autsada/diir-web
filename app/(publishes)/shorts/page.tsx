@@ -1,6 +1,13 @@
 import Shorts from "./Shorts"
-import { fetchMyPlaylists, fetchShorts, getStationById } from "@/graphql"
+import {
+  fetchMyPlaylists,
+  fetchShorts,
+  getShort,
+  getStationById,
+} from "@/graphql"
+import { Maybe, Publish } from "@/graphql/codegen/graphql"
 import { getAccount } from "@/lib/server"
+import { notFound, redirect } from "next/navigation"
 
 type Props = {
   searchParams: { id?: string }
@@ -11,6 +18,28 @@ export default async function Page({ searchParams }: Props) {
   const account = data?.account
   const idToken = data?.idToken
   const signature = data?.signature
+
+  const publishId = searchParams.id
+
+  let short: Maybe<Publish> | undefined = undefined
+  if (publishId) {
+    short = await getShort({
+      publishId,
+    })
+  }
+
+  if (typeof publishId === "string" && !publishId) {
+    // For the case that user enter "/shorts?id="
+    redirect("/shorts")
+  }
+
+  if (publishId && !short) {
+    notFound()
+  }
+
+  if (short && short.kind !== "Short") {
+    redirect(`/watch/${short.id}`)
+  }
 
   // Query station by id
   const station =

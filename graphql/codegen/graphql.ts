@@ -809,7 +809,7 @@ export type Query = {
   getBalance: Scalars['String']['output'];
   getMyAccount?: Maybe<Account>;
   getPublishById?: Maybe<Publish>;
-  getShort?: Maybe<GetShortResponse>;
+  getShort?: Maybe<Publish>;
   getStationById?: Maybe<Station>;
   getStationByName?: Maybe<Station>;
 };

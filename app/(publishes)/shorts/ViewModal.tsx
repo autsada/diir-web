@@ -79,6 +79,25 @@ export default function ViewModal({
   const prevBtnRef = useRef<HTMLButtonElement>(null)
   const nextBtnRef = useRef<HTMLButtonElement>(null)
 
+  // Set video el style to contain
+  useEffect(() => {
+    const container = document?.getElementById("short-desktop-player")
+    if (container) {
+      const nodes = container.children
+      if (nodes[0]) {
+        const videos = nodes[0].children
+        if (videos.length > 0) {
+          for (let i = 0; i < videos.length; i++) {
+            const vid = videos[i] as HTMLVideoElement
+            if (vid) {
+              vid.style.objectFit = "contain"
+            }
+          }
+        }
+      }
+    }
+  }, [])
+
   const goBack = useCallback(() => {
     router.back()
   }, [router])

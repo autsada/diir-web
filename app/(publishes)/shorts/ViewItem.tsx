@@ -7,7 +7,7 @@ import Avatar from "@/components/Avatar"
 import Description from "@/app/(watch)/watch/[id]/Description"
 import ActionsForCarousel from "./ActionsForCarousel"
 import Comments from "@/app/(watch)/watch/[id]/Comments"
-import { getPostExcerpt, calculateTimeElapsed } from "@/lib/client"
+import { getPostExcerpt, calculateTimeElapsed, formatDate } from "@/lib/client"
 import type {
   Maybe,
   Publish,
@@ -95,6 +95,7 @@ export default function ViewItem({
   return (
     <div id={publish.id} className="relative w-full h-[100vh] flex">
       <div
+        id="short-desktop-player"
         ref={containerRef}
         className="w-[500px] min-w-[500px] md:w-[600px] md:min-w-[600px] lg:w-[700px] lg:min-w-[700px] xl:w-[800px] xl:min-w-[800px] h-full bg-black"
       >
@@ -132,7 +133,11 @@ export default function ViewItem({
           <p>
             {publish.views || 0} view{publish.views === 1 ? "" : "s"}
           </p>
-          <p>{calculateTimeElapsed(publish.createdAt)}</p>
+          <p>
+            {!publish.description
+              ? formatDate(new Date(publish.createdAt))
+              : calculateTimeElapsed(publish.createdAt)}
+          </p>
         </div>
         <div className="my-5 flex items-center gap-x-4">
           <ActionsForCarousel

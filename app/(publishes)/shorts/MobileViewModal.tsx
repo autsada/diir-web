@@ -84,6 +84,25 @@ export default function MobileViewModal({
   const { onVisible: openAuthModal } = useAuthContext()
   const router = useRouter()
 
+  // Set video el style to cover
+  useEffect(() => {
+    const container = document?.getElementById("short-mobile-player")
+    if (container) {
+      const nodes = container.children
+      if (nodes[0]) {
+        const videos = nodes[0].children
+        if (videos.length > 0) {
+          for (let i = 0; i < videos.length; i++) {
+            const vid = videos[i] as HTMLVideoElement
+            if (vid) {
+              vid.style.objectFit = "cover"
+            }
+          }
+        }
+      }
+    }
+  }, [])
+
   const fetchPublishComments = useCallback(
     async (publishId: string, orderBy?: CommentsOrderBy) => {
       try {

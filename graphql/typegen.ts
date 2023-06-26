@@ -1004,7 +1004,7 @@ export interface NexusGenFieldTypes {
     getBalance: string // String!
     getMyAccount: NexusGenRootTypes["Account"] | null // Account
     getPublishById: NexusGenRootTypes["Publish"] | null // Publish
-    getShort: NexusGenRootTypes["GetShortResponse"] | null // GetShortResponse
+    getShort: NexusGenRootTypes["Publish"] | null // Publish
     getStationById: NexusGenRootTypes["Station"] | null // Station
     getStationByName: NexusGenRootTypes["Station"] | null // Station
   }
@@ -1401,7 +1401,7 @@ export interface NexusGenFieldTypeNames {
     getBalance: "String"
     getMyAccount: "Account"
     getPublishById: "Publish"
-    getShort: "GetShortResponse"
+    getShort: "Publish"
     getStationById: "Station"
     getStationByName: "Station"
   }

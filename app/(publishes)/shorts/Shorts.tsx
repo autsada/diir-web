@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useState, useEffect, useMemo } from "react"
+import React, { useCallback, useState, useMemo } from "react"
 import _ from "lodash"
 import { isMobile } from "react-device-detect"
 
@@ -58,16 +58,6 @@ export default function Shorts({
   }
 
   const [loading, setLoading] = useState(false)
-
-  // Set video el style to cover
-  useEffect(() => {
-    const els = document?.getElementsByTagName("video")
-    if (els.length > 0) {
-      for (let i = 0; i < els.length; i++) {
-        els[i].style.objectFit = "cover"
-      }
-    }
-  }, [])
 
   const fetchMore = useCallback(async () => {
     if (!pageInfo || !pageInfo.endCursor || !pageInfo.hasNextPage) return
