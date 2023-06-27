@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect } from "react"
 
 import VideoPlayer from "@/components/VideoPlayer"
 import StationName from "@/components/StationName"
@@ -7,6 +7,7 @@ import Avatar from "@/components/Avatar"
 import Description from "@/app/(watch)/watch/[id]/Description"
 import ActionsForCarousel from "./ActionsForCarousel"
 import Comments from "@/app/(watch)/watch/[id]/Comments"
+import { useCountView } from "@/hooks/useCountView"
 import { getPostExcerpt, calculateTimeElapsed, formatDate } from "@/lib/client"
 import type {
   Maybe,
@@ -50,15 +51,16 @@ export default function ViewItem({
   reloadComments,
 }: Props) {
   const playback = publish.playback
+  const duration = publish.playback?.duration || 0
 
-  const containerRef = useRef<HTMLDivElement>(null)
+  const { videoContainerRef, onReady } = useCountView(publish.id, duration)
 
   // Register wheel event
   useEffect(() => {
     if (typeof window === "undefined") return
-    if (!containerRef?.current) return
+    if (!videoContainerRef?.current) return
 
-    const container = containerRef.current
+    const container = videoContainerRef.current
     let isScrolling = false
     let timeoutId: NodeJS.Timer | undefined = undefined
 
@@ -96,13 +98,14 @@ export default function ViewItem({
     <div id={publish.id} className="relative w-full h-[100vh] flex">
       <div
         id="short-desktop-player"
-        ref={containerRef}
+        ref={videoContainerRef}
         className="w-[500px] min-w-[500px] md:w-[600px] md:min-w-[600px] lg:w-[700px] lg:min-w-[700px] xl:w-[800px] xl:min-w-[800px] h-full bg-black"
       >
         <VideoPlayer
           playback={playback}
           playing={isSelected}
           loop={isSelected}
+          onReady={onReady}
         />
       </div>
 

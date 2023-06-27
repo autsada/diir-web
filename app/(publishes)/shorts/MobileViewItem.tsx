@@ -6,6 +6,7 @@ import VideoPlayer from "@/components/VideoPlayer"
 import ActionsForCarousel from "./ActionsForCarousel"
 import { calculateTimeElapsed, getPostExcerpt } from "@/lib/client"
 import { useExpandContent } from "@/hooks/useExpandContent"
+import { useCountView } from "@/hooks/useCountView"
 import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
@@ -31,6 +32,7 @@ export default function MobileViewItem({
   openCommentsModal,
 }: Props) {
   const playback = publish.playback
+  const duration = publish.playback?.duration || 0
   const description = publish.description || ""
 
   const initialDisplayed = 60
@@ -38,6 +40,7 @@ export default function MobileViewItem({
     description,
     initialDisplayed
   ) // For displaying description
+  const { videoContainerRef, onReady } = useCountView(publish.id, duration)
 
   // Set video el style to cover
   useEffect(() => {
@@ -57,11 +60,16 @@ export default function MobileViewItem({
       className="relative w-full h-[100vh] flex items-center justify-center"
     >
       <div className="relative w-full h-full bg-black">
-        <div id="short-mobile-player" className="w-full h-full">
+        <div
+          ref={videoContainerRef}
+          id="short-mobile-player"
+          className="w-full h-full"
+        >
           <VideoPlayer
             playback={playback}
             playing={isSelected}
             loop={isSelected}
+            onReady={onReady}
           />
         </div>
 
