@@ -9,6 +9,7 @@ import type {
   CommentPublishInput,
   FetchCommentsByPublishIdInput,
   LikeCommentInput,
+  FetchSubCommentsInput,
 } from "./types"
 
 /**
@@ -18,6 +19,7 @@ export const FETCH_COMMENTS_BY_PUBLISH_ID_QUERY = gql`
   query FetchCommentsByPublishId($input: FetchCommentsByPublishIdInput!) {
     fetchCommentsByPublishId(input: $input) {
       pageInfo {
+        count
         endCursor
         hasNextPage
       }
@@ -41,22 +43,22 @@ export const FETCH_COMMENTS_BY_PUBLISH_ID_QUERY = gql`
           disLiked
           commentType
           commentsCount
-          comments {
-            id
-            createdAt
-            updatedAt
-            content
-            creator {
-              id
-              name
-              image
-              displayName
-              defaultColor
-            }
-            liked
-            disLiked
-            likesCount
-          }
+          # comments {
+          #   id
+          #   createdAt
+          #   updatedAt
+          #   content
+          #   creator {
+          #     id
+          #     name
+          #     image
+          #     displayName
+          #     defaultColor
+          #   }
+          #   liked
+          #   disLiked
+          #   likesCount
+          # }
         }
       }
     }
@@ -76,6 +78,60 @@ export async function fetchComments(data: FetchCommentsByPublishIdInput) {
       })
 
     return result?.fetchCommentsByPublishId
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Fetch sub comments by comment id
+ */
+export const FETCH_SUB_COMMENTS_QUERY = gql`
+  query FetchSubComments($input: FetchSubCommentsInput!) {
+    fetchSubComments(input: $input) {
+      pageInfo {
+        count
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          content
+          createdAt
+          updatedAt
+          publishId
+          creator {
+            id
+            name
+            image
+            displayName
+            defaultColor
+          }
+          liked
+          likesCount
+          disLiked
+          commentType
+        }
+      }
+    }
+  }
+`
+export async function fetchSubComments(data: FetchSubCommentsInput) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+      })
+      .request<
+        QueryReturnType<"fetchSubComments">,
+        QueryArgsType<"fetchSubComments">
+      >(FETCH_SUB_COMMENTS_QUERY, {
+        input: data,
+      })
+
+    return result?.fetchSubComments
   } catch (error) {
     throw error
   }

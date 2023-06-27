@@ -7,7 +7,7 @@ import SubComments from "./SubComments"
 import Mask from "@/components/Mask"
 import { useAuthContext } from "@/context/AuthContext"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
-import { wait } from "@/lib/helpers"
+import { combineEdges, wait } from "@/lib/helpers"
 import { commentOnPublish } from "./actions"
 import type {
   FetchCommentsResponse,
@@ -108,7 +108,7 @@ export default function CommentDetails({
       const data = (await res.json()) as {
         result: FetchCommentsResponse
       }
-      setEdges((prev) => [...prev, ...data.result.edges])
+      setEdges((prev) => combineEdges<CommentEdge>(prev, data?.result?.edges))
       setPageInfo(data?.result?.pageInfo)
       setCommentsLoading(false)
     } catch (error) {

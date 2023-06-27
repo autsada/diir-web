@@ -173,6 +173,12 @@ export interface NexusGenInputs {
     orderBy?: NexusGenEnums["PublishOrderBy"] | null // PublishOrderBy
     requestorId?: string | null // String
   }
+  FetchSubCommentsInput: {
+    // input type
+    commentId: string // String!
+    cursor?: string | null // String
+    requestorId?: string | null // String
+  }
   FetchSuggestedPublishesInput: {
     // input type
     cursor?: string | null // String
@@ -998,6 +1004,7 @@ export interface NexusGenFieldTypes {
     fetchPreviewWatchLater: NexusGenRootTypes["FetchWatchLaterResponse"] | null // FetchWatchLaterResponse
     fetchShorts: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchStationPublishes: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    fetchSubComments: NexusGenRootTypes["FetchCommentsResponse"] | null // FetchCommentsResponse
     fetchSuggestedVideos: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchVideosByCategory: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchWatchLater: NexusGenRootTypes["FetchWatchLaterResponse"] | null // FetchWatchLaterResponse
@@ -1395,6 +1402,7 @@ export interface NexusGenFieldTypeNames {
     fetchPreviewWatchLater: "FetchWatchLaterResponse"
     fetchShorts: "FetchPublishesResponse"
     fetchStationPublishes: "FetchPublishesResponse"
+    fetchSubComments: "FetchCommentsResponse"
     fetchSuggestedVideos: "FetchPublishesResponse"
     fetchVideosByCategory: "FetchPublishesResponse"
     fetchWatchLater: "FetchWatchLaterResponse"
@@ -1677,6 +1685,10 @@ export interface NexusGenArgTypes {
     fetchStationPublishes: {
       // args
       input: NexusGenInputs["FetchStationPublishesInput"] // FetchStationPublishesInput!
+    }
+    fetchSubComments: {
+      // args
+      input: NexusGenInputs["FetchSubCommentsInput"] // FetchSubCommentsInput!
     }
     fetchSuggestedVideos: {
       // args

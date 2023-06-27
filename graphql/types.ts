@@ -47,6 +47,9 @@ export type FetchDontRecommendsInput =
   NexusGenInputs["FetchDontRecommendsInput"]
 export type FetchSuggestedPublishesInput =
   NexusGenInputs["FetchSuggestedPublishesInput"]
+export type FetchCommentsByPublishIdInput =
+  NexusGenInputs["FetchCommentsByPublishIdInput"]
+export type FetchSubCommentsInput = NexusGenInputs["FetchSubCommentsInput"]
 
 export type CacheSessionInput = NexusGenInputs["CacheSessionInput"]
 export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
@@ -66,8 +69,6 @@ export type DontRecommendInput = NexusGenInputs["DontRecommendInput"]
 export type ReportPublishInput = NexusGenInputs["ReportPublishInput"]
 export type LikePublishInput = NexusGenInputs["LikePublishInput"]
 export type TipAmount = 1 | 2 | 5 | 10 | 25 | 50 | 100 | 1000 | 2000
-export type FetchCommentsByPublishIdInput =
-  NexusGenInputs["FetchCommentsByPublishIdInput"]
 export type CommentPublishInput = NexusGenInputs["CommentPublishInput"]
 export type LikeCommentInput = NexusGenInputs["LikeCommentInput"]
 export type FollowInput = NexusGenInputs["FollowInput"]

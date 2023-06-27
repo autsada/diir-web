@@ -36,6 +36,7 @@ interface Props {
     orderBy?: CommentsOrderBy
   ) => Promise<void>
   fetchCommentsSortBy?: CommentsOrderBy
+  reloadSubComments?: () => Promise<void>
 }
 
 export default function CommentItem({
@@ -48,6 +49,7 @@ export default function CommentItem({
   isSub = false,
   reloadComments,
   fetchCommentsSortBy,
+  reloadSubComments,
 }: Props) {
   const parentCommentId = parentComment?.id
   const commentId = comment?.id || ""
@@ -105,6 +107,11 @@ export default function CommentItem({
       reloadComments(publishId, fetchCommentsSortBy)
     }
 
+    if (reloadSubComments) {
+      await wait(200)
+      reloadSubComments()
+    }
+
     return "Ok"
   }, [
     publishId,
@@ -112,6 +119,7 @@ export default function CommentItem({
     commentId,
     reloadComments,
     fetchCommentsSortBy,
+    reloadSubComments,
   ])
 
   const clearComment = useCallback(() => {

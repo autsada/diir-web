@@ -343,6 +343,12 @@ export type FetchStationPublishesInput = {
   requestorId?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type FetchSubCommentsInput = {
+  commentId: Scalars['String']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  requestorId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type FetchSuggestedPublishesInput = {
   cursor?: InputMaybe<Scalars['String']['input']>;
   publishId: Scalars['String']['input'];
@@ -803,6 +809,7 @@ export type Query = {
   fetchPreviewWatchLater?: Maybe<FetchWatchLaterResponse>;
   fetchShorts?: Maybe<FetchPublishesResponse>;
   fetchStationPublishes?: Maybe<FetchPublishesResponse>;
+  fetchSubComments?: Maybe<FetchCommentsResponse>;
   fetchSuggestedVideos?: Maybe<FetchPublishesResponse>;
   fetchVideosByCategory?: Maybe<FetchPublishesResponse>;
   fetchWatchLater?: Maybe<FetchWatchLaterResponse>;
@@ -867,6 +874,11 @@ export type QueryFetchShortsArgs = {
 
 export type QueryFetchStationPublishesArgs = {
   input: FetchStationPublishesInput;
+};
+
+
+export type QueryFetchSubCommentsArgs = {
+  input: FetchSubCommentsInput;
 };
 
 
