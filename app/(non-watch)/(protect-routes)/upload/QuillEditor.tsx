@@ -94,7 +94,7 @@ export default function QuillEditor({
       formats={formats}
       value={content}
       onChange={handleChange}
-      className="w-full h-max lg:h-full text-lg pb-[70px]"
+      className="w-full h-max lg:h-full text-lg"
       placeholder="Blog content here..."
     />
   )

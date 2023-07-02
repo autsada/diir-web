@@ -48,13 +48,14 @@ export async function saveBlogPost({
         imageRef,
         filename,
         tags,
-        content,
+        content: content ? JSON.parse(content) : null,
         visibility,
       },
     })
 
     // Revalidate page
     revalidatePath(`/upload`)
+    revalidatePath(`/upload/publishes`)
   } catch (error) {
     console.error(error)
   }

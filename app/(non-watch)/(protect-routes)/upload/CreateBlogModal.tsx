@@ -146,7 +146,7 @@ export default function CreateBlogModal({
             imageRef,
             filename,
             tags,
-            content,
+            content: content ? JSON.stringify(content) : undefined,
             visibility,
           })
         )
@@ -263,7 +263,7 @@ export default function CreateBlogModal({
             </div>
           </div>
 
-          <div className="flex-grow overflow-y-auto lg:overflow-y-hidden scrollbar-hide pb-[70px]">
+          <div className="flex-grow overflow-y-auto lg:overflow-y-hidden scrollbar-hide">
             {/* Edit */}
             <div className={`${mode === "edit" ? "block" : "hidden"} h-full`}>
               <div className="w-full pt-1 overflow-x-auto">
@@ -353,7 +353,7 @@ export default function CreateBlogModal({
                   </p>
                 </div>
 
-                <div className="w-full h-full lg:w-3/5 sm:px-2 lg:px-3 xl:px-4">
+                <div className="w-full h-full lg:w-3/5 sm:px-2 lg:px-3 xl:px-4 pb-[100px]">
                   <QuillEditor
                     content={content}
                     setContent={setContent}
@@ -420,7 +420,7 @@ export default function CreateBlogModal({
         >
           <div>
             <h6 className="text-lg md:text-xl">
-              The draft has not been saved yet, do you really want to leave?
+              This will NOT save the draft, do you really want to leave?
             </h6>
           </div>
         </ConfirmModal>
