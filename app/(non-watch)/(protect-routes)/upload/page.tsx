@@ -27,6 +27,8 @@ export default async function Page() {
 
       <Suspense fallback={<div>Loading...</div>}>
         <Upload
+          isAuthenticated={!!account}
+          profile={station}
           idToken={data?.idToken || ""}
           stationName={station?.name || ""}
         />

@@ -25,6 +25,8 @@
     "firebase": "^9.20.0",
     "graphql": "^16.6.0",
     "graphql-request": "^6.0.0",
+    "highlight.js": "^11.8.0",
+    "html-react-parser": "^4.0.0",
     "lodash": "^4.17.21",
     "next": "^13.4.3",
     "postcss": "8.4.22",
@@ -36,6 +38,7 @@
     "react-icons": "^4.8.0",
     "react-phone-number-input": "^3.2.19",
     "react-player": "^2.12.0",
+    "react-quill": "^2.0.0",
     "react-responsive-carousel": "^3.2.23",
     "react-share": "^4.4.1",
     "react-spinners": "^0.13.8",
@@ -50,6 +53,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.0",
     "@graphql-codegen/client-preset": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/lodash": "^4.14.194"
   }
 }

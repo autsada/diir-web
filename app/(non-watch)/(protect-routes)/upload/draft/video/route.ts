@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
-import { createDraftPublish } from "@/graphql"
+
+import { createDraftVideo } from "@/graphql"
 import { getAccount } from "@/lib/server"
 
 export async function POST(req: Request) {
@@ -14,13 +15,15 @@ export async function POST(req: Request) {
   const { filename } = (await req.json()) as { filename: string }
   if (!filename) throw new Error("Bad input")
 
-  const result = await createDraftPublish({
+  const result = await createDraftVideo({
     idToken,
     signature: data?.signature,
-    accountId: account.id,
-    creatorId: account.defaultStation.id,
-    filename,
-    owner: account.owner,
+    input: {
+      accountId: account.id,
+      creatorId: account.defaultStation.id,
+      filename,
+      owner: account.owner,
+    },
   })
 
   return NextResponse.json(result)

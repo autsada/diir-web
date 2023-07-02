@@ -15,6 +15,9 @@ import type {
   FetchStationPublishesInput,
   FetchShortsInput,
   GetShortInput,
+  CreateDraftVideoInput,
+  CreateDraftBlogInput,
+  UpdateBlogInput,
 } from "./types"
 import { FetchSuggestedPublishesInput } from "./codegen/graphql"
 
@@ -111,6 +114,13 @@ export const FETCH_CREATOR_PUBLISHES_QUERY = gql`
             id
             thumbnail
             duration
+          }
+          blog {
+            createdAt
+            updatedAt
+            title
+            content
+            publishId
           }
         }
       }
@@ -572,29 +582,23 @@ export async function getShort(input: GetShortInput) {
 }
 
 /**
- * Cache a draft publish
+ * Create draft video
  */
-export const CREATE_DRAFT_PUBLISH_MUTATION = gql`
-  mutation CreateDraftPublish($input: CreateDraftPublishInput!) {
-    createDraftPublish(input: $input) {
+export const CREATE_DRAFT_VIDEO_MUTATION = gql`
+  mutation CreateDraftVideo($input: CreateDraftVideoInput!) {
+    createDraftVideo(input: $input) {
       id
     }
   }
 `
-export async function createDraftPublish({
+export async function createDraftVideo({
   idToken,
   signature,
-  owner,
-  creatorId,
-  accountId,
-  filename,
+  input,
 }: {
   idToken: string
   signature?: string
-  owner: string
-  creatorId: string
-  accountId: string
-  filename: string
+  input: CreateDraftVideoInput
 }) {
   try {
     const data = await client
@@ -604,13 +608,52 @@ export async function createDraftPublish({
         "auth-wallet-signature": signature || "",
       })
       .request<
-        MutationReturnType<"createDraftPublish">,
-        MutationArgsType<"createDraftPublish">
-      >(CREATE_DRAFT_PUBLISH_MUTATION, {
-        input: { owner, creatorId, accountId, filename },
+        MutationReturnType<"createDraftVideo">,
+        MutationArgsType<"createDraftVideo">
+      >(CREATE_DRAFT_VIDEO_MUTATION, {
+        input,
       })
 
-    return data?.createDraftPublish
+    return data?.createDraftVideo
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Create draft blog
+ */
+export const CREATE_DRAFT_BLOG_MUTATION = gql`
+  mutation CreateDraftBlog($input: CreateDraftBlogInput!) {
+    createDraftBlog(input: $input) {
+      id
+    }
+  }
+`
+export async function createDraftBlog({
+  idToken,
+  signature,
+  input,
+}: {
+  idToken: string
+  signature?: string
+  input: CreateDraftBlogInput
+}) {
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"createDraftBlog">,
+        MutationArgsType<"createDraftBlog">
+      >(CREATE_DRAFT_BLOG_MUTATION, {
+        input,
+      })
+
+    return data?.createDraftBlog
   } catch (error) {
     throw error
   }
@@ -650,6 +693,45 @@ export async function updatePublish({
       })
 
     return result?.updatePublish
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Update blog
+ */
+export const UPDATE_BLOG_MUTATION = gql`
+  mutation UpdateBlog($input: UpdateBlogInput!) {
+    updateBlog(input: $input) {
+      status
+    }
+  }
+`
+export async function updateBlog({
+  idToken,
+  signature,
+  input,
+}: {
+  idToken: string
+  signature?: string
+  input: UpdateBlogInput
+}) {
+  try {
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updateBlog">,
+        MutationArgsType<"updateBlog">
+      >(UPDATE_BLOG_MUTATION, {
+        input,
+      })
+
+    return data?.updateBlog
   } catch (error) {
     throw error
   }

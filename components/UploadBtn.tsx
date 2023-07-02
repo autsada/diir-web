@@ -3,11 +3,12 @@
 import React from "react"
 import Link from "next/link"
 import { MdOutlineVideoCall } from "react-icons/md"
+import { AiOutlinePlusCircle } from "react-icons/ai"
 
 export default function UploadBtn({
   isAuthenticated,
   onClick,
-  size = 30,
+  size = 20,
   color = "white",
 }: {
   isAuthenticated: boolean
@@ -17,7 +18,7 @@ export default function UploadBtn({
 }) {
   return !isAuthenticated ? (
     <div onClick={onClick}>
-      <MdOutlineVideoCall
+      <AiOutlinePlusCircle
         size={size}
         color={color}
         className="cursor-pointer"
@@ -25,7 +26,7 @@ export default function UploadBtn({
     </div>
   ) : (
     <Link href="/upload">
-      <MdOutlineVideoCall
+      <AiOutlinePlusCircle
         size={size}
         color={color}
         className="cursor-pointer"

@@ -1,6 +1,5 @@
 import React from "react"
 import { AiFillRead, AiOutlineRead } from "react-icons/ai"
-import { IoRadio, IoRadioOutline } from "react-icons/io5"
 import {
   RiHome4Fill,
   RiHome4Line,
@@ -10,12 +9,16 @@ import {
 import { MdVideoLibrary, MdOutlineVideoLibrary } from "react-icons/md"
 
 import ActiveLink from "./ActiveLink"
+import UploadBtn from "../UploadBtn"
+import { useAuthContext } from "@/context/AuthContext"
 
 interface Props {
   isAuthenticated: boolean
 }
 
 export default function BottomTabs({ isAuthenticated }: Props) {
+  const { onVisible: openAuthModal } = useAuthContext()
+
   return (
     <div className="w-full grid grid-cols-5 bg-white shadow-xl border-t border-neutral-100">
       <div className="">
@@ -36,13 +39,12 @@ export default function BottomTabs({ isAuthenticated }: Props) {
           isVertical={true}
         />
       </div>
-      <div className="">
-        <ActiveLink
-          name="Podcasts"
-          href="/podcasts"
-          ActiveIcon={IoRadio}
-          InActiveIcon={IoRadioOutline}
-          isVertical={true}
+      <div className="flex items-start justify-center pt-2">
+        <UploadBtn
+          isAuthenticated={isAuthenticated}
+          onClick={openAuthModal.bind(undefined, "Sign in to upload content.")}
+          color="#2096F3"
+          size={40}
         />
       </div>
       <div className="">

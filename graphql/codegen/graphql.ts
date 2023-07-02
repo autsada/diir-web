@@ -15,6 +15,7 @@ export type Scalars = {
   Float: { input: number; output: number; }
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: { input: any; output: any; }
+  Json: { input: any; output: any; }
 };
 
 export type Account = {
@@ -47,6 +48,16 @@ export type AddToWatchLaterInput = {
   owner: Scalars['String']['input'];
   publishId: Scalars['String']['input'];
   stationId: Scalars['String']['input'];
+};
+
+export type Blog = {
+  __typename?: 'Blog';
+  content: Scalars['Json']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  publish?: Maybe<Publish>;
+  publishId: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type CacheSessionInput = {
@@ -162,15 +173,26 @@ export enum CommentsOrderBy {
   Newest = 'newest'
 }
 
-export type CreateDraftPublishInput = {
+export type CreateDraftBlogInput = {
+  accountId: Scalars['String']['input'];
+  creatorId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+};
+
+export type CreateDraftBlogResult = {
+  __typename?: 'CreateDraftBlogResult';
+  id: Scalars['String']['output'];
+};
+
+export type CreateDraftVideoInput = {
   accountId: Scalars['String']['input'];
   creatorId: Scalars['String']['input'];
   filename: Scalars['String']['input'];
   owner: Scalars['String']['input'];
 };
 
-export type CreateDraftPublishResult = {
-  __typename?: 'CreateDraftPublishResult';
+export type CreateDraftVideoResult = {
+  __typename?: 'CreateDraftVideoResult';
   filename?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
 };
@@ -445,7 +467,8 @@ export type Mutation = {
   comment?: Maybe<WriteResult>;
   countViews?: Maybe<WriteResult>;
   createAccount?: Maybe<Account>;
-  createDraftPublish?: Maybe<CreateDraftPublishResult>;
+  createDraftBlog?: Maybe<CreateDraftBlogResult>;
+  createDraftVideo?: Maybe<CreateDraftVideoResult>;
   createStation?: Maybe<Station>;
   createTip?: Maybe<Tip>;
   deleteAllPlaylistItems?: Maybe<WriteResult>;
@@ -465,6 +488,7 @@ export type Mutation = {
   reportPublish?: Maybe<WriteResult>;
   sendTips?: Maybe<SendTipsResult>;
   updateBannerImage?: Maybe<WriteResult>;
+  updateBlog?: Maybe<WriteResult>;
   updateDisplayName?: Maybe<WriteResult>;
   updatePlaylistDescription?: Maybe<WriteResult>;
   updatePlaylistName?: Maybe<WriteResult>;
@@ -517,8 +541,13 @@ export type MutationCreateAccountArgs = {
 };
 
 
-export type MutationCreateDraftPublishArgs = {
-  input: CreateDraftPublishInput;
+export type MutationCreateDraftBlogArgs = {
+  input: CreateDraftBlogInput;
+};
+
+
+export type MutationCreateDraftVideoArgs = {
+  input: CreateDraftVideoInput;
 };
 
 
@@ -614,6 +643,11 @@ export type MutationSendTipsArgs = {
 
 export type MutationUpdateBannerImageArgs = {
   input: UpdateImageInput;
+};
+
+
+export type MutationUpdateBlogArgs = {
+  input: UpdateBlogInput;
 };
 
 
@@ -742,6 +776,7 @@ export type PreviewPlaylistEdge = {
 
 export type Publish = {
   __typename?: 'Publish';
+  blog?: Maybe<Blog>;
   comments: Array<Comment>;
   commentsCount: Scalars['Int']['output'];
   contentRef?: Maybe<Scalars['String']['output']>;
@@ -1062,6 +1097,20 @@ export type Tip = {
   sender: Station;
   senderId: Scalars['String']['output'];
   to: Scalars['String']['output'];
+};
+
+export type UpdateBlogInput = {
+  accountId: Scalars['String']['input'];
+  content?: InputMaybe<Scalars['String']['input']>;
+  creatorId: Scalars['String']['input'];
+  filename?: InputMaybe<Scalars['String']['input']>;
+  imageRef?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
+  owner: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  visibility?: InputMaybe<Visibility>;
 };
 
 export type UpdateDisplayNameInput = {

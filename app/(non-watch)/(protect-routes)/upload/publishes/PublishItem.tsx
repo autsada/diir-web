@@ -72,7 +72,10 @@ export default function PublishItem({ publish }: Props) {
         </div>
       </th>
       <th className="w-[27%] sm:w-[12%] px-1 font-normal break-words">
-        {publish.title}
+        {getPostExcerpt(
+          (publish.kind === "Blog" ? publish.blog?.title : publish.title) || "",
+          60
+        )}
       </th>
       <th className="w-[25%] sm:w-[20%] px-2 py-1 font-normal hidden lg:table-cell break-words text-left">
         {publish.description ? (

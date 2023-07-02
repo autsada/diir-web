@@ -71,12 +71,12 @@ export default function MainNav({
           </div>
         </div>
       </div>
-      <div className={`${!account ? "mr-2" : "mr-0"} sm:mr-4`}>
+      <div className={`hidden sm:block sm:mr-4`}>
         <UploadBtn
           isAuthenticated={!!account}
           onClick={openAuthModal.bind(undefined, "Sign in to upload content.")}
           color={isWatchPage ? "#FF904D" : "#2096F3"}
-          size={40}
+          size={30}
         />
       </div>
       <div className="h-full w-[80px] flex items-center justify-end pr-2">

@@ -107,9 +107,7 @@ export default function LikeReaction({
   return (
     <>
       <div>
-        <div
-          className={`h-[40px] flex items-center justify-center rounded-full overflow-hidden bg-red-300`}
-        >
+        <div className="h-[40px] flex items-center justify-center rounded-full overflow-hidden">
           <Reaction
             IconOutline={AiOutlineLike}
             IconFill={AiFillLike}

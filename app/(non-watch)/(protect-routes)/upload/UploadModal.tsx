@@ -7,46 +7,13 @@ import CloseButton from "@/components/CloseButton"
 import ModalWrapper from "@/components/ModalWrapper"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
+import { upload } from "@/lib/client"
 import type { FileWithPrview } from "@/types"
 
 interface Props {
   cancelUpload: () => void
   idToken: string
   stationName: string
-}
-
-/**
- * A function to call an upload route in the Upload Service
- */
-function upload({
-  idToken,
-  file,
-  publishId,
-  stationName,
-}: {
-  idToken: string
-  file: File
-  publishId: string
-  stationName: string
-}) {
-  const uploadURL =
-    process.env.NEXT_PUBLIC_UPLOAD_URL || "http://localhost:4444"
-  // const uploadURL =
-  //   process.env.NEXT_PUBLIC_UPLOAD_URL ||
-  //   "https://c394-2405-9800-b961-39d-fcd7-2e95-581d-6778.ngrok-free.app"
-
-  const formData = new FormData()
-  formData.append("file", file!)
-  formData.append("publishId", publishId)
-  formData.append("stationName", stationName)
-
-  return fetch(`${uploadURL}/publishes/upload`, {
-    method: "POST",
-    headers: {
-      "id-token": idToken,
-    },
-    body: formData,
-  })
 }
 
 export default function UploadModal({
@@ -62,7 +29,7 @@ export default function UploadModal({
   const createDraft = useCallback(
     async (file: FileWithPrview) => {
       setDraftLoading(true)
-      const result = await fetch(`/upload/draft`, {
+      const result = await fetch(`/upload/draft/video`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +85,7 @@ export default function UploadModal({
       <div className="w-full h-full min-w-full min-h-full max-w-full max-h-full flex items-center justify-center">
         <div className="relative w-[95%] h-[95%] pb-20 bg-white rounded-md overflow-hidden">
           <div className="w-full py-2 px-5 8-red-200 flex items-center justify-between border-b border-gray-100">
-            <h6>Upload videos / podcasts</h6>
+            <h6>Upload video</h6>
             <div>
               <CloseButton onClick={cancelUpload} className="text-base" />
             </div>

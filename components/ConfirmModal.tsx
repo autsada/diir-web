@@ -5,7 +5,9 @@ import ButtonLoader from "./ButtonLoader"
 
 interface Props {
   children: React.ReactNode
+  cancelText?: string
   onCancel: () => void
+  confirmText?: string
   onConfirm: () => void
   loading?: boolean
   error?: string
@@ -14,7 +16,9 @@ interface Props {
 
 export default function ConfirmModal({
   children,
+  cancelText = "Cancel",
   onCancel,
+  confirmText = "Confirm",
   onConfirm,
   loading,
   error,
@@ -27,20 +31,23 @@ export default function ConfirmModal({
 
         <div className="mt-6 flex justify-around items-center">
           <button
-            className="btn-cancel w-[100px] rounded-full"
+            className={`btn-cancel min-w-[100px] px-5 rounded-full ${
+              loading ? "opacity-30 cursor-not-allowed" : "opacity-100"
+            }`}
+            disabled={loading}
             onClick={onCancel}
           >
-            Cancel
+            {cancelText}
           </button>
           <button
             type="button"
-            className={`btn-dark w-[100px] rounded-full ${
+            className={`btn-dark min-w-[100px] px-5 rounded-full ${
               disabled ? "opacity-30 cursor-not-allowed" : "opacity-100"
             }`}
             disabled={typeof disabled === "boolean" && disabled}
             onClick={onConfirm}
           >
-            {loading ? <ButtonLoader loading size={8} /> : "Confirm"}
+            {loading ? <ButtonLoader loading size={8} /> : confirmText}
           </button>
         </div>
         {error && (
