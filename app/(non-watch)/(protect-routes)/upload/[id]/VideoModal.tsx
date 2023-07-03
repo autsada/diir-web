@@ -37,7 +37,7 @@ type FormData = {
   kind: PublishKind
 }
 
-export default function ContentModal({ publish, stationName }: Props) {
+export default function VideoModal({ publish, stationName }: Props) {
   const [thumbnail, setThumbnail] = useState<FileWithPrview>()
   const [thumbnailError, setThumbnailError] = useState("")
   const [isChangingThumb, setIsChangingThumb] = useState(false)
@@ -592,40 +592,6 @@ export default function ContentModal({ publish, stationName }: Props) {
                     </div>
                   </div>
                 </div>
-
-                <label
-                  htmlFor="kind"
-                  className="block text-start font-semibold mb-10"
-                >
-                  Publish Kind
-                  <div className="px-5 mt-2">
-                    <label
-                      htmlFor="Video"
-                      className="block font-light text-textLight mb-2"
-                    >
-                      <input
-                        type="radio"
-                        value="Video"
-                        defaultChecked={true}
-                        className="cursor-pointer mr-4"
-                        {...register("kind")}
-                      />
-                      Video
-                    </label>
-                    <label
-                      htmlFor="Podcast"
-                      className="block font-light text-textLight"
-                    >
-                      <input
-                        type="radio"
-                        value="Podcast"
-                        className="cursor-pointer mr-4"
-                        {...register("kind")}
-                      />
-                      Podcast
-                    </label>
-                  </div>
-                </label>
 
                 <label
                   htmlFor="visibility"

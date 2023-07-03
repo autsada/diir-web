@@ -1,7 +1,7 @@
 import React from "react"
 import { redirect } from "next/navigation"
 
-import ContentModal from "./ContentModal"
+import VideoModal from "./VideoModal"
 import { getStationById, getUploadedPublish } from "@/graphql"
 import { getAccount } from "@/lib/server"
 
@@ -43,7 +43,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     <>
       <h5>Publish: {params.id}</h5>
 
-      <ContentModal publish={publish} stationName={station?.name || ""} />
+      <VideoModal publish={publish} stationName={station?.name || ""} />
     </>
   )
 }
