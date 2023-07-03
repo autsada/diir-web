@@ -42,6 +42,10 @@ export const GET_UPLOADED_PUBLISH_QUERY = gql`
       uploadError
       transcodeError
       kind
+      tags
+      creator {
+        isOwner
+      }
       playback {
         id
         videoId
@@ -51,8 +55,11 @@ export const GET_UPLOADED_PUBLISH_QUERY = gql`
         dash
         hls
       }
-      creator {
-        isOwner
+      blog {
+        createdAt
+        updatedAt
+        content
+        publishId
       }
     }
   }
@@ -67,10 +74,16 @@ export async function getUploadedPublish({
   data: QueryByIdInput
 }) {
   try {
-    const data = await client.request<
-      QueryReturnType<"getPublishById">,
-      QueryArgsType<"getPublishById">
-    >(GET_UPLOADED_PUBLISH_QUERY, { input: { targetId, requestorId } })
+    const data = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        QueryReturnType<"getPublishById">,
+        QueryArgsType<"getPublishById">
+      >(GET_UPLOADED_PUBLISH_QUERY, { input: { targetId, requestorId } })
 
     return data?.getPublishById
   } catch (error) {
@@ -110,6 +123,7 @@ export const FETCH_CREATOR_PUBLISHES_QUERY = gql`
           tipsCount
           visibility
           kind
+          tags
           playback {
             id
             thumbnail

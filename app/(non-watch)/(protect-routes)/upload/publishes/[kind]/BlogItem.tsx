@@ -3,8 +3,7 @@ import { useRouter } from "next/navigation"
 import { BsEye, BsEyeSlash } from "react-icons/bs"
 import { onSnapshot, doc } from "firebase/firestore"
 
-import ButtonLoader from "@/components/ButtonLoader"
-import { formatDate, getPostExcerpt, secondsToHourFormat } from "@/lib/client"
+import { formatDate, getPostExcerpt } from "@/lib/client"
 import { db, uploadsCollection } from "@/firebase/config"
 import type { Publish } from "@/graphql/codegen/graphql"
 
@@ -41,29 +40,18 @@ export default function BlogItem({ blog }: Props) {
       onClick={onClickItem.bind(undefined, blog.id)}
     >
       <th className="w-[30%] sm:w-[20%] lg:w-[15%] xl:w-[12%] font-normal py-2 break-words">
-        <div className="relative w-full h-full">
-          {blog.thumbnail || blog.playback ? (
+        <div className="w-full h-full flex items-center justify-center">
+          {blog.thumbnail ? (
             <div className="w-full h-full bg-black">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={
-                  blog.thumbnail && blog.thumbSource === "custom"
-                    ? blog.thumbnail
-                    : blog.playback?.thumbnail
-                }
-                alt={blog.title || ""}
+                src={blog.thumbnail}
+                alt={blog.title || blog.filename || ""}
                 className="w-full h-[64px] sm:h-[50px] xl:h-[64px] object-cover"
               />
             </div>
           ) : (
-            <button>
-              <ButtonLoader loading color="#f97316" />
-            </button>
-          )}
-          {blog.playback && (
-            <div className="absolute bottom-[1px] right-[2px] px-[2px] rounded-sm bg-white font-thin text-xs flex items-center justify-center">
-              {secondsToHourFormat(blog.playback?.duration)}
-            </div>
+            <p>-</p>
           )}
         </div>
       </th>

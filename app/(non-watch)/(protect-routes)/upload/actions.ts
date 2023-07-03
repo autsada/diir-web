@@ -56,6 +56,7 @@ export async function saveBlogPost({
     // Revalidate page
     revalidatePath(`/upload`)
     revalidatePath(`/upload/publishes`)
+    revalidatePath(`/upload/publishes/[kind]`)
   } catch (error) {
     console.error(error)
   }

@@ -80,8 +80,10 @@ export default function QuillEditor({
       source: Sources,
       editor: ReactQuill.UnprivilegedEditor
     ) => {
-      setContent(editor.getContents())
-      setContentForPreview(editor.getHTML())
+      setTimeout(() => {
+        setContent(editor.getContents())
+        setContentForPreview(editor.getHTML())
+      }, 2000)
     },
     [setContent, setContentForPreview]
   )

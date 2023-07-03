@@ -797,6 +797,7 @@ export type Publish = {
   playback?: Maybe<PlaybackLink>;
   primaryCategory?: Maybe<Category>;
   secondaryCategory?: Maybe<Category>;
+  tags: Array<Scalars['String']['output']>;
   thumbSource: ThumbnailSource;
   thumbnail?: Maybe<Scalars['String']['output']>;
   thumbnailRef?: Maybe<Scalars['String']['output']>;

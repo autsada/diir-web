@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import VideoModal from "./VideoModal"
 import { getStationById, getUploadedPublish } from "@/graphql"
 import { getAccount } from "@/lib/server"
+import BlogModal from "./BlogModal"
 
 export default async function Page({ params }: { params: { id: string } }) {
   const data = await getAccount()
@@ -43,7 +44,11 @@ export default async function Page({ params }: { params: { id: string } }) {
     <>
       <h5>Publish: {params.id}</h5>
 
-      <VideoModal publish={publish} stationName={station?.name || ""} />
+      {publish.kind === "Blog" ? (
+        <BlogModal publish={publish} profile={station} />
+      ) : (
+        <VideoModal publish={publish} stationName={station?.name || ""} />
+      )}
     </>
   )
 }
