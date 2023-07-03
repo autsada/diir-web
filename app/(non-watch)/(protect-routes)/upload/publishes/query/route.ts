@@ -1,17 +1,11 @@
-import React from "react"
+import { NextResponse } from "next/server"
 import { redirect } from "next/navigation"
 
-import Videos from "./Videos"
-import Blogs from "./Blogs"
-import { getAccount } from "@/lib/server"
 import { fetchMyPublishes, getStationById } from "@/graphql"
+import { getAccount } from "@/lib/server"
 import type { QueryPublishKind } from "@/graphql/types"
 
-export default async function Page({
-  params,
-}: {
-  params: { kind: QueryPublishKind }
-}) {
+export async function POST(req: Request) {
   const data = await getAccount()
   const account = data?.account
   const idToken = data?.idToken
@@ -32,10 +26,12 @@ export default async function Page({
     redirect("/settings")
   }
 
-  // Query all publishes by kind.
-  const kind = params.kind
+  const { kind, cursor } = (await req.json()) as {
+    kind: QueryPublishKind
+    cursor?: string
+  }
 
-  let fetchResult = await fetchMyPublishes({
+  const result = await fetchMyPublishes({
     idToken,
     signature,
     data: {
@@ -43,12 +39,9 @@ export default async function Page({
       owner: account.owner,
       creatorId: station.id,
       kind,
+      cursor,
     },
   })
 
-  return kind === "blogs" ? (
-    <Blogs fetchResult={fetchResult} />
-  ) : (
-    <Videos fetchResult={fetchResult} />
-  )
+  return NextResponse.json({ result })
 }

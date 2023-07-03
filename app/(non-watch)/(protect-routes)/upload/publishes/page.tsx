@@ -1,10 +1,9 @@
 import React from "react"
 
-import Publishes from "./Publishes"
+import Preview from "./Preview"
 import { getAccount } from "@/lib/server"
 import { fetchMyPublishes, getStationById } from "@/graphql"
 import { redirect } from "next/navigation"
-import type { Station } from "@/graphql/codegen/graphql"
 
 export default async function AllPublishes() {
   const data = await getAccount()
@@ -21,7 +20,7 @@ export default async function AllPublishes() {
   }
 
   // Query station by id
-  const station = (await getStationById(account?.defaultStation?.id)) as Station
+  const station = await getStationById(account?.defaultStation?.id)
 
   if (!station) {
     redirect("/settings")
@@ -40,5 +39,5 @@ export default async function AllPublishes() {
     },
   })
 
-  return <Publishes fetchResult={result || undefined} />
+  return <Preview fetchResult={result || undefined} />
 }

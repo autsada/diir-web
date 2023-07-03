@@ -4,8 +4,8 @@ import React from "react"
 import { useParams } from "next/navigation"
 
 import Tab from "@/components/Tab"
-import type { Station } from "@/graphql/codegen/graphql"
 import { publishKinds } from "@/lib/helpers"
+import type { Station } from "@/graphql/codegen/graphql"
 
 interface Props {
   station: Station
@@ -17,7 +17,7 @@ export default function PublishTabs({ station }: Props) {
   const tab = params?.kind
 
   return (
-    <div className="flex gap-x-1 sm:gap-x-4">
+    <div className="flex gap-x-4">
       <Tab href={`/upload/publishes`} name="HOME" isActive={!tab} />
       {publishKinds.map((k) =>
         k === "ads" && !isOwner ? null : (

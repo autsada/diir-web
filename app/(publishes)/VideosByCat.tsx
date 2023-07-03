@@ -4,6 +4,7 @@ import Mask from "@/components/Mask"
 import PublishItem from "./PublishItem"
 import ButtonLoader from "@/components/ButtonLoader"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
+import { combineEdges } from "@/lib/helpers"
 import type {
   Maybe,
   FetchPublishesResponse,
@@ -93,7 +94,7 @@ export default function VideosByCat({
       const data = (await res.json()) as {
         result: FetchPublishesResponse
       }
-      setVideos((prev) => [...prev, ...data.result.edges])
+      setVideos((prev) => combineEdges(prev, data.result.edges))
       setPageInfo(data?.result?.pageInfo)
       setLoading(false)
     } catch (error) {

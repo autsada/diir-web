@@ -118,7 +118,6 @@ export const FETCH_CREATOR_PUBLISHES_QUERY = gql`
           blog {
             createdAt
             updatedAt
-            title
             content
             publishId
           }

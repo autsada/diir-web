@@ -212,7 +212,6 @@ export default function CreateBlogModal({
     if (tagInputRef.current) {
       const input = document.getElementById("tag-input")
       if (input) {
-        console.log("called")
         input.focus()
       }
     }

@@ -56,7 +56,6 @@ export type Blog = {
   createdAt: Scalars['DateTime']['output'];
   publish?: Maybe<Publish>;
   publishId: Scalars['String']['output'];
-  title: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -1101,7 +1100,7 @@ export type Tip = {
 
 export type UpdateBlogInput = {
   accountId: Scalars['String']['input'];
-  content?: InputMaybe<Scalars['String']['input']>;
+  content?: InputMaybe<Scalars['Json']['input']>;
   creatorId: Scalars['String']['input'];
   filename?: InputMaybe<Scalars['String']['input']>;
   imageRef?: InputMaybe<Scalars['String']['input']>;

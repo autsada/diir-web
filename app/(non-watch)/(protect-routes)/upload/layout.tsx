@@ -10,6 +10,9 @@ export default async function Layout({
 }) {
   const data = await getAccount()
   const account = data?.account
+  const idToken = data?.idToken
+
+  if (!account || !idToken) throw new Error("Please sign in to proceed.")
 
   return (
     <div className="px-4 py-2">
