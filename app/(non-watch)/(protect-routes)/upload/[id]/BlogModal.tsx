@@ -12,6 +12,7 @@ import Dropzone from "react-dropzone"
 import { AiOutlineCloseCircle } from "react-icons/ai"
 import type { DeltaStatic } from "quill"
 import _ from "lodash"
+import { toast } from "react-toastify"
 
 import CloseButton from "@/components/CloseButton"
 import ModalWrapper from "@/components/ModalWrapper"
@@ -25,6 +26,7 @@ import { publishesFolder } from "@/firebase/config"
 import { saveBlogPost } from "../actions"
 import type { FileWithPrview } from "@/types"
 import type { Publish, Station } from "@/graphql/codegen/graphql"
+import { PublishVisibility } from "@/graphql/types"
 
 interface Props {
   profile: Station
@@ -100,184 +102,114 @@ export default function BlogModal({ profile, publish }: Props) {
     setConfirmModalVisible(false)
   }, [])
 
-  const saveDraft = useCallback(async () => {
-    if (!stationName) return
-    if (
-      isTitleEqual &&
-      isTagsEqual &&
-      isOldImageEqual &&
-      !image &&
-      isContentEqual
-    )
-      return
-
-    try {
-      // Validate title
-      if (title.length > 128) {
-        setTitleError("Max length 128 characters.")
-        return
-      }
-
-      setSavingDraft(true)
-
-      // Save a blog
-      // 1 Upload image to cloud storage (if any)
-      let imageUrl: string | undefined = undefined
-      let imageRef: string | undefined = undefined
-      let filename: string | undefined = undefined
-      if (image) {
-        const { url, fileRef } = await uploadFile({
-          file: image,
-          folder: `${publishesFolder}/${stationName}/${publishId}`,
-        })
-        imageUrl = url
-        imageRef = fileRef
-        filename = image.name
-
-        // Remove the old image (if any) without waiting
-        // Add try/catch to let the process continue if delete file has error
-        try {
-          if (prevImage && prevImageRef) {
-            deleteFile(prevImageRef)
-          }
-        } catch (error) {
-          console.error(error)
-        }
-        setImage(undefined)
-        setOldImage(url)
-      } else {
-        // If user removes the old image wihout uploading a new one
-        // Wait for the delete to finish
-        if (!oldImage && prevImageRef) {
-          await deleteFile(prevImageRef)
-        }
-      }
-
-      // 2.2 Save the draft
-      startTransition(() =>
-        saveBlogPost({
-          publishId,
-          title,
-          imageUrl: !imageUrl && !oldImage ? "" : imageUrl,
-          imageRef: !imageRef && !oldImage ? "" : imageRef,
-          filename: !filename && !oldImage ? "" : filename,
-          tags,
-          content: content ? JSON.stringify(content) : undefined,
-          visibility: "draft",
-        })
+  const saveBlog = useCallback(
+    async (visibility: PublishVisibility) => {
+      if (!stationName) return
+      if (
+        isTitleEqual &&
+        isTagsEqual &&
+        isOldImageEqual &&
+        !image &&
+        isContentEqual
       )
-      setSavingDraft(false)
-    } catch (error) {
-      setSavingDraft(false)
-      setError("Failed saving the draft, please try again.")
-    }
-  }, [
-    stationName,
-    isTitleEqual,
-    isOldImageEqual,
-    isTagsEqual,
-    isContentEqual,
-    title,
-    image,
-    tags,
-    prevImage,
-    oldImage,
-    prevImageRef,
-    publishId,
-    content,
-  ])
+        return
 
-  //   const saveDraft = useCallback(
-  //     async (visibility: PublishVisibility) => {
-  //       if (
-  //         !stationName ||
-  //         (!title &&
-  //           !image &&
-  //           tags.length === 0 &&
-  //           !content &&
-  //           !contentForPreview)
-  //       )
-  //         return
+      try {
+        // Validate title
+        if (title.length > 128) {
+          setTitleError("Max length 128 characters.")
+          return
+        }
 
-  //       try {
-  //         // Validate title
-  //         if (title.length > 128) {
-  //           setTitleError("Max length 128 characters.")
-  //           return
-  //         }
+        if (visibility === "draft") {
+          setSavingDraft(true)
+        } else if (visibility === "public") {
+          setPublishingBlog(true)
+        }
 
-  //         if (visibility === "draft") {
-  //           setSavingDraft(true)
-  //         } else if (visibility === "public") {
-  //           // Validate title
-  //           if (title.length === 0) {
-  //             setTitleError("Title is required.")
-  //             return
-  //           } else if (title.length < 3) {
-  //             setTitleError("Min length 3 characters.")
-  //             return
-  //           } else if (title.length > 128) {
-  //             setTitleError("Max length 128 characters.")
-  //             return
-  //           } else {
-  //             setTitleError("")
-  //           }
+        // Save a blog
+        // 1 Upload image to cloud storage (if any)
+        let imageUrl: string | undefined = undefined
+        let imageRef: string | undefined = undefined
+        let filename: string | undefined = undefined
+        if (image) {
+          const { url, fileRef } = await uploadFile({
+            file: image,
+            folder: `${publishesFolder}/${stationName}/${publishId}`,
+          })
+          imageUrl = url
+          imageRef = fileRef
+          filename = image.name
 
-  //           // Validate content
-  //           if (!content) {
-  //             setError("No content to publish.")
-  //             return
-  //           }
-  //           setPublishingBlog(true)
-  //         }
+          // Remove the old image (if any) without waiting
+          // Add try/catch to let the process continue if delete file has error
+          try {
+            if (prevImage && prevImageRef) {
+              deleteFile(prevImageRef)
+            }
+          } catch (error) {
+            console.error(error)
+          }
+          setImage(undefined)
+          setOldImage(url)
+        } else {
+          // If user removes the old image wihout uploading a new one
+          // Wait for the delete to finish
+          if (!oldImage && prevImageRef) {
+            await deleteFile(prevImageRef)
+          }
+        }
 
-  //         // Save a blog
-  //         // 1 Upload image to cloud storage (if any)
-  //         let imageUrl: string | undefined = undefined
-  //         let imageRef: string | undefined = undefined
-  //         let filename: string | undefined = undefined
-  //         if (image) {
-  //           const { url, fileRef } = await uploadFile({
-  //             file: image,
-  //             folder: `${publishesFolder}/${stationName}/${publishId}`,
-  //           })
-  //           imageUrl = url
-  //           imageRef = fileRef
-  //           filename = image.name
-  //         }
-
-  //         // 2.2 Save the draft
-  //         startTransition(() =>
-  //           saveBlogPost({
-  //             publishId,
-  //             title,
-  //             imageUrl,
-  //             imageRef,
-  //             filename,
-  //             tags,
-  //             content: content ? JSON.stringify(content) : undefined,
-  //             visibility,
-  //           })
-  //         )
-  //         if (visibility === "draft") {
-  //           setSavingDraft(false)
-  //         } else if (visibility === "public") {
-  //           setPublishingBlog(false)
-  //         }
-
-  //         // 2.3 Close modal
-  //         cancelUpload()
-  //       } catch (error) {
-  //         if (visibility === "draft") {
-  //           setSavingDraft(false)
-  //         } else if (visibility === "public") {
-  //           setPublishingBlog(false)
-  //         }
-  //         setError("Failed saving the draft, please try again.")
-  //       }
-  //     },
-  //     [stationName, title, image, tags, content, contentForPreview]
-  //   )
+        // 2.2 Save the draft
+        startTransition(() =>
+          saveBlogPost({
+            publishId,
+            title,
+            imageUrl: !imageUrl && !oldImage ? "" : imageUrl,
+            imageRef: !imageRef && !oldImage ? "" : imageRef,
+            filename: !filename && !oldImage ? "" : filename,
+            tags,
+            content: content ? JSON.stringify(content) : undefined,
+            visibility,
+          })
+        )
+        const id = setTimeout(() => {
+          if (visibility === "draft") {
+            setSavingDraft(false)
+          } else if (visibility === "public") {
+            setPublishingBlog(false)
+          }
+          clearTimeout(id)
+        }, 1000)
+        toast.success(
+          visibility === "draft" ? "Blog updated" : "Blog published",
+          { theme: "dark" }
+        )
+      } catch (error) {
+        if (visibility === "draft") {
+          setSavingDraft(false)
+        } else if (visibility === "public") {
+          setPublishingBlog(false)
+        }
+        setError("Failed saving the draft, please try again.")
+      }
+    },
+    [
+      stationName,
+      isTitleEqual,
+      isOldImageEqual,
+      isTagsEqual,
+      isContentEqual,
+      title,
+      image,
+      tags,
+      prevImage,
+      oldImage,
+      prevImageRef,
+      publishId,
+      content,
+    ]
+  )
 
   const changeMode = useCallback((m: "edit" | "preview") => {
     setMode(m)
@@ -339,8 +271,6 @@ export default function BlogModal({ profile, publish }: Props) {
 
   if (!publish) return null
 
-  console.log("loading -->", savingDraft)
-  console.log("publish -->", publish)
   return (
     <ModalWrapper visible>
       <div className="w-full h-full min-w-full min-h-full max-w-full max-h-full flex items-center justify-center">
@@ -421,7 +351,7 @@ export default function BlogModal({ profile, publish }: Props) {
                               type="button"
                               className="btn-light mx-0 px-6 rounded-full"
                             >
-                              {publish.thumbnail || image
+                              {oldImage || image
                                 ? "Change"
                                 : "Add a cover image"}
                             </button>
@@ -520,14 +450,14 @@ export default function BlogModal({ profile, publish }: Props) {
                 <button
                   type="button"
                   className="btn-light mx-0 w-[130px]"
-                  onClick={saveDraft}
+                  onClick={saveBlog.bind(undefined, "draft")}
                 >
                   {savingDraft ? <ButtonLoader loading /> : "Update draft"}
                 </button>
                 <button
                   type="button"
                   className="btn-blue mx-0 w-[100px]"
-                  //   onClick={saveBlog.bind(undefined, "public")}
+                  onClick={saveBlog.bind(undefined, "public")}
                 >
                   {publishingBlog ? <ButtonLoader loading /> : "Publish"}
                 </button>
