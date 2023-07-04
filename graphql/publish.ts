@@ -9,7 +9,7 @@ import type {
   MutationReturnType,
   MutationArgsType,
   QueryByIdInput,
-  UpdatePublishInput,
+  UpdateVideoInput,
   FetchPublishesByCatInput,
   LikePublishInput,
   FetchStationPublishesInput,
@@ -675,21 +675,21 @@ export async function createDraftBlog({
 /**
  * Update publish
  */
-export const UPDATE_PUBLISH_MUTATION = gql`
-  mutation UpdatePublish($input: UpdatePublishInput!) {
-    updatePublish(input: $input) {
+export const UPDATE_VIDEO_MUTATION = gql`
+  mutation UpdateVideo($input: UpdateVideoInput!) {
+    updateVideo(input: $input) {
       id
     }
   }
 `
-export async function updatePublish({
+export async function updateVideo({
   idToken,
   signature,
   data,
 }: {
   idToken: string
   signature?: string
-  data: UpdatePublishInput
+  data: UpdateVideoInput
 }) {
   try {
     const result = await client
@@ -699,13 +699,13 @@ export async function updatePublish({
         "auth-wallet-signature": signature || "",
       })
       .request<
-        MutationReturnType<"updatePublish">,
-        MutationArgsType<"updatePublish">
-      >(UPDATE_PUBLISH_MUTATION, {
+        MutationReturnType<"updateVideo">,
+        MutationArgsType<"updateVideo">
+      >(UPDATE_VIDEO_MUTATION, {
         input: data,
       })
 
-    return result?.updatePublish
+    return result?.updateVideo
   } catch (error) {
     throw error
   }

@@ -56,7 +56,7 @@ export type CacheSessionInput = NexusGenInputs["CacheSessionInput"]
 export type CreateDraftVideoInput = NexusGenInputs["CreateDraftVideoInput"]
 export type CreateDraftBlogInput = NexusGenInputs["CreateDraftBlogInput"]
 export type UpdateBlogInput = NexusGenInputs["UpdateBlogInput"]
-export type UpdatePublishInput = NexusGenInputs["UpdatePublishInput"]
+export type UpdateVideoInput = NexusGenInputs["UpdateVideoInput"]
 export type AddToWatchLaterInput = NexusGenInputs["AddToWatchLaterInput"]
 export type RemoveFromWatchLaterInput =
   NexusGenInputs["RemoveFromWatchLaterInput"]

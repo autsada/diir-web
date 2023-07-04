@@ -110,6 +110,13 @@ export interface NexusGenInputs {
     playlistId: string // String!
     stationId: string // String!
   }
+  DeletePublishInput: {
+    // input type
+    accountId: string // String!
+    owner: string // String!
+    publishId: string // String!
+    stationId: string // String!
+  }
   DontRecommendInput: {
     // input type
     accountId: string // String!
@@ -348,18 +355,18 @@ export interface NexusGenInputs {
     preferences: NexusGenEnums["Category"][] // [Category!]!
     stationId: string // String!
   }
-  UpdatePublishInput: {
+  UpdateVideoInput: {
     // input type
     accountId: string // String!
     contentRef?: string | null // String
     contentURI?: string | null // String
+    creatorId: string // String!
     description?: string | null // String
     kind?: NexusGenEnums["PublishKind"] | null // PublishKind
     owner: string // String!
     primaryCategory?: NexusGenEnums["Category"] | null // Category
     publishId: string // String!
     secondaryCategory?: NexusGenEnums["Category"] | null // Category
-    stationId: string // String!
     thumbSource: NexusGenEnums["ThumbSource"] // ThumbSource!
     thumbnail?: string | null // String
     thumbnailRef?: string | null // String
@@ -928,7 +935,7 @@ export interface NexusGenFieldTypes {
     updatePlaylists: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updatePreferences: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updateProfileImage: NexusGenRootTypes["WriteResult"] | null // WriteResult
-    updatePublish: NexusGenRootTypes["Publish"] | null // Publish
+    updateVideo: NexusGenRootTypes["Publish"] | null // Publish
     validateDisplayName: boolean | null // Boolean
     validateName: boolean | null // Boolean
   }
@@ -1346,7 +1353,7 @@ export interface NexusGenFieldTypeNames {
     updatePlaylists: "WriteResult"
     updatePreferences: "WriteResult"
     updateProfileImage: "WriteResult"
-    updatePublish: "Publish"
+    updateVideo: "Publish"
     validateDisplayName: "Boolean"
     validateName: "Boolean"
   }
@@ -1701,9 +1708,9 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs["UpdateImageInput"] // UpdateImageInput!
     }
-    updatePublish: {
+    updateVideo: {
       // args
-      input: NexusGenInputs["UpdatePublishInput"] // UpdatePublishInput!
+      input: NexusGenInputs["UpdateVideoInput"] // UpdateVideoInput!
     }
     validateDisplayName: {
       // args

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 
-import { updatePublish } from "@/graphql"
+import { updateVideo } from "@/graphql"
 import { getAccount } from "@/lib/server"
-import type { UpdatePublishInput } from "@/graphql/types"
+import type { UpdateVideoInput } from "@/graphql/types"
 
 export async function POST(req: Request) {
   const data = await getAccount()
@@ -16,8 +16,8 @@ export async function POST(req: Request) {
   if (!idToken) throw new Error("Please sign in to proceed.")
 
   const body = (await req.json()) as Omit<
-    UpdatePublishInput,
-    "accountId" | "owner" | "stationId" | "contentURI" | "contentRef"
+    UpdateVideoInput,
+    "accountId" | "owner" | "creatorId" | "contentURI" | "contentRef"
   >
 
   const {
@@ -34,13 +34,13 @@ export async function POST(req: Request) {
   } = body
   if (!publishId) throw new Error("Bad input")
 
-  const result = await updatePublish({
+  const result = await updateVideo({
     idToken,
     signature,
     data: {
       accountId: account.id,
       owner: account.owner,
-      stationId: account.defaultStation.id,
+      creatorId: account.defaultStation.id,
       publishId,
       thumbnail: thumbnail || null,
       thumbnailRef: thumbnailRef || null,

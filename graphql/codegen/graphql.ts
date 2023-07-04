@@ -234,6 +234,13 @@ export type DeletePlaylistInput = {
   stationId: Scalars['String']['input'];
 };
 
+export type DeletePublishInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+  stationId: Scalars['String']['input'];
+};
+
 export type DisLike = {
   __typename?: 'DisLike';
   createdAt: Scalars['DateTime']['output'];
@@ -494,7 +501,7 @@ export type Mutation = {
   updatePlaylists?: Maybe<WriteResult>;
   updatePreferences?: Maybe<WriteResult>;
   updateProfileImage?: Maybe<WriteResult>;
-  updatePublish?: Maybe<Publish>;
+  updateVideo?: Maybe<Publish>;
   validateDisplayName?: Maybe<Scalars['Boolean']['output']>;
   validateName?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -680,8 +687,8 @@ export type MutationUpdateProfileImageArgs = {
 };
 
 
-export type MutationUpdatePublishArgs = {
-  input: UpdatePublishInput;
+export type MutationUpdateVideoArgs = {
+  input: UpdateVideoInput;
 };
 
 
@@ -1159,17 +1166,17 @@ export type UpdatePreferencesInput = {
   stationId: Scalars['String']['input'];
 };
 
-export type UpdatePublishInput = {
+export type UpdateVideoInput = {
   accountId: Scalars['String']['input'];
   contentRef?: InputMaybe<Scalars['String']['input']>;
   contentURI?: InputMaybe<Scalars['String']['input']>;
+  creatorId: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   kind?: InputMaybe<PublishKind>;
   owner: Scalars['String']['input'];
   primaryCategory?: InputMaybe<Category>;
   publishId: Scalars['String']['input'];
   secondaryCategory?: InputMaybe<Category>;
-  stationId: Scalars['String']['input'];
   thumbSource: ThumbSource;
   thumbnail?: InputMaybe<Scalars['String']['input']>;
   thumbnailRef?: InputMaybe<Scalars['String']['input']>;
