@@ -390,10 +390,10 @@ export default function BlogModal({ profile, publish }: Props) {
     <ModalWrapper visible>
       <div className="w-full h-full min-w-full min-h-full max-w-full max-h-full flex items-center justify-center">
         <div className="relative w-[95%] h-[95%] bg-white rounded-md overflow-hidden flex flex-col">
-          <div className="w-full py-2 px-5 8-red-200 flex items-center justify-between border-b border-neutral-100">
+          <div className="w-full py-2 px-2 sm:px-5 flex items-center justify-between border-b border-neutral-100">
             <h6>Update blog</h6>
             <h5
-              className={`font-normal italic ${
+              className={`font-normal italic text-base sm:text-2xl ${
                 prevVisibility === "public" ? "text-blueDark" : "text-textLight"
               }`}
             >
@@ -555,53 +555,56 @@ export default function BlogModal({ profile, publish }: Props) {
             </div>
           </div>
 
-          <div className="w-full h-[70px] py-2 px-5 border-t border-neutral-100 flex items-center justify-end gap-x-5">
-            <p className="error">
-              {titleError ? (
-                titleError
-              ) : fileError ? (
-                fileError
-              ) : error ? (
-                error
+          <div className="w-full h-[70px] py-2 px-5 border-t border-neutral-100 flex items-center justify-between">
+            <div>Delete</div>
+            <div className="flex items-center justify-end gap-x-5">
+              <p className="error">
+                {titleError ? (
+                  titleError
+                ) : fileError ? (
+                  fileError
+                ) : error ? (
+                  error
+                ) : (
+                  <>&nbsp;</>
+                )}
+              </p>
+              {prevVisibility === "draft" ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn-light mx-0 w-[130px]"
+                    onClick={updateDraft.bind(undefined, "draft")}
+                  >
+                    {savingDraft ? <ButtonLoader loading /> : "Update draft"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-blue mx-0 w-[100px]"
+                    onClick={updateDraft.bind(undefined, "public")}
+                  >
+                    {publishingBlog ? <ButtonLoader loading /> : "Publish"}
+                  </button>
+                </>
               ) : (
-                <>&nbsp;</>
+                <>
+                  <button
+                    type="button"
+                    className="btn-orange mx-0 w-[100px]"
+                    onClick={updateBlog.bind(undefined, "un-publish")}
+                  >
+                    {unPublishinglog ? <ButtonLoader loading /> : "UnPublish"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-light mx-0 w-[100px]"
+                    onClick={updateBlog.bind(undefined, "update")}
+                  >
+                    {updatingBlog ? <ButtonLoader loading /> : "Update"}
+                  </button>
+                </>
               )}
-            </p>
-            {prevVisibility === "draft" ? (
-              <>
-                <button
-                  type="button"
-                  className="btn-light mx-0 w-[130px]"
-                  onClick={updateDraft.bind(undefined, "draft")}
-                >
-                  {savingDraft ? <ButtonLoader loading /> : "Update draft"}
-                </button>
-                <button
-                  type="button"
-                  className="btn-blue mx-0 w-[100px]"
-                  onClick={updateDraft.bind(undefined, "public")}
-                >
-                  {publishingBlog ? <ButtonLoader loading /> : "Publish"}
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  className="btn-orange mx-0 w-[100px]"
-                  onClick={updateBlog.bind(undefined, "un-publish")}
-                >
-                  {unPublishinglog ? <ButtonLoader loading /> : "UnPublish"}
-                </button>
-                <button
-                  type="button"
-                  className="btn-light mx-0 w-[100px]"
-                  onClick={updateBlog.bind(undefined, "update")}
-                >
-                  {updatingBlog ? <ButtonLoader loading /> : "Update"}
-                </button>
-              </>
-            )}
+            </div>
           </div>
         </div>
       </div>

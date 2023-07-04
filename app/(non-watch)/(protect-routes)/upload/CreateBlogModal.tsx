@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, useTransition } from "react"
 import Dropzone from "react-dropzone"
 import { AiOutlineCloseCircle } from "react-icons/ai"
+import { useRouter } from "next/navigation"
 import type { DeltaStatic } from "quill"
 
 import CloseButton from "@/components/CloseButton"
@@ -42,8 +43,8 @@ export default function CreateBlogModal({
   const [error, setError] = useState("")
 
   const tagInputRef = useRef<HTMLDivElement>(null)
-
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   const onCloseModal = useCallback(() => {
     if (
@@ -150,14 +151,9 @@ export default function CreateBlogModal({
             visibility,
           })
         )
-        if (visibility === "draft") {
-          setSavingDraft(false)
-        } else if (visibility === "public") {
-          setPublishingBlog(false)
-        }
 
-        // 2.3 Close modal
-        cancelUpload()
+        // Push user to upload --> blogs
+        router.push("/upload/publishes/blogs")
       } catch (error) {
         if (visibility === "draft") {
           setSavingDraft(false)
@@ -175,7 +171,7 @@ export default function CreateBlogModal({
       content,
       contentForPreview,
       createPublish,
-      cancelUpload,
+      router,
     ]
   )
 

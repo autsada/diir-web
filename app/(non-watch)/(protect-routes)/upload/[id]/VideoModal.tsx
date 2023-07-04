@@ -1,6 +1,12 @@
 "use client"
 
-import React, { useCallback, useEffect, useState, useRef } from "react"
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useTransition,
+} from "react"
 import { useRouter } from "next/navigation"
 import { doc, onSnapshot } from "firebase/firestore"
 import { MdFileUpload, MdOutlineWarning } from "react-icons/md"
@@ -9,6 +15,7 @@ import { IoCaretDownSharp } from "react-icons/io5"
 import { useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
 import _ from "lodash"
+import { toast } from "react-toastify"
 
 import ModalWrapper from "@/components/ModalWrapper"
 import CloseButton from "@/components/CloseButton"
@@ -19,6 +26,7 @@ import Mask from "@/components/Mask"
 import { contentCategories } from "@/lib/helpers"
 import { db, publishesFolder, uploadsCollection } from "@/firebase/config"
 import { deleteFile, uploadFile } from "@/firebase/helpers"
+import { saveVideo } from "../actions"
 import type { PublishCategory, PublishKind, ThumbSource } from "@/graphql/types"
 import type { Publish } from "@/graphql/codegen/graphql"
 import type { FileWithPrview } from "@/types"
@@ -50,6 +58,7 @@ export default function VideoModal({ publish, stationName }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
+  const [isPending, startTransition] = useTransition()
   const router = useRouter()
   const hiddenInputRef = useRef<HTMLInputElement>(null)
   const {
@@ -182,20 +191,12 @@ export default function VideoModal({ publish, stationName }: Props) {
         return
       }
 
-      // Call api route to update the publish in the database
-      const res = await fetch(`/upload/update`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ publishId: publish.id, ...newData }),
-      })
-      await res.json()
-
-      // Reload data
-      router.refresh()
-      // Push to all publishes page
-      router.push("/upload/publishes")
+      startTransition(() => saveVideo({ publishId: publish.id, ...newData }))
+      const id = setTimeout(() => {
+        setLoading(false)
+        clearTimeout(id)
+      }, 1000)
+      toast.success("Video updated", { theme: "dark" })
     } catch (error) {
       setLoading(false)
       setError("Save failed, please try again.")
@@ -656,7 +657,8 @@ export default function VideoModal({ publish, stationName }: Props) {
         </form>
       </div>
 
-      {loading && <Mask />}
+      {/* Prevent interaction while loading */}
+      {(loading || isPending) && <Mask />}
     </ModalWrapper>
   )
 }

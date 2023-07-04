@@ -18,6 +18,7 @@ import type {
   CreateDraftVideoInput,
   CreateDraftBlogInput,
   UpdateBlogInput,
+  DeletePublishInput,
 } from "./types"
 import { FetchSuggestedPublishesInput } from "./codegen/graphql"
 
@@ -673,7 +674,7 @@ export async function createDraftBlog({
 }
 
 /**
- * Update publish
+ * Update video
  */
 export const UPDATE_VIDEO_MUTATION = gql`
   mutation UpdateVideo($input: UpdateVideoInput!) {
@@ -685,11 +686,11 @@ export const UPDATE_VIDEO_MUTATION = gql`
 export async function updateVideo({
   idToken,
   signature,
-  data,
+  input,
 }: {
   idToken: string
   signature?: string
-  data: UpdateVideoInput
+  input: UpdateVideoInput
 }) {
   try {
     const result = await client
@@ -702,7 +703,7 @@ export async function updateVideo({
         MutationReturnType<"updateVideo">,
         MutationArgsType<"updateVideo">
       >(UPDATE_VIDEO_MUTATION, {
-        input: data,
+        input,
       })
 
     return result?.updateVideo
@@ -852,6 +853,45 @@ export async function countViews(publishId: string) {
       })
 
     return result?.countViews
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Delete publish
+ */
+export const DELETE_PUBLISH_MUTATION = gql`
+  mutation DeletePublish($input: DeletePublishInput!) {
+    deletePublish(input: $input) {
+      status
+    }
+  }
+`
+export async function deletePublish({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: DeletePublishInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"deletePublish">,
+        MutationArgsType<"deletePublish">
+      >(DELETE_PUBLISH_MUTATION, {
+        input: data,
+      })
+
+    return result?.deletePublish
   } catch (error) {
     throw error
   }

@@ -113,9 +113,9 @@ export interface NexusGenInputs {
   DeletePublishInput: {
     // input type
     accountId: string // String!
+    creatorId: string // String!
     owner: string // String!
     publishId: string // String!
-    stationId: string // String!
   }
   DontRecommendInput: {
     // input type
@@ -913,6 +913,7 @@ export interface NexusGenFieldTypes {
     createTip: NexusGenRootTypes["Tip"] | null // Tip
     deleteAllPlaylistItems: NexusGenRootTypes["WriteResult"] | null // WriteResult
     deletePlaylist: NexusGenRootTypes["WriteResult"] | null // WriteResult
+    deletePublish: NexusGenRootTypes["WriteResult"] | null // WriteResult
     disLikeComment: NexusGenRootTypes["WriteResult"] | null // WriteResult
     disLikePublish: NexusGenRootTypes["WriteResult"] | null // WriteResult
     dontRecommend: NexusGenRootTypes["WriteResult"] | null // WriteResult
@@ -1331,6 +1332,7 @@ export interface NexusGenFieldTypeNames {
     createTip: "Tip"
     deleteAllPlaylistItems: "WriteResult"
     deletePlaylist: "WriteResult"
+    deletePublish: "WriteResult"
     disLikeComment: "WriteResult"
     disLikePublish: "WriteResult"
     dontRecommend: "WriteResult"
@@ -1619,6 +1621,10 @@ export interface NexusGenArgTypes {
     deletePlaylist: {
       // args
       input: NexusGenInputs["DeletePlaylistInput"] // DeletePlaylistInput!
+    }
+    deletePublish: {
+      // args
+      input: NexusGenInputs["DeletePublishInput"] // DeletePublishInput!
     }
     disLikeComment: {
       // args

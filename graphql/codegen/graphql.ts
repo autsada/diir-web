@@ -236,9 +236,9 @@ export type DeletePlaylistInput = {
 
 export type DeletePublishInput = {
   accountId: Scalars['String']['input'];
+  creatorId: Scalars['String']['input'];
   owner: Scalars['String']['input'];
   publishId: Scalars['String']['input'];
-  stationId: Scalars['String']['input'];
 };
 
 export type DisLike = {
@@ -479,6 +479,7 @@ export type Mutation = {
   createTip?: Maybe<Tip>;
   deleteAllPlaylistItems?: Maybe<WriteResult>;
   deletePlaylist?: Maybe<WriteResult>;
+  deletePublish?: Maybe<WriteResult>;
   disLikeComment?: Maybe<WriteResult>;
   disLikePublish?: Maybe<WriteResult>;
   dontRecommend?: Maybe<WriteResult>;
@@ -574,6 +575,11 @@ export type MutationDeleteAllPlaylistItemsArgs = {
 
 export type MutationDeletePlaylistArgs = {
   input: DeletePlaylistInput;
+};
+
+
+export type MutationDeletePublishArgs = {
+  input: DeletePublishInput;
 };
 
 
