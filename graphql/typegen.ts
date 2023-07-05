@@ -634,6 +634,7 @@ export interface NexusGenObjects {
     contentURI?: string | null // String
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     creatorId: string // String!
+    deleting: boolean // Boolean!
     description?: string | null // String
     filename?: string | null // String
     id: string // ID!
@@ -1011,6 +1012,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     creator: NexusGenRootTypes["Station"] // Station!
     creatorId: string // String!
+    deleting: boolean // Boolean!
     description: string | null // String
     disLiked: boolean | null // Boolean
     disLikesCount: number // Int!
@@ -1430,6 +1432,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: "DateTime"
     creator: "Station"
     creatorId: "String"
+    deleting: "Boolean"
     description: "String"
     disLiked: "Boolean"
     disLikesCount: "Int"

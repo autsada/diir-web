@@ -40,6 +40,7 @@ export const GET_UPLOADED_PUBLISH_QUERY = gql`
       thumbnailRef
       thumbSource
       uploading
+      deleting
       uploadError
       transcodeError
       kind
@@ -120,6 +121,7 @@ export const FETCH_CREATOR_PUBLISHES_QUERY = gql`
           likesCount
           disLikesCount
           uploading
+          deleting
           uploadError
           tipsCount
           visibility
@@ -871,11 +873,11 @@ export const DELETE_PUBLISH_MUTATION = gql`
 export async function deletePublish({
   idToken,
   signature,
-  data,
+  input,
 }: {
   idToken: string
   signature?: string
-  data: DeletePublishInput
+  input: DeletePublishInput
 }) {
   try {
     const result = await client
@@ -888,7 +890,7 @@ export async function deletePublish({
         MutationReturnType<"deletePublish">,
         MutationArgsType<"deletePublish">
       >(DELETE_PUBLISH_MUTATION, {
-        input: data,
+        input,
       })
 
     return result?.deletePublish

@@ -796,6 +796,7 @@ export type Publish = {
   createdAt: Scalars['DateTime']['output'];
   creator: Station;
   creatorId: Scalars['String']['output'];
+  deleting: Scalars['Boolean']['output'];
   description?: Maybe<Scalars['String']['output']>;
   disLiked?: Maybe<Scalars['Boolean']['output']>;
   disLikesCount: Scalars['Int']['output'];

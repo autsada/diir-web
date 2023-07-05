@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation"
 import { doc, onSnapshot } from "firebase/firestore"
 import { MdFileUpload, MdOutlineWarning } from "react-icons/md"
 import { HiDotsVertical } from "react-icons/hi"
-import { IoCaretDownSharp } from "react-icons/io5"
+import { IoCaretDownSharp, IoTrash } from "react-icons/io5"
 import { useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
 import _ from "lodash"
@@ -23,6 +23,7 @@ import ButtonLoader from "@/components/ButtonLoader"
 import ProgressBar from "@/components/ProgressBar"
 import VideoPlayer from "@/components/VideoPlayer"
 import Mask from "@/components/Mask"
+import ConfirmDeleteModal from "./ConfirmDeleteModal"
 import { contentCategories } from "@/lib/helpers"
 import { db, publishesFolder, uploadsCollection } from "@/firebase/config"
 import { deleteFile, uploadFile } from "@/firebase/helpers"
@@ -46,6 +47,7 @@ type FormData = {
 }
 
 export default function VideoModal({ publish, stationName }: Props) {
+  const publishId = publish?.id
   const [thumbnail, setThumbnail] = useState<FileWithPrview>()
   const [thumbnailError, setThumbnailError] = useState("")
   const [isChangingThumb, setIsChangingThumb] = useState(false)
@@ -57,6 +59,9 @@ export default function VideoModal({ publish, stationName }: Props) {
   const [thumbnailProgress, setThumbnailProgress] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [confirmDeleteModalVisible, setConfirmDeleteModalVisible] =
+    useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
@@ -202,6 +207,36 @@ export default function VideoModal({ publish, stationName }: Props) {
       setError("Save failed, please try again.")
     }
   })
+
+  const openConfirmDeleteModal = useCallback(() => {
+    setConfirmDeleteModalVisible(true)
+  }, [])
+
+  const closeConfirmDeleteModal = useCallback(() => {
+    setConfirmDeleteModalVisible(false)
+  }, [])
+
+  const deleteVideo = useCallback(async () => {
+    if (!publishId) return
+
+    try {
+      setDeleting(true)
+      await fetch(`/upload/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          publishId,
+        }),
+      })
+      router.back()
+    } catch (error) {
+      setDeleting(false)
+    }
+  }, [publishId, router])
+
+  if (!publish) return null
 
   return (
     <ModalWrapper visible>
@@ -645,20 +680,41 @@ export default function VideoModal({ publish, stationName }: Props) {
             </div>
           </div>
 
-          <div className="w-full h-[70px] py-2 px-5 border-t border-gray-100 flex items-center justify-end">
-            {typeof isChanged === "boolean" && !isChanged && (
-              <p className="error mr-5">No changes</p>
-            )}
-            {error && <p className="error mr-5">{error}</p>}
-            <button type="submit" className="btn-blue mx-0 w-[100px]">
-              {loading ? <ButtonLoader loading /> : "Save"}
-            </button>
+          <div className="w-full h-[70px] py-2 px-5 border-t border-neutral-100 flex items-center justify-between">
+            <div className="h-full w-[50px] flex items-center">
+              {!deleting ? (
+                <IoTrash
+                  className="text-error text-xl cursor-pointer"
+                  onClick={openConfirmDeleteModal}
+                />
+              ) : (
+                <ButtonLoader loading size={5} color="#dc2626" />
+              )}
+            </div>
+            <div className="flex items-center justify-end">
+              {typeof isChanged === "boolean" && !isChanged && (
+                <p className="error mr-5">No changes</p>
+              )}
+              {error && <p className="error mr-5">{error}</p>}
+              <button type="submit" className="btn-blue mx-0 w-[100px]">
+                {loading ? <ButtonLoader loading /> : "Save"}
+              </button>
+            </div>
           </div>
         </form>
       </div>
 
+      {/* Confirm delete */}
+      {confirmDeleteModalVisible && (
+        <ConfirmDeleteModal
+          loading={deleting}
+          onCancel={closeConfirmDeleteModal}
+          onConfirm={deleteVideo}
+        />
+      )}
+
       {/* Prevent interaction while loading */}
-      {(loading || isPending) && <Mask />}
+      {(loading || isPending || deleting) && <Mask />}
     </ModalWrapper>
   )
 }

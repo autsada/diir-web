@@ -10,6 +10,7 @@ import React, {
 import { useRouter } from "next/navigation"
 import Dropzone from "react-dropzone"
 import { AiOutlineCloseCircle } from "react-icons/ai"
+import { IoTrash } from "react-icons/io5"
 import type { DeltaStatic } from "quill"
 import _ from "lodash"
 import { toast } from "react-toastify"
@@ -21,6 +22,7 @@ import Mask from "@/components/Mask"
 import PreviewMode from "../PreviewMode"
 import QuillEditor from "../QuillEditor"
 import ConfirmModal from "@/components/ConfirmModal"
+import ConfirmDeleteModal from "./ConfirmDeleteModal"
 import { uploadFile, deleteFile } from "@/firebase/helpers"
 import { publishesFolder } from "@/firebase/config"
 import { saveBlogPost } from "../actions"
@@ -70,6 +72,9 @@ export default function BlogModal({ profile, publish }: Props) {
   const [updatingBlog, setUpdatingBlog] = useState(false)
   const [unPublishinglog, setUnPublishingBlog] = useState(false)
   const [error, setError] = useState("")
+  const [confirmDeleteModalVisible, setConfirmDeleteModalVisible] =
+    useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const tagInputRef = useRef<HTMLDivElement>(null)
   const [isPending, startTransition] = useTransition()
@@ -384,6 +389,34 @@ export default function BlogModal({ profile, publish }: Props) {
     ]
   )
 
+  const openConfirmDeleteModal = useCallback(() => {
+    setConfirmDeleteModalVisible(true)
+  }, [])
+
+  const closeConfirmDeleteModal = useCallback(() => {
+    setConfirmDeleteModalVisible(false)
+  }, [])
+
+  const deleteBlog = useCallback(async () => {
+    if (!publishId) return
+
+    try {
+      setDeleting(true)
+      await fetch(`/upload/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          publishId,
+        }),
+      })
+      router.back()
+    } catch (error) {
+      setDeleting(false)
+    }
+  }, [publishId, router])
+
   if (!publish) return null
 
   return (
@@ -556,7 +589,16 @@ export default function BlogModal({ profile, publish }: Props) {
           </div>
 
           <div className="w-full h-[70px] py-2 px-5 border-t border-neutral-100 flex items-center justify-between">
-            <div>Delete</div>
+            <div className="h-full w-[50px] flex items-center">
+              {!deleting ? (
+                <IoTrash
+                  className="text-error text-xl cursor-pointer"
+                  onClick={openConfirmDeleteModal}
+                />
+              ) : (
+                <ButtonLoader loading size={5} color="#dc2626" />
+              )}
+            </div>
             <div className="flex items-center justify-end gap-x-5">
               <p className="error">
                 {titleError ? (
@@ -625,12 +667,22 @@ export default function BlogModal({ profile, publish }: Props) {
         </ConfirmModal>
       )}
 
+      {/* Confirm delete */}
+      {confirmDeleteModalVisible && (
+        <ConfirmDeleteModal
+          loading={deleting}
+          onCancel={closeConfirmDeleteModal}
+          onConfirm={deleteBlog}
+        />
+      )}
+
       {/* Prevent interaction while creating a draft */}
       {(savingDraft ||
         publishingBlog ||
         updatingBlog ||
         unPublishinglog ||
-        isPending) && <Mask />}
+        isPending ||
+        deleting) && <Mask />}
     </ModalWrapper>
   )
 }

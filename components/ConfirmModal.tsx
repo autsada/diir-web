@@ -12,6 +12,7 @@ interface Props {
   loading?: boolean
   error?: string
   disabled?: boolean
+  useRedBgForConfirm?: boolean
 }
 
 export default function ConfirmModal({
@@ -23,6 +24,7 @@ export default function ConfirmModal({
   loading,
   error,
   disabled,
+  useRedBgForConfirm = false,
 }: Props) {
   return (
     <ModalWrapper visible>
@@ -31,7 +33,9 @@ export default function ConfirmModal({
 
         <div className="mt-6 flex justify-around items-center">
           <button
-            className={`btn-cancel min-w-[100px] px-5 rounded-full ${
+            className={`${
+              useRedBgForConfirm ? "btn-dark" : "btn-cancel"
+            } min-w-[100px] px-5 rounded-full ${
               loading ? "opacity-30 cursor-not-allowed" : "opacity-100"
             }`}
             disabled={loading}
@@ -41,7 +45,9 @@ export default function ConfirmModal({
           </button>
           <button
             type="button"
-            className={`btn-dark min-w-[100px] px-5 rounded-full ${
+            className={`${
+              useRedBgForConfirm ? "btn-cancel" : "btn-dark"
+            } min-w-[100px] px-5 rounded-full ${
               disabled ? "opacity-30 cursor-not-allowed" : "opacity-100"
             }`}
             disabled={typeof disabled === "boolean" && disabled}
