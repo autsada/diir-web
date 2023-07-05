@@ -188,7 +188,7 @@ export default function RightDrawer({
 
             <div className="w-full px-5 mt-5">
               <ActiveLink
-                name="Your Station"
+                name="Profile"
                 href={profile ? `/station/${profile.id}` : "/station"}
                 ActiveIcon={MdVideoLibrary}
                 InActiveIcon={MdOutlineVideoLibrary}
@@ -196,7 +196,7 @@ export default function RightDrawer({
             </div>
             <div className="w-full px-5 mt-5">
               <ActiveLink
-                name="Publishes Dashboard"
+                name="Uploads"
                 href="/upload/publishes"
                 ActiveIcon={BsCollectionPlayFill}
                 InActiveIcon={BsCollectionPlay}
