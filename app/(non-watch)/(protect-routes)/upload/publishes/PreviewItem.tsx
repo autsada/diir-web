@@ -13,6 +13,8 @@ interface Props {
 }
 
 export default function PreviewItem({ publish }: Props) {
+  const isDeleting = publish?.deleting
+
   const router = useRouter()
 
   // Listen to upload finished update in Firestore
@@ -91,34 +93,48 @@ export default function PreviewItem({ publish }: Props) {
       <th className="w-[60%] sm:w-[40%] lg:w-[30] px-1 font-normal break-words">
         {getPostExcerpt(publish.title || "", 60)}
       </th>
-      <th className="sm:w-[15%] lg:w-[10%] hidden sm:table-cell px-2 py-1 font-normal break-words">
-        {publish.kind}
-      </th>
-      <th className="sm:w-[15%] lg:w-[10%] hidden sm:table-cell font-normal py-2 break-words">
-        <div className="flex flex-col sm:flex-row items-center justify-center">
-          {publish.visibility === "public" ? (
-            <BsEye className="text-green-600" />
-          ) : publish.visibility === "private" ? (
-            <BsEyeSlash className="text-red-600" />
-          ) : null}{" "}
-          <span
-            className={`mt-2 sm:mt-0 sm:ml-2 ${
-              publish.visibility === "draft" ? "font-thin mt-0" : "font-normal"
-            }`}
-          >
-            {publish.visibility}
-          </span>
-        </div>
-      </th>
-      <th className="md:w-[15%] lg:w-[10%] hidden md:table-cell font-normal py-2 break-words">
-        {formatDate(new Date(publish.createdAt))}
-      </th>
-      <th className="lg:w-[10%] font-normal py-2 hidden lg:table-cell break-words">
-        {publish.views}
-      </th>
-      <th className="lg:w-[10%] font-normal py-2 hidden lg:table-cell break-words">
-        {publish.likesCount}
-      </th>
+      {isDeleting ? (
+        <>
+          <th className="text-error text-center">Deleting...</th>
+          <th className="sm:w-[15%] lg:w-[10%] hidden sm:table-cell font-normal py-2 break-words"></th>
+          <th className="md:w-[15%] lg:w-[10%] hidden md:table-cell font-normal py-2 break-words"></th>
+          <th className="lg:w-[10%] font-normal py-2 hidden lg:table-cell break-words"></th>
+          <th className="lg:w-[10%] font-normal py-2 hidden lg:table-cell break-words"></th>
+        </>
+      ) : (
+        <>
+          <th className="sm:w-[15%] lg:w-[10%] hidden sm:table-cell px-2 py-1 font-normal break-words">
+            {publish.kind}
+          </th>
+          <th className="sm:w-[15%] lg:w-[10%] hidden sm:table-cell font-normal py-2 break-words">
+            <div className="flex flex-col sm:flex-row items-center justify-center">
+              {publish.visibility === "public" ? (
+                <BsEye className="text-green-600" />
+              ) : publish.visibility === "private" ? (
+                <BsEyeSlash className="text-red-600" />
+              ) : null}{" "}
+              <span
+                className={`mt-2 sm:mt-0 sm:ml-2 ${
+                  publish.visibility === "draft"
+                    ? "font-thin mt-0"
+                    : "font-normal"
+                }`}
+              >
+                {publish.visibility}
+              </span>
+            </div>
+          </th>
+          <th className="md:w-[15%] lg:w-[10%] hidden md:table-cell font-normal py-2 break-words">
+            {formatDate(new Date(publish.createdAt))}
+          </th>
+          <th className="lg:w-[10%] font-normal py-2 hidden lg:table-cell break-words">
+            {publish.views}
+          </th>
+          <th className="lg:w-[10%] font-normal py-2 hidden lg:table-cell break-words">
+            {publish.likesCount}
+          </th>
+        </>
+      )}
     </tr>
   )
 }
