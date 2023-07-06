@@ -10,7 +10,7 @@ export default function RouteLinks() {
       <ActiveLink name="General" href="/settings" isSubLink />
       <ActiveLink name="Wallet" href="/settings/wallet" isSubLink />
       <ActiveLink name="Preferences" href="/settings/preferences" isSubLink />
-      <ActiveLink name="Stations" href="/settings/stations" isSubLink />
+      <ActiveLink name="Profiles" href="/settings/stations" isSubLink />
     </>
   )
 }

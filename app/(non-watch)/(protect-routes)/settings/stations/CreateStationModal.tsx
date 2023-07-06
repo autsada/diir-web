@@ -30,7 +30,7 @@ interface Props {
   doItLaterText?: string
 }
 
-export default function CreateStationModal({
+export default function CreateProfileModal({
   account,
   closeModal,
   title = "Create Station",

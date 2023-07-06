@@ -16,7 +16,7 @@ interface Props {
 }
 
 // TODO: Change from using api route to server action
-export default function ManageStations({
+export default function ManageProfiles({
   account,
   defaultStationId,
   owner,
@@ -81,7 +81,7 @@ export default function ManageStations({
             className="btn-blue px-5 mx-0 rounded-full"
             onClick={openModal}
           >
-            Create new station
+            Create new profile
           </button>
         </div>
 
