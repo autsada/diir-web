@@ -43,6 +43,7 @@ export const contentCategories = [
   "Technology",
   "Programming",
   "AI",
+  "Blockchain",
   "LifeStyle",
   "Vehicles",
   "Children",

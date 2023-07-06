@@ -380,6 +380,7 @@ export interface NexusGenEnums {
   Category:
     | "AI"
     | "Animals"
+    | "Blockchain"
     | "Children"
     | "Education"
     | "Entertainment"
@@ -687,9 +688,10 @@ export interface NexusGenObjects {
     imageRef?: string | null // String
     name: string // String!
     owner: string // String!
-    preferences: NexusGenEnums["Category"][] // [Category!]!
+    readPreferences: NexusGenEnums["Category"][] // [Category!]!
     tokenId?: number | null // Int
     updatedAt?: NexusGenScalars["DateTime"] | null // DateTime
+    watchPreferences: NexusGenEnums["Category"][] // [Category!]!
   }
   Tip: {
     // root type
@@ -935,9 +937,10 @@ export interface NexusGenFieldTypes {
     updatePlaylistDescription: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updatePlaylistName: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updatePlaylists: NexusGenRootTypes["WriteResult"] | null // WriteResult
-    updatePreferences: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updateProfileImage: NexusGenRootTypes["WriteResult"] | null // WriteResult
+    updateReadPreferences: NexusGenRootTypes["WriteResult"] | null // WriteResult
     updateVideo: NexusGenRootTypes["Publish"] | null // Publish
+    updateWatchPreferences: NexusGenRootTypes["WriteResult"] | null // WriteResult
     validateDisplayName: boolean | null // Boolean
     validateName: boolean | null // Boolean
   }
@@ -1109,12 +1112,13 @@ export interface NexusGenFieldTypes {
     isOwner: boolean | null // Boolean
     name: string // String!
     owner: string // String!
-    preferences: NexusGenEnums["Category"][] // [Category!]!
     publishes: NexusGenRootTypes["Publish"][] // [Publish!]!
     publishesCount: number // Int!
+    readPreferences: NexusGenEnums["Category"][] // [Category!]!
     tokenId: number | null // Int
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
     watchLater: NexusGenRootTypes["WatchLater"][] // [WatchLater!]!
+    watchPreferences: NexusGenEnums["Category"][] // [Category!]!
   }
   Tip: {
     // field return type
@@ -1355,9 +1359,10 @@ export interface NexusGenFieldTypeNames {
     updatePlaylistDescription: "WriteResult"
     updatePlaylistName: "WriteResult"
     updatePlaylists: "WriteResult"
-    updatePreferences: "WriteResult"
     updateProfileImage: "WriteResult"
+    updateReadPreferences: "WriteResult"
     updateVideo: "Publish"
+    updateWatchPreferences: "WriteResult"
     validateDisplayName: "Boolean"
     validateName: "Boolean"
   }
@@ -1525,12 +1530,13 @@ export interface NexusGenFieldTypeNames {
     isOwner: "Boolean"
     name: "String"
     owner: "String"
-    preferences: "Category"
     publishes: "Publish"
     publishesCount: "Int"
+    readPreferences: "Category"
     tokenId: "Int"
     updatedAt: "DateTime"
     watchLater: "WatchLater"
+    watchPreferences: "Category"
   }
   Tip: {
     // field return type name
@@ -1709,17 +1715,21 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs["UpdatePlaylistsInput"] // UpdatePlaylistsInput!
     }
-    updatePreferences: {
-      // args
-      input: NexusGenInputs["UpdatePreferencesInput"] // UpdatePreferencesInput!
-    }
     updateProfileImage: {
       // args
       input: NexusGenInputs["UpdateImageInput"] // UpdateImageInput!
     }
+    updateReadPreferences: {
+      // args
+      input: NexusGenInputs["UpdatePreferencesInput"] // UpdatePreferencesInput!
+    }
     updateVideo: {
       // args
       input: NexusGenInputs["UpdateVideoInput"] // UpdateVideoInput!
+    }
+    updateWatchPreferences: {
+      // args
+      input: NexusGenInputs["UpdatePreferencesInput"] // UpdatePreferencesInput!
     }
     validateDisplayName: {
       // args

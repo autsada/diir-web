@@ -6,14 +6,14 @@ import _ from "lodash"
 import Mask from "@/components/Mask"
 import ButtonLoader from "@/components/ButtonLoader"
 import { contentCategories } from "@/lib/helpers"
-import { updateUserPreferences } from "./actions"
+import { updateUserReadPreferences } from "./actions"
 import type { PublishCategory } from "@/graphql/types"
 
 interface Props {
   preferences: PublishCategory[]
 }
 
-export default function Topics({ preferences }: Props) {
+export default function ReadPreferences({ preferences }: Props) {
   const [prevPreferences, setPrevPreferences] = useState(preferences)
   const [selectedPreferences, setSelectedPreferences] = useState(preferences)
   if (preferences !== prevPreferences) {
@@ -37,7 +37,7 @@ export default function Topics({ preferences }: Props) {
   const confirmUpdate = useCallback(() => {
     if (!isChanged) return
 
-    startTransition(() => updateUserPreferences(selectedPreferences))
+    startTransition(() => updateUserReadPreferences(selectedPreferences))
   }, [isChanged, selectedPreferences])
 
   const cancelUpdate = useCallback(() => {
@@ -105,7 +105,7 @@ function Topic({
     <button
       type="button"
       className={`${
-        isSelected ? "btn-dark" : "btn-light"
+        isSelected ? "btn-blue" : "btn-light"
       } mx-0 px-5 rounded-full`}
       onClick={selectTopic.bind(undefined, cat)}
     >

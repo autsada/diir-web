@@ -34,7 +34,8 @@ export const GET_ACCOUNT_QUERY = gql`
         followersCount
         followingCount
         publishesCount
-        preferences
+        watchPreferences
+        readPreferences
       }
       defaultStation {
         id
@@ -49,7 +50,8 @@ export const GET_ACCOUNT_QUERY = gql`
         followersCount
         followingCount
         publishesCount
-        preferences
+        watchPreferences
+        readPreferences
       }
     }
   }

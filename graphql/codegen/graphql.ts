@@ -73,6 +73,7 @@ export type CalculateTipsResult = {
 export enum Category {
   Ai = 'AI',
   Animals = 'Animals',
+  Blockchain = 'Blockchain',
   Children = 'Children',
   Education = 'Education',
   Entertainment = 'Entertainment',
@@ -500,9 +501,9 @@ export type Mutation = {
   updatePlaylistDescription?: Maybe<WriteResult>;
   updatePlaylistName?: Maybe<WriteResult>;
   updatePlaylists?: Maybe<WriteResult>;
-  updatePreferences?: Maybe<WriteResult>;
   updateProfileImage?: Maybe<WriteResult>;
   updateVideo?: Maybe<Publish>;
+  updateWatchPreferences?: Maybe<WriteResult>;
   validateDisplayName?: Maybe<Scalars['Boolean']['output']>;
   validateName?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -683,11 +684,6 @@ export type MutationUpdatePlaylistsArgs = {
 };
 
 
-export type MutationUpdatePreferencesArgs = {
-  input: UpdatePreferencesInput;
-};
-
-
 export type MutationUpdateProfileImageArgs = {
   input: UpdateImageInput;
 };
@@ -695,6 +691,11 @@ export type MutationUpdateProfileImageArgs = {
 
 export type MutationUpdateVideoArgs = {
   input: UpdateVideoInput;
+};
+
+
+export type MutationUpdateWatchPreferencesArgs = {
+  input: UpdatePreferencesInput;
 };
 
 
@@ -1079,12 +1080,13 @@ export type Station = {
   isOwner?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
   owner: Scalars['String']['output'];
-  preferences: Array<Category>;
   publishes: Array<Publish>;
   publishesCount: Scalars['Int']['output'];
+  readPreferences: Array<Category>;
   tokenId?: Maybe<Scalars['Int']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   watchLater: Array<WatchLater>;
+  watchPreferences: Array<Category>;
 };
 
 export enum ThumbSource {

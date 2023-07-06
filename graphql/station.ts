@@ -449,16 +449,16 @@ export async function follow({
 }
 
 /**
- * Update user's preferences
+ * Update user's watch preferences
  */
-export const UPDATE_PREFERENCES_MUTATION = gql`
-  mutation UpdatePreferences($input: UpdatePreferencesInput!) {
-    updatePreferences(input: $input) {
+export const UPDATE_WATCH_PREFERENCES_MUTATION = gql`
+  mutation UpdateWatchPreferences($input: UpdatePreferencesInput!) {
+    updateWatchPreferences(input: $input) {
       status
     }
   }
 `
-export async function updatePreferences({
+export async function updateWatchPreferences({
   idToken,
   signature,
   data,
@@ -475,13 +475,52 @@ export async function updatePreferences({
         "auth-wallet-signature": signature || "",
       })
       .request<
-        MutationReturnType<"updatePreferences">,
-        MutationArgsType<"updatePreferences">
-      >(UPDATE_PREFERENCES_MUTATION, {
+        MutationReturnType<"updateWatchPreferences">,
+        MutationArgsType<"updateWatchPreferences">
+      >(UPDATE_WATCH_PREFERENCES_MUTATION, {
         input: data,
       })
 
-    return result?.updatePreferences
+    return result?.updateWatchPreferences
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Update user's read preferences
+ */
+export const UPDATE_READ_PREFERENCES_MUTATION = gql`
+  mutation UpdateReadPreferences($input: UpdatePreferencesInput!) {
+    updateReadPreferences(input: $input) {
+      status
+    }
+  }
+`
+export async function updateReadPreferences({
+  idToken,
+  signature,
+  data,
+}: {
+  idToken: string
+  signature?: string
+  data: UpdatePreferencesInput
+}) {
+  try {
+    const result = await client
+      .setHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+        "auth-wallet-signature": signature || "",
+      })
+      .request<
+        MutationReturnType<"updateReadPreferences">,
+        MutationArgsType<"updateReadPreferences">
+      >(UPDATE_READ_PREFERENCES_MUTATION, {
+        input: data,
+      })
+
+    return result?.updateReadPreferences
   } catch (error) {
     throw error
   }
