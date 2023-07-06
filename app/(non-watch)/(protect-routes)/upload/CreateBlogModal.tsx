@@ -33,6 +33,7 @@ export default function CreateBlogModal({
   const [title, setTitle] = useState("")
   const [titleError, setTitleError] = useState("")
   const [tags, setTags] = useState<string[]>([])
+  const [tagsError, setTagsError] = useState("")
   const [image, setImage] = useState<FileWithPrview>()
   const [fileError, setFileError] = useState("")
   const [content, setContent] = useState<DeltaStatic>()
@@ -103,13 +104,19 @@ export default function CreateBlogModal({
             setTitleError("Title is required.")
             return
           } else if (title.length < 3) {
-            setTitleError("Min length 3 characters.")
+            setTitleError("Min title length 3 characters.")
             return
           } else if (title.length > 128) {
-            setTitleError("Max length 128 characters.")
+            setTitleError("Max title length 128 characters.")
             return
           } else {
             setTitleError("")
+          }
+
+          // Validate tags
+          if (tags.length === 0) {
+            setTagsError("At least 1 tag is required.")
+            return
           }
 
           // Validate content
@@ -218,9 +225,11 @@ export default function CreateBlogModal({
     const last = value.slice(value.length - 1)
     if (last === ",") {
       const newTag = value.substring(0, value.length - 1)
-      setTags((prev) =>
-        prev.includes(newTag) || prev.length === 4 ? prev : [...prev, newTag]
-      )
+      if (newTag && !newTag.includes(",")) {
+        setTags((prev) =>
+          prev.includes(newTag) || prev.length === 4 ? prev : [...prev, newTag]
+        )
+      }
       e.target.value = ""
     }
   }, [])
@@ -323,7 +332,7 @@ export default function CreateBlogModal({
                   <div className="w-full p-2 border border-neutral-200 rounded-md overflow-x-auto scrollbar-hide">
                     <div
                       ref={tagInputRef}
-                      className="w-max h-full flex items-center gap-2 cursor-pointer"
+                      className="w-max h-[30px] flex items-center gap-2 cursor-pointer"
                       onClick={onClickTagsDiv}
                     >
                       {tags.length > 0 &&
@@ -381,6 +390,8 @@ export default function CreateBlogModal({
                 titleError
               ) : fileError ? (
                 fileError
+              ) : tagsError ? (
+                tagsError
               ) : error ? (
                 error
               ) : (

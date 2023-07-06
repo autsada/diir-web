@@ -50,6 +50,7 @@ export default function BlogModal({ profile, publish }: Props) {
   const prevTags = publish.tags
   const [tags, setTags] = useState<string[]>(prevTags)
   const isTagsEqual = useMemo(() => _.isEqual(prevTags, tags), [prevTags, tags])
+  const [tagsError, setTagsError] = useState("")
   const prevImage = publish.thumbnail
   const [oldImage, setOldImage] = useState(prevImage)
   const prevImageRef = publish.thumbnailRef
@@ -156,9 +157,11 @@ export default function BlogModal({ profile, publish }: Props) {
     const last = value.slice(value.length - 1)
     if (last === ",") {
       const newTag = value.substring(0, value.length - 1)
-      setTags((prev) =>
-        prev.includes(newTag) || prev.length === 4 ? prev : [...prev, newTag]
-      )
+      if (newTag && !newTag.includes(",")) {
+        setTags((prev) =>
+          prev.includes(newTag) || prev.length === 4 ? prev : [...prev, newTag]
+        )
+      }
       e.target.value = ""
     }
   }, [])
@@ -183,14 +186,36 @@ export default function BlogModal({ profile, publish }: Props) {
 
       try {
         // Validate title
-        if (title.length > 128) {
-          setTitleError("Max length 128 characters.")
-          return
-        }
 
         if (visibility === "draft") {
           setSavingDraft(true)
         } else if (visibility === "public") {
+          // Validate title
+          if (title.length === 0) {
+            setTitleError("Title is required.")
+            return
+          } else if (title.length < 3) {
+            setTitleError("Min title length 3 characters.")
+            return
+          } else if (title.length > 128) {
+            setTitleError("Max title length 128 characters.")
+            return
+          } else {
+            setTitleError("")
+          }
+
+          // Validate tags
+          if (tags.length === 0) {
+            setTagsError("At least 1 tag is required.")
+            return
+          }
+
+          // Validate content
+          if (!content) {
+            setError("No content to publish.")
+            return
+          }
+
           setPublishingBlog(true)
         }
 
@@ -294,15 +319,35 @@ export default function BlogModal({ profile, publish }: Props) {
       if (updateType === "un-publish" && prevVisibility !== "public") return
 
       try {
-        // Validate title
-        if (title.length > 128) {
-          setTitleError("Max length 128 characters.")
-          return
-        }
-
         if (updateType === "un-publish") {
           setUnPublishingBlog(true)
         } else {
+          // Validate title
+          if (title.length === 0) {
+            setTitleError("Title is required.")
+            return
+          } else if (title.length < 3) {
+            setTitleError("Min title length is 3 characters.")
+            return
+          } else if (title.length > 128) {
+            setTitleError("Max title length is 128 characters.")
+            return
+          } else {
+            setTitleError("")
+          }
+
+          // Validate tags
+          if (tags.length === 0) {
+            setTagsError("At least 1 tag is required.")
+            return
+          }
+
+          // Validate content
+          if (!content) {
+            setError("No content to publish.")
+            return
+          }
+
           setUpdatingBlog(true)
         }
 
@@ -607,6 +652,8 @@ export default function BlogModal({ profile, publish }: Props) {
                   titleError
                 ) : fileError ? (
                   fileError
+                ) : tagsError ? (
+                  tagsError
                 ) : error ? (
                   error
                 ) : (
