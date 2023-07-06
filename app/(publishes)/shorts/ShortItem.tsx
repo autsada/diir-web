@@ -27,7 +27,7 @@ interface Props {
   playlistsResult: Maybe<FetchPlaylistsResponse> | undefined
 }
 
-export default function ShortItem1({
+export default function ShortItem({
   publish,
   isAuthenticated,
   profile,
@@ -102,7 +102,7 @@ export default function ShortItem1({
       <div className="flex items-start gap-x-2">
         <Avatar profile={publish.creator} />
         <div className="flex-grow text-left">
-          <Link href={`/shorts/${publish.id}`}>
+          <Link href={`/shorts?id=${publish.id}`}>
             <h6 className="text-base sm:text-lg">
               {getPostExcerpt(publish.title || "", 30)}
             </h6>
@@ -132,7 +132,7 @@ export default function ShortItem1({
                 {getPostExcerpt(publish.title || "", 40)}
               </h6>
             </div>
-            <Link href={`/shorts/${publish.id}`}>
+            <Link href={`/shorts?id=${publish.id}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={thumbnail || ""}
