@@ -255,8 +255,8 @@ export default function VideoModal({ publish, stationName }: Props) {
           />
 
           <div className="w-full h-[70px] px-5 flex items-center justify-between border-b border-gray-100">
-            <h6 className="text-sm sm:text-base lg:text-textRegular">
-              Publish id: {publish.id}
+            <h6 className="text-xs sm:text-sm md:text-base lg:text-textRegular">
+              Id: {publish.id}
             </h6>
             <div>
               <CloseButton

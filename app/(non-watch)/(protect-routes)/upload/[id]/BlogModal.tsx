@@ -424,7 +424,9 @@ export default function BlogModal({ profile, publish }: Props) {
       <div className="w-full h-full min-w-full min-h-full max-w-full max-h-full flex items-center justify-center">
         <div className="relative w-[95%] h-[95%] bg-white rounded-md overflow-hidden flex flex-col">
           <div className="w-full py-2 px-2 sm:px-5 flex items-center justify-between border-b border-neutral-100">
-            <h6>Update blog</h6>
+            <h6 className="text-xs sm:text-sm md:text-base lg:text-textRegular">
+              Id: {publish.id}
+            </h6>
             <h5
               className={`font-normal italic text-base sm:text-2xl ${
                 prevVisibility === "public" ? "text-blueDark" : "text-textLight"

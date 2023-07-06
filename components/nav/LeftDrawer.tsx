@@ -5,7 +5,6 @@ import {
   RiVideoFill,
   RiVideoLine,
 } from "react-icons/ri"
-import { IoRadioOutline, IoRadio } from "react-icons/io5"
 import { AiOutlineRead, AiFillRead } from "react-icons/ai"
 import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md"
 
@@ -84,14 +83,6 @@ export default function LeftDrawer({
             href="/shorts"
             ActiveIcon={RiVideoFill}
             InActiveIcon={RiVideoLine}
-          />
-        </div>
-        <div className="w-full px-5 mt-5">
-          <ActiveLink
-            name="Podcasts"
-            href="/podcasts"
-            ActiveIcon={IoRadio}
-            InActiveIcon={IoRadioOutline}
           />
         </div>
         <div className="w-full px-5 mt-5">

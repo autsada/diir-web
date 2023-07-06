@@ -4,8 +4,8 @@ import Blogs from "./Blogs"
 
 export default function Page() {
   return (
-    <main>
+    <div className="sm:ml-[100px]">
       <Blogs />
-    </main>
+    </div>
   )
 }

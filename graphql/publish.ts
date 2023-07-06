@@ -347,6 +347,12 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
         likesCount
         commentType
       }
+      blog {
+        createdAt
+        updatedAt
+        content
+        publishId
+      }
       # comments {
       #   id
       #   creator {

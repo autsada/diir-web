@@ -115,6 +115,10 @@ export default async function Watch({ params }: Props) {
     redirect(`/shorts?id=${publish.id}`)
   }
 
+  if (publish.kind === "Blog") {
+    redirect(`/read/${publish.id}`)
+  }
+
   // Fetch user's playlists if user is authenticated
   const playlistsResult = !station
     ? undefined

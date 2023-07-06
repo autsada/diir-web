@@ -3,7 +3,7 @@
 import React from "react"
 import { useParams } from "next/navigation"
 
-import Tab from "@/components/Tab"
+import LinkTab from "@/components/LinkTab"
 import { publishKinds } from "@/lib/helpers"
 import type { Station } from "@/graphql/codegen/graphql"
 
@@ -18,10 +18,10 @@ export default function PublishTabs({ station }: Props) {
 
   return (
     <div className="flex gap-x-4">
-      <Tab href={`/upload/publishes`} name="HOME" isActive={!tab} />
+      <LinkTab href={`/upload/publishes`} name="HOME" isActive={!tab} />
       {publishKinds.map((k) =>
         k === "ads" && !isOwner ? null : (
-          <Tab
+          <LinkTab
             key={k}
             href={`/upload/publishes/${k.toLowerCase()}`}
             name={k.toUpperCase()}
