@@ -6,7 +6,6 @@ import React, {
   ChangeEvent,
 } from "react"
 import Dropzone from "react-dropzone"
-import { AiOutlineCloseCircle } from "react-icons/ai"
 import { IoCaretDownSharp } from "react-icons/io5"
 import { useRouter } from "next/navigation"
 import type { DeltaStatic } from "quill"
@@ -16,6 +15,7 @@ import ModalWrapper from "@/components/ModalWrapper"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
 import PreviewMode from "./PreviewMode"
+import Tag from "./Tag"
 import QuillEditor from "./QuillEditor"
 import ConfirmModal from "@/components/ConfirmModal"
 import { uploadFile } from "@/firebase/helpers"
@@ -360,32 +360,41 @@ export default function CreateBlogModal({
                     </div>
                   </div>
 
-                  <div className="w-full p-2 border border-neutral-200 rounded-md overflow-x-auto scrollbar-hide">
-                    <div
-                      ref={tagInputRef}
-                      className="w-max h-[30px] flex items-center gap-2 cursor-pointer"
-                      onClick={onClickTagsDiv}
-                    >
-                      {tags.length > 0 &&
-                        tags.map((tag) => (
-                          <Tag key={tag} tag={tag} onClick={removeTag} />
-                        ))}
-                      {tags.length < 4 && (
-                        <input
-                          id="tag-input"
-                          type="text"
-                          name="tag"
-                          maxLength={31}
-                          placeholder="Add up to 4 tags"
-                          className="block w-full h-full"
-                          onChange={addTag}
-                        />
-                      )}
+                  <label
+                    htmlFor="tags"
+                    className="block text-start font-semibold mb-5"
+                  >
+                    Tags
+                    <p className="font-light text-textLight text-sm">
+                      Tags can be useful in helping readers find your blog.
+                    </p>
+                    <div className="w-full p-2 border border-neutral-200 rounded-md overflow-x-auto scrollbar-hide">
+                      <div
+                        ref={tagInputRef}
+                        className="w-max h-[30px] flex items-center gap-2 cursor-pointer"
+                        onClick={onClickTagsDiv}
+                      >
+                        {tags.length > 0 &&
+                          tags.map((tag) => (
+                            <Tag key={tag} tag={tag} onClick={removeTag} />
+                          ))}
+                        {tags.length < 4 && (
+                          <input
+                            id="tag-input"
+                            type="text"
+                            name="tag"
+                            maxLength={31}
+                            placeholder="Add up to 4 tags"
+                            className="block w-full h-full"
+                            onChange={addTag}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <p className="font-light text-textLight text-sm">
-                    Enter a comma after each tag
-                  </p>
+                    <p className="font-light text-textLight text-sm">
+                      Enter a comma after each tag
+                    </p>
+                  </label>
 
                   <div className="mt-5">
                     <label
@@ -393,7 +402,7 @@ export default function CreateBlogModal({
                       className="block text-start font-semibold mb-5"
                     >
                       Category
-                      <p className="font-light text-textExtraLight text-sm">
+                      <p className="font-light text-textLight text-sm">
                         You can choose up to 2 relevant categories.
                       </p>
                       <div className="mt-2 grid grid-cols-2 gap-x-2">
@@ -542,18 +551,5 @@ export default function CreateBlogModal({
       {/* Prevent interaction while creating a draft */}
       {(savingDraft || publishingBlog || isPending) && <Mask />}
     </ModalWrapper>
-  )
-}
-
-function Tag({ tag, onClick }: { tag: string; onClick: (t: string) => void }) {
-  return (
-    <div className="px-2 lg:px-3 h-[30px] rounded-full bg-neutral-200 flex items-center justify-center gap-x-2 lg:gap-x-3">
-      <span className="text-sm">{tag}</span>
-      <AiOutlineCloseCircle
-        size={16}
-        className="cursor-pointer"
-        onClick={onClick.bind(undefined, tag)}
-      />
-    </div>
   )
 }

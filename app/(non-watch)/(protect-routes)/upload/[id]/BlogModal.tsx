@@ -10,7 +10,6 @@ import React, {
 } from "react"
 import { useRouter } from "next/navigation"
 import Dropzone from "react-dropzone"
-import { AiOutlineCloseCircle } from "react-icons/ai"
 import { IoCaretDownSharp, IoTrash } from "react-icons/io5"
 import type { DeltaStatic } from "quill"
 import _ from "lodash"
@@ -20,6 +19,7 @@ import CloseButton from "@/components/CloseButton"
 import ModalWrapper from "@/components/ModalWrapper"
 import ButtonLoader from "@/components/ButtonLoader"
 import Mask from "@/components/Mask"
+import Tag from "../Tag"
 import PreviewMode from "../PreviewMode"
 import QuillEditor from "../QuillEditor"
 import ConfirmModal from "@/components/ConfirmModal"
@@ -164,7 +164,7 @@ export default function BlogModal({ profile, publish }: Props) {
 
   const onClickTagsDiv = useCallback(() => {
     if (tagInputRef.current) {
-      const input = document.getElementById("tag-input")
+      const input = document.getElementById("tags-blog-input")
       if (input) {
         input.focus()
       }
@@ -577,7 +577,7 @@ export default function BlogModal({ profile, publish }: Props) {
               <div className="w-full h-full px-2 sm:px-4 sm:divide-neutral-100 flex flex-col lg:flex-row pb-[100px]">
                 <div className="w-full h-max lg:h-full lg:w-2/5 py-2 px-2 lg:overflow-y-auto scrollbar-hide">
                   <div className="mb-4 w-full">
-                    <div className="relative z-0 w-full flex items-center justify-center">
+                    <div className="relative w-full flex items-center justify-center">
                       {image ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -635,32 +635,41 @@ export default function BlogModal({ profile, publish }: Props) {
                     </div>
                   </div>
 
-                  <div className="w-full p-2 border border-neutral-200 rounded-md overflow-x-auto scrollbar-hide">
-                    <div
-                      ref={tagInputRef}
-                      className="w-max h-full flex items-center gap-2 cursor-pointer"
-                      onClick={onClickTagsDiv}
-                    >
-                      {tags.length > 0 &&
-                        tags.map((tag) => (
-                          <Tag key={tag} tag={tag} onClick={removeTag} />
-                        ))}
-                      {tags.length < 4 && (
-                        <input
-                          id="tag-input"
-                          type="text"
-                          name="tag"
-                          maxLength={31}
-                          placeholder="Add up to 4 tags"
-                          className="block w-full h-full"
-                          onChange={addTag}
-                        />
-                      )}
+                  <label
+                    htmlFor="tags"
+                    className="block text-start font-semibold mb-5"
+                  >
+                    Tags
+                    <p className="font-light text-textLight text-sm">
+                      Tags can be useful in helping readers find your blog.
+                    </p>
+                    <div className="w-full p-2 border border-neutral-200 rounded-md overflow-x-auto scrollbar-hide">
+                      <div
+                        ref={tagInputRef}
+                        className="w-max h-full flex items-center gap-2 cursor-pointer"
+                        onClick={onClickTagsDiv}
+                      >
+                        {tags.length > 0 &&
+                          tags.map((tag) => (
+                            <Tag key={tag} tag={tag} onClick={removeTag} />
+                          ))}
+                        {tags.length < 4 && (
+                          <input
+                            id="tags-blog-input"
+                            type="text"
+                            name="tag"
+                            maxLength={31}
+                            placeholder="Add up to 4 tags"
+                            className="block w-full h-full"
+                            onChange={addTag}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <p className="font-light text-textLight text-sm">
-                    Enter a comma after each tag
-                  </p>
+                    <p className="font-light text-textLight text-sm">
+                      Enter a comma after each tag
+                    </p>
+                  </label>
 
                   <div className="mt-5">
                     <label
@@ -668,7 +677,7 @@ export default function BlogModal({ profile, publish }: Props) {
                       className="block text-start font-semibold mb-5"
                     >
                       Category
-                      <p className="font-light text-textExtraLight text-sm">
+                      <p className="font-light text-textLight text-sm">
                         You can choose up to 2 relevant categories.
                       </p>
                       <div className="mt-2 grid grid-cols-2 gap-x-2">
@@ -761,8 +770,8 @@ export default function BlogModal({ profile, publish }: Props) {
                 profile={profile}
                 title={title}
                 hashTags={tags}
-                imageUrl={image?.preview}
-                imageName={image?.name}
+                imageUrl={image ? image?.preview : oldImage || ""}
+                imageName={image ? image?.name : publish.filename || ""}
                 content={contentForPreview}
               />
             </div>
@@ -866,18 +875,5 @@ export default function BlogModal({ profile, publish }: Props) {
         isPending ||
         deleting) && <Mask />}
     </ModalWrapper>
-  )
-}
-
-function Tag({ tag, onClick }: { tag: string; onClick: (t: string) => void }) {
-  return (
-    <div className="px-2 lg:px-3 h-[30px] rounded-full bg-neutral-200 flex items-center justify-center gap-x-2 lg:gap-x-3">
-      <span className="text-sm">{tag}</span>
-      <AiOutlineCloseCircle
-        size={16}
-        className="cursor-pointer"
-        onClick={onClick.bind(undefined, tag)}
-      />
-    </div>
   )
 }

@@ -1194,6 +1194,7 @@ export type UpdateVideoInput = {
   primaryCategory?: InputMaybe<Category>;
   publishId: Scalars['String']['input'];
   secondaryCategory?: InputMaybe<Category>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
   thumbSource: ThumbSource;
   thumbnail?: InputMaybe<Scalars['String']['input']>;
   thumbnailRef?: InputMaybe<Scalars['String']['input']>;

@@ -22,6 +22,7 @@ import CloseButton from "@/components/CloseButton"
 import ButtonLoader from "@/components/ButtonLoader"
 import ProgressBar from "@/components/ProgressBar"
 import VideoPlayer from "@/components/VideoPlayer"
+import Tag from "../Tag"
 import Mask from "@/components/Mask"
 import ConfirmDeleteModal from "./ConfirmDeleteModal"
 import { contentCategories } from "@/lib/helpers"
@@ -54,6 +55,7 @@ export default function VideoModal({ publish, stationName }: Props) {
   const [thumbSource, setThumbSource] = useState<ThumbSource>(() =>
     !publish?.thumbSource ? "generated" : publish.thumbSource
   )
+  const [tags, setTags] = useState<string[]>(publish?.tags || [])
   const [isChanged, setIsChanged] = useState<boolean>()
   const [thumbnailLoading, setThumbnailLoading] = useState(false)
   const [thumbnailProgress, setThumbnailProgress] = useState(0)
@@ -66,6 +68,7 @@ export default function VideoModal({ publish, stationName }: Props) {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
   const hiddenInputRef = useRef<HTMLInputElement>(null)
+  const tagInputRef = useRef<HTMLDivElement>(null)
   const {
     register,
     handleSubmit,
@@ -136,6 +139,33 @@ export default function VideoModal({ publish, stationName }: Props) {
     }
   }, [hiddenInputRef])
 
+  const onClickTagsDiv = useCallback(() => {
+    if (tagInputRef.current) {
+      const input = document.getElementById("tags-video-input")
+      if (input) {
+        input.focus()
+      }
+    }
+  }, [])
+
+  const addTag = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    const last = value.slice(value.length - 1)
+    if (last === ",") {
+      const newTag = value.substring(0, value.length - 1)
+      if (newTag && !newTag.includes(",")) {
+        setTags((prev) =>
+          prev.includes(newTag) || prev.length === 4 ? prev : [...prev, newTag]
+        )
+      }
+      e.target.value = ""
+    }
+  }, [])
+
+  const removeTag = useCallback((t: string) => {
+    setTags((prev) => prev.filter((tag) => tag !== t))
+  }, [])
+
   const handleSave = handleSubmit(async (data) => {
     try {
       if (!stationName) return
@@ -174,7 +204,7 @@ export default function VideoModal({ publish, stationName }: Props) {
         primaryCategory: publish.primaryCategory || "",
         secondaryCategory: publish.secondaryCategory || "",
         visibility: publish.visibility,
-        kind: publish.kind || "",
+        tags: publish.tags || [],
       }
       const newData = {
         thumbnail: thumbnailURI,
@@ -185,7 +215,7 @@ export default function VideoModal({ publish, stationName }: Props) {
         primaryCategory: data.primaryCat || "",
         secondaryCategory: data.secondaryCat || "",
         visibility: data.visibility,
-        kind: data.kind || "",
+        tags,
       }
 
       const isEqual = _.isEqual(oldData, newData)
@@ -334,7 +364,7 @@ export default function VideoModal({ publish, stationName }: Props) {
                   className="block text-start font-semibold mb-10"
                 >
                   Thumbnail
-                  <p className="font-light text-textExtraLight text-sm">
+                  <p className="font-light text-textLight text-sm">
                     Select or upload a picture for the publish thumbnail.
                   </p>
                   <div className="mt-2 grid grid-cols-2 gap-x-4 sm:gap-x-10">
@@ -501,7 +531,7 @@ export default function VideoModal({ publish, stationName }: Props) {
                   className="block text-start font-semibold mb-5"
                 >
                   Category
-                  <p className="font-light text-textExtraLight text-sm">
+                  <p className="font-light text-textLight text-sm">
                     You can choose up to 2 relevant categories.
                   </p>
                   <div className="mt-2 grid grid-cols-2 gap-x-2">
@@ -627,6 +657,44 @@ export default function VideoModal({ publish, stationName }: Props) {
                       <p>{publish.filename || ""}</p>
                     </div>
                   </div>
+                </div>
+
+                <div className="mb-10">
+                  <label
+                    htmlFor="tags"
+                    className="block text-start font-semibold mb-5"
+                  >
+                    Tags
+                    <p className="font-light text-textLight text-sm">
+                      Tags can be useful in helping viewers find your video.
+                    </p>
+                    <div className="w-full p-2 border border-neutral-200 rounded-md overflow-x-auto scrollbar-hide">
+                      <div
+                        ref={tagInputRef}
+                        className="w-max h-full flex items-center gap-2 cursor-pointer"
+                        onClick={onClickTagsDiv}
+                      >
+                        {tags.length > 0 &&
+                          tags.map((tag) => (
+                            <Tag key={tag} tag={tag} onClick={removeTag} />
+                          ))}
+                        {tags.length < 4 && (
+                          <input
+                            id="tags-video-input"
+                            type="text"
+                            name="tag"
+                            maxLength={31}
+                            placeholder="Add up to 4 tags"
+                            className="block w-full h-full"
+                            onChange={addTag}
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <p className="font-light text-textLight text-sm">
+                      Enter a comma after each tag
+                    </p>
+                  </label>
                 </div>
 
                 <label
