@@ -502,6 +502,7 @@ export type Mutation = {
   updatePlaylistName?: Maybe<WriteResult>;
   updatePlaylists?: Maybe<WriteResult>;
   updateProfileImage?: Maybe<WriteResult>;
+  updateReadPreferences?: Maybe<WriteResult>;
   updateVideo?: Maybe<Publish>;
   updateWatchPreferences?: Maybe<WriteResult>;
   validateDisplayName?: Maybe<Scalars['Boolean']['output']>;
@@ -686,6 +687,11 @@ export type MutationUpdatePlaylistsArgs = {
 
 export type MutationUpdateProfileImageArgs = {
   input: UpdateImageInput;
+};
+
+
+export type MutationUpdateReadPreferencesArgs = {
+  input: UpdatePreferencesInput;
 };
 
 
@@ -1123,7 +1129,9 @@ export type UpdateBlogInput = {
   imageRef?: InputMaybe<Scalars['String']['input']>;
   imageUrl?: InputMaybe<Scalars['String']['input']>;
   owner: Scalars['String']['input'];
+  primaryCategory?: InputMaybe<Category>;
   publishId: Scalars['String']['input'];
+  secondaryCategory?: InputMaybe<Category>;
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   visibility?: InputMaybe<Visibility>;

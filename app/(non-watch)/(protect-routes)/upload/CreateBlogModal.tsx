@@ -1,6 +1,13 @@
-import React, { useState, useCallback, useRef, useTransition } from "react"
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useTransition,
+  ChangeEvent,
+} from "react"
 import Dropzone from "react-dropzone"
 import { AiOutlineCloseCircle } from "react-icons/ai"
+import { IoCaretDownSharp } from "react-icons/io5"
 import { useRouter } from "next/navigation"
 import type { DeltaStatic } from "quill"
 
@@ -14,9 +21,10 @@ import ConfirmModal from "@/components/ConfirmModal"
 import { uploadFile } from "@/firebase/helpers"
 import { publishesFolder } from "@/firebase/config"
 import { saveBlogPost } from "./actions"
+import { contentCategories } from "@/lib/helpers"
 import type { FileWithPrview } from "@/types"
 import type { Station } from "@/graphql/codegen/graphql"
-import type { PublishVisibility } from "@/graphql/types"
+import type { PublishCategory, PublishVisibility } from "@/graphql/types"
 
 interface Props {
   profile: Station
@@ -32,10 +40,12 @@ export default function CreateBlogModal({
   const [mode, setMode] = useState<"edit" | "preview">("edit")
   const [title, setTitle] = useState("")
   const [titleError, setTitleError] = useState("")
-  const [tags, setTags] = useState<string[]>([])
-  const [tagsError, setTagsError] = useState("")
   const [image, setImage] = useState<FileWithPrview>()
   const [fileError, setFileError] = useState("")
+  const [tags, setTags] = useState<string[]>([])
+  const [primaryCat, setPrimaryCat] = useState<PublishCategory>()
+  const [primaryCatError, setPrimaryCatError] = useState("")
+  const [secondaryCat, setSecondaryCat] = useState<PublishCategory>()
   const [content, setContent] = useState<DeltaStatic>()
   const [contentForPreview, setContentForPreview] = useState("")
   const [confirmModalVisible, setConfirmModalVisible] = useState(false)
@@ -81,22 +91,19 @@ export default function CreateBlogModal({
     async (visibility: PublishVisibility) => {
       if (
         !stationName ||
-        (!title &&
-          !image &&
-          tags.length === 0 &&
-          !content &&
-          !contentForPreview)
+        (!title && !image && !primaryCat && !content && !contentForPreview)
       )
         return
 
       try {
-        // Validate title
-        if (title.length > 128) {
-          setTitleError("Max length 128 characters.")
-          return
-        }
-
         if (visibility === "draft") {
+          // Validate title
+          if (title.length > 128) {
+            setTitleError("Max title length 128 characters.")
+            return
+          } else {
+            setTitleError("")
+          }
           setSavingDraft(true)
         } else if (visibility === "public") {
           // Validate title
@@ -113,9 +120,9 @@ export default function CreateBlogModal({
             setTitleError("")
           }
 
-          // Validate tags
-          if (tags.length === 0) {
-            setTagsError("At least 1 tag is required.")
+          // Validate primary category
+          if (!primaryCat) {
+            setPrimaryCatError("Primary category is required.")
             return
           }
 
@@ -153,6 +160,8 @@ export default function CreateBlogModal({
             imageUrl,
             imageRef,
             filename,
+            primaryCategory: primaryCat,
+            secondaryCategory: secondaryCat,
             tags,
             content: content ? JSON.stringify(content) : undefined,
             visibility,
@@ -175,6 +184,8 @@ export default function CreateBlogModal({
       title,
       image,
       tags,
+      primaryCat,
+      secondaryCat,
       content,
       contentForPreview,
       createPublish,
@@ -186,10 +197,15 @@ export default function CreateBlogModal({
     setMode(m)
   }, [])
 
-  const changeTitle = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setTitle(value)
-  }, [])
+  const changeTitle = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value
+      setTitle(value)
+      if (titleError && value.length >= 3 && value.length <= 128)
+        setTitleError("")
+    },
+    [titleError]
+  )
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     // Do something with the files
@@ -238,6 +254,21 @@ export default function CreateBlogModal({
     setTags((prev) => prev.filter((tag) => tag !== t))
   }, [])
 
+  const onChangePrimaryCat = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setPrimaryCat(e.target.value as PublishCategory)
+      if (primaryCatError) setPrimaryCatError("")
+    },
+    [primaryCatError]
+  )
+
+  const onChangeSecondaryCat = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setSecondaryCat(e.target.value as PublishCategory)
+    },
+    []
+  )
+
   return (
     <ModalWrapper visible>
       <div className="w-full h-full min-w-full min-h-full max-w-full max-h-full flex items-center justify-center">
@@ -284,7 +315,7 @@ export default function CreateBlogModal({
                 />
               </div>
 
-              <div className="w-full h-full sm:divide-neutral-100 flex flex-col lg:flex-row">
+              <div className="w-full h-full px-2 sm:px-4 sm:divide-neutral-100 flex flex-col lg:flex-row pb-[100px]">
                 <div className="w-full h-max lg:h-full lg:w-2/5 py-2 px-2 lg:overflow-y-auto scrollbar-hide">
                   <div className="mb-4 w-full">
                     <div className="relative z-0 w-full flex items-center justify-center">
@@ -355,6 +386,82 @@ export default function CreateBlogModal({
                   <p className="font-light text-textLight text-sm">
                     Enter a comma after each tag
                   </p>
+
+                  <div className="mt-5">
+                    <label
+                      htmlFor="category"
+                      className="block text-start font-semibold mb-5"
+                    >
+                      Category
+                      <p className="font-light text-textExtraLight text-sm">
+                        You can choose up to 2 relevant categories.
+                      </p>
+                      <div className="mt-2 grid grid-cols-2 gap-x-2">
+                        <div
+                          className={`relative py-1 pl-4 rounded-sm border ${
+                            primaryCatError
+                              ? "border-red-500"
+                              : "border-gray-200"
+                          }`}
+                        >
+                          <label
+                            htmlFor="primaryCat"
+                            className="block font-thin"
+                          >
+                            Primary <span className="text-textDark">*</span>
+                          </label>
+                          <select
+                            className="relative z-10 w-full bg-transparent appearance-none outline-none focus:outline-none cursor-pointer"
+                            onChange={onChangePrimaryCat}
+                          >
+                            <option value="">----</option>
+                            {contentCategories.map((cat) => (
+                              <option key={cat} value={cat}>
+                                {cat}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute z-0 top-0 right-2 h-full flex flex-col justify-center">
+                            <IoCaretDownSharp />
+                          </div>
+                        </div>
+                        <div
+                          className={`relative border border-gray-200 py-1 pl-4 rounded-sm ${
+                            !primaryCat ? "opacity-50" : "opacity-100"
+                          }`}
+                        >
+                          {primaryCat && (
+                            <>
+                              <label
+                                htmlFor="secondaryCat"
+                                className="block font-thin"
+                              >
+                                Secondary
+                              </label>
+                              <select
+                                id="secondary"
+                                className="relative z-10 w-full bg-transparent appearance-none outline-none focus:outline-none cursor-pointer"
+                                disabled={!primaryCat}
+                                onChange={onChangeSecondaryCat}
+                              >
+                                <option value="">----</option>
+                                {contentCategories
+                                  .filter((cat) => cat !== primaryCat)
+                                  .map((cat) => (
+                                    <option key={cat} value={cat}>
+                                      {cat}
+                                    </option>
+                                  ))}
+                              </select>
+                              <div className="absolute z-0 top-0 right-2 h-full flex flex-col justify-center">
+                                <IoCaretDownSharp />
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="w-full h-full lg:w-3/5 sm:px-2 lg:px-3 xl:px-4 pb-[100px]">
@@ -390,8 +497,8 @@ export default function CreateBlogModal({
                 titleError
               ) : fileError ? (
                 fileError
-              ) : tagsError ? (
-                tagsError
+              ) : primaryCatError ? (
+                primaryCatError
               ) : error ? (
                 error
               ) : (

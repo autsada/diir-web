@@ -66,6 +66,8 @@ export async function saveBlogPost({
   imageUrl,
   imageRef,
   filename,
+  primaryCategory,
+  secondaryCategory,
   tags,
   content,
   visibility,
@@ -76,6 +78,8 @@ export async function saveBlogPost({
   | "imageUrl"
   | "imageRef"
   | "filename"
+  | "primaryCategory"
+  | "secondaryCategory"
   | "tags"
   | "content"
   | "visibility"
@@ -101,6 +105,8 @@ export async function saveBlogPost({
         imageUrl,
         imageRef,
         filename,
+        primaryCategory,
+        secondaryCategory,
         tags,
         content: content ? JSON.parse(content) : null,
         visibility,
