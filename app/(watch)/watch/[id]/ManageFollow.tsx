@@ -93,7 +93,7 @@ export default function ManageFollow({
     <>
       {!isOwner && (
         <div
-          className={`w-[20px] h-8 sm:h-10 mx-auto flex items-center justify-center ${
+          className={`w-[20px] h-[20px] mx-auto flex items-center justify-center ${
             !optimisticFollowing ? "bg-orangeBase" : "bg-blueBase"
           } rounded-full cursor-pointer`}
           onClick={isPending ? undefined : followDebounce}

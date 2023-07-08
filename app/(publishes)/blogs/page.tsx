@@ -22,7 +22,7 @@ export default async function Page() {
   })
 
   return (
-    <div className="sm:ml-[100px]">
+    <div className="px-2 sm:px-4 py-2 sm:ml-[100px]">
       <Blogs isAuthenticated={!!account} fetchResult={blogsResult} />
     </div>
   )

@@ -55,7 +55,10 @@ export default function VideoModal({ publish, stationName }: Props) {
   const [thumbSource, setThumbSource] = useState<ThumbSource>(() =>
     !publish?.thumbSource ? "generated" : publish.thumbSource
   )
-  const [tags, setTags] = useState<string[]>(publish?.tags || [])
+  const prevTags = publish?.tags
+  const [tags, setTags] = useState<string[]>(
+    !prevTags ? [] : prevTags.split(" ")
+  )
   const [isChanged, setIsChanged] = useState<boolean>()
   const [thumbnailLoading, setThumbnailLoading] = useState(false)
   const [thumbnailProgress, setThumbnailProgress] = useState(0)
@@ -152,7 +155,12 @@ export default function VideoModal({ publish, stationName }: Props) {
     const value = e.target.value
     const last = value.slice(value.length - 1)
     if (last === ",") {
-      const newTag = value.substring(0, value.length - 1)
+      // Remove space and lowercase before saving a tag
+      const newTag = value
+        .substring(0, value.length - 1)
+        .split(" ")
+        .join("")
+        .toLowerCase()
       if (newTag && !newTag.includes(",")) {
         setTags((prev) =>
           prev.includes(newTag) || prev.length === 4 ? prev : [...prev, newTag]
@@ -204,7 +212,7 @@ export default function VideoModal({ publish, stationName }: Props) {
         primaryCategory: publish.primaryCategory || "",
         secondaryCategory: publish.secondaryCategory || "",
         visibility: publish.visibility,
-        tags: publish.tags || [],
+        tags: publish.tags || undefined,
       }
       const newData = {
         thumbnail: thumbnailURI,
@@ -215,7 +223,7 @@ export default function VideoModal({ publish, stationName }: Props) {
         primaryCategory: data.primaryCat || "",
         secondaryCategory: data.secondaryCat || "",
         visibility: data.visibility,
-        tags,
+        tags: tags.length > 0 ? tags.join(" ") : undefined,
       }
 
       const isEqual = _.isEqual(oldData, newData)

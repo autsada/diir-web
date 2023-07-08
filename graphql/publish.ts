@@ -195,6 +195,7 @@ export const FETCH_ALL_VIDEOS_QUERY = gql`
           primaryCategory
           secondaryCategory
           kind
+          tags
           creator {
             id
             name
@@ -231,67 +232,6 @@ export async function fetchAllVideos(input: FetchPublishesInput) {
 }
 
 /**
- * Fetch blogs
- */
-export const FETCH_BLOGS_QUERY = gql`
-  query FetchBlogs($input: FetchPublishesInput!) {
-    fetchBlogs(input: $input) {
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-      edges {
-        cursor
-        node {
-          id
-          title
-          createdAt
-          views
-          visibility
-          thumbSource
-          thumbnail
-          primaryCategory
-          secondaryCategory
-          kind
-          tags
-          liked
-          likesCount
-          bookmarked
-          creator {
-            id
-            name
-            displayName
-            image
-            defaultColor
-            isOwner
-          }
-          blog {
-            createdAt
-            updatedAt
-            content
-            publishId
-          }
-        }
-      }
-    }
-  }
-`
-export async function fetchBlogs(input: FetchPublishesInput) {
-  try {
-    const result = await client.request<
-      QueryReturnType<"fetchBlogs">,
-      QueryArgsType<"fetchBlogs">
-    >(FETCH_BLOGS_QUERY, {
-      input,
-    })
-
-    return result?.fetchBlogs
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
  * Fetch videos by category
  */
 export const FETCH_VIDEOS_BY_CAT_QUERY = gql`
@@ -314,6 +254,7 @@ export const FETCH_VIDEOS_BY_CAT_QUERY = gql`
           primaryCategory
           secondaryCategory
           kind
+          tags
           creator {
             id
             name
@@ -368,6 +309,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
       thumbnail
       thumbSource
       views
+      tags
       creator {
         id
         name
@@ -465,6 +407,7 @@ export const FETCH_SUGGESTED_VIDEOS_QUERY = gql`
           primaryCategory
           secondaryCategory
           kind
+          tags
           creator {
             id
             name
@@ -585,6 +528,7 @@ export const FETCH_SHORTS_QUERY = gql`
           disLiked
           likesCount
           commentsCount
+          tags
           creator {
             id
             name
@@ -655,6 +599,68 @@ export async function getShort(input: GetShortInput) {
       )
 
     return result?.getShort
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Fetch blogs
+ */
+export const FETCH_BLOGS_QUERY = gql`
+  query FetchBlogs($input: FetchPublishesInput!) {
+    fetchBlogs(input: $input) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          title
+          createdAt
+          views
+          visibility
+          thumbSource
+          thumbnail
+          primaryCategory
+          secondaryCategory
+          kind
+          tags
+          liked
+          likesCount
+          commentsCount
+          bookmarked
+          creator {
+            id
+            name
+            displayName
+            image
+            defaultColor
+            isOwner
+          }
+          blog {
+            createdAt
+            updatedAt
+            content
+            publishId
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchBlogs(input: FetchPublishesInput) {
+  try {
+    const result = await client.request<
+      QueryReturnType<"fetchBlogs">,
+      QueryArgsType<"fetchBlogs">
+    >(FETCH_BLOGS_QUERY, {
+      input,
+    })
+
+    return result?.fetchBlogs
   } catch (error) {
     throw error
   }

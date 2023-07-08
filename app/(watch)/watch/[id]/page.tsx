@@ -21,6 +21,7 @@ import {
   getWatchingPublish,
 } from "@/graphql"
 import { calculateTimeElapsed } from "@/lib/client"
+import Tags from "./Tags"
 
 type Props = {
   params: { id: string }
@@ -186,7 +187,9 @@ export default async function Watch({ params }: Props) {
         <div className="w-full sm:col-span-6 lg:col-span-7 xl:col-span-6 px-2 sm:px-8">
           <h6 className="sm:text-2xl">{publish.title}</h6>
 
-          <div className="py-4 w-full overflow-x-auto scrollbar-hide">
+          {publish.tags && <Tags tags={publish.tags} />}
+
+          <div className="mt-2 mb-5 w-full overflow-x-auto scrollbar-hide">
             <div className="w-max flex items-center gap-x-2">
               <Reactions
                 publish={publish}

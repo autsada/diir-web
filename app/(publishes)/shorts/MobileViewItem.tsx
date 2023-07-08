@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import Link from "next/link"
 
 import ManageFollow from "@/app/(watch)/watch/[id]/ManageFollow"
 import Avatar from "@/components/Avatar"
@@ -78,6 +79,17 @@ export default function MobileViewItem({
             <h6 className="text-base sm:text-lg text-white">
               {getPostExcerpt(publish.title || "", 40)}
             </h6>
+            {publish.tags && publish.tags.split(" ").length > 0 && (
+              <div className="mt-1 flex items-center gap-x-4">
+                {publish.tags.split(" ").map((tag) => (
+                  <Link key={tag} href={`/tag/${tag}`}>
+                    <div className="text-textExtraLight px-2 py-1 rounded-full cursor-pointer hover:bg-neutral-100">
+                      #{tag}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
             <div className="mt-1 flex items-center gap-x-4 font-thin italic text-xs text-white">
               <p>
                 {publish.views || 0} view{publish.views === 1 ? "" : "s"}

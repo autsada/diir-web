@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react"
 import Link from "next/link"
 import { AiOutlineLike } from "react-icons/ai"
 import { BsBookmarkFill, BsBookmark } from "react-icons/bs"
+import { MdOutlineComment } from "react-icons/md"
 
 import Avatar from "@/components/Avatar"
 import StationName from "@/components/StationName"
@@ -29,7 +30,7 @@ export default function BlogItem({
   }, [])
 
   return (
-    <div className="relative w-full pt-4 pb-2">
+    <div className="relative w-full py-4">
       <div className="w-full flex items-stretch gap-x-2">
         <Avatar profile={publish.creator} />
         <div className="text-left">
@@ -58,50 +59,61 @@ export default function BlogItem({
           {publish.tags && publish.tags.split(" ").length > 0 && (
             <div className="mt-1 flex items-center gap-x-4">
               {publish.tags.split(" ").map((tag) => (
-                <div
-                  key={tag}
-                  className="text-textLight px-2 py-1 rounded-full cursor-pointer hover:bg-neutral-100"
-                >
-                  #{tag}
-                </div>
+                <Link key={tag} href={`/tag/${tag}`}>
+                  <div className="text-textLight px-2 py-1 rounded-full cursor-pointer hover:bg-neutral-100">
+                    #{tag}
+                  </div>
+                </Link>
               ))}
             </div>
           )}
-          <div className="flex items-end gap-x-5 px-2">
-            <div>2 min read</div>
-            <Link href={`/read/${publish.id}`}>
-              <div className="relative h-full px-2 py-1 flex items-center justify-center gap-x-2 cursor-pointer">
-                <div className="h-full flex items-center justify-center">
-                  <AiOutlineLike size={22} className="text-2xl" />
+          <div className="flex items-center justify-between px-2">
+            <div className="h-full flex items-center gap-x-6">
+              <Link href={`/read/${publish.id}`}>
+                <div className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer">
+                  <div className="h-full flex items-center justify-center">
+                    <MdOutlineComment size={22} className="text-2xl" />
+                  </div>
+                  <div className="h-full text-xs sm:text-sm flex items-center justify-center">
+                    {publish.commentsCount}
+                  </div>
                 </div>
-                <div className="h-full text-xs sm:text-sm flex items-center justify-center">
-                  2
+              </Link>
+              <Link href={`/read/${publish.id}`}>
+                <div className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer">
+                  <div className="h-full flex items-center justify-center">
+                    <AiOutlineLike size={22} className="text-2xl" />
+                  </div>
+                  <div className="h-full text-xs sm:text-sm flex items-center justify-center">
+                    {publish.likesCount}
+                  </div>
                 </div>
+              </Link>
+              <div
+                className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer"
+                onClick={bookmarkHandler.bind(
+                  undefined,
+                  publish.id,
+                  bookmarkCallback
+                )}
+              >
+                {optimisticBookmarked ? (
+                  <BsBookmarkFill size={18} className="text-2xl" />
+                ) : (
+                  <BsBookmark size={20} className="text-2xl" />
+                )}
               </div>
-            </Link>
-            <div
-              className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer"
-              onClick={bookmarkHandler.bind(
-                undefined,
-                publish.id,
-                bookmarkCallback
-              )}
-            >
-              {optimisticBookmarked ? (
-                <BsBookmarkFill size={18} className="text-2xl" />
-              ) : (
-                <BsBookmark size={20} className="text-2xl" />
-              )}
             </div>
+            <div>2 min read</div>
           </div>
         </div>
-        <div className="sm:col-span-2 flex items-center justify-center cursor-pointer">
+        <div className="sm:col-span-2 flex items-center justify-end cursor-pointer">
           {publish.thumbnail && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={publish.thumbnail}
               alt={publish.filename || publish.title || ""}
-              className="w-[100px] h-[60px] md:w-[150px] md:h-[100px] object-cover"
+              className="w-full sm:w-[100px] h-[60px] md:w-[150px] md:h-[100px] object-cover"
             />
           )}
         </div>
