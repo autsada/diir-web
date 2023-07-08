@@ -316,6 +316,7 @@ export default function BlogModal({ profile, publish }: Props) {
             secondaryCategory: secondaryCat,
             content: content ? JSON.stringify(content) : undefined,
             visibility,
+            preview: visibility === "public" ? contentForPreview : undefined,
           })
         )
         const id = setTimeout(() => {
@@ -357,6 +358,7 @@ export default function BlogModal({ profile, publish }: Props) {
       prevImageRef,
       publishId,
       content,
+      contentForPreview,
       prevVisibility,
     ]
   )
@@ -454,6 +456,7 @@ export default function BlogModal({ profile, publish }: Props) {
             secondaryCategory: secondaryCat,
             content: content ? JSON.stringify(content) : undefined,
             visibility: updateType === "un-publish" ? "draft" : prevVisibility,
+            preview: updateType === "update" ? contentForPreview : undefined,
           })
         )
         const id = setTimeout(() => {
@@ -495,6 +498,7 @@ export default function BlogModal({ profile, publish }: Props) {
       prevImageRef,
       publishId,
       content,
+      contentForPreview,
       prevVisibility,
     ]
   )

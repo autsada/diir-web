@@ -57,6 +57,7 @@ export async function saveVideo(
     revalidatePath(`/upload/[id]`)
     revalidatePath(`/upload/publishes`)
     revalidatePath(`/upload/publishes/[kind]`)
+    revalidatePath(`/`)
   } catch (error) {
     console.error(error)
   }
@@ -72,6 +73,7 @@ export async function saveBlogPost({
   secondaryCategory,
   tags,
   content,
+  preview,
   visibility,
 }: Pick<
   UpdateBlogInput,
@@ -84,6 +86,7 @@ export async function saveBlogPost({
   | "secondaryCategory"
   | "tags"
   | "content"
+  | "preview"
   | "visibility"
 >) {
   try {
@@ -111,6 +114,7 @@ export async function saveBlogPost({
         secondaryCategory,
         tags,
         content: content ? JSON.parse(content) : null,
+        preview,
         visibility,
       },
     })
@@ -119,6 +123,7 @@ export async function saveBlogPost({
     revalidatePath(`/upload/[id]`)
     revalidatePath(`/upload/publishes`)
     revalidatePath(`/upload/publishes/[kind]`)
+    revalidatePath(`/blogs`)
   } catch (error) {
     console.error(error)
   }

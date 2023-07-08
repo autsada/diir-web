@@ -56,6 +56,7 @@ export type Blog = {
   createdAt: Scalars['DateTime']['output'];
   publish?: Maybe<Publish>;
   publishId: Scalars['String']['output'];
+  readingTime?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -1159,6 +1160,7 @@ export type UpdateBlogInput = {
   imageRef?: InputMaybe<Scalars['String']['input']>;
   imageUrl?: InputMaybe<Scalars['String']['input']>;
   owner: Scalars['String']['input'];
+  preview?: InputMaybe<Scalars['String']['input']>;
   primaryCategory?: InputMaybe<Category>;
   publishId: Scalars['String']['input'];
   secondaryCategory?: InputMaybe<Category>;

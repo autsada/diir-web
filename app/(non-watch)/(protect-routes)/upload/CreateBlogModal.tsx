@@ -165,6 +165,7 @@ export default function CreateBlogModal({
             tags: tags.length > 0 ? tags.join(" ") : undefined,
             content: content ? JSON.stringify(content) : undefined,
             visibility,
+            preview: visibility === "public" ? contentForPreview : undefined,
           })
         )
 

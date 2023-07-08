@@ -53,9 +53,11 @@ export default function BlogItem({
       </div>
       <div className="mt-2 w-full grid grid-cols-6">
         <div className="col-span-5 sm:col-span-4 h-[120px] md:h-[150px] flex flex-col justify-between">
-          <h5 className="text-lg sm:text-xl lg:text-2xl hover:text-blueDark cursor-pointer">
-            {publish.title || ""}
-          </h5>
+          <Link href={`/read/${publish.id}`}>
+            <h5 className="text-lg sm:text-xl lg:text-2xl hover:text-blueDark cursor-pointer">
+              {publish.title || ""}
+            </h5>
+          </Link>
           {publish.tags && publish.tags.split(" ").length > 0 && (
             <div className="mt-1 flex items-center gap-x-4">
               {publish.tags.split(" ").map((tag) => (
@@ -67,7 +69,7 @@ export default function BlogItem({
               ))}
             </div>
           )}
-          <div className="flex items-center justify-between px-2">
+          <div className="mt-2 flex items-center justify-between px-2">
             <div className="h-full flex items-center gap-x-6">
               <Link href={`/read/${publish.id}`}>
                 <div className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer">
@@ -104,17 +106,23 @@ export default function BlogItem({
                 )}
               </div>
             </div>
-            <div>2 min read</div>
+            <Link href={`/read/${publish.id}`}>
+              <div className="font-light text-textLight">
+                {publish.blog?.readingTime}
+              </div>
+            </Link>
           </div>
         </div>
         <div className="sm:col-span-2 flex items-center justify-end cursor-pointer">
           {publish.thumbnail && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={publish.thumbnail}
-              alt={publish.filename || publish.title || ""}
-              className="w-full sm:w-[100px] h-[60px] md:w-[150px] md:h-[100px] object-cover"
-            />
+            <Link href={`/read/${publish.id}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={publish.thumbnail}
+                alt={publish.filename || publish.title || ""}
+                className="w-full sm:w-[100px] h-[60px] md:w-[150px] md:h-[100px] object-cover"
+              />
+            </Link>
           )}
         </div>
       </div>

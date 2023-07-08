@@ -312,6 +312,7 @@ export interface NexusGenInputs {
     imageRef?: string | null // String
     imageUrl?: string | null // String
     owner: string // String!
+    preview?: string | null // String
     primaryCategory?: NexusGenEnums["Category"] | null // Category
     publishId: string // String!
     secondaryCategory?: NexusGenEnums["Category"] | null // Category
@@ -456,6 +457,7 @@ export interface NexusGenObjects {
     content: NexusGenScalars["Json"] // Json!
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     publishId: string // String!
+    readingTime?: string | null // String
     updatedAt?: NexusGenScalars["DateTime"] | null // DateTime
   }
   CalculateTipsResult: {
@@ -768,6 +770,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     publish: NexusGenRootTypes["Publish"] | null // Publish
     publishId: string // String!
+    readingTime: string | null // String
     updatedAt: NexusGenScalars["DateTime"] | null // DateTime
   }
   CalculateTipsResult: {
@@ -1201,6 +1204,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: "DateTime"
     publish: "Publish"
     publishId: "String"
+    readingTime: "String"
     updatedAt: "DateTime"
   }
   CalculateTipsResult: {
