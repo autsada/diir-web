@@ -42,6 +42,13 @@ export interface NexusGenInputs {
     publishId: string // String!
     stationId: string // String!
   }
+  BookmarkPostInput: {
+    // input type
+    accountId: string // String!
+    owner: string // String!
+    profileId: string // String!
+    publishId: string // String!
+  }
   CacheSessionInput: {
     // input type
     accountId: string // String!
@@ -171,6 +178,7 @@ export interface NexusGenInputs {
   FetchPublishesInput: {
     // input type
     cursor?: string | null // String
+    orderBy?: NexusGenEnums["PublishOrderBy"] | null // PublishOrderBy
     requestorId?: string | null // String
   }
   FetchShortsInput: {
@@ -307,7 +315,7 @@ export interface NexusGenInputs {
     primaryCategory?: NexusGenEnums["Category"] | null // Category
     publishId: string // String!
     secondaryCategory?: NexusGenEnums["Category"] | null // Category
-    tags?: string[] | null // [String!]
+    tags?: string | null // String
     title?: string | null // String
     visibility?: NexusGenEnums["Visibility"] | null // Visibility
   }
@@ -369,7 +377,7 @@ export interface NexusGenInputs {
     primaryCategory?: NexusGenEnums["Category"] | null // Category
     publishId: string // String!
     secondaryCategory?: NexusGenEnums["Category"] | null // Category
-    tags?: string[] | null // [String!]
+    tags?: string | null // String
     thumbSource: NexusGenEnums["ThumbSource"] // ThumbSource!
     thumbnail?: string | null // String
     thumbnailRef?: string | null // String
@@ -645,7 +653,7 @@ export interface NexusGenObjects {
     kind?: NexusGenEnums["PublishKind"] | null // PublishKind
     primaryCategory?: NexusGenEnums["Category"] | null // Category
     secondaryCategory?: NexusGenEnums["Category"] | null // Category
-    tags: string[] // [String!]!
+    tags?: string | null // String
     thumbSource: NexusGenEnums["ThumbnailSource"] // ThumbnailSource!
     thumbnail?: string | null // String
     thumbnailRef?: string | null // String
@@ -663,6 +671,12 @@ export interface NexusGenObjects {
     node?: NexusGenRootTypes["Publish"] | null // Publish
   }
   Query: {}
+  ReadBookmark: {
+    // root type
+    createdAt: NexusGenScalars["DateTime"] // DateTime!
+    profileId: string // String!
+    publishId: string // String!
+  }
   Report: {
     // root type
     createdAt: NexusGenScalars["DateTime"] // DateTime!
@@ -908,6 +922,7 @@ export interface NexusGenFieldTypes {
     addToNewPlaylist: NexusGenRootTypes["WriteResult"] | null // WriteResult
     addToPlaylist: NexusGenRootTypes["WriteResult"] | null // WriteResult
     addToWatchLater: NexusGenRootTypes["WriteResult"] | null // WriteResult
+    bookmarkPost: NexusGenRootTypes["WriteResult"] | null // WriteResult
     cacheSession: NexusGenRootTypes["WriteResult"] // WriteResult!
     calculateTips: NexusGenRootTypes["CalculateTipsResult"] | null // CalculateTipsResult
     comment: NexusGenRootTypes["WriteResult"] | null // WriteResult
@@ -1011,6 +1026,7 @@ export interface NexusGenFieldTypes {
   Publish: {
     // field return type
     blog: NexusGenRootTypes["Blog"] | null // Blog
+    bookmarked: boolean | null // Boolean
     comments: NexusGenRootTypes["Comment"][] // [Comment!]!
     commentsCount: number // Int!
     contentRef: string | null // String
@@ -1033,7 +1049,7 @@ export interface NexusGenFieldTypes {
     playback: NexusGenRootTypes["PlaybackLink"] | null // PlaybackLink
     primaryCategory: NexusGenEnums["Category"] | null // Category
     secondaryCategory: NexusGenEnums["Category"] | null // Category
-    tags: string[] // [String!]!
+    tags: string | null // String
     thumbSource: NexusGenEnums["ThumbnailSource"] // ThumbnailSource!
     thumbnail: string | null // String
     thumbnailRef: string | null // String
@@ -1058,6 +1074,7 @@ export interface NexusGenFieldTypes {
       | NexusGenRootTypes["CheckPublishPlaylistsResponse"]
       | null // CheckPublishPlaylistsResponse
     fetchAllVideos: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
+    fetchBlogs: NexusGenRootTypes["FetchPublishesResponse"] | null // FetchPublishesResponse
     fetchCommentsByPublishId: NexusGenRootTypes["FetchCommentsResponse"] | null // FetchCommentsResponse
     fetchDontRecommends: NexusGenRootTypes["FetchDontRecommendsResponse"] | null // FetchDontRecommendsResponse
     fetchMyPlaylists: NexusGenRootTypes["FetchPlaylistsResponse"] | null // FetchPlaylistsResponse
@@ -1079,6 +1096,14 @@ export interface NexusGenFieldTypes {
     getShort: NexusGenRootTypes["Publish"] | null // Publish
     getStationById: NexusGenRootTypes["Station"] | null // Station
     getStationByName: NexusGenRootTypes["Station"] | null // Station
+  }
+  ReadBookmark: {
+    // field return type
+    createdAt: NexusGenScalars["DateTime"] // DateTime!
+    profileId: string // String!
+    publish: NexusGenRootTypes["Publish"] // Publish!
+    publishId: string // String!
+    station: NexusGenRootTypes["Station"] // Station!
   }
   Report: {
     // field return type
@@ -1330,6 +1355,7 @@ export interface NexusGenFieldTypeNames {
     addToNewPlaylist: "WriteResult"
     addToPlaylist: "WriteResult"
     addToWatchLater: "WriteResult"
+    bookmarkPost: "WriteResult"
     cacheSession: "WriteResult"
     calculateTips: "CalculateTipsResult"
     comment: "WriteResult"
@@ -1433,6 +1459,7 @@ export interface NexusGenFieldTypeNames {
   Publish: {
     // field return type name
     blog: "Blog"
+    bookmarked: "Boolean"
     comments: "Comment"
     commentsCount: "Int"
     contentRef: "String"
@@ -1478,6 +1505,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     checkPublishPlaylists: "CheckPublishPlaylistsResponse"
     fetchAllVideos: "FetchPublishesResponse"
+    fetchBlogs: "FetchPublishesResponse"
     fetchCommentsByPublishId: "FetchCommentsResponse"
     fetchDontRecommends: "FetchDontRecommendsResponse"
     fetchMyPlaylists: "FetchPlaylistsResponse"
@@ -1497,6 +1525,14 @@ export interface NexusGenFieldTypeNames {
     getShort: "Publish"
     getStationById: "Station"
     getStationByName: "Station"
+  }
+  ReadBookmark: {
+    // field return type name
+    createdAt: "DateTime"
+    profileId: "String"
+    publish: "Publish"
+    publishId: "String"
+    station: "Station"
   }
   Report: {
     // field return type name
@@ -1589,6 +1625,10 @@ export interface NexusGenArgTypes {
     addToWatchLater: {
       // args
       input: NexusGenInputs["AddToWatchLaterInput"] // AddToWatchLaterInput!
+    }
+    bookmarkPost: {
+      // args
+      input: NexusGenInputs["BookmarkPostInput"] // BookmarkPostInput!
     }
     cacheSession: {
       // args
@@ -1749,6 +1789,10 @@ export interface NexusGenArgTypes {
       input: NexusGenInputs["CheckPublishPlaylistsInput"] // CheckPublishPlaylistsInput!
     }
     fetchAllVideos: {
+      // args
+      input: NexusGenInputs["FetchPublishesInput"] // FetchPublishesInput!
+    }
+    fetchBlogs: {
       // args
       input: NexusGenInputs["FetchPublishesInput"] // FetchPublishesInput!
     }

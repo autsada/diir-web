@@ -162,7 +162,7 @@ export default function CreateBlogModal({
             filename,
             primaryCategory: primaryCat,
             secondaryCategory: secondaryCat,
-            tags,
+            tags: tags.length > 0 ? tags.join(" ") : undefined,
             content: content ? JSON.stringify(content) : undefined,
             visibility,
           })
@@ -240,7 +240,11 @@ export default function CreateBlogModal({
     const value = e.target.value
     const last = value.slice(value.length - 1)
     if (last === ",") {
-      const newTag = value.substring(0, value.length - 1)
+      // Remove space before saving a tag
+      const newTag = value
+        .substring(0, value.length - 1)
+        .split(" ")
+        .join("")
       if (newTag && !newTag.includes(",")) {
         setTags((prev) =>
           prev.includes(newTag) || prev.length === 4 ? prev : [...prev, newTag]
@@ -385,7 +389,7 @@ export default function CreateBlogModal({
                             name="tag"
                             maxLength={31}
                             placeholder="Add up to 4 tags"
-                            className="block w-full h-full"
+                            className="block h-full"
                             onChange={addTag}
                           />
                         )}

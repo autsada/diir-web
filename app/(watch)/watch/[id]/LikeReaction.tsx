@@ -8,6 +8,7 @@ import {
 import _ from "lodash"
 
 import Reaction from "./Reaction"
+import Mask from "@/components/Mask"
 import { useAuthContext } from "@/context/AuthContext"
 import { likePublish, disLikePublish } from "./actions"
 
@@ -137,6 +138,9 @@ export default function LikeReaction({
           onClick={disLikeDebounce}
         />
       </div>
+
+      {/* Prevent interaction while loading */}
+      {isPending && <Mask />}
     </>
   )
 }

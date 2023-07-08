@@ -59,8 +59,13 @@ export default function BlogModal({ profile, publish }: Props) {
   const [image, setImage] = useState<FileWithPrview>()
   const [fileError, setFileError] = useState("")
   const prevTags = publish.tags
-  const [tags, setTags] = useState<string[]>(prevTags)
-  const isTagsEqual = useMemo(() => _.isEqual(prevTags, tags), [prevTags, tags])
+  const [tags, setTags] = useState<string[]>(
+    !prevTags ? [] : prevTags.split(" ")
+  )
+  const isTagsEqual = useMemo(
+    () => _.isEqual(!prevTags ? [] : prevTags.split(" "), tags),
+    [prevTags, tags]
+  )
   const prevPrimaryCat = publish.primaryCategory as PublishCategory
   const [primaryCat, setPrimaryCat] = useState(prevPrimaryCat)
   const [primaryCatError, setPrimaryCatError] = useState("")
@@ -175,7 +180,11 @@ export default function BlogModal({ profile, publish }: Props) {
     const value = e.target.value
     const last = value.slice(value.length - 1)
     if (last === ",") {
-      const newTag = value.substring(0, value.length - 1)
+      // Remove space before saving a tag
+      const newTag = value
+        .substring(0, value.length - 1)
+        .split(" ")
+        .join("")
       if (newTag && !newTag.includes(",")) {
         setTags((prev) =>
           prev.includes(newTag) || prev.length === 4 ? prev : [...prev, newTag]
@@ -301,7 +310,7 @@ export default function BlogModal({ profile, publish }: Props) {
             imageUrl: !imageUrl && !oldImage ? "" : imageUrl,
             imageRef: !imageRef && !oldImage ? "" : imageRef,
             filename: !filename && !oldImage ? "" : filename,
-            tags,
+            tags: tags.length > 0 ? tags.join(" ") : undefined,
             primaryCategory: primaryCat,
             secondaryCategory: secondaryCat,
             content: content ? JSON.stringify(content) : undefined,
@@ -439,7 +448,7 @@ export default function BlogModal({ profile, publish }: Props) {
             imageUrl: !imageUrl && !oldImage ? "" : imageUrl,
             imageRef: !imageRef && !oldImage ? "" : imageRef,
             filename: !filename && !oldImage ? "" : filename,
-            tags,
+            tags: tags.length > 0 ? tags.join(" ") : undefined,
             primaryCategory: primaryCat,
             secondaryCategory: secondaryCat,
             content: content ? JSON.stringify(content) : undefined,

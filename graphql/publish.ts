@@ -215,20 +215,77 @@ export const FETCH_ALL_VIDEOS_QUERY = gql`
     }
   }
 `
-
-export async function fetchAllVideos({
-  requestorId,
-  cursor,
-}: FetchPublishesInput) {
+export async function fetchAllVideos(input: FetchPublishesInput) {
   try {
     const result = await client.request<
       QueryReturnType<"fetchAllVideos">,
       QueryArgsType<"fetchAllVideos">
     >(FETCH_ALL_VIDEOS_QUERY, {
-      input: { cursor, requestorId },
+      input,
     })
 
     return result?.fetchAllVideos
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Fetch blogs
+ */
+export const FETCH_BLOGS_QUERY = gql`
+  query FetchBlogs($input: FetchPublishesInput!) {
+    fetchBlogs(input: $input) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          title
+          createdAt
+          views
+          visibility
+          thumbSource
+          thumbnail
+          primaryCategory
+          secondaryCategory
+          kind
+          tags
+          liked
+          likesCount
+          bookmarked
+          creator {
+            id
+            name
+            displayName
+            image
+            defaultColor
+            isOwner
+          }
+          blog {
+            createdAt
+            updatedAt
+            content
+            publishId
+          }
+        }
+      }
+    }
+  }
+`
+export async function fetchBlogs(input: FetchPublishesInput) {
+  try {
+    const result = await client.request<
+      QueryReturnType<"fetchBlogs">,
+      QueryArgsType<"fetchBlogs">
+    >(FETCH_BLOGS_QUERY, {
+      input,
+    })
+
+    return result?.fetchBlogs
   } catch (error) {
     throw error
   }

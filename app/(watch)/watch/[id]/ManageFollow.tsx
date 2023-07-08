@@ -93,7 +93,7 @@ export default function ManageFollow({
     <>
       {!isOwner && (
         <div
-          className={`w-[20px] h-[20px] mx-auto flex items-center justify-center ${
+          className={`w-[20px] h-8 sm:h-10 mx-auto flex items-center justify-center ${
             !optimisticFollowing ? "bg-orangeBase" : "bg-blueBase"
           } rounded-full cursor-pointer`}
           onClick={isPending ? undefined : followDebounce}
@@ -117,7 +117,7 @@ export default function ManageFollow({
       ) : optimisticFollowing ? (
         <button
           type="button"
-          className={`btn-blue text-sm sm:text-base mx-0 w-[100px] sm:w-[110px] rounded-full ${
+          className={`btn-blue text-sm sm:text-base mx-0 w-[90px] h-8 sm:h-10 sm:w-[110px] rounded-full ${
             followingText === "Following"
               ? "text-white bg-blueBase"
               : "text-red-500 bg-blueLighter hover:bg-blueLighter"
@@ -131,7 +131,7 @@ export default function ManageFollow({
       ) : (
         <button
           type="button"
-          className="btn-orange mx-0 text-sm sm:text-base w-[100px] sm:w-[110px] rounded-full"
+          className="btn-orange mx-0 text-sm sm:text-base w-[80px] h-8 sm:h-10 sm:w-[110px] rounded-full"
           onClick={followDebounce}
         >
           Follow

@@ -59,6 +59,13 @@ export type Blog = {
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
+export type BookmarkPostInput = {
+  accountId: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  profileId: Scalars['String']['input'];
+  publishId: Scalars['String']['input'];
+};
+
 export type CacheSessionInput = {
   accountId: Scalars['String']['input'];
   address: Scalars['String']['input'];
@@ -350,6 +357,7 @@ export type FetchPublishesByCatInput = {
 
 export type FetchPublishesInput = {
   cursor?: InputMaybe<Scalars['String']['input']>;
+  orderBy?: InputMaybe<PublishOrderBy>;
   requestorId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -469,6 +477,7 @@ export type Mutation = {
   addToNewPlaylist?: Maybe<WriteResult>;
   addToPlaylist?: Maybe<WriteResult>;
   addToWatchLater?: Maybe<WriteResult>;
+  bookmarkPost?: Maybe<WriteResult>;
   cacheSession: WriteResult;
   calculateTips?: Maybe<CalculateTipsResult>;
   comment?: Maybe<WriteResult>;
@@ -522,6 +531,11 @@ export type MutationAddToPlaylistArgs = {
 
 export type MutationAddToWatchLaterArgs = {
   input: AddToWatchLaterInput;
+};
+
+
+export type MutationBookmarkPostArgs = {
+  input: BookmarkPostInput;
 };
 
 
@@ -796,6 +810,7 @@ export type PreviewPlaylistEdge = {
 export type Publish = {
   __typename?: 'Publish';
   blog?: Maybe<Blog>;
+  bookmarked?: Maybe<Scalars['Boolean']['output']>;
   comments: Array<Comment>;
   commentsCount: Scalars['Int']['output'];
   contentRef?: Maybe<Scalars['String']['output']>;
@@ -818,7 +833,7 @@ export type Publish = {
   playback?: Maybe<PlaybackLink>;
   primaryCategory?: Maybe<Category>;
   secondaryCategory?: Maybe<Category>;
-  tags: Array<Scalars['String']['output']>;
+  tags?: Maybe<Scalars['String']['output']>;
   thumbSource: ThumbnailSource;
   thumbnail?: Maybe<Scalars['String']['output']>;
   thumbnailRef?: Maybe<Scalars['String']['output']>;
@@ -856,6 +871,7 @@ export type Query = {
   __typename?: 'Query';
   checkPublishPlaylists?: Maybe<CheckPublishPlaylistsResponse>;
   fetchAllVideos?: Maybe<FetchPublishesResponse>;
+  fetchBlogs?: Maybe<FetchPublishesResponse>;
   fetchCommentsByPublishId?: Maybe<FetchCommentsResponse>;
   fetchDontRecommends?: Maybe<FetchDontRecommendsResponse>;
   fetchMyPlaylists?: Maybe<FetchPlaylistsResponse>;
@@ -884,6 +900,11 @@ export type QueryCheckPublishPlaylistsArgs = {
 
 
 export type QueryFetchAllVideosArgs = {
+  input: FetchPublishesInput;
+};
+
+
+export type QueryFetchBlogsArgs = {
   input: FetchPublishesInput;
 };
 
@@ -999,6 +1020,15 @@ export enum QueryPublishKind {
   Podcasts = 'podcasts',
   Videos = 'videos'
 }
+
+export type ReadBookmark = {
+  __typename?: 'ReadBookmark';
+  createdAt: Scalars['DateTime']['output'];
+  profileId: Scalars['String']['output'];
+  publish: Publish;
+  publishId: Scalars['String']['output'];
+  station: Station;
+};
 
 export type RemoveAllWatchLaterInput = {
   accountId: Scalars['String']['input'];
@@ -1132,7 +1162,7 @@ export type UpdateBlogInput = {
   primaryCategory?: InputMaybe<Category>;
   publishId: Scalars['String']['input'];
   secondaryCategory?: InputMaybe<Category>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  tags?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   visibility?: InputMaybe<Visibility>;
 };
@@ -1194,7 +1224,7 @@ export type UpdateVideoInput = {
   primaryCategory?: InputMaybe<Category>;
   publishId: Scalars['String']['input'];
   secondaryCategory?: InputMaybe<Category>;
-  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  tags?: InputMaybe<Scalars['String']['input']>;
   thumbSource: ThumbSource;
   thumbnail?: InputMaybe<Scalars['String']['input']>;
   thumbnailRef?: InputMaybe<Scalars['String']['input']>;
