@@ -11,12 +11,10 @@ import { MdOutlineComment } from "react-icons/md"
 
 import Avatar from "@/components/Avatar"
 import StationName from "@/components/StationName"
-import ManageFollow from "@/app/(watch)/watch/[id]/ManageFollow"
 import { calculateTimeElapsed, getPostExcerpt } from "@/lib/client"
 import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
-  isAuthenticated: boolean
   publish: Publish
   bookmarkHandler: (publishId: string, callback: () => void) => void
   onShare: (publish: Publish) => Promise<void>
@@ -24,7 +22,6 @@ interface Props {
 }
 
 export default function BlogItem({
-  isAuthenticated,
   publish,
   bookmarkHandler,
   onShare,
@@ -47,14 +44,6 @@ export default function BlogItem({
           <p className="font-light text-textLight text-sm sm:text-base">
             {calculateTimeElapsed(publish.createdAt)}
           </p>
-        </div>
-        <div className="pl-10">
-          <ManageFollow
-            isAuthenticated={isAuthenticated}
-            follow={publish.creator}
-            ownerHref={`/upload/${publish.id}`}
-            ownerLinkText="Edit"
-          />
         </div>
         <div className="flex-grow cursor-pointer">
           <Link href={`/read/${publish.id}`}>

@@ -60,7 +60,6 @@ export default function PopularBlogs({
           !edge.node ? null : (
             <BlogItem
               key={edge.node?.id}
-              isAuthenticated={isAuthenticated}
               publish={edge.node}
               bookmarkHandler={bookmark}
               onShare={onShareBlog}
