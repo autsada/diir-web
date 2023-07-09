@@ -54,6 +54,7 @@ export type Blog = {
   __typename?: 'Blog';
   content: Scalars['Json']['output'];
   createdAt: Scalars['DateTime']['output'];
+  excerpt?: Maybe<Scalars['String']['output']>;
   publish?: Maybe<Publish>;
   publishId: Scalars['String']['output'];
   readingTime?: Maybe<Scalars['String']['output']>;

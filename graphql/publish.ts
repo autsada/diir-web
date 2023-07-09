@@ -63,6 +63,7 @@ export const GET_UPLOADED_PUBLISH_QUERY = gql`
         content
         publishId
         readingTime
+        excerpt
       }
     }
   }
@@ -139,6 +140,7 @@ export const FETCH_CREATOR_PUBLISHES_QUERY = gql`
             content
             publishId
             readingTime
+            excerpt
           }
         }
       }
@@ -354,6 +356,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
         content
         publishId
         readingTime
+        excerpt
       }
       # comments {
       #   id
@@ -649,6 +652,7 @@ export const FETCH_BLOGS_QUERY = gql`
             content
             publishId
             readingTime
+            excerpt
           }
         }
       }

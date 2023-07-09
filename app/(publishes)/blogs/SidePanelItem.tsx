@@ -16,15 +16,13 @@ import { calculateTimeElapsed, getPostExcerpt } from "@/lib/client"
 import type { Publish } from "@/graphql/codegen/graphql"
 
 interface Props {
-  isAuthenticated: boolean
   publish: Publish
   bookmarkHandler: (publishId: string, callback: () => void) => void
   onShare: (publish: Publish) => Promise<void>
   onReport: (publish: Publish) => void
 }
 
-export default function BlogItem({
-  isAuthenticated,
+export default function SidePanelItem({
   publish,
   bookmarkHandler,
   onShare,
@@ -41,20 +39,17 @@ export default function BlogItem({
   return (
     <div className="relative w-full py-4">
       <div className="w-full flex items-stretch gap-x-2">
-        <Avatar profile={publish.creator} />
+        <Avatar
+          profile={publish.creator}
+          fontSize="text-sm"
+          width={35}
+          height={35}
+        />
         <div className="text-left">
           <StationName profile={publish.creator} />
-          <p className="font-light text-textLight text-sm sm:text-base">
+          <p className="font-light text-textLight text-xs sm:text-base">
             {calculateTimeElapsed(publish.createdAt)}
           </p>
-        </div>
-        <div className="pl-10">
-          <ManageFollow
-            isAuthenticated={isAuthenticated}
-            follow={publish.creator}
-            ownerHref={`/upload/${publish.id}`}
-            ownerLinkText="Edit"
-          />
         </div>
         <div className="flex-grow cursor-pointer">
           <Link href={`/read/${publish.id}`}>
@@ -66,12 +61,12 @@ export default function BlogItem({
       <div className="mt-2 w-full grid grid-cols-6">
         <div className="col-span-5 sm:col-span-4">
           <Link href={`/read/${publish.id}`}>
-            <h5 className="text-lg sm:text-xl lg:text-2xl hover:text-textLight cursor-pointer">
+            <h5 className="text-base sm:text-lg lg:text-xl hover:text-textLight cursor-pointer">
               {publish.title || ""}
             </h5>
             {publish.blog?.excerpt && (
-              <p className="mt-1 text-textLight">
-                {getPostExcerpt(publish.blog.excerpt, 100)}
+              <p className="mt-1 text-sm text-textLight">
+                {getPostExcerpt(publish.blog.excerpt, 60)}
               </p>
             )}
           </Link>
@@ -79,7 +74,7 @@ export default function BlogItem({
             <div className="mt-1 flex items-center gap-x-4">
               {publish.tags.split(" ").map((tag) => (
                 <Link key={tag} href={`/tag/${tag}`}>
-                  <div className="text-textLight px-2 py-1 rounded-full cursor-pointer hover:bg-neutral-100">
+                  <div className="text-textLight text-sm px-2 py-1 rounded-full cursor-pointer hover:bg-neutral-100">
                     #{tag}
                   </div>
                 </Link>
@@ -94,7 +89,7 @@ export default function BlogItem({
               <img
                 src={publish.thumbnail}
                 alt={publish.filename || publish.title || ""}
-                className="w-[80px] h-[60px] object-cover"
+                className="w-[60px] h-[50px] object-cover"
               />
             </Link>
           )}
@@ -106,7 +101,7 @@ export default function BlogItem({
           <div className="h-full flex items-center gap-x-2 sm:gap-x-3 md:gap-x-4 lg:gap-x-5">
             <div className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer">
               <div className="h-full flex items-center justify-center">
-                <AiOutlineLike size={22} className="text-2xl" />
+                <AiOutlineLike size={18} className="text-2xl" />
               </div>
               <div className="h-full text-xs sm:text-sm flex items-center justify-center">
                 {publish.likesCount}
@@ -114,7 +109,7 @@ export default function BlogItem({
             </div>
             <div className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer">
               <div className="h-full flex items-center justify-center">
-                <AiOutlineRead size={22} className="text-2xl" />
+                <AiOutlineRead size={18} className="text-2xl" />
               </div>
               <div className="h-full text-xs sm:text-sm flex items-center justify-center">
                 {publish.views}
@@ -122,7 +117,7 @@ export default function BlogItem({
             </div>
             <div className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer">
               <div className="h-full flex items-center justify-center">
-                <MdOutlineComment size={20} className="text-2xl" />
+                <MdOutlineComment size={17} className="text-2xl" />
               </div>
               <div className="h-full text-xs sm:text-sm flex items-center justify-center">
                 {publish.commentsCount}
@@ -132,7 +127,7 @@ export default function BlogItem({
         </Link>
         <div className="px-2 flex items-center justify-center gap-x-4 sm:gap-x-6 lg:gap-x-8">
           <div
-            className="relative h-full flex items-center justify-center cursor-pointer"
+            className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer"
             onClick={bookmarkHandler.bind(
               undefined,
               publish.id,
@@ -140,27 +135,27 @@ export default function BlogItem({
             )}
           >
             {optimisticBookmarked ? (
-              <BsBookmarkFill size={16} className="text-2xl" />
+              <BsBookmarkFill size={14} className="text-2xl" />
             ) : (
-              <BsBookmark size={17} className="text-2xl" />
+              <BsBookmark size={15} className="text-2xl" />
             )}
           </div>
           <div
-            className="relative h-full flex items-center justify-center cursor-pointer"
+            className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer"
             onClick={onShare.bind(undefined, publish)}
           >
-            <AiOutlineShareAlt size={22} className="text-2xl" />
+            <AiOutlineShareAlt size={18} className="text-2xl" />
           </div>
           <div
-            className="relative h-full flex items-center justify-center cursor-pointer"
+            className="relative h-full flex items-center justify-center gap-x-2 cursor-pointer"
             onClick={onReport.bind(undefined, publish)}
           >
-            <AiOutlineFlag size={23} className="text-2xl" />
+            <AiOutlineFlag size={19} className="text-2xl" />
           </div>
         </div>
         <div className="w-[100px] text-right">
           <Link href={`/read/${publish.id}`}>
-            <div className="font-light text-textLight">
+            <div className="font-light text-textLight text-sm">
               {publish.blog?.readingTime}
             </div>
           </Link>

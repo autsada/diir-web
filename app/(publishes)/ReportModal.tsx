@@ -9,11 +9,12 @@ import { reportPublish } from "../(watch)/watch/[id]/actions"
 import type { ReportReason } from "@/graphql/types"
 
 interface Props {
+  title?: string
   closeModal: () => void
   publishId: string
 }
 
-export default function ReportModal({ closeModal, publishId }: Props) {
+export default function ReportModal({ title, closeModal, publishId }: Props) {
   const [conformModalVisible, setConfirmModalVisible] = useState(false)
   const [selectedTopic, setSelectedTopic] = useState<HTMLInputElement>()
 
@@ -50,7 +51,7 @@ export default function ReportModal({ closeModal, publishId }: Props) {
       <div className="fixed z-10 inset-0" onClick={closeModal}></div>
       <div className="relative z-20 pt-5 w-[400px] max-w-[85%] text-center bg-white rounded-xl overflow-hidden">
         <div className="px-10 flex items-center justify-between">
-          <p className="text-lg text-left">Report publish</p>
+          <p className="text-lg text-left">{title || "Report video"}</p>
           <div>
             <CloseButton onClick={closeModal} />
           </div>
@@ -111,7 +112,8 @@ export default function ReportModal({ closeModal, publishId }: Props) {
         <ConfirmModal onCancel={onBack} onConfirm={confirmReport}>
           <div>
             <p className="text-lg">
-              You are going to report this publish for the following topic.
+              You are going to report this {title ? "blog" : "video"} for the
+              following topic.
             </p>
             <div className="mt-5 py-4 border border-neutral-400 rounded-md">
               <h6 className="text-base">{selectedTopic.title}</h6>

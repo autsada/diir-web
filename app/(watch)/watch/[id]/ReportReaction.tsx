@@ -15,11 +15,11 @@ export default function ReportReaction({
 }: Props) {
   const [reportModalVisible, setReportModalVisible] = useState(false)
 
-  const openReportModalVisible = useCallback(() => {
+  const openReportModal = useCallback(() => {
     setReportModalVisible(true)
   }, [])
 
-  const closeReportModalVisible = useCallback(() => {
+  const closeReportModal = useCallback(() => {
     setReportModalVisible(false)
   }, [])
 
@@ -32,15 +32,12 @@ export default function ReportReaction({
           description="Report"
           withDescription={withDescription}
           isActive={false}
-          onClick={openReportModalVisible}
+          onClick={openReportModal}
         />
       </div>
 
       {reportModalVisible && publishId && (
-        <ReportModal
-          publishId={publishId}
-          closeModal={closeReportModalVisible}
-        />
+        <ReportModal publishId={publishId} closeModal={closeReportModal} />
       )}
     </>
   )

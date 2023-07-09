@@ -8,6 +8,7 @@ interface Props {
   width?: number
   height?: number
   fontSize?:
+    | "text-sm"
     | "text-base"
     | "text-lg"
     | "text-xl"

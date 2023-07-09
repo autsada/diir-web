@@ -209,7 +209,7 @@ export default function ViewModal({
     const shareData = {
       title: targetPublish.title || "",
       text: targetPublish.title || "",
-      url: `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/watch/${targetPublish.id}`,
+      url: `https://4c04-2405-9800-b961-39d-98db-d99c-fb3e-5d9b.ngrok-free.app/shorts?id=${targetPublish.id}`,
     }
 
     if (navigator.share && navigator.canShare(shareData)) {
@@ -356,6 +356,7 @@ export default function ViewModal({
           publishId={targetPublish.id}
           title={targetPublish.title || ""}
           closeModal={closeShareModal}
+          shareUrl={`https://7015-2405-9800-b961-39d-9594-1174-9b67-5c66.ngrok-free.app/shorts?id=${targetPublish.id}`}
         />
       )}
 

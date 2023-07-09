@@ -29,11 +29,15 @@ interface Props {
   publishId: string
   title: string
   closeModal: () => void
+  shareUrl: string
 }
 
-export default function ShareModal({ publishId, title, closeModal }: Props) {
-  const shareUrl = `https://cd48-2405-9800-b961-39d-5016-4959-8f5c-eab7.ngrok-free.app/watch/${publishId}`
-
+export default function ShareModal({
+  publishId,
+  title,
+  closeModal,
+  shareUrl,
+}: Props) {
   const [copiedVisible, setCopiedVisible] = useState(false)
   const [copyError, setCopyError] = useState("")
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>()
