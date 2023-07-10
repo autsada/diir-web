@@ -336,6 +336,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
       disLiked
       likesCount
       commentsCount
+      bookmarked
       lastComment {
         id
         creator {
@@ -354,6 +355,7 @@ export const GET_WATCHING_PUBLISH_QUERY = gql`
         createdAt
         updatedAt
         content
+        htmlContent
         publishId
         readingTime
         excerpt

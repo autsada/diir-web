@@ -127,7 +127,7 @@ export default function CreateBlogModal({
           }
 
           // Validate content
-          if (!content) {
+          if (!content || !contentForPreview) {
             setError("No content to publish.")
             return
           }
@@ -164,6 +164,7 @@ export default function CreateBlogModal({
             secondaryCategory: secondaryCat,
             tags: tags.length > 0 ? tags.join(" ") : undefined,
             content: content ? JSON.stringify(content) : undefined,
+            htmlContent: contentForPreview,
             visibility,
             preview: visibility === "public" ? contentForPreview : undefined,
           })

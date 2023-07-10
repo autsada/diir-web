@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useTransition } from "react"
 
 import FeedTabs from "./FeedTabs"
 import ForYouFeed from "./ForYouFeed"
@@ -9,11 +9,13 @@ import PopularFeed from "./PopularFeed"
 import SidePanel from "./SidePanel"
 import ShareModal from "../ShareModal"
 import ReportModal from "../ReportModal"
+import { useAuthContext } from "@/context/AuthContext"
 import type {
   Maybe,
   FetchPublishesResponse,
   Publish,
 } from "@/graphql/codegen/graphql"
+import { bookmarkPost } from "./actions"
 
 interface Props {
   isAuthenticated: boolean
@@ -34,6 +36,9 @@ export default function Blogs({
   const [shareModalVisible, setShareModalVisible] = useState(false)
   const [reportModalVisible, setReportModalVisible] = useState(false)
 
+  const [isPending, startTransition] = useTransition()
+  const { onVisible: openAuthModal } = useAuthContext()
+
   const openShareModal = useCallback((blog: Publish) => {
     setShareModalVisible(true)
     setTargetBlog(blog)
@@ -53,6 +58,18 @@ export default function Blogs({
     setReportModalVisible(false)
     setTargetBlog(undefined)
   }, [])
+
+  const bookmark = useCallback(
+    (publishId: string, callback: () => void) => {
+      if (!isAuthenticated) {
+        openAuthModal("Sign in to bookmark the blog.")
+      } else {
+        startTransition(() => bookmarkPost(publishId))
+        if (callback) callback()
+      }
+    },
+    [isAuthenticated, openAuthModal]
+  )
 
   const onShareBlog = useCallback(
     async (blog: Publish) => {
@@ -90,8 +107,8 @@ export default function Blogs({
             }
           >
             <ForYouFeed
-              isAuthenticated={isAuthenticated}
               fetchResult={fetchResult}
+              bookmark={bookmark}
               onShareBlog={onShareBlog}
               openReportModal={openReportModal}
             />
@@ -104,8 +121,8 @@ export default function Blogs({
             }
           >
             <LatestFeed
-              isAuthenticated={isAuthenticated}
               fetchResult={latestResult}
+              bookmark={bookmark}
               onShareBlog={onShareBlog}
               openReportModal={openReportModal}
             />
@@ -114,8 +131,8 @@ export default function Blogs({
           {/* For large device only */}
           <div className="hidden lg:block lg:w-[40%] lg:pl-5 lg:pr-2">
             <SidePanel
-              isAuthenticated={isAuthenticated}
               fetchResult={popularResult}
+              bookmark={bookmark}
               onShareBlog={onShareBlog}
               openReportModal={openReportModal}
             />
@@ -125,8 +142,8 @@ export default function Blogs({
         {/* For small-medium device view only */}
         <div className={feed === "popular" ? "block lg:hidden" : "hidden"}>
           <PopularFeed
-            isAuthenticated={isAuthenticated}
             fetchResult={popularResult}
+            bookmark={bookmark}
             onShareBlog={onShareBlog}
             openReportModal={openReportModal}
           />
@@ -136,7 +153,6 @@ export default function Blogs({
       {/* Share modal */}
       {shareModalVisible && targetBlog && (
         <ShareModal
-          publishId={targetBlog.id}
           title={targetBlog.title!}
           closeModal={closeShareModal}
           shareUrl={`https://7015-2405-9800-b961-39d-9594-1174-9b67-5c66.ngrok-free.app/read/${targetBlog.id}`}

@@ -17,7 +17,7 @@ export default async function Layout({
         <SideBar isAuthenticated={!!account} />
       </div>
 
-      <div className="sm:ml-[100px] bg-blue-300">{children}</div>
+      <div className="sm:ml-[100px]">{children}</div>
     </>
   )
 }

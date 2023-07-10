@@ -26,18 +26,12 @@ import ModalWrapper from "@/components/ModalWrapper"
 import CloseButton from "@/components/CloseButton"
 
 interface Props {
-  publishId: string
   title: string
   closeModal: () => void
   shareUrl: string
 }
 
-export default function ShareModal({
-  publishId,
-  title,
-  closeModal,
-  shareUrl,
-}: Props) {
+export default function ShareModal({ title, closeModal, shareUrl }: Props) {
   const [copiedVisible, setCopiedVisible] = useState(false)
   const [copyError, setCopyError] = useState("")
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>()

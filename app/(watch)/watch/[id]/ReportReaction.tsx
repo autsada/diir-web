@@ -5,11 +5,13 @@ import Reaction from "./Reaction"
 import ReportModal from "@/app/(publishes)/ReportModal"
 
 interface Props {
+  title?: string
   publishId: string
   withDescription?: boolean
 }
 
 export default function ReportReaction({
+  title,
   publishId,
   withDescription = true,
 }: Props) {
@@ -37,7 +39,11 @@ export default function ReportReaction({
       </div>
 
       {reportModalVisible && publishId && (
-        <ReportModal publishId={publishId} closeModal={closeReportModal} />
+        <ReportModal
+          title={title}
+          publishId={publishId}
+          closeModal={closeReportModal}
+        />
       )}
     </>
   )

@@ -1,8 +1,6 @@
-import React, { useState, useCallback, useTransition } from "react"
+import React, { useState } from "react"
 
 import SidePanelItem from "./SidePanelItem"
-import { useAuthContext } from "@/context/AuthContext"
-import { bookmarkPost } from "./actions"
 import type {
   Maybe,
   FetchPublishesResponse,
@@ -10,8 +8,8 @@ import type {
 } from "@/graphql/codegen/graphql"
 
 interface Props {
-  isAuthenticated: boolean
   fetchResult: Maybe<FetchPublishesResponse> | undefined
+  bookmark: (publishId: string, callback: () => void) => void
   onShareBlog: (blog: Publish) => Promise<void>
   openReportModal: (blog: Publish) => void
 }
@@ -20,8 +18,8 @@ interface Props {
  * For large device view only
  */
 export default function SidePanel({
-  isAuthenticated,
   fetchResult,
+  bookmark,
   onShareBlog,
   openReportModal,
 }: Props) {
@@ -37,21 +35,6 @@ export default function SidePanel({
     setPrevPageInfo(fetchResult?.pageInfo)
     setPageInfo(fetchResult?.pageInfo)
   }
-
-  const [isPending, startTransition] = useTransition()
-  const { onVisible: openAuthModal } = useAuthContext()
-
-  const bookmark = useCallback(
-    (publishId: string, callback: () => void) => {
-      if (!isAuthenticated) {
-        openAuthModal("Sign in to bookmark the blog.")
-      } else {
-        startTransition(() => bookmarkPost(publishId))
-        if (callback) callback()
-      }
-    },
-    [isAuthenticated, openAuthModal]
-  )
 
   return (
     <div className="mt-5 w-full flex flex-col items-center gap-y-1 divide-y-2 divide-neutral-100 sm:pb-10">

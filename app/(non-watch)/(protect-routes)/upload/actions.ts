@@ -73,6 +73,7 @@ export async function saveBlogPost({
   secondaryCategory,
   tags,
   content,
+  htmlContent,
   preview,
   visibility,
 }: Pick<
@@ -86,6 +87,7 @@ export async function saveBlogPost({
   | "secondaryCategory"
   | "tags"
   | "content"
+  | "htmlContent"
   | "preview"
   | "visibility"
 >) {
@@ -114,6 +116,7 @@ export async function saveBlogPost({
         secondaryCategory,
         tags,
         content: content ? JSON.parse(content) : null,
+        htmlContent,
         preview,
         visibility,
       },

@@ -28,6 +28,7 @@ export async function bookmarkPost(publishId: string) {
 
     // Revalidate page
     revalidatePath(`/blogs`)
+    revalidatePath(`/read/[id]`)
   } catch (error) {
     console.error(error)
   }

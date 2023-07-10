@@ -262,7 +262,7 @@ export default function BlogModal({ profile, publish }: Props) {
           }
 
           // Validate content
-          if (!content) {
+          if (!content || !contentForPreview) {
             setError("No content to publish.")
             return
           }
@@ -315,6 +315,7 @@ export default function BlogModal({ profile, publish }: Props) {
             primaryCategory: primaryCat,
             secondaryCategory: secondaryCat,
             content: content ? JSON.stringify(content) : undefined,
+            htmlContent: contentForPreview,
             visibility,
             preview: visibility === "public" ? contentForPreview : undefined,
           })
@@ -404,7 +405,7 @@ export default function BlogModal({ profile, publish }: Props) {
           }
 
           // Validate content
-          if (!content) {
+          if (!content || !contentForPreview) {
             setError("No content to publish.")
             return
           }
@@ -455,6 +456,7 @@ export default function BlogModal({ profile, publish }: Props) {
             primaryCategory: primaryCat,
             secondaryCategory: secondaryCat,
             content: content ? JSON.stringify(content) : undefined,
+            htmlContent: contentForPreview,
             visibility: updateType === "un-publish" ? "draft" : prevVisibility,
             preview: updateType === "update" ? contentForPreview : undefined,
           })

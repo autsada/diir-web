@@ -55,6 +55,7 @@ export type Blog = {
   content: Scalars['Json']['output'];
   createdAt: Scalars['DateTime']['output'];
   excerpt?: Maybe<Scalars['String']['output']>;
+  htmlContent?: Maybe<Scalars['String']['output']>;
   publish?: Maybe<Publish>;
   publishId: Scalars['String']['output'];
   readingTime?: Maybe<Scalars['String']['output']>;
@@ -1158,6 +1159,7 @@ export type UpdateBlogInput = {
   content?: InputMaybe<Scalars['Json']['input']>;
   creatorId: Scalars['String']['input'];
   filename?: InputMaybe<Scalars['String']['input']>;
+  htmlContent?: InputMaybe<Scalars['String']['input']>;
   imageRef?: InputMaybe<Scalars['String']['input']>;
   imageUrl?: InputMaybe<Scalars['String']['input']>;
   owner: Scalars['String']['input'];

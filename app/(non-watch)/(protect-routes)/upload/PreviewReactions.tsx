@@ -6,7 +6,7 @@ import {
   AiOutlineLike,
   AiOutlineShareAlt,
 } from "react-icons/ai"
-import { MdOutlineBookmarkBorder } from "react-icons/md"
+import { BsBookmark } from "react-icons/bs"
 import type { IconType } from "react-icons"
 
 export default function PreviewReactions() {
@@ -19,7 +19,7 @@ export default function PreviewReactions() {
         <Reaction IconOutline={AiOutlineDislike} />
       </div>
       <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
-        <Reaction IconOutline={MdOutlineBookmarkBorder} width="w-[70px]" />
+        <Reaction IconOutline={BsBookmark} size={19} width="w-[70px]" />
       </div>
       <div className="h-[40px] flex items-center rounded-full overflow-hidden divide-x bg-gray-100">
         <Reaction IconOutline={AiOutlineDollarCircle} description="Tip" />
@@ -38,9 +38,10 @@ interface ReactionProps {
   IconOutline: IconType
   description?: string
   width?: string // w-[100px] for exp
+  size?: number
 }
 
-function Reaction({ IconOutline, description, width }: ReactionProps) {
+function Reaction({ IconOutline, description, width, size }: ReactionProps) {
   return (
     <div
       className={`relative h-full ${
@@ -48,7 +49,7 @@ function Reaction({ IconOutline, description, width }: ReactionProps) {
       } px-4 flex items-center justify-center gap-x-2 cursor-pointer bg-gray-100 hover:bg-gray-200`}
     >
       <div className="h-full flex items-center justify-center">
-        <IconOutline className="text-2xl" />
+        <IconOutline size={size} className="text-2xl" />
       </div>
 
       {description && (

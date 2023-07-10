@@ -242,7 +242,6 @@ export default function Recommendations({
       {/* Share modal */}
       {shareModalVisible && targetPublish && (
         <ShareModal
-          publishId={targetPublish.id}
           title={targetPublish.title!}
           closeModal={closeShareModal}
           shareUrl={`https://7015-2405-9800-b961-39d-9594-1174-9b67-5c66.ngrok-free.app/watch/${targetPublish.id}`}

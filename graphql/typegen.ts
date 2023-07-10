@@ -309,6 +309,7 @@ export interface NexusGenInputs {
     content?: NexusGenScalars["Json"] | null // Json
     creatorId: string // String!
     filename?: string | null // String
+    htmlContent?: string | null // String
     imageRef?: string | null // String
     imageUrl?: string | null // String
     owner: string // String!
@@ -457,6 +458,7 @@ export interface NexusGenObjects {
     content: NexusGenScalars["Json"] // Json!
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     excerpt?: string | null // String
+    htmlContent?: string | null // String
     publishId: string // String!
     readingTime?: string | null // String
     updatedAt?: NexusGenScalars["DateTime"] | null // DateTime
@@ -770,6 +772,7 @@ export interface NexusGenFieldTypes {
     content: NexusGenScalars["Json"] // Json!
     createdAt: NexusGenScalars["DateTime"] // DateTime!
     excerpt: string | null // String
+    htmlContent: string | null // String
     publish: NexusGenRootTypes["Publish"] | null // Publish
     publishId: string // String!
     readingTime: string | null // String
@@ -1205,6 +1208,7 @@ export interface NexusGenFieldTypeNames {
     content: "Json"
     createdAt: "DateTime"
     excerpt: "String"
+    htmlContent: "String"
     publish: "Publish"
     publishId: "String"
     readingTime: "String"

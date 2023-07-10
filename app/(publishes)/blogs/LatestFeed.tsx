@@ -1,8 +1,6 @@
-import React, { useState, useCallback, useTransition } from "react"
+import React, { useState } from "react"
 
 import BlogItem from "./BlogItem"
-import { useAuthContext } from "@/context/AuthContext"
-import { bookmarkPost } from "./actions"
 import type {
   Maybe,
   FetchPublishesResponse,
@@ -10,15 +8,15 @@ import type {
 } from "@/graphql/codegen/graphql"
 
 interface Props {
-  isAuthenticated: boolean
   fetchResult: Maybe<FetchPublishesResponse> | undefined
+  bookmark: (publishId: string, callback: () => void) => void
   onShareBlog: (blog: Publish) => Promise<void>
   openReportModal: (blog: Publish) => void
 }
 
 export default function LatestFeed({
-  isAuthenticated,
   fetchResult,
+  bookmark,
   onShareBlog,
   openReportModal,
 }: Props) {
@@ -34,21 +32,6 @@ export default function LatestFeed({
     setPrevPageInfo(fetchResult?.pageInfo)
     setPageInfo(fetchResult?.pageInfo)
   }
-
-  const [isPending, startTransition] = useTransition()
-  const { onVisible: openAuthModal } = useAuthContext()
-
-  const bookmark = useCallback(
-    (publishId: string, callback: () => void) => {
-      if (!isAuthenticated) {
-        openAuthModal("Sign in to bookmark the blog.")
-      } else {
-        startTransition(() => bookmarkPost(publishId))
-        if (callback) callback()
-      }
-    },
-    [isAuthenticated, openAuthModal]
-  )
 
   return (
     <div className="mt-5 w-full flex flex-col items-center gap-y-1 divide-y-2 divide-neutral-100 sm:pb-10">

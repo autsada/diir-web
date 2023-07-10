@@ -59,7 +59,7 @@ export default function SidePanelItem({
       </div>
 
       <div className="mt-2 w-full grid grid-cols-6">
-        <div className="col-span-5 sm:col-span-4">
+        <div className="col-span-5">
           <Link href={`/read/${publish.id}`}>
             <h5 className="text-base sm:text-lg lg:text-xl hover:text-textLight cursor-pointer">
               {publish.title || ""}
@@ -82,7 +82,7 @@ export default function SidePanelItem({
             </div>
           )}
         </div>
-        <div className="sm:col-span-2 flex justify-end cursor-pointer">
+        <div className="flex justify-end cursor-pointer">
           {publish.thumbnail && (
             <Link href={`/read/${publish.id}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}

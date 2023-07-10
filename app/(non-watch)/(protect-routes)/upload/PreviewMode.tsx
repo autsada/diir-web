@@ -27,7 +27,7 @@ export default function PreviewMode({
   return (
     <div className="h-max min-h-full w-full md:w-[650px] lg:w-[700px] xl:w-[750px] mx-auto">
       {imageUrl && (
-        <div className="mb-5">
+        <div className="mb-2 sm:mb-3 md:mb-4 lg:mb-5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imageUrl}
